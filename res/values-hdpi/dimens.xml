@@ -1,0 +1,46 @@
+<resources>
+
+    <!-- Login -->
+    <dimen name="login_layout_height">210dp</dimen>
+    <dimen name="login_layout_margin_right_left">150dp</dimen>
+    <dimen name="login_logo_margin_right_left">75dp</dimen>
+    <dimen name="login_text_size">18sp</dimen>
+    <dimen name="login_edit_layout_height">67.5dp</dimen>
+    <dimen name="login_edit_layout_margin_right_left">22.5dp</dimen>
+    <dimen name="login_edit_tv_width">150dp</dimen>
+    <dimen name="login_edit_et_width">300dp</dimen>
+    <dimen name="login_btn_margin_top">37.5dp</dimen>
+
+    <!-- Btn style -->
+    <dimen name="btn_style_width">60dp</dimen>
+    <dimen name="btn_style_height">37.5dp</dimen>
+    <dimen name="btn_style_txt_size">13.5sp</dimen>
+
+    <!-- Layout style for add tab -->
+    <dimen name="add_tab_layout_style_width">340dp</dimen>
+    <dimen name="add_tab_layout_style_height">262.5dp</dimen>
+
+    <!-- Input layout style -->
+    <dimen name="input_layout_style_height">37.5dp</dimen>
+    <dimen name="input_layout_margin_left">3.75dp</dimen>
+
+    <!-- Text view style for add tab -->
+    <dimen name="add_tab_txt_style_width">106dp</dimen>
+    <dimen name="add_tab_txt_style_size">12sp</dimen>
+    <dimen name="add_tab_txt_input_style_height">32dp</dimen>
+    <dimen name="add_tab_txt_input_style_padding_left_right">10dp</dimen>
+
+    <!-- Layout style for order measure -->
+    <dimen name="order_measure_layout_margin_right_left">120dp</dimen>
+    <dimen name="order_measure_layout_margin_top">22.5dp</dimen>
+    <dimen name="order_measure_layout_first_margin_top">60dp</dimen>
+
+    <!-- Browser tab -->
+    <dimen name="browser_tab_grid_height">320dp</dimen>
+    <dimen name="browser_tab_vertical_spacing">0.75dp</dimen>
+
+    <!-- HorizontalScrollView img size -->
+    <dimen name="scrollview_layout_size">130dp</dimen>
+    <dimen name="scrollview_img_size">120dp</dimen>
+
+</resources>

@@ -1,0 +1,260 @@
+package com.example.retailsale;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.ToggleButton;
+
+import com.example.retailsale.fragment.AddFragment;
+import com.example.retailsale.manager.CustomerInfo;
+import com.example.retailsale.util.Utility;
+
+public class OrderMeasure extends Activity implements OnClickListener, OnCheckedChangeListener
+{
+	private static final String TAG = "OrderMeasure";
+	private ArrayAdapter<String> requestArrayAdapter, costArrayAdapter, progressArrayAdapter;
+	private String[] requestList, costList, progressList;
+	
+	private boolean isSendNoteMsgChecked = false, isAsAboveChecked = false;
+	private CustomerInfo customerInfo;
+	
+	// views
+	private ToggleButton sendNoteMsgTB;
+	private CheckBox asAboveCheckBox;
+	private DatePicker measureDate;
+	private TimePicker measureTime;
+	private Spinner requestSpinner, costSpinner, progressSpinner;
+	private TextView saleCreateDateTV, consumerNameTV, phoneNumberTV;
+	private EditText caseNameET, cantDescriptionET, consumerAddressET, contactAddressET, commentET;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_oder_measure);
+//		customerInfo = new CustomerInfo();
+		findViews();
+		getBundle();
+	}
+
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+	}
+
+	@Override
+	public void onClick(View v)
+	{
+		switch (v.getId())
+		{
+		case R.id.order_measure_cancel_btn:
+			this.finish();
+			overridePendingTransition(R.anim.activity_conversion_in_from_right, R.anim.activity_conversion_out_to_left); 
+			break;
+		case R.id.order_measure_save_btn:
+			if (customerInfo != null)
+			{
+				saveData();
+				this.finish();
+				overridePendingTransition(R.anim.activity_conversion_in_from_right,
+						R.anim.activity_conversion_out_to_left);
+			}
+			break;
+		}
+	}
+
+	private void findViews()
+	{
+		Button cancelBtn = (Button) findViewById(R.id.order_measure_cancel_btn);
+		Button saveBtn = (Button) findViewById(R.id.order_measure_save_btn);
+		sendNoteMsgTB = (ToggleButton) findViewById(R.id.order_measure_send_note_msg_btn);
+		asAboveCheckBox = (CheckBox) findViewById(R.id.order_measure_as_above_checkbox);
+		measureDate = (DatePicker) findViewById(R.id.order_measure_datePicker);
+		measureTime = (TimePicker) findViewById(R.id.order_measure_timePicker);
+		saleCreateDateTV = (TextView) findViewById(R.id.order_measure_sale_create_date);
+		consumerNameTV = (TextView) findViewById(R.id.order_measure_consumer_name);
+		phoneNumberTV = (TextView) findViewById(R.id.order_measure_consumer_phone_number);
+		caseNameET = (EditText) findViewById(R.id.order_measure_case_name);
+		cantDescriptionET = (EditText) findViewById(R.id.order_measure_cant_description);
+		consumerAddressET = (EditText) findViewById(R.id.order_measure_consumer_address);
+		contactAddressET = (EditText) findViewById(R.id.order_measure_consumer_contact_address);
+		commentET = (EditText) findViewById(R.id.order_measure_consumer_comment);
+		
+		cancelBtn.setOnClickListener(this);
+		saveBtn.setOnClickListener(this);
+		
+		Resources res = getResources();
+		
+		requestList = res.getStringArray(R.array.style);
+		costList = res.getStringArray(R.array.budget);
+		progressList = res.getStringArray(R.array.saleProgress);
+		
+		requestSpinner = (Spinner) findViewById(R.id.order_measure_consumer_request);
+		costSpinner = (Spinner) findViewById(R.id.order_measure_consumer_cost);
+		progressSpinner = (Spinner) findViewById(R.id.order_measure_sale_progress_request);
+		// request spinner
+		requestArrayAdapter = new ArrayAdapter<String>(OrderMeasure.this,
+				android.R.layout.simple_spinner_item, requestList);
+		requestSpinner.setAdapter(requestArrayAdapter);
+		// cost spinner
+		costArrayAdapter = new ArrayAdapter<String>(OrderMeasure.this, android.R.layout.simple_spinner_item,
+				costList);
+		costSpinner.setAdapter(costArrayAdapter);
+		// progress spinner
+		progressArrayAdapter = new ArrayAdapter<String>(OrderMeasure.this, android.R.layout.simple_spinner_item,
+				progressList);
+		progressSpinner.setAdapter(progressArrayAdapter);
+		
+		// time picker to set 24h
+		measureTime.setIs24HourView(true);
+		
+		// send note msg toggle btn
+		sendNoteMsgTB.setOnCheckedChangeListener(this);
+		
+		// as above check box
+		asAboveCheckBox.setOnCheckedChangeListener(this);
+	}
+	
+	private void getBundle() {
+		Intent intent = this.getIntent();
+		if (intent != null)
+		{
+			customerInfo = intent.getParcelableExtra(AddFragment.SEND_CUSTOMER_INFO);
+			Log.d(TAG, "customer visit date is " + customerInfo.getCustomerVisitDate());
+			String reservationDate = customerInfo.getReservationDate();
+			Log.d(TAG, "reservation date is " + reservationDate);
+			if (reservationDate == null)
+			{
+//				setInfo(true);
+			} else {
+				setInfo(false, customerInfo.getReservationWorkAlias(),
+						customerInfo.getReservationWork(), customerInfo.getReservationContact(),
+						customerInfo.getReservationYear(), customerInfo.getReservationMonth(),
+						customerInfo.getReservationDay(), customerInfo.getReservationHour(), customerInfo.getReservationMinute(),
+						customerInfo.getReservationStatusComment(),
+						customerInfo.getReservationStatus(), customerInfo.getReservationComment(),
+						customerInfo.getReservationSpace(), customerInfo.getReservationBudget());
+			}
+		}
+	}
+	
+	private void setInfo(boolean isDefault, String caseName, String workAddress,
+			String contactAddress, int reservationYear, int reservationMonth, int reservationDay,
+			int reservationHour, int reservationMinute, String cantDescription,
+			int progressPosition, String comment, int requestPosition, int costPosition)
+	{
+		if (isDefault)
+		{}
+		else
+		{
+			caseNameET.setText(caseName);
+			consumerAddressET.setText(workAddress);
+			contactAddressET.setText(contactAddress);
+			measureDate.updateDate(reservationYear, reservationMonth - 1, reservationDay);
+			measureTime.setCurrentHour(reservationHour);
+			measureTime.setCurrentMinute(reservationMinute);
+			cantDescriptionET.setText(cantDescription);
+			progressSpinner.setSelection(progressPosition);
+			commentET.setText(comment);
+			requestSpinner.setSelection(requestPosition);
+			costSpinner.setSelection(costPosition);
+		}
+	}
+	
+	private void saveData() {
+		// case name
+		customerInfo.setReservationWorkAlias(caseNameET.getText().toString());
+		
+		// work address
+		customerInfo.setReservationWork(consumerAddressET.getText().toString());
+		
+		// contact address
+		if (asAboveCheckBox.isChecked()) {
+			customerInfo.setReservationContact(consumerAddressET.getText().toString());
+		} else {
+			customerInfo.setReservationContact(contactAddressET.getText().toString());
+		}
+		
+		// measure date & time
+		int year = measureDate.getYear();
+		int month = measureDate.getMonth() + 1;
+		int day = measureDate.getDayOfMonth();
+		int hour = measureTime.getCurrentHour();
+		int minute = measureTime.getCurrentMinute();
+		String dateString = Utility.covertDateToString(year, month, day);
+		
+		String timeString = Utility.covertTimeToString(hour, minute);
+		Log.d(TAG, "date: " + dateString + " time : " + timeString);
+		Log.d(TAG, "hour: " + hour + " minute : " + minute);
+		customerInfo.setReservationYear(year);
+		customerInfo.setReservationMonth(month);
+		customerInfo.setReservationDay(day);
+		customerInfo.setReservationHour(hour);
+		customerInfo.setReservationMinute(minute);
+		
+		customerInfo.setReservationDate(dateString);
+		customerInfo.setReservationTime(timeString);
+		
+		// can't sale description
+		customerInfo.setReservationStatusComment(cantDescriptionET.getText().toString());
+		
+		// progress
+		customerInfo.setReservationStatus(progressSpinner.getSelectedItemPosition());
+		
+		// comment
+		customerInfo.setReservationComment(commentET.getText().toString());
+		
+		// request
+		customerInfo.setReservationSpace(requestSpinner.getSelectedItemPosition());
+		
+		// cost
+		customerInfo.setReservationBudget(costSpinner.getSelectedItemPosition());
+		
+		// send result
+	    Intent resultIntent = new Intent();
+	    resultIntent.putExtra(AddFragment.SEND_CUSTOMER_INFO, customerInfo);
+	    setResult(RESULT_OK, resultIntent);  
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+	{
+		switch (buttonView.getId()) {
+		case R.id.order_measure_send_note_msg_btn:
+			Log.d(TAG, "To change note msg, the isChecked" + isChecked);
+			isSendNoteMsgChecked = isChecked;
+			break;
+		case R.id.order_measure_as_above_checkbox:
+			Log.d(TAG, "To change as above checkbox, the isChecked" + isChecked);
+			isAsAboveChecked = isChecked;
+			break;
+		}
+	}
+}

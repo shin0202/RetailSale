@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkorange"
+    android:orientation="horizontal" >
+
+    <!-- Left Layout -->
+
+    <LinearLayout
+        android:id="@+id/sync_tab_left_layout"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="3"
+        android:orientation="vertical" >
+
+        <!-- Upload consumer layout -->
+
+        <LinearLayout
+            android:id="@+id/sync_tab_upload_layout"
+            style="@style/syncTabLeftTextLayoutStyle" >
+
+            <TextView
+                android:id="@+id/sync_tab_upload_txt"
+                style="@style/syncTabLeftTextViewStyle"
+                android:text="@string/sync_tab_upload_consumer" />
+        </LinearLayout>
+
+        <!-- Downlaod picture layout -->
+
+        <LinearLayout
+            android:id="@+id/sync_tab_download_layout"
+            style="@style/syncTabLeftTextLayoutStyle" >
+
+            <TextView
+                android:id="@+id/sync_tab_download_txt"
+                style="@style/syncTabLeftTextViewStyle"
+                android:text="@string/sync_tab_download_picture" />
+        </LinearLayout>
+
+        <!-- Sync data layout -->
+
+        <LinearLayout
+            android:id="@+id/sync_tab_sync_layout"
+            style="@style/syncTabLeftTextLayoutStyle" >
+
+            <TextView
+                android:id="@+id/sync_tab_sync_txt"
+                style="@style/syncTabLeftTextViewStyle"
+                android:text="@string/sync_tab_sync_data" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Right Layout -->
+
+    <LinearLayout
+        android:id="@+id/sync_tab_right_layout"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/sync_tab_item_title"
+            style="@style/syncTabRightTextViewStyle" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/fuchsia" />
+
+        <TextView
+            android:id="@+id/sync_tab_item_description"
+            style="@style/syncTabRightTextViewStyle" />
+
+        <TextView
+            android:id="@+id/sync_tab_item_message"
+            style="@style/syncTabRightTextViewStyle" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">RetailSale</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="new_item">New</string>
+
+    <!-- Login -->
+    <string name="login">Login</string>
+    <string name="system_title">Retail Sale</string>
+    <string name="user_id">User ID</string>
+    <string name="user_pwd">User Password</string>
+    <string name="user_id_hint">Please input user id</string>
+    <string name="user_pwd_hint">Please input user password</string>
+
+    <!-- tab name -->
+    <string name="add_consumer">Add consumer</string>
+    <string name="browser_all_photo">Browser all</string>
+    <string name="sync_with_server">Sync server</string>
+    <string name="logout">Logout</string>
+
+    <!-- Add tab -->
+    <string name="add_tab_customer_name">Customer Name</string>
+    <string name="add_tab_customer_name_hint">Input customer name</string>
+    <string name="add_tab_phone_number">Phone Number</string>
+    <string name="add_tab_phone_number_hint">Input phone number</string>
+    <string name="add_tab_phone_number_company">Company phone Number</string>
+    <string name="add_tab_phone_number_company_hint">Input cpmpany phone number</string>
+    <string name="add_tab_cellphone_number">Cellphone Number</string>
+    <string name="add_tab_cellphone_number_hint">Input cellphone number</string>
+    <string name="add_tab_select_msg">Select Message</string>
+    <string name="add_tab_select_job">Select Job</string>
+    <string name="add_tab_leave_info">To leave info</string>
+    <string name="add_tab_email">Email</string>
+    <string name="add_tab_email_hint">Input Email</string>
+    <string name="add_tab_age">Age</string>
+    <string name="add_tab_male">Male</string>
+
+    <!-- Add tab new -->
+    <string name="add_tab_company_name">Company Name</string>
+    <string name="add_tab_customer_id">Customer ID</string>
+    <string name="add_tab_designer_store">Design Store</string>
+    <string name="add_tab_designer_name">Design Name</string>
+    <string name="add_tab_create_date">Create Date</string>
+    <string name="add_tab_title">Title</string>
+    <string name="add_tab_customer_birthday">Customer Birthday</string>
+    <string name="add_tab_customer_birthday_hint">Input customer birthday</string>
+    <string name="add_tab_customer_introducer">Introducer</string>
+    <string name="add_tab_customer_introducer_hint">Input introducer</string>
+    <string name="add_tab_customer_come_time">Come Time</string>
+    <string name="add_tab_customer_come_id">Come ID</string>
+
+    <!-- Order measure -->
+    <string name="order_measure_send_note_msg">Send note message</string>
+    <string name="order_measure_consumer_address_msg">Work Address</string>
+    <string name="order_measure_consumer_address_hint">Input work address</string>
+    <string name="order_measure_consumer_comment_msg">Consumer Comment</string>
+    <string name="order_measure_consumer_comment_hint">Input consumer comment</string>
+    <string name="order_measure_consumer_request_msg">Consumer Request</string>
+    <string name="order_measure_consumer_cost_msg">Consumer Cost</string>
+    <string name="order_measure_consumer_date_time_msg">Date and Time</string>
+
+    <!-- Order measure New -->
+    <string name="order_measure_case_name">Case Name</string>
+    <string name="order_measure_case_name_hint">Input case name</string>
+    <string name="order_measure_cant_description">Description</string>
+    <string name="order_measure_cant_description_hint">Input description</string>
+    <string name="order_measure_cant_sale_progress">Sale Progress</string>
+    <string name="order_measure_consumer_contact_address_msg">Contact Address</string>
+    <string name="order_measure_consumer_contact_address_hint">Input contact address</string>
+    <string name="order_measure_consumer_as_work_address">As work address</string>
+    <string name="order_measure_last_update">Last Update</string>
+    <string name="order_measure_sale_create_date">Sale Create Date</string>
+
+    <!-- Sync tab -->
+    <string name="sync_tab_upload_consumer">Upload Consumer Information</string>
+    <string name="sync_tab_download_picture">Download Pictures</string>
+    <string name="sync_tab_sync_data">Sync Data</string>
+    <string name="sync_tab_upload_description">Upload consumer information description</string>
+    <string name="sync_tab_upload_message">Upload consumer information message</string>
+    <string name="sync_tab_download_description">Download pictures description</string>
+    <string name="sync_tab_download_message">Download pictures message</string>
+    <string name="sync_tab_sync_description">Sync data description</string>
+    <string name="sync_tab_sync_message">Sync data message</string>
+    
+    <!-- Error String -->
+    <string name="field_error">Field Error</string>
+
+</resources>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">RetailSale</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="save">儲存</string>
+    <string name="cancel">取消</string>
+    <string name="new_item">新增</string>
+
+    <!-- Login -->
+    <string name="login">登入</string>
+    <string name="system_title">門市管理系統</string>
+    <string name="user_id">使用者帳號</string>
+    <string name="user_pwd">使用者密碼</string>
+    <string name="user_id_hint">請輸入使用者帳號</string>
+    <string name="user_pwd_hint">請輸入使用者密碼</string>
+
+    <!-- tab name -->
+    <string name="add_consumer">新增客戶資料</string>
+    <string name="browser_all_photo">瀏覽所有相片</string>
+    <string name="sync_with_server">與伺服器進行同步</string>
+    <string name="logout">登出</string>
+
+    <!-- Add tab -->
+    <string name="add_tab_customer_name">客戶姓名</string>
+    <string name="add_tab_customer_name_hint">請輸入客戶姓名</string>
+    <string name="add_tab_phone_number">住家電話</string>
+    <string name="add_tab_phone_number_hint">請輸入住家電話</string>
+    <string name="add_tab_phone_number_company">公司電話</string>
+    <string name="add_tab_phone_number_company_hint">請輸入公司電話</string>
+    <string name="add_tab_cellphone_number">手機電話</string>
+    <string name="add_tab_cellphone_number_hint">請輸入手機電話</string>
+    <string name="add_tab_select_msg">訊息來源</string>
+    <string name="add_tab_select_job">職業</string>
+    <string name="add_tab_leave_info">客戶不留基本資料</string>
+    <string name="add_tab_email">電子郵件</string>
+    <string name="add_tab_email_hint">請輸入電子郵件</string>
+    <string name="add_tab_age">年齡</string>
+    <string name="add_tab_male">性別</string>
+
+    <!-- Add tab new -->
+    <string name="add_tab_company_name">公司名稱</string>
+    <string name="add_tab_customer_id">客戶編號</string>
+    <string name="add_tab_designer_store">設計師店別</string>
+    <string name="add_tab_designer_name">設計師名稱</string>
+    <string name="add_tab_create_date">建立日期</string>
+    <string name="add_tab_title">稱謂</string>
+    <string name="add_tab_customer_birthday">客戶生日</string>
+    <string name="add_tab_customer_birthday_hint">請輸入客戶生日</string>
+    <string name="add_tab_customer_introducer">介紹人</string>
+    <string name="add_tab_customer_introducer_hint">請輸入介紹人</string>
+    <string name="add_tab_customer_come_time">來店時間</string>
+    <string name="add_tab_customer_come_id">來店案號</string>
+
+    <!-- Order measure -->
+    <string name="order_measure_send_note_msg">傳送備忘簡訊</string>
+    <string name="order_measure_consumer_address_msg">施工地址</string>
+    <string name="order_measure_consumer_address_hint">請輸入XX市XX區XX路XX巷XX號</string>
+    <string name="order_measure_consumer_comment_msg">備註</string>
+    <string name="order_measure_consumer_comment_hint">請輸入備註</string>
+    <string name="order_measure_consumer_request_msg">格局需求</string>
+    <string name="order_measure_consumer_cost_msg">預算</string>
+    <string name="order_measure_consumer_date_time_msg">約定時間</string>
+    <string name="order_measure_last_update">上次更新</string>
+    <string name="order_measure_sale_create_date">銷售建立日期</string>
+
+    <!-- Order measure New -->
+    <string name="order_measure_case_name">建案名稱</string>
+    <string name="order_measure_case_name_hint">請輸入XXX建案XX棟XX樓之X</string>
+    <string name="order_measure_cant_description">未成交說明</string>
+    <string name="order_measure_cant_description_hint">輸入說明</string>
+    <string name="order_measure_cant_sale_progress">銷售進度</string>
+    <string name="order_measure_consumer_contact_address_msg">聯絡地址</string>
+    <string name="order_measure_consumer_contact_address_hint">請輸入XX市XX區XX路XX巷XX號</string>
+    <string name="order_measure_consumer_as_work_address">同施工地址</string>
+
+    <!-- Sync tab -->
+    <string name="sync_tab_upload_consumer">上傳客戶資料</string>
+    <string name="sync_tab_download_picture">下載相片資料</string>
+    <string name="sync_tab_sync_data">同步伺服器資料</string>
+    <string name="sync_tab_upload_description">上傳說明</string>
+    <string name="sync_tab_upload_message">上傳訊息</string>
+    <string name="sync_tab_download_description">下載說明</string>
+    <string name="sync_tab_download_message">下載訊息</string>
+    <string name="sync_tab_sync_description">同步說明</string>
+    <string name="sync_tab_sync_message">同步訊息</string>
+
+    <!-- Error String -->
+    <string name="field_error">欄位錯誤</string>
+
+</resources>

@@ -1,0 +1,103 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="android:icon">@android:color/transparent</item>
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="btnStyle">
+        <item name="android:layout_width">@dimen/btn_style_width</item>
+        <item name="android:layout_height">@dimen/btn_style_height</item>
+        <item name="android:textSize">@dimen/btn_style_txt_size</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="inputTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/add_tab_txt_input_style_height</item>
+        <item name="android:textSize">@dimen/add_tab_txt_style_size</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:paddingLeft">@dimen/add_tab_txt_input_style_padding_left_right</item>
+        <item name="android:paddingRight">@dimen/add_tab_txt_input_style_padding_left_right</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="addTabLayoutStyle">
+        <item name="android:layout_width">@dimen/add_tab_layout_style_width</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="inputLayoutStyle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/input_layout_style_height</item>
+    </style>
+
+    <style name="inputLayoutStyleInclueMargin">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/input_layout_style_height</item>
+        <item name="android:layout_marginLeft">@dimen/input_layout_margin_left</item>
+    </style>
+
+    <style name="addTabTextViewStyle">
+        <item name="android:layout_width">@dimen/add_tab_txt_style_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">@dimen/add_tab_txt_style_size</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="syncTabLeftTextLayoutStyle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="syncTabLeftTextViewStyle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/add_tab_txt_style_size</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="syncTabRightTextViewStyle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/add_tab_txt_style_size</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="orderMeasureTextViewStyle">
+        <item name="android:layout_width">@dimen/add_tab_txt_style_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/add_tab_txt_style_size</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="orderMeasureLayoutStyle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginLeft">@dimen/order_measure_layout_margin_right_left</item>
+        <item name="android:layout_marginRight">@dimen/order_measure_layout_margin_right_left</item>
+        <item name="android:layout_marginTop">@dimen/order_measure_layout_margin_top</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+</resources>
