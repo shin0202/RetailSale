@@ -30,7 +30,7 @@
     <string name="add_tab_phone_number_company_hint">請輸入公司電話</string>
     <string name="add_tab_cellphone_number">手機電話</string>
     <string name="add_tab_cellphone_number_hint">請輸入手機電話</string>
-    <string name="add_tab_select_msg">訊息來源</string>
+    <string name="add_tab_select_info">訊息來源</string>
     <string name="add_tab_select_job">職業</string>
     <string name="add_tab_leave_info">客戶不留基本資料</string>
     <string name="add_tab_email">電子郵件</string>
@@ -49,7 +49,7 @@
     <string name="add_tab_customer_birthday_hint">請輸入客戶生日</string>
     <string name="add_tab_customer_introducer">介紹人</string>
     <string name="add_tab_customer_introducer_hint">請輸入介紹人</string>
-    <string name="add_tab_customer_come_time">來店時間</string>
+    <string name="add_tab_customer_visit_time">來店時間</string>
     <string name="add_tab_customer_come_id">來店案號</string>
 
     <!-- Order measure -->

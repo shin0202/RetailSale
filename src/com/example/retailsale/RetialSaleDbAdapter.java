@@ -40,14 +40,14 @@ public class RetialSaleDbAdapter
 	public static final String KEY_ADD_JOB = "job";
 	public static final String KEY_ADD_INTRODUCER = "introducer";
 	public static final String KEY_ADD_AGE = "age";
-	public static final String KEY_ADD_COME_DATE_TIME = "come_date_time";
+	public static final String KEY_ADD_VISIT_DATE_TIME = "visit_date_time";
 	public static final String KEY_ADD_CREATE_DATE = "create_date";
 	/************************************************************************** for add customer */
 	/************************************************************************** for order measure */
 	public static final String KEY_ADD_SEND_MSG = "send_msg";
 	public static final String KEY_ADD_CASE_NAME = "case_name";
-	public static final String KEY_ADD_CANT_DESCRIPTION = "cant_description";
-	public static final String KEY_ADD_SALE_PROGRESS = "sale_progress";
+	public static final String KEY_ADD_STATUS_COMMENT = "status_comment";
+	public static final String KEY_ADD_SALE_STATUS = "sale_status";
 	public static final String KEY_ADD_CUSTOMER_ADDRESS = "customer_address";
 	public static final String KEY_ADD_CONTACT_ADDRESS = "contact_address";
 	public static final String KEY_ADD_COMMENT = "comment";
@@ -75,17 +75,17 @@ public class RetialSaleDbAdapter
 	public static final int OPTION_RESERVATION_BUDGET_IDNEX = 9;
 	public static final int OPTION_RESERVATION_SPACE_IDNEX = 10;
 	/************************************************************************** for data option */
-	public static final int NOTNEW = 0;
-	public static final int NEW = 1;
+	public static final int NOTUPLOAD = 0;
+	public static final int UPLOAD = 1;
 	private static final String ADD_CUSTOMER_CREATE = CREATE_TABLE_STRING + ADD_CUSTOMER_TABLE
 			+ "(" + KEY_ADD_CUSTOMER_ID + " INTEGER PRIMARY KEY," + KEY_ADD_CUSTOMER_NAME
 			+ " TEXT," + KEY_ADD_PHONE_NUMBER + " TEXT," + KEY_ADD_CELL_PHONE_NUMBER + " TEXT,"
-			+ KEY_ADD_COMPANY_PHONE + " TEXT," + KEY_ADD_EMAIL + " TEXT," + KEY_ADD_SEX + " TEXT,"
-			+ KEY_ADD_BIRTHDAY + " TEXT," + KEY_ADD_MSG_FROM + " TEXT," + KEY_ADD_TITLE
+			+ KEY_ADD_COMPANY_PHONE + " TEXT," + KEY_ADD_EMAIL + " TEXT," + KEY_ADD_SEX + " INTEGER,"
+			+ KEY_ADD_BIRTHDAY + " TEXT," + KEY_ADD_MSG_FROM + " INTEGER," + KEY_ADD_TITLE
 			+ " INTEGER," + KEY_ADD_JOB + " INTEGER," + KEY_ADD_INTRODUCER + " TEXT," + KEY_ADD_AGE
-			+ " INTEGER," + KEY_ADD_COME_DATE_TIME + " TEXT," + KEY_ADD_CREATE_DATE + " TEXT,"
+			+ " INTEGER," + KEY_ADD_VISIT_DATE_TIME + " TEXT," + KEY_ADD_CREATE_DATE + " TEXT,"
 			+ KEY_ADD_SEND_MSG + " INTEGER," + KEY_ADD_CASE_NAME + " TEXT,"
-			+ KEY_ADD_CANT_DESCRIPTION + " TEXT," + KEY_ADD_SALE_PROGRESS + " INTEGER,"
+			+ KEY_ADD_STATUS_COMMENT + " TEXT," + KEY_ADD_SALE_STATUS + " INTEGER,"
 			+ KEY_ADD_CUSTOMER_ADDRESS + " TEXT," + KEY_ADD_CONTACT_ADDRESS + " TEXT,"
 			+ KEY_ADD_COMMENT + " TEXT," + KEY_ADD_REQUEST + " INTEGER," + KEY_ADD_COST
 			+ " INTEGER," + KEY_ADD_WORK_DATE_TIME + " TEXT," + KEY_ADD_IS_UPLOAD +  " INTEGER" + ");";
@@ -233,8 +233,8 @@ public class RetialSaleDbAdapter
 				KEY_ADD_CUSTOMER_NAME, KEY_ADD_PHONE_NUMBER, KEY_ADD_CELL_PHONE_NUMBER,
 				KEY_ADD_COMPANY_PHONE, KEY_ADD_EMAIL, KEY_ADD_SEX, KEY_ADD_BIRTHDAY,
 				KEY_ADD_MSG_FROM, KEY_ADD_TITLE, KEY_ADD_JOB, KEY_ADD_INTRODUCER, KEY_ADD_AGE,
-				KEY_ADD_COME_DATE_TIME, KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG, KEY_ADD_CASE_NAME,
-				KEY_ADD_CANT_DESCRIPTION, KEY_ADD_SALE_PROGRESS, KEY_ADD_CUSTOMER_ADDRESS,
+				KEY_ADD_VISIT_DATE_TIME, KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG, KEY_ADD_CASE_NAME,
+				KEY_ADD_STATUS_COMMENT, KEY_ADD_SALE_STATUS, KEY_ADD_CUSTOMER_ADDRESS,
 				KEY_ADD_CONTACT_ADDRESS, KEY_ADD_COMMENT, KEY_ADD_REQUEST, KEY_ADD_COST,
 				KEY_ADD_WORK_DATE_TIME, KEY_ADD_IS_UPLOAD }, null, null, null, null, KEY_ADD_CREATE_DATE + ORDER_DESC);
 	}
@@ -249,11 +249,11 @@ public class RetialSaleDbAdapter
 
 	/** Insert customer to customer table */
 	public long create(String customerName, String phoneNumber, String cellphoneNumer,
-			String companyPhone, String email, String sex, String birthday, String msgFrom,
-			String title, String job, String introducer, String age, String comeDateTime,
-			String createDate, int sendMsg, String caseName, String cantDescription,
-			String saleProgress, String customerAddress, String contactAddress, String comment,
-			String request, String cost, String workDateTime, int isUpload)
+			String companyPhone, String email, int sex, String birthday, int msgFrom,
+			int title, int job, String introducer, int age, String visitDateTime,
+			String createDate, int sendMsg, String caseName, String statusComment,
+			int saleStatus, String customerAddress, String contactAddress, String comment,
+			int request, int cost, String workDateTime, int isUpload)
 	{
 		ContentValues args = new ContentValues();
 		args.put(KEY_ADD_CUSTOMER_NAME, customerName);
@@ -268,12 +268,12 @@ public class RetialSaleDbAdapter
 		args.put(KEY_ADD_JOB, job);
 		args.put(KEY_ADD_INTRODUCER, introducer);
 		args.put(KEY_ADD_AGE, age);
-		args.put(KEY_ADD_COME_DATE_TIME, comeDateTime);
+		args.put(KEY_ADD_VISIT_DATE_TIME, visitDateTime);
 		args.put(KEY_ADD_CREATE_DATE, createDate);
 		args.put(KEY_ADD_SEND_MSG, sendMsg);
 		args.put(KEY_ADD_CASE_NAME, caseName);
-		args.put(KEY_ADD_CANT_DESCRIPTION, cantDescription);
-		args.put(KEY_ADD_SALE_PROGRESS, saleProgress);
+		args.put(KEY_ADD_STATUS_COMMENT, statusComment);
+		args.put(KEY_ADD_SALE_STATUS, saleStatus);
 		args.put(KEY_ADD_CUSTOMER_ADDRESS, customerAddress);
 		args.put(KEY_ADD_CONTACT_ADDRESS, contactAddress);
 		args.put(KEY_ADD_COMMENT, comment);
@@ -337,9 +337,9 @@ public class RetialSaleDbAdapter
 					KEY_ADD_CUSTOMER_ID, KEY_ADD_CUSTOMER_NAME, KEY_ADD_PHONE_NUMBER,
 					KEY_ADD_CELL_PHONE_NUMBER, KEY_ADD_COMPANY_PHONE, KEY_ADD_EMAIL, KEY_ADD_SEX,
 					KEY_ADD_BIRTHDAY, KEY_ADD_MSG_FROM, KEY_ADD_TITLE, KEY_ADD_JOB,
-					KEY_ADD_INTRODUCER, KEY_ADD_AGE, KEY_ADD_COME_DATE_TIME, KEY_ADD_CREATE_DATE,
-					KEY_ADD_SEND_MSG, KEY_ADD_CASE_NAME, KEY_ADD_CANT_DESCRIPTION,
-					KEY_ADD_SALE_PROGRESS, KEY_ADD_CUSTOMER_ADDRESS, KEY_ADD_CONTACT_ADDRESS,
+					KEY_ADD_INTRODUCER, KEY_ADD_AGE, KEY_ADD_VISIT_DATE_TIME, KEY_ADD_CREATE_DATE,
+					KEY_ADD_SEND_MSG, KEY_ADD_CASE_NAME, KEY_ADD_STATUS_COMMENT,
+					KEY_ADD_SALE_STATUS, KEY_ADD_CUSTOMER_ADDRESS, KEY_ADD_CONTACT_ADDRESS,
 					KEY_ADD_COMMENT, KEY_ADD_REQUEST, KEY_ADD_COST, KEY_ADD_WORK_DATE_TIME, KEY_ADD_IS_UPLOAD },
 					KEY_ADD_CUSTOMER_ID + "=" + rowId, null, null, null, null, null);
 			if (cursor != null) { return cursor; }
@@ -371,11 +371,11 @@ public class RetialSaleDbAdapter
 
 	/** Update the customer table */
 	public boolean updateCustomer(String rowID, String customerName, String phoneNumber,
-			String cellphoneNumer, String companyPhone, String email, String sex, String birthday,
-			String msgFrom, String title, String job, String introducer, String age,
-			String comeDateTime, String createDate, int sendMsg, String caseName,
-			String cantDescription, String saleProgress, String customerAddress,
-			String contactAddress, String comment, String request, String cost, String workDateTime, int isUpload)
+			String cellphoneNumer, String companyPhone, String email, int sex, String birthday,
+			int msgFrom, int title, int job, String introducer, int age,
+			String visitDateTime, String createDate, int sendMsg, String caseName,
+			String statusComment, int saleStatus, String customerAddress,
+			String contactAddress, String comment, int request, int cost, String workDateTime, int isUpload)
 	{
 		if (db.isOpen())
 		{
@@ -392,12 +392,12 @@ public class RetialSaleDbAdapter
 			args.put(KEY_ADD_JOB, job);
 			args.put(KEY_ADD_INTRODUCER, introducer);
 			args.put(KEY_ADD_AGE, age);
-			args.put(KEY_ADD_COME_DATE_TIME, comeDateTime);
+			args.put(KEY_ADD_VISIT_DATE_TIME, visitDateTime);
 			args.put(KEY_ADD_CREATE_DATE, createDate);
 			args.put(KEY_ADD_SEND_MSG, sendMsg);
 			args.put(KEY_ADD_CASE_NAME, caseName);
-			args.put(KEY_ADD_CANT_DESCRIPTION, cantDescription);
-			args.put(KEY_ADD_SALE_PROGRESS, saleProgress);
+			args.put(KEY_ADD_STATUS_COMMENT, statusComment);
+			args.put(KEY_ADD_SALE_STATUS, saleStatus);
 			args.put(KEY_ADD_CUSTOMER_ADDRESS, customerAddress);
 			args.put(KEY_ADD_CONTACT_ADDRESS, contactAddress);
 			args.put(KEY_ADD_COMMENT, comment);

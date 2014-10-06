@@ -38,8 +38,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	private static final String TAG = "AddFragment";
 	private static final int REQUEST_ORDER_MEASURE = 999;
 	public static final String SEND_CUSTOMER_INFO = "send_customer_info";
-    private OptionAdapter msgAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter;
-	private List<DataOptionType> msgList, jobList, ageList, sexList, titleList;
+    private OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter;
+	private List<DataOptionType> infoList, jobList, ageList, sexList, titleList;
 	private boolean isChecked = false;
 	private CustomerInfo customerInfo;
 	private RetialSaleDbAdapter retialSaleDbAdapter;
@@ -47,13 +47,13 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	
 	// views
 	private MainActivity mainActivty;
-	private Spinner msgSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner;
+	private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner;
 	private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET,
 			emailET, customerBirthdayET, introducerET;
 	private CheckBox leaveInfoCB;
 	private TextView companyNameTV, customerIDTV, designerStoreTV, designerNameTV, createDateTV;
-	private DatePicker consumerComeDateDP;
-	private TimePicker consumerComeTimeTP;
+	private DatePicker consumerVisitDateDP;
+	private TimePicker consumerVisitTimeTP;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -67,13 +67,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	{
 		super.onResume();
 		Log.d(TAG, "onResume()");
-		if (retialSaleDbAdapter == null) {
-            retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
-		}
-		
-		if (!retialSaleDbAdapter.isDbOpen()) { // not open, then open it
-		    retialSaleDbAdapter.open();
-		}
+		openDatabase();
 	}
 
 	@Override
@@ -98,7 +92,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	{
 	    Log.d(TAG, "onCreateView()");
 		View view = inflater.inflate(R.layout.add_tab, container, false);
-		msgSpinner = (Spinner) view.findViewById(R.id.add_tab_msg_from);
+		infoSpinner = (Spinner) view.findViewById(R.id.add_tab_info_from);
 		jobSpinner = (Spinner) view.findViewById(R.id.add_tab_job);
 		ageSpinner = (Spinner) view.findViewById(R.id.add_tab_age_selection);
 		sexSpinner = (Spinner) view.findViewById(R.id.add_tab_sex_selection);
@@ -113,8 +107,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		introducerET = (EditText) view.findViewById(R.id.add_tab_edit_introducer);
 		emailET = (EditText) view.findViewById(R.id.add_tab_edit_email);
 		leaveInfoCB = (CheckBox) view.findViewById(R.id.add_tab_leave_info_checkbox);
-		consumerComeDateDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_come_datePicker);
-		consumerComeTimeTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_come_timePicker);
+		consumerVisitDateDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_visit_datePicker);
+		consumerVisitTimeTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_visit_timePicker);
 				
 		// save btn
 		saveBtn.setOnClickListener(this);
@@ -123,7 +117,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		// leave info
 		leaveInfoCB.setOnCheckedChangeListener(this);
 		// time picker to set 24h
-		consumerComeTimeTP.setIs24HourView(true);
+		consumerVisitTimeTP.setIs24HourView(true);
 		
 	    // set & check option data
         setOptionType();
@@ -194,20 +188,20 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		}
 	}
 
-	private void saveData()
+	private void setCustomerData()
 	{
 		String phoneNumber = phoneNumberET.getText().toString();
 		String cellPhoneNumber = cellPhoneNumberET.getText().toString();
 		String companyPhoneNumber = companyPhoneNumberET.getText().toString();
 		String email = emailET.getText().toString();
 		String customerBirthday = customerBirthdayET.getText().toString();
-		String dateString = Utility.covertDateToString(consumerComeDateDP.getYear(),
-				consumerComeDateDP.getMonth() + 1, consumerComeDateDP.getDayOfMonth());
-		String timeString = Utility.covertTimeToString(consumerComeTimeTP.getCurrentHour(),
-				consumerComeTimeTP.getCurrentMinute());
+		String dateString = Utility.covertDateToString(consumerVisitDateDP.getYear(),
+				consumerVisitDateDP.getMonth() + 1, consumerVisitDateDP.getDayOfMonth());
+		String timeString = Utility.covertTimeToString(consumerVisitTimeTP.getCurrentHour(),
+				consumerVisitTimeTP.getCurrentMinute());
 		String customerName = customerNameET.getText().toString();
 		String introducer = introducerET.getText().toString();
-		int msgSelectedPosition = msgSpinner.getSelectedItemPosition();
+		int msgSelectedPosition = infoSpinner.getSelectedItemPosition();
 		int jobSelectedPosition = jobSpinner.getSelectedItemPosition();
 		int ageSelectedPosition = ageSpinner.getSelectedItemPosition();
 		int sexSelectedPosition = sexSpinner.getSelectedItemPosition();
@@ -261,10 +255,30 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 							+ timeString);
 		}
 	}
+	
+	private void saveData() { // create date & sendMsg need to add
+	    setCustomerData();
+	    openDatabase();
+        if (customerInfo == null) {
+            retialSaleDbAdapter.create(customerInfo.getCustometName(), customerInfo.getCustomerHome(),
+                    customerInfo.getCustomerMobile(), customerInfo.getCustomerCompany(),
+                    customerInfo.getCustomerMail(), customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
+                    customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(), customerInfo.getCustomerJob(),
+                    customerInfo.getCustomerIntroducer(), customerInfo.getCustomerAge(),
+                    customerInfo.getCustomerVisitDate(), customerInfo.getCustomerVisitDate(), 0,
+                    customerInfo.getReservationWorkAlias(), customerInfo.getReservationStatusComment(),
+                    customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
+                    customerInfo.getReservationContact(), customerInfo.getReservationComment(),
+                    customerInfo.getReservationSpace(), customerInfo.getReservationBudget(),
+                    customerInfo.getReservationDate(), RetialSaleDbAdapter.NOTUPLOAD);
+        } else {
+            Log.d(TAG, "customerInfo is null, cannot access data to db.");
+        }
+	}
 
 	private void startOrderMeasureActivity()
 	{
-		saveData();
+	    setCustomerData();
 		if (customerInfo != null)
 		{
 			Intent orderintent = new Intent(this.getActivity(), OrderMeasure.class);
@@ -278,7 +292,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	private void enableField(boolean enabled)
 	{
 		// spinner
-		msgSpinner.setEnabled(enabled);
+		infoSpinner.setEnabled(enabled);
 		jobSpinner.setEnabled(enabled);
 		ageSpinner.setEnabled(enabled);
 		sexSpinner.setEnabled(enabled);
@@ -292,14 +306,24 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		customerBirthdayET.setEnabled(enabled);
 		introducerET.setEnabled(enabled);
 		// datepicker
-		consumerComeDateDP.setEnabled(enabled);
+		consumerVisitDateDP.setEnabled(enabled);
 		// timepicker
-		consumerComeTimeTP.setEnabled(enabled);
+		consumerVisitTimeTP.setEnabled(enabled);
 	}
 
 	private void showToast(String showString)
 	{
 		Toast.makeText(this.getActivity(), showString, Toast.LENGTH_SHORT).show();
+	}
+	
+	private void openDatabase() {
+        if (retialSaleDbAdapter == null) {
+            retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
+        }
+
+        if (!retialSaleDbAdapter.isDbOpen()) { // not open, then open it
+            retialSaleDbAdapter.open();
+        }
 	}
 	
 	private void setOptionType() {
@@ -388,7 +412,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 
 	private void getOptionType() {
 	    
-	    msgList = new ArrayList<DataOptionType>();
+	    infoList = new ArrayList<DataOptionType>();
 	    jobList = new ArrayList<DataOptionType>();
 	    ageList = new ArrayList<DataOptionType>(); 
 	    sexList = new ArrayList<DataOptionType>();
@@ -425,7 +449,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                         titleList.add(new DataOptionType(optionSerial, optionName));
                         break;
                     case RetialSaleDbAdapter.OPTION_CUSTOMER_INFO_IDNEX:
-                        msgList.add(new DataOptionType(optionSerial, optionName));
+                        infoList.add(new DataOptionType(optionSerial, optionName));
                         break;
                     case RetialSaleDbAdapter.OPTION_CUSTOMER_JOB_IDNEX:
                         jobList.add(new DataOptionType(optionSerial, optionName));
@@ -443,8 +467,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         optionTypeCursor.close();
         
       // msg spinner
-      msgAdapter = new OptionAdapter(this.getActivity(), msgList);
-      msgSpinner.setAdapter(msgAdapter);
+      infoAdapter = new OptionAdapter(this.getActivity(), infoList);
+      infoSpinner.setAdapter(infoAdapter);
       
       // job spinner
       jobAdapter = new OptionAdapter(this.getActivity(), jobList);

@@ -30,7 +30,7 @@
     <string name="add_tab_phone_number_company_hint">Input cpmpany phone number</string>
     <string name="add_tab_cellphone_number">Cellphone Number</string>
     <string name="add_tab_cellphone_number_hint">Input cellphone number</string>
-    <string name="add_tab_select_msg">Select Message</string>
+    <string name="add_tab_select_info">Select Info</string>
     <string name="add_tab_select_job">Select Job</string>
     <string name="add_tab_leave_info">To leave info</string>
     <string name="add_tab_email">Email</string>
@@ -49,7 +49,7 @@
     <string name="add_tab_customer_birthday_hint">Input customer birthday</string>
     <string name="add_tab_customer_introducer">Introducer</string>
     <string name="add_tab_customer_introducer_hint">Input introducer</string>
-    <string name="add_tab_customer_come_time">Come Time</string>
+    <string name="add_tab_customer_visit_time">Come Time</string>
     <string name="add_tab_customer_come_id">Come ID</string>
 
     <!-- Order measure -->

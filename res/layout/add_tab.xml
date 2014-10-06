@@ -153,20 +153,20 @@
                         android:hint="@string/add_tab_phone_number_company_hint" />
                 </LinearLayout>
 
-                <!-- Msg from -->
+                <!-- info -->
 
                 <LinearLayout
-                    android:id="@+id/add_tab_select_msg_layout"
+                    android:id="@+id/add_tab_select_info_layout"
                     style="@style/inputLayoutStyle"
                     android:orientation="horizontal" >
 
                     <TextView
-                        android:id="@+id/add_tab_select_msg_field"
+                        android:id="@+id/add_tab_select_info_field"
                         style="@style/addTabTextViewStyle"
-                        android:text="@string/add_tab_select_msg" />
+                        android:text="@string/add_tab_select_info" />
 
                     <Spinner
-                        android:id="@+id/add_tab_msg_from"
+                        android:id="@+id/add_tab_info_from"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -361,29 +361,29 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/add_tab_consumer_come_date_time_layout"
+                    android:id="@+id/add_tab_consumer_visit_date_time_layout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/input_layout_margin_left"
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/add_tab_consumer_come_date_time_field"
+                        android:id="@+id/add_tab_consumer_visit_date_time_field"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:textColor="@color/black"
                         android:textSize="@dimen/add_tab_txt_style_size"
-                        android:text="@string/add_tab_customer_come_time" />
+                        android:text="@string/add_tab_customer_visit_time" />
 
                     <DatePicker
-                        android:id="@+id/add_tab_consumer_come_datePicker"
+                        android:id="@+id/add_tab_consumer_visit_datePicker"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:calendarViewShown="false" />
 
                     <TimePicker
-                        android:id="@+id/add_tab_consumer_come_timePicker"
+                        android:id="@+id/add_tab_consumer_visit_timePicker"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
