@@ -36,7 +36,7 @@
     <string name="add_tab_email">電子郵件</string>
     <string name="add_tab_email_hint">請輸入電子郵件</string>
     <string name="add_tab_age">年齡</string>
-    <string name="add_tab_male">性別</string>
+    <string name="add_tab_sex">性別</string>
 
     <!-- Add tab new -->
     <string name="add_tab_company_name">公司名稱</string>
@@ -69,7 +69,7 @@
     <string name="order_measure_case_name_hint">請輸入XXX建案XX棟XX樓之X</string>
     <string name="order_measure_cant_description">未成交說明</string>
     <string name="order_measure_cant_description_hint">輸入說明</string>
-    <string name="order_measure_cant_sale_progress">銷售進度</string>
+    <string name="order_measure_cant_sale_status">銷售進度</string>
     <string name="order_measure_consumer_contact_address_msg">聯絡地址</string>
     <string name="order_measure_consumer_contact_address_hint">請輸入XX市XX區XX路XX巷XX號</string>
     <string name="order_measure_consumer_as_work_address">同施工地址</string>

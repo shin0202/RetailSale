@@ -10,6 +10,11 @@ public class DataOptionType
 	@SerializedName("typeName")
 	private String typeName;
 	
+	public DataOptionType(int typeSerial, String typeName) {
+	    this.typeSerial = typeSerial;
+	    this.typeName = typeName;
+	}
+	
 	public int getTypeSerial()
 	{
 

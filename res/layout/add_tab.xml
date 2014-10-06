@@ -342,20 +342,20 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
-                <!-- male -->
+                <!-- sex -->
 
                 <LinearLayout
-                    android:id="@+id/add_tab_select_male_layout"
+                    android:id="@+id/add_tab_select_sex_layout"
                     style="@style/inputLayoutStyleInclueMargin"
                     android:orientation="horizontal" >
 
                     <TextView
-                        android:id="@+id/add_tab_select_male_field"
+                        android:id="@+id/add_tab_select_sex_field"
                         style="@style/addTabTextViewStyle"
-                        android:text="@string/add_tab_male" />
+                        android:text="@string/add_tab_sex" />
 
                     <Spinner
-                        android:id="@+id/add_tab_male_selection"
+                        android:id="@+id/add_tab_sex_selection"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>

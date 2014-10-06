@@ -33,7 +33,7 @@ public class RetialSaleDbAdapter
 	public static final String KEY_ADD_CELL_PHONE_NUMBER = "cellphone_number";
 	public static final String KEY_ADD_COMPANY_PHONE = "company_phone";
 	public static final String KEY_ADD_EMAIL = "email";
-	public static final String KEY_ADD_MALE = "male";
+	public static final String KEY_ADD_SEX = "sex";
 	public static final String KEY_ADD_BIRTHDAY = "birthday";
 	public static final String KEY_ADD_MSG_FROM = "msg_from";
 	public static final String KEY_ADD_TITLE = "title";
@@ -62,13 +62,25 @@ public class RetialSaleDbAdapter
 	public static final String KEY_DATA_OPTION_ALIAS = "option_alias";
 	public static final String KEY_DATA_OPTION_SERIAL = "option_serial";
 	public static final String KEY_DATA_OPTION_NAME = "option_name";
+	
+	public static final int OPTION_USER_TYPE_IDNEX = 0;
+	public static final int OPTION_CUSTOMER_SEX_IDNEX = 1;
+	public static final int OPTION_CUSTOMER_TITLE_IDNEX = 2;
+	public static final int OPTION_CUSTOMER_INFO_IDNEX = 3;
+	public static final int OPTION_CUSTOMER_JOB_IDNEX = 4;
+	public static final int OPTION_CUSTOMER_AGE_IDNEX = 5;
+	public static final int OPTION_SERVICE_TYPE_IDNEX = 6;
+	public static final int OPTION_USER_GROUP_IDNEX = 7;
+	public static final int OPTION_RESERVATION_STATUS_IDNEX = 8;
+	public static final int OPTION_RESERVATION_BUDGET_IDNEX = 9;
+	public static final int OPTION_RESERVATION_SPACE_IDNEX = 10;
 	/************************************************************************** for data option */
 	public static final int NOTNEW = 0;
 	public static final int NEW = 1;
 	private static final String ADD_CUSTOMER_CREATE = CREATE_TABLE_STRING + ADD_CUSTOMER_TABLE
 			+ "(" + KEY_ADD_CUSTOMER_ID + " INTEGER PRIMARY KEY," + KEY_ADD_CUSTOMER_NAME
 			+ " TEXT," + KEY_ADD_PHONE_NUMBER + " TEXT," + KEY_ADD_CELL_PHONE_NUMBER + " TEXT,"
-			+ KEY_ADD_COMPANY_PHONE + " TEXT," + KEY_ADD_EMAIL + " TEXT," + KEY_ADD_MALE + " TEXT,"
+			+ KEY_ADD_COMPANY_PHONE + " TEXT," + KEY_ADD_EMAIL + " TEXT," + KEY_ADD_SEX + " TEXT,"
 			+ KEY_ADD_BIRTHDAY + " TEXT," + KEY_ADD_MSG_FROM + " TEXT," + KEY_ADD_TITLE
 			+ " INTEGER," + KEY_ADD_JOB + " INTEGER," + KEY_ADD_INTRODUCER + " TEXT," + KEY_ADD_AGE
 			+ " INTEGER," + KEY_ADD_COME_DATE_TIME + " TEXT," + KEY_ADD_CREATE_DATE + " TEXT,"
@@ -93,7 +105,7 @@ public class RetialSaleDbAdapter
 		{
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 			this.context = context;
-			createDatabase();
+//			createDatabase();
 		}
 
 		/**
@@ -209,13 +221,17 @@ public class RetialSaleDbAdapter
 	{
 		if (dbHelper != null) dbHelper.close();
 	}
+	
+	public boolean isDbOpen() {
+	    return db.isOpen();
+	}
 
 	/** Get all customer from customer table */
 	public Cursor getAllCustomer()
 	{
 		return db.query(ADD_CUSTOMER_TABLE, new String[] { KEY_ADD_CUSTOMER_ID,
 				KEY_ADD_CUSTOMER_NAME, KEY_ADD_PHONE_NUMBER, KEY_ADD_CELL_PHONE_NUMBER,
-				KEY_ADD_COMPANY_PHONE, KEY_ADD_EMAIL, KEY_ADD_MALE, KEY_ADD_BIRTHDAY,
+				KEY_ADD_COMPANY_PHONE, KEY_ADD_EMAIL, KEY_ADD_SEX, KEY_ADD_BIRTHDAY,
 				KEY_ADD_MSG_FROM, KEY_ADD_TITLE, KEY_ADD_JOB, KEY_ADD_INTRODUCER, KEY_ADD_AGE,
 				KEY_ADD_COME_DATE_TIME, KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG, KEY_ADD_CASE_NAME,
 				KEY_ADD_CANT_DESCRIPTION, KEY_ADD_SALE_PROGRESS, KEY_ADD_CUSTOMER_ADDRESS,
@@ -233,7 +249,7 @@ public class RetialSaleDbAdapter
 
 	/** Insert customer to customer table */
 	public long create(String customerName, String phoneNumber, String cellphoneNumer,
-			String companyPhone, String email, String male, String birthday, String msgFrom,
+			String companyPhone, String email, String sex, String birthday, String msgFrom,
 			String title, String job, String introducer, String age, String comeDateTime,
 			String createDate, int sendMsg, String caseName, String cantDescription,
 			String saleProgress, String customerAddress, String contactAddress, String comment,
@@ -245,7 +261,7 @@ public class RetialSaleDbAdapter
 		args.put(KEY_ADD_CELL_PHONE_NUMBER, cellphoneNumer);
 		args.put(KEY_ADD_COMPANY_PHONE, companyPhone);
 		args.put(KEY_ADD_EMAIL, email);
-		args.put(KEY_ADD_MALE, male);
+		args.put(KEY_ADD_SEX, sex);
 		args.put(KEY_ADD_BIRTHDAY, birthday);
 		args.put(KEY_ADD_MSG_FROM, msgFrom);
 		args.put(KEY_ADD_TITLE, title);
@@ -319,7 +335,7 @@ public class RetialSaleDbAdapter
 		{
 			Cursor cursor = db.query(true, ADD_CUSTOMER_TABLE, new String[] {
 					KEY_ADD_CUSTOMER_ID, KEY_ADD_CUSTOMER_NAME, KEY_ADD_PHONE_NUMBER,
-					KEY_ADD_CELL_PHONE_NUMBER, KEY_ADD_COMPANY_PHONE, KEY_ADD_EMAIL, KEY_ADD_MALE,
+					KEY_ADD_CELL_PHONE_NUMBER, KEY_ADD_COMPANY_PHONE, KEY_ADD_EMAIL, KEY_ADD_SEX,
 					KEY_ADD_BIRTHDAY, KEY_ADD_MSG_FROM, KEY_ADD_TITLE, KEY_ADD_JOB,
 					KEY_ADD_INTRODUCER, KEY_ADD_AGE, KEY_ADD_COME_DATE_TIME, KEY_ADD_CREATE_DATE,
 					KEY_ADD_SEND_MSG, KEY_ADD_CASE_NAME, KEY_ADD_CANT_DESCRIPTION,
@@ -355,7 +371,7 @@ public class RetialSaleDbAdapter
 
 	/** Update the customer table */
 	public boolean updateCustomer(String rowID, String customerName, String phoneNumber,
-			String cellphoneNumer, String companyPhone, String email, String male, String birthday,
+			String cellphoneNumer, String companyPhone, String email, String sex, String birthday,
 			String msgFrom, String title, String job, String introducer, String age,
 			String comeDateTime, String createDate, int sendMsg, String caseName,
 			String cantDescription, String saleProgress, String customerAddress,
@@ -369,7 +385,7 @@ public class RetialSaleDbAdapter
 			args.put(KEY_ADD_CELL_PHONE_NUMBER, cellphoneNumer);
 			args.put(KEY_ADD_COMPANY_PHONE, companyPhone);
 			args.put(KEY_ADD_EMAIL, email);
-			args.put(KEY_ADD_MALE, male);
+			args.put(KEY_ADD_SEX, sex);
 			args.put(KEY_ADD_BIRTHDAY, birthday);
 			args.put(KEY_ADD_MSG_FROM, msgFrom);
 			args.put(KEY_ADD_TITLE, title);

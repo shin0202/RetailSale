@@ -1,8 +1,12 @@
 package com.example.retailsale;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,23 +25,26 @@ import android.widget.ToggleButton;
 
 import com.example.retailsale.fragment.AddFragment;
 import com.example.retailsale.manager.CustomerInfo;
+import com.example.retailsale.manager.DataOptionType;
+import com.example.retailsale.manager.OptionAdapter;
 import com.example.retailsale.util.Utility;
 
 public class OrderMeasure extends Activity implements OnClickListener, OnCheckedChangeListener
 {
 	private static final String TAG = "OrderMeasure";
-	private ArrayAdapter<String> requestArrayAdapter, costArrayAdapter, progressArrayAdapter;
-	private String[] requestList, costList, progressList;
+	private OptionAdapter requestAdapter, costAdapter, statusAdapter;
+	private List<DataOptionType> requestList, costList, statusList;
 	
 	private boolean isSendNoteMsgChecked = false, isAsAboveChecked = false;
 	private CustomerInfo customerInfo;
+	private RetialSaleDbAdapter retialSaleDbAdapter;
 	
 	// views
 	private ToggleButton sendNoteMsgTB;
 	private CheckBox asAboveCheckBox;
 	private DatePicker measureDate;
 	private TimePicker measureTime;
-	private Spinner requestSpinner, costSpinner, progressSpinner;
+	private Spinner requestSpinner, costSpinner, statusSpinner;
 	private TextView saleCreateDateTV, consumerNameTV, phoneNumberTV;
 	private EditText caseNameET, cantDescriptionET, consumerAddressET, contactAddressET, commentET;
 
@@ -49,6 +56,9 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 //		customerInfo = new CustomerInfo();
 		findViews();
 		getBundle();
+		
+        // get optionType
+        getOptionType();
 	}
 
 	@Override
@@ -61,6 +71,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 	protected void onPause()
 	{
 		super.onPause();
+		retialSaleDbAdapter.close();
 	}
 
 	@Override
@@ -107,30 +118,12 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		contactAddressET = (EditText) findViewById(R.id.order_measure_consumer_contact_address);
 		commentET = (EditText) findViewById(R.id.order_measure_consumer_comment);
 		
-		cancelBtn.setOnClickListener(this);
-		saveBtn.setOnClickListener(this);
-		
-		Resources res = getResources();
-		
-		requestList = res.getStringArray(R.array.style);
-		costList = res.getStringArray(R.array.budget);
-		progressList = res.getStringArray(R.array.saleProgress);
-		
+		statusSpinner = (Spinner) findViewById(R.id.order_measure_sale_status_request);
 		requestSpinner = (Spinner) findViewById(R.id.order_measure_consumer_request);
 		costSpinner = (Spinner) findViewById(R.id.order_measure_consumer_cost);
-		progressSpinner = (Spinner) findViewById(R.id.order_measure_sale_progress_request);
-		// request spinner
-		requestArrayAdapter = new ArrayAdapter<String>(OrderMeasure.this,
-				android.R.layout.simple_spinner_item, requestList);
-		requestSpinner.setAdapter(requestArrayAdapter);
-		// cost spinner
-		costArrayAdapter = new ArrayAdapter<String>(OrderMeasure.this, android.R.layout.simple_spinner_item,
-				costList);
-		costSpinner.setAdapter(costArrayAdapter);
-		// progress spinner
-		progressArrayAdapter = new ArrayAdapter<String>(OrderMeasure.this, android.R.layout.simple_spinner_item,
-				progressList);
-		progressSpinner.setAdapter(progressArrayAdapter);
+		
+		cancelBtn.setOnClickListener(this);
+		saveBtn.setOnClickListener(this);
 		
 		// time picker to set 24h
 		measureTime.setIs24HourView(true);
@@ -168,7 +161,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 	private void setInfo(boolean isDefault, String caseName, String workAddress,
 			String contactAddress, int reservationYear, int reservationMonth, int reservationDay,
 			int reservationHour, int reservationMinute, String cantDescription,
-			int progressPosition, String comment, int requestPosition, int costPosition)
+			int statusPosition, String comment, int requestPosition, int costPosition)
 	{
 		if (isDefault)
 		{}
@@ -181,7 +174,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 			measureTime.setCurrentHour(reservationHour);
 			measureTime.setCurrentMinute(reservationMinute);
 			cantDescriptionET.setText(cantDescription);
-			progressSpinner.setSelection(progressPosition);
+			statusSpinner.setSelection(statusPosition);
 			commentET.setText(comment);
 			requestSpinner.setSelection(requestPosition);
 			costSpinner.setSelection(costPosition);
@@ -225,8 +218,8 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		// can't sale description
 		customerInfo.setReservationStatusComment(cantDescriptionET.getText().toString());
 		
-		// progress
-		customerInfo.setReservationStatus(progressSpinner.getSelectedItemPosition());
+		// status
+		customerInfo.setReservationStatus(statusSpinner.getSelectedItemPosition());
 		
 		// comment
 		customerInfo.setReservationComment(commentET.getText().toString());
@@ -256,5 +249,68 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 			isAsAboveChecked = isChecked;
 			break;
 		}
+	}
+	
+	private void getOptionType() {
+	    requestList = new ArrayList<DataOptionType>();
+	    costList = new ArrayList<DataOptionType>();
+	    statusList = new ArrayList<DataOptionType>();
+	    
+	    retialSaleDbAdapter = new RetialSaleDbAdapter(OrderMeasure.this);
+	    retialSaleDbAdapter.open();
+	    
+	       // to get option type content
+        Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
+        int optionType, optionSerial;
+        String optionAlias, optionName;
+        
+        if (optionTypeCursor != null) {
+            int count = optionTypeCursor.getCount();
+            if (count > 0)
+            {
+                while (optionTypeCursor.moveToNext())
+                {
+                    optionType = optionTypeCursor.getInt(optionTypeCursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_TYPE));
+                    
+                    optionSerial = optionTypeCursor.getInt(optionTypeCursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_SERIAL));
+                    
+                    optionAlias = optionTypeCursor.getString(optionTypeCursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_ALIAS));
+                    
+                    optionName = optionTypeCursor.getString(optionTypeCursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_NAME));
+                    
+                    switch (optionType) {
+                    case RetialSaleDbAdapter.OPTION_RESERVATION_STATUS_IDNEX :
+                        statusList.add(new DataOptionType(optionSerial, optionName));
+                        break;
+                    case RetialSaleDbAdapter.OPTION_RESERVATION_BUDGET_IDNEX :
+                        costList.add(new DataOptionType(optionSerial, optionName));
+                        break;
+                    case RetialSaleDbAdapter.OPTION_RESERVATION_SPACE_IDNEX:
+                        requestList.add(new DataOptionType(optionSerial, optionName));
+                        break;
+                    }
+                }
+            }
+        } else {
+            Log.d(TAG, "option cursor is null ");
+        }
+        
+        optionTypeCursor.close();
+        
+        // status spinner
+        statusAdapter = new OptionAdapter(OrderMeasure.this, statusList);
+        statusSpinner.setAdapter(statusAdapter);
+        
+        // budget spinner
+        costAdapter = new OptionAdapter(OrderMeasure.this, costList);
+        costSpinner.setAdapter(costAdapter);
+        
+        // space spinner
+        requestAdapter = new OptionAdapter(OrderMeasure.this, requestList);
+        requestSpinner.setAdapter(requestAdapter);
 	}
 }

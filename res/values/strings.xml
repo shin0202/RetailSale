@@ -36,7 +36,7 @@
     <string name="add_tab_email">Email</string>
     <string name="add_tab_email_hint">Input Email</string>
     <string name="add_tab_age">Age</string>
-    <string name="add_tab_male">Male</string>
+    <string name="add_tab_sex">Sex</string>
 
     <!-- Add tab new -->
     <string name="add_tab_company_name">Company Name</string>
@@ -67,7 +67,7 @@
     <string name="order_measure_case_name_hint">Input case name</string>
     <string name="order_measure_cant_description">Description</string>
     <string name="order_measure_cant_description_hint">Input description</string>
-    <string name="order_measure_cant_sale_progress">Sale Progress</string>
+    <string name="order_measure_cant_sale_status">Sale Status</string>
     <string name="order_measure_consumer_contact_address_msg">Contact Address</string>
     <string name="order_measure_consumer_contact_address_hint">Input contact address</string>
     <string name="order_measure_consumer_as_work_address">As work address</string>
