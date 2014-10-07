@@ -1,7 +1,9 @@
 package com.example.retailsale.util;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -114,5 +116,15 @@ public class Utility
 		timeString.append(minute);
 		
 		return timeString.toString();
+	}
+	
+	public static String getCurrentDateTime() {
+	    String dateTime = "";
+	    
+	    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	    Date date = new Date();
+	    dateTime = dateFormat.format(date).toString();
+	    
+	    return dateTime;
 	}
 }

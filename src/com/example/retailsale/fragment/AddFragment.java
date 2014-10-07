@@ -258,21 +258,26 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		}
 	}
 	
-	private void saveData() { // create date & sendMsg need to add
+	private void saveData() {
 	    setCustomerData();
 	    openDatabase();
-        if (customerInfo == null) {
-            retialSaleDbAdapter.create(customerInfo.getCustometName(), customerInfo.getCustomerHome(),
+        if (customerInfo != null) {
+            int sendNoteValue = isSendMsg ? 1 : 0;
+            String createDateTime = Utility.getCurrentDateTime();
+            Log.d(TAG, "sendNoteValue is " + sendNoteValue + " createDateTime is " + createDateTime);
+            long id = retialSaleDbAdapter.create(customerInfo.getCustometName(), customerInfo.getCustomerHome(),
                     customerInfo.getCustomerMobile(), customerInfo.getCustomerCompany(),
                     customerInfo.getCustomerMail(), customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
                     customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(), customerInfo.getCustomerJob(),
                     customerInfo.getCustomerIntroducer(), customerInfo.getCustomerAge(),
-                    customerInfo.getCustomerVisitDate(), customerInfo.getCustomerVisitDate(), 0,
+                    customerInfo.getCustomerVisitDate(), createDateTime, sendNoteValue,
                     customerInfo.getReservationWorkAlias(), customerInfo.getReservationStatusComment(),
                     customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
                     customerInfo.getReservationContact(), customerInfo.getReservationComment(),
                     customerInfo.getReservationSpace(), customerInfo.getReservationBudget(),
                     customerInfo.getReservationDate(), RetialSaleDbAdapter.NOTUPLOAD);
+            
+            Log.d(TAG, "id is " + id);
         } else {
             Log.d(TAG, "customerInfo is null, cannot access data to db.");
         }
