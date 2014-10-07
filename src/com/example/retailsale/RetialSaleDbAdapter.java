@@ -213,7 +213,7 @@ public class RetialSaleDbAdapter
 		{
 			e.printStackTrace();
 		}
-		db = dbHelper.openDataBase();
+		db = dbHelper.getWritableDatabase();
 		return this;
 	}
 

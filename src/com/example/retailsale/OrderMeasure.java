@@ -5,13 +5,11 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -140,6 +138,9 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		if (intent != null)
 		{
 			customerInfo = intent.getParcelableExtra(AddFragment.SEND_CUSTOMER_INFO);
+			isSendNoteMsgChecked = intent.getBooleanExtra(AddFragment.SEND_NOTE_MSG, isSendNoteMsgChecked);
+			Log.d(TAG, "isSendNoteMsgChecked is " + isSendNoteMsgChecked);
+			sendNoteMsgTB.setChecked(isSendNoteMsgChecked);
 			Log.d(TAG, "customer visit date is " + customerInfo.getCustomerVisitDate());
 			String reservationDate = customerInfo.getReservationDate();
 			Log.d(TAG, "reservation date is " + reservationDate);
@@ -233,6 +234,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		// send result
 	    Intent resultIntent = new Intent();
 	    resultIntent.putExtra(AddFragment.SEND_CUSTOMER_INFO, customerInfo);
+	    resultIntent.putExtra(AddFragment.SEND_NOTE_MSG, isSendNoteMsgChecked);
 	    setResult(RESULT_OK, resultIntent);  
 	}
 
@@ -247,6 +249,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		case R.id.order_measure_as_above_checkbox:
 			Log.d(TAG, "To change as above checkbox, the isChecked" + isChecked);
 			isAsAboveChecked = isChecked;
+			handleContactAddress(isAsAboveChecked);
 			break;
 		}
 	}
@@ -312,5 +315,14 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         // space spinner
         requestAdapter = new OptionAdapter(OrderMeasure.this, requestList);
         requestSpinner.setAdapter(requestAdapter);
+	}
+	
+	private void handleContactAddress(boolean isEnable) {
+		if (isEnable) {
+			contactAddressET.setText(consumerAddressET.getText().toString());
+			contactAddressET.setEnabled(false);
+		} else {
+			contactAddressET.setEnabled(true);
+		}
 	}
 }

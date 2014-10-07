@@ -38,12 +38,13 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	private static final String TAG = "AddFragment";
 	private static final int REQUEST_ORDER_MEASURE = 999;
 	public static final String SEND_CUSTOMER_INFO = "send_customer_info";
+	public static final String SEND_NOTE_MSG = "send_note_msg";
     private OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter;
 	private List<DataOptionType> infoList, jobList, ageList, sexList, titleList;
 	private boolean isChecked = false;
 	private CustomerInfo customerInfo;
 	private RetialSaleDbAdapter retialSaleDbAdapter;
-	private boolean isDbOpen = false;
+	private boolean isSendMsg = false;
 	
 	// views
 	private MainActivity mainActivty;
@@ -177,12 +178,13 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 				if (data != null)
 				{
 					customerInfo = data.getParcelableExtra(SEND_CUSTOMER_INFO);
+					isSendMsg = data.getBooleanExtra(AddFragment.SEND_NOTE_MSG, isSendMsg);
 					Log.d(TAG, "date is " + customerInfo.getReservationDate());
 					Log.d(TAG, "time is " + customerInfo.getReservationTime());
 					Log.d(TAG, "hour is " + customerInfo.getReservationHour());
 					Log.d(TAG, "month is " + customerInfo.getReservationMonth());
 					Log.d(TAG, "progress is " + customerInfo.getReservationStatus());
-					
+					Log.d(TAG, "isSendMsg is " + isSendMsg);
 				}
 			}
 		}
@@ -283,6 +285,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		{
 			Intent orderintent = new Intent(this.getActivity(), OrderMeasure.class);
 			orderintent.putExtra(SEND_CUSTOMER_INFO, customerInfo);
+			orderintent.putExtra(AddFragment.SEND_NOTE_MSG, isSendMsg);
 			startActivityForResult(orderintent, REQUEST_ORDER_MEASURE);
 			this.getActivity().overridePendingTransition(R.anim.activity_conversion_in_from_right,
 					R.anim.activity_conversion_out_to_left);
