@@ -2,7 +2,7 @@ package com.example.retailsale.manager;
 
 import com.google.gson.annotations.SerializedName;
 
-public class FileInfo
+public class WebFileInfo
 {
 	@SerializedName("optType")
 	private String fileName;

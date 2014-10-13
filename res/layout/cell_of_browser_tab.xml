@@ -6,8 +6,20 @@
 
     <ImageView
         android:id="@+id/browser_photo"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
         android:src="@drawable/img" />
+
+    <TextView
+        android:id="@+id/photo_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:text="testststtstst"
+        android:textColor="@color/black"
+        android:textSize="@dimen/add_tab_txt_style_size" />
 
 </LinearLayout>

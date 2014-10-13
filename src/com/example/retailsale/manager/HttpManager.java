@@ -31,6 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.retailsale.util.Utility;
 import com.example.retailsale.volly.toolbox.GsonListRequest;
 import com.example.retailsale.volly.toolbox.GsonRequest;
 import com.example.retailsale.volly.toolbox.StringXORer;
@@ -233,8 +234,8 @@ public class HttpManager
     public void getFileInfo(Context context, GetFileInfoListener getFileInfoListener) {
         String dataOptionTypeUri = String.format("http://www.cpami.gov.tw/opendata/fd2_json.php");
 
-        GsonRequest<FileInfo> getFileInfoGsonRequset = new GsonRequest<FileInfo>(Method.GET, dataOptionTypeUri,
-                FileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener), getFileInfoReqErrorListener());
+        GsonRequest<WebFileInfo> getFileInfoGsonRequset = new GsonRequest<WebFileInfo>(Method.GET, dataOptionTypeUri,
+                WebFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener), getFileInfoReqErrorListener());
         getFileInfoGsonRequset.setTag("getFileInfo");
 
         VolleySingleton.getInstance(context).getRequestQueue().add(getFileInfoGsonRequset);
@@ -363,10 +364,10 @@ public class HttpManager
     ////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////listener of file info
-    private Response.Listener<FileInfo> getFileInfoReqSuccessListener(final GetFileInfoListener getFileInfoListener) {
-        return new Response.Listener<FileInfo>() {
+    private Response.Listener<WebFileInfo> getFileInfoReqSuccessListener(final GetFileInfoListener getFileInfoListener) {
+        return new Response.Listener<WebFileInfo>() {
             @Override
-            public void onResponse(FileInfo response) {
+            public void onResponse(WebFileInfo response) {
                 Log.e(TAG, "getDataOptionType success response: " + response.toString());
                 handleFileInfo(response);
                 if (getFileInfoListener != null)
@@ -409,37 +410,33 @@ public class HttpManager
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    private void handleFileInfo(FileInfo fileInfo) {        
+    private void handleFileInfo(WebFileInfo fileInfo) {        
         if (fileInfo != null) {
             // 1. get file path
-            StringBuilder path = new StringBuilder().append(Environment.getExternalStorageDirectory().getPath())
-                    .append(fileInfo.getFilePath());
+            StringBuilder path = new StringBuilder().append(Utility.FILE_PATH).append(fileInfo.getFilePath());
             
             // 2. create the folder from file path
-            createFolder(Environment.getExternalStorageDirectory().getPath() + fileInfo.getFilePath());
+            createFolder(path.toString());
             
             // 3. generate the MD5 string from file name
             String md5FileName = generateMD5String(fileInfo.getFileName());
             
-            // 4. To mix md5 file name and file data, then write data to file path
+            // 4. To mix md5 file name and file data to "newData", then write data to file path(newFileName)
             StringBuilder newFileName = new StringBuilder().append(path.toString()).append(fileInfo.getFileName())
                     .append(".txt");
             StringBuilder newData = new StringBuilder().append(md5FileName).append(fileInfo.getFileData());
             
             writeFile(newFileName.toString(), newData.toString());
-            
-            final File folder = new File(path.toString());
-            listFilesForFolder(folder);
-            
-            // 5. to read file and remove md5
-            String readContent = readFile(newFileName.toString());
-            Log.d(TAG, "readContent is " + readContent);
-            String realData = readContent.replace(md5FileName, "");
-            Log.d(TAG, "realData is " + realData);
-            
-            // 6. decode Base64 to byte[]
-            String encodeString = encodeBase64(realData);
-            decodeBase64(encodeString);
+       
+//            // 5. to read file and remove md5
+//            String readContent = readFile(newFileName.toString());
+//            Log.d(TAG, "readContent is " + readContent);
+//            String realData = readContent.replace(md5FileName, "");
+//            Log.d(TAG, "realData is " + realData);
+//            
+//            // 6. decode Base64 to byte[]
+//            String encodeString = encodeBase64(realData);
+//            decodeBase64(encodeString);
         }
     }
     
@@ -479,17 +476,6 @@ public class HttpManager
             e.printStackTrace();
         }
         return readContent.toString();
-    }
-    
-    public void listFilesForFolder(final File folder) {
-        for (final File fileEntry : folder.listFiles()) {
-            Log.d(TAG, "the name is " + fileEntry.getName());
-//            if (fileEntry.isDirectory()) {
-//                listFilesForFolder(fileEntry);
-//            } else {
-//                System.out.println(fileEntry.getName());
-//            }
-        }
     }
     
     private void createFolder(String path) {

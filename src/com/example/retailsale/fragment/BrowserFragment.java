@@ -1,5 +1,6 @@
 package com.example.retailsale.fragment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,181 +21,203 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.retailsale.MainActivity;
 import com.example.retailsale.PhotoPlayer;
 import com.example.retailsale.R;
+import com.example.retailsale.manager.LocalFileInfo;
+import com.example.retailsale.util.Utility;
 
-public class BrowserFragment extends Fragment implements OnItemClickListener
-{
-//	private Context context;
-	private int albumCount = 0;
-	private PhotosAdapterView photosAdapterView;
-	private List<Integer> photos = new ArrayList<Integer>();
-	private GridView photoGrid;
+public class BrowserFragment extends Fragment implements OnItemClickListener {
+    private static final String TAG = "BrowserFragment";
+    private int albumCount = 0;
+    private String currentParent;
+    private PhotosAdapterView photosAdapterView;
+    private List<LocalFileInfo> albumList = new ArrayList<LocalFileInfo>();
+    private List<LocalFileInfo> photoList = new ArrayList<LocalFileInfo>();
+    
+    // views
+    private LinearLayout albums;
+    private GridView photoGrid;
 
-//	public BrowserFragment(Context context)
-//	{
-//		this.context = context;
-//	}
-	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-	
-	@Override
-	public void onAttach(Activity activity)
-	{
-		super.onAttach(activity);
-		MainActivity mainActivity = (MainActivity) activity;
-		// value = mainActivity.getBrowserData();
-	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-	{
-		View view = inflater.inflate(R.layout.browser_tab, container, false);
-		photoGrid = (GridView) view.findViewById(R.id.browser_tab_files_grid);
-		photoGrid.setOnItemClickListener(this);
-		LinearLayout albums = (LinearLayout) view.findViewById(R.id.albums);
-		albumCount = 0;
-		for (int j = 0; j < 3; j++)
-		{
-			albums.addView(insertPhoto("path"));
-		}
-		for (int i = 0; i < 50; i++)
-		{
-			photos.add(i);
-		}
-		photosAdapterView = new PhotosAdapterView(getActivity(), photos);
-		photoGrid.setAdapter(photosAdapterView);
-		return view;
-	}
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        MainActivity mainActivity = (MainActivity) activity;
+        // value = mainActivity.getBrowserData();
+    }
 
-	View insertPhoto(String path)
-	{
-		// Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
-		int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
-		int imgDp = (int) getResources().getDimension(R.dimen.scrollview_img_size);
-		LinearLayout layout = new LinearLayout(getActivity());
-		layout.setLayoutParams(new LayoutParams(layoutDp, layoutDp));
-		layout.setGravity(Gravity.CENTER);
-		ImageView imageView = new ImageView(getActivity());
-		imageView.setLayoutParams(new LayoutParams(imgDp, imgDp));
-		imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		// imageView.setImageBitmap(bm);
-		imageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.album));
-		imageView.setTag(albumCount);
-		albumCount++;
-		imageView.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				Log.d("Test", "albumCount " + v.getTag());
-				int photoCount = 0;
-				photos.clear();
-				photosAdapterView = null;
-				switch ((Integer) v.getTag())
-				{
-				case 0:
-					photoCount = 50;
-					break;
-				case 1:
-					photoCount = 30;
-					break;
-				case 2:
-					photoCount = 10;
-					break;
-				}
-				Log.d("Test", "photoCount " + photoCount);
-				for (int i = 0; i < photoCount; i++)
-				{
-					photos.add(i);
-				}
-				photosAdapterView = new PhotosAdapterView(getActivity(), photos);
-				photoGrid.setAdapter(photosAdapterView);
-			}
-		});
-		layout.addView(imageView);
-		return layout;
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.browser_tab, container, false);
+        photoGrid = (GridView) view.findViewById(R.id.browser_tab_files_grid);
+        photoGrid.setOnItemClickListener(this);
+        albums = (LinearLayout) view.findViewById(R.id.albums);
+        
+        // get albums from download path
+        albumCount = 0;
+        currentParent = Utility.FILE_PATH;
+        listFolder(new File(currentParent));
+        
+        // get content from first album path
+        listFilesInFolder(new File(albumList.get(0).getFilePath()));
+        photosAdapterView = new PhotosAdapterView(getActivity(), photoList);
+        photoGrid.setAdapter(photosAdapterView);
+        
+        return view;
+    }
 
-	public class PhotosAdapterView extends BaseAdapter
-	{
-		public static final int BASE_INDEX = 1000;
-		private List<Integer> photos;
-		private Context context;
-		// Views
-		private LayoutInflater layoutInflater;
-		private ViewTag viewTag;
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getActivity(), PhotoPlayer.class);
+        startActivity(intent);
+    }
 
-		public PhotosAdapterView(Context context, List<Integer> photos)
-		{
-			this.context = context;
-			this.photos = photos;
-			layoutInflater = LayoutInflater.from(context);
-		}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+//	      TextView txtResult = (TextView) this.getView().findViewById(R.id.textView1);
+//	      txtResult.setText(value);
+    }
+    
+    public void listFolder(final File folder) {
+        for (final File fileEntry : folder.listFiles()) {
+            String name = fileEntry.getName();
+            String path = fileEntry.getAbsolutePath();
+            Log.d(TAG, "name: " + name + " path: " + path);
+            albums.addView(addQuicklySelectedDummy(name, path, LocalFileInfo.SELECTED_DIR));
+        }
+    }
+    
+    public void listFilesInFolder(final File folder) {
+        for (final File fileEntry : folder.listFiles()) {
+            String name = fileEntry.getName();
+            String path = fileEntry.getAbsolutePath();
+            Log.d(TAG, "name: " + name + " path: " + path);
+            if (fileEntry.isDirectory()) {
+                photoList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
+            } 
+            else {
+                photoList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_FILE));
+            }
+        }
+    }
 
-		@Override
-		public int getCount()
-		{
-			return photos.size();
-		}
+    private View addQuicklySelectedDummy(String name, String path, int type) {
+        // Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
+        int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
+        int imgDp = (int) getResources().getDimension(R.dimen.scrollview_img_size);
+        LinearLayout layout = new LinearLayout(getActivity());
+        layout.setLayoutParams(new LayoutParams(layoutDp, layoutDp));
+        layout.setGravity(Gravity.CENTER);
+        ImageView imageView = new ImageView(getActivity());
+        imageView.setLayoutParams(new LayoutParams(imgDp, imgDp));
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        // imageView.setImageBitmap(bm);
+        imageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.album));
+        imageView.setTag(albumCount);
+        albumCount++;
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Log.d(TAG, "albumCount " + v.getTag());
+//                int photoCount = 0;
+//                photos.clear();
+//                photosAdapterView = null;
+//                switch ((Integer) v.getTag()) {
+//                case 0:
+//                    photoCount = 50;
+//                    break;
+//                case 1:
+//                    photoCount = 30;
+//                    break;
+//                case 2:
+//                    photoCount = 10;
+//                    break;
+//                }
+//                Log.d(TAG, "photoCount " + photoCount);
+//                for (int i = 0; i < photoCount; i++) {
+//                    photos.add(i);
+//                }
+//                photosAdapterView = new PhotosAdapterView(getActivity(), photos);
+//                photoGrid.setAdapter(photosAdapterView);
+            }
+        });
+        
+        TextView textView = new TextView(getActivity());
+        textView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        textView.setGravity(Gravity.CENTER_HORIZONTAL);
+        
+        layout.addView(imageView);
+        layout.addView(textView);
+        
+        albumList.add(new LocalFileInfo(name, path, type));
+        
+        return layout;
+    }
 
-		@Override
-		public Object getItem(int position)
-		{
-			return photos.get(position);
-		}
+    public class PhotosAdapterView extends BaseAdapter {
+        public static final int BASE_INDEX = 1000;
+        private List<LocalFileInfo> photoList;
+        private Context context;
+        // Views
+        private LayoutInflater layoutInflater;
+        private ViewTag viewTag;
 
-		@Override
-		public long getItemId(int position)
-		{
-			return position;
-		}
+        public PhotosAdapterView(Context context, List<LocalFileInfo> photoList) {
+            this.context = context;
+            this.photoList = photoList;
+            layoutInflater = LayoutInflater.from(context);
+        }
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent)
-		{
-			if (convertView == null)
-			{
-				convertView = layoutInflater.inflate(R.layout.cell_of_browser_tab, null);
-				viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.browser_photo));
-				convertView.setTag(viewTag);
-			}
-			else
-			{
-				viewTag = (ViewTag) convertView.getTag();
-			}
-			convertView.setId(BASE_INDEX + position);
-			return convertView;
-		}
+        @Override
+        public int getCount() {
+            return photoList.size();
+        }
 
-		class ViewTag
-		{
-			ImageView showPhoto;
+        @Override
+        public Object getItem(int position) {
+            return photoList.get(position);
+        }
 
-			public ViewTag(ImageView showPhoto)
-			{
-				this.showPhoto = showPhoto;
-			}
-		}
-	}
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-	{
-		Intent intent = new Intent(getActivity(), PhotoPlayer.class);
-		startActivity(intent);
-	}
-	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
-//		TextView txtResult = (TextView) this.getView().findViewById(R.id.textView1);
-//		txtResult.setText(value);
-	}
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = layoutInflater.inflate(R.layout.cell_of_browser_tab, null);
+                viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.browser_photo),
+                        (TextView) convertView.findViewById(R.id.photo_name));
+                convertView.setTag(viewTag);
+            } else {
+                viewTag = (ViewTag) convertView.getTag();
+            }
+            convertView.setId(BASE_INDEX + position);
+            
+            viewTag.showName.setText(photoList.get(position).getFileName());
+            
+            // to show img
+            //viewTag.showPhoto.setImageBitmap(bm);
+            
+            return convertView;
+        }
+
+        class ViewTag {
+            ImageView showPhoto;
+            TextView showName;
+            public ViewTag(ImageView showPhoto, TextView showName) {
+                this.showPhoto = showPhoto;
+                this.showName = showName;
+            }
+        }
+    }
 }
