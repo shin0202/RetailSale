@@ -6,7 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -24,14 +24,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.retailsale.MainActivity;
-import com.example.retailsale.PhotoPlayer;
 import com.example.retailsale.R;
 import com.example.retailsale.manager.LocalFileInfo;
 import com.example.retailsale.util.Utility;
 
 public class BrowserFragment extends Fragment implements OnItemClickListener {
     private static final String TAG = "BrowserFragment";
-    private int albumCount = 0;
+    private int albumNum = 0;
     private String currentParent;
     private PhotosAdapterView photosAdapterView;
     private List<LocalFileInfo> albumList = new ArrayList<LocalFileInfo>();
@@ -61,22 +60,30 @@ public class BrowserFragment extends Fragment implements OnItemClickListener {
         albums = (LinearLayout) view.findViewById(R.id.albums);
         
         // get albums from download path
-        albumCount = 0;
+        albumNum = 0;
         currentParent = Utility.FILE_PATH;
+        Log.d(TAG, "current parent is " + currentParent);
         listFolder(new File(currentParent));
         
         // get content from first album path
-        listFilesInFolder(new File(albumList.get(0).getFilePath()));
-        photosAdapterView = new PhotosAdapterView(getActivity(), photoList);
-        photoGrid.setAdapter(photosAdapterView);
+		if (albumList.size() > 0)
+		{
+			listFilesInFolder(new File(albumList.get(0).getFilePath()));
+		}
+        
+		if (photoList.size() != 0)
+		{
+			photosAdapterView = new PhotosAdapterView(getActivity(), photoList);
+			photoGrid.setAdapter(photosAdapterView);
+		}
         
         return view;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), PhotoPlayer.class);
-        startActivity(intent);
+//        Intent intent = new Intent(getActivity(), PhotoPlayer.class);
+//        startActivity(intent);
     }
 
     @Override
@@ -86,28 +93,42 @@ public class BrowserFragment extends Fragment implements OnItemClickListener {
 //	      txtResult.setText(value);
     }
     
-    public void listFolder(final File folder) {
-        for (final File fileEntry : folder.listFiles()) {
-            String name = fileEntry.getName();
-            String path = fileEntry.getAbsolutePath();
-            Log.d(TAG, "name: " + name + " path: " + path);
-            albums.addView(addQuicklySelectedDummy(name, path, LocalFileInfo.SELECTED_DIR));
-        }
-    }
+	public void listFolder(final File folder)
+	{
+		if (folder.listFiles() != null)
+		{
+			for (final File fileEntry : folder.listFiles())
+			{
+				String name = fileEntry.getName();
+				String path = fileEntry.getAbsolutePath();
+				Log.d(TAG, "name: " + name + " path: " + path);
+				albums.addView(addQuicklySelectedDummy(name, path, LocalFileInfo.SELECTED_DIR));
+			}
+		} else {
+			Log.d(TAG, "listFolder listFiles is null ");
+		}
+	}
     
-    public void listFilesInFolder(final File folder) {
-        for (final File fileEntry : folder.listFiles()) {
-            String name = fileEntry.getName();
-            String path = fileEntry.getAbsolutePath();
-            Log.d(TAG, "name: " + name + " path: " + path);
-            if (fileEntry.isDirectory()) {
-                photoList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
-            } 
-            else {
-                photoList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_FILE));
-            }
-        }
-    }
+	public void listFilesInFolder(final File folder)
+	{
+		if (folder.listFiles() != null)
+		{
+			for (final File fileEntry : folder.listFiles())
+			{
+				String name = fileEntry.getName();
+				String path = fileEntry.getAbsolutePath();
+				Log.d(TAG, "name: " + name + " path: " + path);
+				if (fileEntry.isDirectory())
+				{
+					photoList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
+				}
+				else
+				{
+					photoList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_FILE));
+				}
+			}
+		}
+	}
 
     private View addQuicklySelectedDummy(String name, String path, int type) {
         // Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
@@ -116,43 +137,37 @@ public class BrowserFragment extends Fragment implements OnItemClickListener {
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setLayoutParams(new LayoutParams(layoutDp, layoutDp));
         layout.setGravity(Gravity.CENTER);
+        layout.setOrientation(LinearLayout.VERTICAL);
         ImageView imageView = new ImageView(getActivity());
         imageView.setLayoutParams(new LayoutParams(imgDp, imgDp));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         // imageView.setImageBitmap(bm);
         imageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.album));
-        imageView.setTag(albumCount);
-        albumCount++;
+        imageView.setTag(albumNum);
+        albumNum++;
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.d(TAG, "albumCount " + v.getTag());
-//                int photoCount = 0;
-//                photos.clear();
-//                photosAdapterView = null;
-//                switch ((Integer) v.getTag()) {
-//                case 0:
-//                    photoCount = 50;
-//                    break;
-//                case 1:
-//                    photoCount = 30;
-//                    break;
-//                case 2:
-//                    photoCount = 10;
-//                    break;
-//                }
-//                Log.d(TAG, "photoCount " + photoCount);
-//                for (int i = 0; i < photoCount; i++) {
-//                    photos.add(i);
-//                }
-//                photosAdapterView = new PhotosAdapterView(getActivity(), photos);
-//                photoGrid.setAdapter(photosAdapterView);
+                Log.d(TAG, "albumNum " + v.getTag());
+                photoList.clear();
+                photosAdapterView = null;
+                
+                listFilesInFolder(new File(albumList.get((Integer)v.getTag()).getFilePath()));
+            	
+				if (photoList.size() != 0)
+				{
+					photosAdapterView = new PhotosAdapterView(getActivity(), photoList);
+					photoGrid.setAdapter(photosAdapterView);
+				}
             }
         });
         
         TextView textView = new TextView(getActivity());
         textView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
+        textView.setTextSize(16);
+        textView.setTextColor(Color.BLACK);
+        textView.setText(name);
         
         layout.addView(imageView);
         layout.addView(textView);

@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.os.Environment;
 import android.util.Log;
 
 public class Utility
@@ -16,7 +15,8 @@ public class Utility
 	private static final int BOUNDS = 10;
 	private static final String FILL_ZERO = "0";
 	private static final String FILL_SLASH = "/";
-	public static final String FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "retailSale/";
+//	public static final String FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/retailSale/";
+	public static final String FILE_PATH = "/sdcard/retailSale/";
 	
 	// for home, company
 	public static boolean isPhoneValid(String email) {

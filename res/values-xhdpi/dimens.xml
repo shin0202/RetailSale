@@ -40,7 +40,7 @@
     <dimen name="browser_tab_vertical_spacing">1dp</dimen>
 
     <!-- HorizontalScrollView img size -->
-    <dimen name="scrollview_layout_size">250dp</dimen>
-    <dimen name="scrollview_img_size">220dp</dimen>
+    <dimen name="scrollview_layout_size">200dp</dimen>
+    <dimen name="scrollview_img_size">160dp</dimen>
 
 </resources>
