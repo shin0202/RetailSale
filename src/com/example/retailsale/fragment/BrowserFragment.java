@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -24,17 +27,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.retailsale.MainActivity;
+import com.example.retailsale.PhotoPlayer;
 import com.example.retailsale.R;
 import com.example.retailsale.manager.LocalFileInfo;
 import com.example.retailsale.util.Utility;
 
 public class BrowserFragment extends Fragment implements OnItemClickListener {
     private static final String TAG = "BrowserFragment";
+    public static final String FILE_LIST = "file_list";
     private int albumNum = 0;
     private String currentParent;
     private PhotosAdapterView photosAdapterView;
     private List<LocalFileInfo> albumList = new ArrayList<LocalFileInfo>();
     private List<LocalFileInfo> photoList = new ArrayList<LocalFileInfo>();
+    private ProgressDialog dialog;
     
     // views
     private LinearLayout albums;
@@ -43,6 +49,21 @@ public class BrowserFragment extends Fragment implements OnItemClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+    
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+    
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -59,31 +80,32 @@ public class BrowserFragment extends Fragment implements OnItemClickListener {
         photoGrid.setOnItemClickListener(this);
         albums = (LinearLayout) view.findViewById(R.id.albums);
         
-        // get albums from download path
-        albumNum = 0;
-        currentParent = Utility.FILE_PATH;
-        Log.d(TAG, "current parent is " + currentParent);
-        listFolder(new File(currentParent));
-        
-        // get content from first album path
-		if (albumList.size() > 0)
-		{
-			listFilesInFolder(new File(albumList.get(0).getFilePath()));
-		}
-        
-		if (photoList.size() != 0)
-		{
-			photosAdapterView = new PhotosAdapterView(getActivity(), photoList);
-			photoGrid.setAdapter(photosAdapterView);
-		}
+        handlePageRefresh(Utility.FILE_PATH);
         
         return view;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        Intent intent = new Intent(getActivity(), PhotoPlayer.class);
-//        startActivity(intent);
+        if (photoList != null) 
+        {
+            LocalFileInfo localFileInfo = photoList.get(position);
+            if (localFileInfo != null && position < photoList.size())
+            {
+                int fileType = localFileInfo.getFileType();
+                if (fileType == LocalFileInfo.SELECTED_FILE) // is file, need to send list(path) for PhotoPlayer
+                {
+                  Intent intent = new Intent(getActivity(), PhotoPlayer.class);
+                  Bundle bundle = new Bundle();
+                  bundle.putParcelableArrayList(FILE_LIST, (ArrayList<? extends Parcelable>) photoList);
+                  intent.putExtras(bundle);
+                  startActivity(intent);
+                } else { // is directory
+                    String currentParent = this.currentParent + localFileInfo.getFileName();
+                    handlePageRefresh(currentParent);
+                }
+            }
+        }
     }
 
     @Override
@@ -93,8 +115,36 @@ public class BrowserFragment extends Fragment implements OnItemClickListener {
 //	      txtResult.setText(value);
     }
     
+    private void handlePageRefresh(String currentParent) {
+        dialog = ProgressDialog.show(BrowserFragment.this.getActivity(),
+                "讀取中", "請等待...",true);
+        // get albums from download path
+        albumNum = 0;
+        this.currentParent = currentParent;
+        Log.d(TAG, "current parent is " + this.currentParent);
+        listFolder(new File(this.currentParent));
+        
+        // get content from first album path
+        if (albumList.size() > 0)
+        {
+            listFilesInFolder(new File(albumList.get(0).getFilePath()));
+        }
+        
+        if (photoList.size() != 0)
+        {
+            photosAdapterView = new PhotosAdapterView(getActivity(), photoList);
+            photoGrid.setAdapter(photosAdapterView);
+        }
+        
+        dialog.dismiss();
+    }
+    
 	public void listFolder(final File folder)
 	{
+	    if (albums != null) {
+	        albums.removeAllViews();
+	    }
+	    
 		if (folder.listFiles() != null)
 		{
 			for (final File fileEntry : folder.listFiles())
@@ -111,6 +161,9 @@ public class BrowserFragment extends Fragment implements OnItemClickListener {
     
 	public void listFilesInFolder(final File folder)
 	{
+	    if (photoList != null) {
+	        photoList.clear();
+	    }
 		if (folder.listFiles() != null)
 		{
 			for (final File fileEntry : folder.listFiles())

@@ -1,6 +1,11 @@
 package com.example.retailsale.manager;
 
-public class LocalFileInfo {
+import java.lang.reflect.Field;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class LocalFileInfo implements Parcelable {
     public static final int SELECTED_FILE = 0;
     public static final int SELECTED_DIR = 1;
 
@@ -31,5 +36,78 @@ public class LocalFileInfo {
     }
     public void setFileType(int fileType) {
         this.fileType = fileType;
+    }
+    
+    /////////////////////////////////// Parcel need add
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeString(fileName);
+        dest.writeString(filePath);
+        dest.writeInt(fileType);
+    }
+    
+    public static final Parcelable.Creator<LocalFileInfo> CREATOR = new Parcelable.Creator<LocalFileInfo>()
+    {
+        public LocalFileInfo createFromParcel(Parcel in)
+        {
+            return new LocalFileInfo(in);
+        }
+
+        @Override
+        public LocalFileInfo[] newArray(int size)
+        {
+            return new LocalFileInfo[size];
+        }
+    };
+    
+    public LocalFileInfo(Parcel in) {
+        super();
+        readFromParcel(in);
+    }
+    
+    public void readFromParcel(Parcel in)
+    {
+        this.fileName = in.readString();
+        this.filePath = in.readString();
+        this.fileType = in.readInt();
+    }
+    /////////////////////////////////// Parcel need add
+    
+    public String toString()
+    {
+        StringBuilder result = new StringBuilder();
+        String newLine = System.getProperty("line.separator");
+        result.append(this.getClass().getName());
+        result.append(" Object {");
+        result.append(newLine);
+        // determine fields declared in this class only (no fields of
+        // superclass)
+        Field[] fields = this.getClass().getDeclaredFields();
+        // print field names paired with their values
+        for (Field field : fields)
+        {
+            result.append("  ");
+            try
+            {
+                result.append(field.getName());
+                result.append(": ");
+                // requires access to private field:
+                result.append(field.get(this));
+            }
+            catch (IllegalAccessException ex)
+            {
+                System.out.println(ex);
+            }
+            result.append(newLine);
+        }
+        result.append("}");
+        return result.toString();
     }
 }
