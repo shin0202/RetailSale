@@ -41,8 +41,6 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 	private static final String GET_NAME = "get_name";
 	private static final String GET_PATH = "get_path";
 	public static final String FILE_LIST = "file_list";
-	private static final int SHOW_WAITING_DIALOG = 999;
-	private static final int DISMISS_WAITING_DIALOG = -999;
 	private static final int LOAD_FILE_ERROR = 0;
 	private static final int LOAD_FILE_COMPLETE = 1;
 	private static final int ADD_VIEW = 2;
@@ -385,9 +383,9 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 		@Override
 		public void run()
 		{
-			dialogHandler.sendEmptyMessage(SHOW_WAITING_DIALOG);
+			dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
 			handlePageRefresh(currentParentPath);
-			dialogHandler.sendEmptyMessage(DISMISS_WAITING_DIALOG);
+			dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
 		}
 	}
 
@@ -398,11 +396,11 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 		{
 			switch (msg.what)
 			{
-			case SHOW_WAITING_DIALOG:
+			case Utility.SHOW_WAITING_DIALOG:
 				Log.d(TAG, "show waiting dialog ");
 				progressDialog = ProgressDialog.show(BrowserFragment.this.getActivity(), "", "讀取中");
 				break;
-			case DISMISS_WAITING_DIALOG:
+			case Utility.DISMISS_WAITING_DIALOG:
 				Log.d(TAG, "dismiss dialog ");
 				if (progressDialog != null) progressDialog.dismiss();
 				break;

@@ -17,6 +17,8 @@ public class Utility
 	private static final String FILL_SLASH = "/";
 //	public static final String FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/retailSale/";
 	public static final String FILE_PATH = "/sdcard/retailSale/";
+	public static final int SHOW_WAITING_DIALOG = 999;
+	public static final int DISMISS_WAITING_DIALOG = -999;
 	
 	// for home, company
 	public static boolean isPhoneValid(String email) {

@@ -5,21 +5,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.retailsale.fragment.BrowserFragment;
 import com.example.retailsale.manager.LocalFileInfo;
 import com.example.retailsale.photoview.PhotoViewAttacher;
+import com.example.retailsale.util.Utility;
 
 public class PhotoPlayer extends Activity implements OnClickListener {
     private static final String TAG = "PhotoPlayer";
@@ -28,6 +35,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
     private ImageView scalableIV;
     private Button backBtn;
     PhotoViewAttacher attacher;
+    private ProgressDialog progressDialog;
     
     private int position = 0;
     File[] files;
@@ -43,7 +51,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         getBundle();
         
         for (int i = 0; i < photoList.size(); i++) {
-            photosLayout.addView(insertPhoto(photoList.get(i).getFilePath()));
+            photosLayout.addView(insertPhoto(photoList.get(i).getFileName(), photoList.get(i).getFilePath()));
         }
 
         // Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
@@ -96,17 +104,17 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         }
     }
 
-    private View insertPhoto(String path) {
+    private View insertPhoto(String name, String path) {
 //        Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
     	
     	int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
 		int imgDp = (int) getResources().getDimension(R.dimen.scrollview_img_size);
 
-        LinearLayout layout = new LinearLayout(getApplicationContext());
+        LinearLayout layout = new LinearLayout(PhotoPlayer.this);
         layout.setLayoutParams(new LayoutParams(layoutDp, layoutDp));
         layout.setGravity(Gravity.CENTER);
-
-        ImageView imageView = new ImageView(getApplicationContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        ImageView imageView = new ImageView(PhotoPlayer.this);
         imageView.setLayoutParams(new LayoutParams(imgDp, imgDp));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 //        imageView.setImageBitmap(bm);
@@ -117,17 +125,31 @@ public class PhotoPlayer extends Activity implements OnClickListener {
             
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "position : " + v.getTag());
-//                scalableIV.initStanScalableImageView(MainActivity.this);
+            	int position = (Integer)v.getTag();
+                Log.d(TAG, "position : " + position);
+//                scalableIV.initStanScalableImageView(PhotoPlayer.this);
                 
-//                scalableIV.setImageBitmap(decodeSampledBitmapFromUri(files[(Integer)v.getTag()].getAbsolutePath()));
+                if (photoList != null && photoList.size() > 0 && position < photoList.size())
+                {
+                	scalableIV.setImageBitmap(decodeSampledBitmapFromUri(photoList.get(position).getFilePath()));
                 
-             // If you later call scalableIV.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
-//                attacher.update();
+                	// If you later call scalableIV.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
+                	attacher.update();
+                }
             }
         });
+        
+		TextView textView = new TextView(PhotoPlayer.this);
+		textView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT));
+		textView.setGravity(Gravity.CENTER_HORIZONTAL);
+		textView.setTextSize(16);
+		textView.setTextColor(Color.BLACK);
+		textView.setText(name);
 
         layout.addView(imageView);
+        layout.addView(textView);
+        
         return layout;
     }
 
@@ -189,4 +211,23 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 			break;
 		}
 	}
+	
+	private Handler dialogHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg)
+		{
+			switch (msg.what)
+			{
+			case Utility.SHOW_WAITING_DIALOG:
+				Log.d(TAG, "show waiting dialog ");
+				progressDialog = ProgressDialog.show(PhotoPlayer.this, "", "讀取中");
+				break;
+			case Utility.DISMISS_WAITING_DIALOG:
+				Log.d(TAG, "dismiss dialog ");
+				if (progressDialog != null) progressDialog.dismiss();
+				break;
+			}
+		}
+	};
 }
