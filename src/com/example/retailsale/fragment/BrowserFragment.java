@@ -18,30 +18,35 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.retailsale.MainActivity;
 import com.example.retailsale.PhotoPlayer;
 import com.example.retailsale.R;
 import com.example.retailsale.manager.LocalFileInfo;
 import com.example.retailsale.util.Utility;
 
-public class BrowserFragment extends Fragment implements OnItemClickListener
+public class BrowserFragment extends Fragment implements OnItemClickListener, OnClickListener
 {
 	private static final String TAG = "BrowserFragment";
+	private static final String GET_NAME = "get_name";
+	private static final String GET_PATH = "get_path";
 	public static final String FILE_LIST = "file_list";
 	private static final int SHOW_WAITING_DIALOG = 999;
 	private static final int DISMISS_WAITING_DIALOG = -999;
 	private static final int LOAD_FILE_ERROR = 0;
 	private static final int LOAD_FILE_COMPLETE = 1;
+	private static final int ADD_VIEW = 2;
+	private static final int SET_ADAPTER = 3;
 	private int albumNum = 0;
 	private String currentParentPath;
 	private int currentAlbumPosition;
@@ -81,7 +86,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener
 	public void onAttach(Activity activity)
 	{
 		super.onAttach(activity);
-		MainActivity mainActivity = (MainActivity) activity;
+//		MainActivity mainActivity = (MainActivity) activity;
 		// value = mainActivity.getBrowserData();
 	}
 
@@ -92,7 +97,13 @@ public class BrowserFragment extends Fragment implements OnItemClickListener
 		photoGrid = (GridView) view.findViewById(R.id.browser_tab_files_grid);
 		photoGrid.setOnItemClickListener(this);
 		albums = (LinearLayout) view.findViewById(R.id.albums);
-		handlePageRefresh(Utility.FILE_PATH);
+		Button backBtn = (Button) view.findViewById(R.id.browser_back_btn);
+		backBtn.setOnClickListener(this);
+		removeAllAlbums();
+//		handlePageRefresh(Utility.FILE_PATH);
+		LoadFileThread loadFileThread = new LoadFileThread(Utility.FILE_PATH);
+		loadFileThread.start();
+		
 		return view;
 	}
 
@@ -105,11 +116,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener
 			if (localFileInfo != null && position < photoList.size())
 			{
 				int fileType = localFileInfo.getFileType();
-				if (fileType == LocalFileInfo.SELECTED_FILE) // is file, need to
-																// send
-																// list(path)
-																// for
-																// PhotoPlayer
+				if (fileType == LocalFileInfo.SELECTED_FILE) // is file, need to send list(path) for PhotoPlayer
 				{
 					Intent intent = new Intent(getActivity(), PhotoPlayer.class);
 					Bundle bundle = new Bundle();
@@ -122,7 +129,10 @@ public class BrowserFragment extends Fragment implements OnItemClickListener
 				{ // is directory
 					String currentParent = this.currentParentPath
 							+ albumList.get(currentAlbumPosition).getFileName() + "/";
-					handlePageRefresh(currentParent);
+					removeAllAlbums();
+//					handlePageRefresh(currentParent);
+                    LoadFileThread loadFileThread = new LoadFileThread(currentParent);
+                    loadFileThread.start();
 				}
 			}
 		}
@@ -132,10 +142,17 @@ public class BrowserFragment extends Fragment implements OnItemClickListener
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		// TextView txtResult = (TextView)
-		// this.getView().findViewById(R.id.textView1);
-		// txtResult.setText(value);
+//		 TextView txtResult = (TextView)
+//		 this.getView().findViewById(R.id.textView1);
+//		 txtResult.setText(value);
 	}
+	
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.browser_back_btn) {
+            // to do back action
+        }
+    }
 
 	private void handlePageRefresh(String currentParent)
 	{
@@ -146,24 +163,25 @@ public class BrowserFragment extends Fragment implements OnItemClickListener
 		Log.d(TAG, "current parent is " + this.currentParentPath);
 		listFolder(new File(this.currentParentPath));
 		// get content from first album path
-		Log.d(TAG, "XXXXXXXXXXXXXXXXXXXXXXX " + albumList.get(0).getFilePath());
+
 		if (albumList.size() > 0)
 		{
-			listFilesInFolder(new File(albumList.get(0).getFilePath()));
+            String path = albumList.get(0).getFilePath();
+            Log.d(TAG, "XXXXXXXXXXXXXXXXXXXXXXX " + path);
+            listFilesInFolder(new File(path));
+		} else {
+		    Log.d(TAG, "size is  " + albumList.size());
 		}
-		if (photoList.size() != 0)
-		{
-			photosAdapterView = new PhotosAdapterView(getActivity(), photoList);
-			photoGrid.setAdapter(photosAdapterView);
-		}
+//		if (photoList.size() != 0)
+//		{
+//			photosAdapterView = new PhotosAdapterView(getActivity(), photoList);
+//			photoGrid.setAdapter(photosAdapterView);
+//		}
+		uiHandler.sendEmptyMessage(SET_ADAPTER);
 	}
 
 	public void listFolder(final File folder)
 	{
-		if (albums != null)
-		{
-			albums.removeAllViews();
-		}
 		if (albumList != null)
 		{
 			albumList.clear();
@@ -175,7 +193,17 @@ public class BrowserFragment extends Fragment implements OnItemClickListener
 				String name = fileEntry.getName();
 				String path = fileEntry.getAbsolutePath();
 				Log.d(TAG, "folder name: " + name + " path: " + path);
-				albums.addView(addQuicklySelectedDummy(name, path, LocalFileInfo.SELECTED_DIR));
+//				albums.addView(addQuicklySelectedDummy(name, path, LocalFileInfo.SELECTED_DIR));
+				Message msg = new Message();
+				msg.what = ADD_VIEW;
+				Bundle bundle = new Bundle();
+				bundle.putString(GET_NAME, name);
+				bundle.putString(GET_PATH, path);
+				msg.setData(bundle);
+				
+				albumList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
+				
+				uiHandler.sendMessage(msg);
 			}
 		}
 		else
@@ -215,6 +243,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener
 
 	private View addQuicklySelectedDummy(String name, String path, int type)
 	{
+	    Log.d(TAG, "addQuicklySelectedDummy ");
 		// Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
 		int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
 		int imgDp = (int) getResources().getDimension(R.dimen.scrollview_img_size);
@@ -255,22 +284,27 @@ public class BrowserFragment extends Fragment implements OnItemClickListener
 		textView.setText(name);
 		layout.addView(imageView);
 		layout.addView(textView);
-		albumList.add(new LocalFileInfo(name, path, type));
+		Log.d(TAG, "addQuicklySelectedDummy end");
 		return layout;
 	}
+	
+    private void removeAllAlbums() {
+        if (albums != null) {
+            albums.removeAllViews();
+        }
+    }
 
 	private class PhotosAdapterView extends BaseAdapter
 	{
 		public static final int BASE_INDEX = 1000;
 		private List<LocalFileInfo> photoList;
-		private Context context;
+//		private Context context;
 		// Views
 		private LayoutInflater layoutInflater;
 		private ViewTag viewTag;
 
 		public PhotosAdapterView(Context context, List<LocalFileInfo> photoList)
 		{
-			this.context = context;
 			this.photoList = photoList;
 			layoutInflater = LayoutInflater.from(context);
 		}
@@ -340,7 +374,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener
 		{
 			dialogHandler.sendEmptyMessage(SHOW_WAITING_DIALOG);
 			handlePageRefresh(currentParentPath);
-			dialogHandler.sendEmptyMessage(SHOW_WAITING_DIALOG);
+			dialogHandler.sendEmptyMessage(DISMISS_WAITING_DIALOG);
 		}
 	}
 
@@ -362,6 +396,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener
 			}
 		}
 	};
+	
 	private Handler uiHandler = new Handler()
 	{
 		@Override
@@ -373,6 +408,22 @@ public class BrowserFragment extends Fragment implements OnItemClickListener
 				break;
 			case LOAD_FILE_COMPLETE:
 				break;
+			case ADD_VIEW:
+			    Log.d(TAG, "ADD_VIEW ");
+			    Bundle bundle = msg.getData();
+			    if (bundle != null) {
+			        String name = bundle.getString(GET_NAME);
+			        String path = bundle.getString(GET_PATH);
+			        albums.addView(addQuicklySelectedDummy(name, path, LocalFileInfo.SELECTED_DIR));
+			    }
+			    break;
+			case SET_ADAPTER:
+                if (photoList.size() != 0)
+                {
+                    photosAdapterView = new PhotosAdapterView(getActivity(), photoList);
+                    photoGrid.setAdapter(photosAdapterView);
+                }
+			    break;
 			}
 		}
 	};
