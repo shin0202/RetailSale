@@ -1,6 +1,8 @@
 package com.example.retailsale;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -15,68 +17,86 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.retailsale.fragment.BrowserFragment;
+import com.example.retailsale.manager.LocalFileInfo;
 import com.example.retailsale.photoview.PhotoViewAttacher;
 
 public class PhotoPlayer extends Activity implements OnClickListener {
-    private static final String TAG = "Main";
+    private static final String TAG = "PhotoPlayer";
 
-    private LinearLayout photos;
-    private ImageView scalableImageView;
+    private LinearLayout photosLayout;
+    private ImageView scalableIV;
     private Button backBtn;
-    PhotoViewAttacher mAttacher;
+    PhotoViewAttacher attacher;
     
-    private int count = 0;
+    private int position = 0;
     File[] files;
+    private List<LocalFileInfo> photoList = new ArrayList<LocalFileInfo>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photoplayer);
 
-        scalableImageView = (ImageView) findViewById(R.id.testnewphoto);
-        scalableImageView.setImageResource(R.drawable.test);
-
-//        scalableImageView.setFit(true);
-//        scalableImageView.setMaxZoom(10);
-//        scalableImageView.setMinZoom(1);
-
-        photos = (LinearLayout) findViewById(R.id.photots);
-        backBtn = (Button) findViewById(R.id.photo_player_cancel_btn);
-        backBtn.setOnClickListener(this);
+        findViews();
         
-        for (int i = 0; i < 3; i++) {
-        	photos.addView(insertPhoto("test"));
+        getBundle();
+        
+        for (int i = 0; i < photoList.size(); i++) {
+            photosLayout.addView(insertPhoto(photoList.get(i).getFilePath()));
         }
 
-//        String ExternalStorageDirectoryPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-
-//        String targetPath = ExternalStorageDirectoryPath + "/DCIM/Camera/";
-
-//        Toast.makeText(getApplicationContext(), targetPath, Toast.LENGTH_LONG).show();
-//        File targetDirector = new File(targetPath);
-//        
-//        Log.d(TAG, "targetPath ==== " + targetPath);
-//
-//        files = targetDirector.listFiles();
-//		if (files != null)
-//		{
-//			for (File file : files)
-//			{
-//				photos.addView(insertPhoto(file.getAbsolutePath()));
-//			}
-//		}
         // Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
-        mAttacher = new PhotoViewAttacher(scalableImageView);
+        attacher = new PhotoViewAttacher(scalableIV);
     }
     
     @Override
     protected void onResume() {
         super.onResume();
         
-        count = 0;
+        position = 0;
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        position = 0;
+    }
+    
+    private void findViews() {
+        scalableIV = (ImageView) findViewById(R.id.photo_player_display);
+        scalableIV.setImageResource(R.drawable.test);
+        
+//      scalableIV.setFit(true);
+//      scalableIV.setMaxZoom(10);
+//      scalableIV.setMinZoom(1);
+        
+        photosLayout = (LinearLayout) findViewById(R.id.photots);
+        backBtn = (Button) findViewById(R.id.photo_player_cancel_btn);
+        backBtn.setOnClickListener(this);
+    }
+    
+    private void getBundle() {
+        Bundle bundle = this.getIntent().getExtras();
+        
+        if (bundle != null) {
+            photoList = bundle.getParcelableArrayList(BrowserFragment.FILE_LIST);
+            
+            if (photoList != null) {
+                for (int i = 0; i < photoList.size(); i++) {
+                    Log.d(TAG, "Get data position : " + i + " name: " + photoList.get(i).getFileName() + 
+                            " path: " + photoList.get(i).getFilePath() + " type: " + photoList.get(i).getFileType());
+                }
+            } else {
+                Log.d(TAG, "It is no data from BrowserFragment(list is null)!");
+            }
+        } else {
+            Log.d(TAG, "It is no data from BrowserFragment(bundle is null)!");
+        }
     }
 
-    View insertPhoto(String path) {
+    private View insertPhoto(String path) {
 //        Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
     	
     	int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
@@ -91,19 +111,19 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 //        imageView.setImageBitmap(bm);
         imageView.setImageDrawable(PhotoPlayer.this.getResources().getDrawable(R.drawable.img));
-        imageView.setTag(count);
-        count++;
+        imageView.setTag(position);
+        position++;
         imageView.setOnClickListener(new View.OnClickListener() {
             
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "count " + v.getTag());
-//                scalableImageView.initStanScalableImageView(MainActivity.this);
+                Log.d(TAG, "position : " + v.getTag());
+//                scalableIV.initStanScalableImageView(MainActivity.this);
                 
-//                scalableImageView.setImageBitmap(decodeSampledBitmapFromUri(files[(Integer)v.getTag()].getAbsolutePath()));
+//                scalableIV.setImageBitmap(decodeSampledBitmapFromUri(files[(Integer)v.getTag()].getAbsolutePath()));
                 
-             // If you later call mImageView.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
-//                mAttacher.update();
+             // If you later call scalableIV.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
+//                attacher.update();
             }
         });
 
@@ -111,7 +131,8 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         return layout;
     }
 
-    public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) {
+    private Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) 
+    {
         Bitmap bm = null;
 
         // First decode with inJustDecodeBounds=true to check dimensions
@@ -129,7 +150,8 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         return bm;
     }
     
-    public Bitmap decodeSampledBitmapFromUri(String path) {
+    private Bitmap decodeSampledBitmapFromUri(String path) 
+    {
         Bitmap bm = null;
 
         // First decode with inJustDecodeBounds=true to check dimensions
@@ -140,9 +162,8 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         return bm;
     }
 
-    public int calculateInSampleSize(
-
-    BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) 
+    {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;

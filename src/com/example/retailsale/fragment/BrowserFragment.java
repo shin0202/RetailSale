@@ -151,6 +151,19 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     public void onClick(View v) {
         if (v.getId() == R.id.browser_back_btn) {
             // to do back action
+            Log.d(TAG, "currentParentPath is " + currentParentPath);
+            
+            if (!currentParentPath.equals(Utility.FILE_PATH)) {
+                File file = new File(currentParentPath);
+                Log.d(TAG, "parent is " + file.getParent() + "/");
+
+                removeAllAlbums();
+
+                LoadFileThread loadFileThread = new LoadFileThread(file.getParent() + "/");
+                loadFileThread.start();
+            } else {
+                Log.d(TAG, "it is in retalesale folder, no need back! ");
+            }
         }
     }
 
