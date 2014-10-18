@@ -2,7 +2,7 @@ package com.example.retailsale.volly.toolbox;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.protocol.HTTP;
@@ -16,6 +16,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.example.retailsale.util.Utility;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -26,6 +27,7 @@ public class GsonListRequest<T> extends Request<T>
 	private Type type;
 	private final Response.Listener<T> listener;
 	private Map<String, String> params;
+	private Map<String, String> header;
 
 	public GsonListRequest(int method, String url, Class<T> clazz, Response.Listener<T> listener,
 			ErrorListener errorListener)
@@ -33,6 +35,10 @@ public class GsonListRequest<T> extends Request<T>
 		super(method, url, errorListener);
 		this.classOfT = clazz;
 		this.listener = listener;
+		header = new HashMap<String, String>();
+		params = new HashMap<String, String>();
+		header.put(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
+		header.put(Utility.JSONTag.FATCA_INFO, Utility.HeaderContent.FATCA_INFO);
 	}
 
 	public GsonListRequest(int method, String url, Type type, Response.Listener<T> listener,
@@ -58,19 +64,14 @@ public class GsonListRequest<T> extends Request<T>
 	{
 		try
 		{
-			// Log.e("GsonListRequest", "response.headers.get(\"content-type\")"
-			// +response.headers.get("content-type"));
 			// String json = new String(response.data,
 			// HttpHeaderParser.parseCharset(response.headers));
 			response.headers.put(HTTP.CONTENT_TYPE, "text/plain; charset=utf-8");
 			String json = new String(response.data, "utf-8");
-			json = URLDecoder.decode(URLDecoder.decode(json));
-			//
-			// Log.d("GsonListRequest", "decode json:" + json);
-			// Log.d("GsonListRequest", "json:" +json);
+			Log.d("GsonListRequest", "json:" + json);
 			return classOfT != null ? Response.success(gson.fromJson(json, classOfT),
 					HttpHeaderParser.parseCacheHeaders(response)) : (Response<T>) Response.success(
-							gson.fromJson(json, type), HttpHeaderParser.parseCacheHeaders(response));
+					gson.fromJson(json, type), HttpHeaderParser.parseCacheHeaders(response));
 		}
 		catch (UnsupportedEncodingException e)
 		{
@@ -87,6 +88,12 @@ public class GsonListRequest<T> extends Request<T>
 	public Map<String, String> getParams() throws AuthFailureError
 	{
 		return params;
+	}
+
+	@Override
+	public Map<String, String> getHeaders() throws AuthFailureError
+	{
+		return header;
 	}
 
 	@Override

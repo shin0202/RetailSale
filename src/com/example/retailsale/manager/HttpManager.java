@@ -1,29 +1,11 @@
 package com.example.retailsale.manager;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.os.Environment;
-import android.util.Base64;
 import android.util.Log;
 
 import com.android.volley.Request.Method;
@@ -34,23 +16,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.retailsale.util.Utility;
 import com.example.retailsale.volly.toolbox.GsonListRequest;
 import com.example.retailsale.volly.toolbox.GsonRequest;
-import com.example.retailsale.volly.toolbox.StringXORer;
 import com.example.retailsale.volly.toolbox.VolleySingleton;
 
 public class HttpManager
 {
 	private final static String TAG = "HttpManager";
-	private final static String HASH_CODE = "nu84x61w";
-	private static String hash_time;
-	private static String facebookID;
-	private static String userName;
-	private static String deviceIMEI;
-	private static String hash_auth;
-	private static String mobile;
-	private static ArrayList<Boolean> isPostMailOkList = new ArrayList<Boolean>();
-	private static int parserCount = 0;
 
-	// LoginListener loginListener;
 	// PostMailListener postMailListener;
 	public HttpManager()
 	{
@@ -62,68 +33,21 @@ public class HttpManager
 
 	public void init(Context context, String facebookID)
 	{
-		// TelephonyManager tm = (TelephonyManager) context
-		// .getSystemService(Context.TELEPHONY_SERVICE);
-		// String phone = tm.getLine1Number();
-		//
-		// HttpManager.mobile = phone;
-		//
-		// Log.e(TAG, "HttpManager()  init() phone:" + phone);
-		HttpManager.facebookID = facebookID;
-		HttpManager.hash_time = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance()
-				.getTime());
-		HttpManager.hash_auth = StringXORer.encode(facebookID + "_" + hash_time, HASH_CODE);
-		// if (tm.getDeviceId() != null)
-		// {
-		// HttpManager.deviceIMEI = tm.getDeviceId();
-		// }
-		// else
-		// {
-		// HttpManager.deviceIMEI = android.os.Build.SERIAL;
-		// }
-		Log.e(TAG, "init(): facebookID:" + facebookID + ",hash_time:" + hash_time + ",deviceIMEI:"
-				+ deviceIMEI + ",hash_auth:" + hash_auth + ",mobile=" + mobile);
+		
 	}
 
     //////////////////////////////////////////////////////////////////////////////// Login related.
-    public void login(Context context, UserInfo user, final LoginListener loginListener) {
-        // this.loginListener = loginListeners;
-
-        String uriLogin = String.format("http://www.cpami.gov.tw/opendata/fd2_json.php");
-        HashMap<String, Object> paramsLoginUpdate = new HashMap<String, Object>();
-        paramsLoginUpdate.put("auth", hash_auth);
-        paramsLoginUpdate.put("user_account", (user.getUserAccount() != null) ? user.getUserAccount() : "");
-        paramsLoginUpdate.put("user_name", (user.getUserName() != null) ? user.getUserName() : "");
-        paramsLoginUpdate.put("user_mobile", (user.getUserMobile() != null) ? user.getUserMobile() : "");
-        paramsLoginUpdate.put("user_key", (user.getUserKey() != null) ? user.getUserKey() : "");
-        paramsLoginUpdate.put("user_group", user.getUserGroup());
-        paramsLoginUpdate.put("user_type", user.getUserType());
-        paramsLoginUpdate.put("last_time", (user.getLastTime() != null) ? user.getLastTime() : "");
+    public void login(Context context, String userAccount, String userPwd, final GetLoginListener loginListener) {
+ 
+    	String uriLogin = "http://192.168.49.128/KendoAPI/ODATA/userQuery(userAccount='" + userAccount + "',userPwd='" + userPwd + "')";
         Log.e(TAG, "login() uriLogin = " + uriLogin);
-        JsonObjectRequest req = new JsonObjectRequest(uriLogin, new JSONObject(paramsLoginUpdate),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Log.e(TAG, "login()  Response:" + response.toString(4));
-                            if (loginListener != null)
-                                loginListener.onResult(true, response.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            if (loginListener != null)
-                                loginListener.onResult(false, e.toString());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e(TAG, "login()  Error: " + error.getMessage());
-                        if (loginListener != null)
-                            loginListener.onResult(false, error.getMessage());
-                    }
-                });
-        req.setTag("login");
-        VolleySingleton.getInstance(context).getRequestQueue().add(req);
+        
+        GsonRequest<UserInfo> getDataOptionsGsonRequset = new GsonRequest<UserInfo>(Method.GET, uriLogin,
+                UserInfo.class, getLoginReqSuccessListener(loginListener),
+                getLoginReqErrorListener());
+        getDataOptionsGsonRequset.setTag("login");
+
+        VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionsGsonRequset);
     }
 
     public void cancelLogin(Context context) {
@@ -338,6 +262,30 @@ public class HttpManager
     }
 
     ////////////////////////////////////////////////////////////////////////////////
+    
+    ////////////////////////////////////////////////////////////////////////////////listener of login
+    private Response.Listener<UserInfo> getLoginReqSuccessListener(
+            final GetLoginListener getLoginListener) {
+        return new Response.Listener<UserInfo>() {
+            @Override
+            public void onResponse(UserInfo response) {
+                Log.e(TAG, "getLogin response: " + response.toString());
+                if (getLoginListener != null)
+                	getLoginListener.onResult(true, response);
+            }
+        };
+    }
+
+    private Response.ErrorListener getLoginReqErrorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "getLogin error: " + error.toString());
+            }
+        };
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////listener of data option type
     private Response.Listener<DataOptionType> getDataOptionTypeReqSuccessListener(
@@ -416,17 +364,17 @@ public class HttpManager
             StringBuilder path = new StringBuilder().append(Utility.FILE_PATH).append(fileInfo.getFilePath());
             
             // 2. create the folder from file path
-            createFolder(path.toString());
+            Utility.createFolder(path.toString());
             
             // 3. generate the MD5 string from file name
-            String md5FileName = generateMD5String(fileInfo.getFileName());
+            String md5FileName = Utility.generateMD5String(fileInfo.getFileName());
             
             // 4. To mix md5 file name and file data to "newData", then write data to file path(newFileName)
             StringBuilder newFileName = new StringBuilder().append(path.toString()).append(fileInfo.getFileName())
                     .append(".txt");
             StringBuilder newData = new StringBuilder().append(md5FileName).append(fileInfo.getFileData());
             
-            writeFile(newFileName.toString(), newData.toString());
+            Utility.writeFile(newFileName.toString(), newData.toString());
        
 //            // 5. to read file and remove md5
 //            String readContent = readFile(newFileName.toString());
@@ -438,105 +386,5 @@ public class HttpManager
 //            String encodeString = encodeBase64(realData);
 //            decodeBase64(encodeString);
         }
-    }
-    
-    private void writeFile(String path, String data) {
-        try {
-            File fakeFile = new File(path);
-            if (!fakeFile.exists()) {
-                fakeFile.createNewFile();
-            }
-            BufferedWriter output = new BufferedWriter(new FileWriter(fakeFile));
-            output.write(data);
-            output.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    private String readFile(String path) {
-        BufferedReader reader;
-        StringBuilder readContent = new StringBuilder();
-        try {
-            reader = new BufferedReader(new FileReader(path));
-            String line = "";
-            try {
-                while ((line = reader.readLine()) != null) {
-                    readContent.append(line);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return readContent.toString();
-    }
-    
-    private void createFolder(String path) {
-        if (path != null) {
-            File directories = new File(path);
-            boolean result = directories.mkdirs();
-            
-            Log.d(TAG, "directories is not exist and created ? " + result);
-        }
-    }
-
-    public static String generateMD5String(String source) {
-        // test string
-//        String testString = "catch12";
-//        String resultString = "";
-//        
-//        resultString = testMD52(testString);
-//        Log.d(TAG, "resultString === " + resultString);
-        
-        MessageDigest digest;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-            digest.reset();
-            digest.update(source.getBytes("UTF-8"));
-            byte[] a = digest.digest();
-            int len = a.length;
-            StringBuilder sb = new StringBuilder(len << 1);
-            for (int i = 0; i < len; i++) {
-                sb.append(Character.forDigit((a[i] & 0xf0) >> 4, 16));
-                sb.append(Character.forDigit(a[i] & 0x0f, 16));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-    
-    public byte[] decodeBase64(String content) {
-        byte[] data = Base64.decode(content, Base64.DEFAULT);
-        try {
-            String text = new String(data, "UTF-8");
-            Log.d(TAG, "decode string is " + text);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return data;
-    }
-    
-    public String encodeBase64(String content) {
-        byte[] data = null;
-        try {
-            data = content.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        String base64 = Base64.encodeToString(data, Base64.DEFAULT);
-        Log.d(TAG, "encode string is " + base64);
-        
-        return base64;
     }
 }

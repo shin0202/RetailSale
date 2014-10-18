@@ -17,10 +17,10 @@ package com.example.retailsale.volly.toolbox;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.http.protocol.HTTP;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -30,15 +30,18 @@ import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.example.retailsale.util.Utility;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 public class GsonRequest<T> extends Request<T>
 {
+	private static final String TAG = "GsonRequest";
 	private Gson gson;
 	private Class<T> clazz;
 	private final Listener<T> listener;
 	private Map<String, String> params;
+	private Map<String, String> header;
 	private Type type;
 
 	public GsonRequest(int method, String url, Class<T> clazz, Listener<T> listener,
@@ -48,6 +51,12 @@ public class GsonRequest<T> extends Request<T>
 		this.clazz = clazz;
 		this.listener = listener;
 		gson = new Gson();
+		
+		header = new HashMap<String, String>();
+		params = new HashMap<String, String>();
+		
+		header.put(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
+		header.put(Utility.JSONTag.FATCA_INFO, Utility.HeaderContent.FATCA_INFO);
 	}
 
 	public GsonRequest(int method, String url, Class<T> clazz, Listener<T> listener,
@@ -79,17 +88,22 @@ public class GsonRequest<T> extends Request<T>
 	{
 		return params;
 	}
+	
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        return header;
+    }
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Response<T> parseNetworkResponse(NetworkResponse response)
 	{
 		try
-		{
-//			String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-			response.headers.put(HTTP.CONTENT_TYPE, "text/plain; charset=utf-8");
+		{	
 			String json = new String(response.data, "utf-8");
-			json = URLDecoder.decode(URLDecoder.decode(json));
+			Log.d(TAG, "json === " + json);
+			
+			Log.d(TAG, "json after === " + json);
 			
 			return clazz != null ? Response.success(gson.fromJson(json, clazz),
 					HttpHeaderParser.parseCacheHeaders(response)) : (Response<T>) Response.success(

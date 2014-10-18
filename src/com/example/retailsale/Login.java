@@ -4,13 +4,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.retailsale.manager.GetLoginListener;
+import com.example.retailsale.manager.HttpManager;
+import com.example.retailsale.manager.UserInfo;
+
 public class Login extends Activity implements OnClickListener
 {
+	private static final String TAG = "Login";
     private static final String DATA = "data";
     private static final String ID_FIELD = "id";
     private static final String PASSWORD_FIELD = "password";
@@ -66,6 +72,21 @@ public class Login extends Activity implements OnClickListener
 	private void startWelcomeActivity() {
 		Intent intent = new Intent(Login.this, WelcomeActivity.class);
 		startActivity(intent);
+	}
+	
+	private void login() {
+    	HttpManager httpManager = new HttpManager();
+    	httpManager.login(Login.this, "A123456", "1qaz@wsx", new GetLoginListener() {
+
+			@Override
+			public void onResult(Boolean isSuccess, UserInfo userInfo)
+			{
+				Log.d(TAG, "userSerial === " + userInfo.getValue().get(0).getUserSerial());
+				Log.d(TAG, "userGroup === " + userInfo.getValue().get(0).getUserGroup());
+				Log.d(TAG, "loginKey === " + userInfo.getValue().get(0).getLoginKey());
+				Log.d(TAG, "message === " + userInfo.getValue().get(0).getMessage());
+			}
+    	});
 	}
 	
 	private void saveData()

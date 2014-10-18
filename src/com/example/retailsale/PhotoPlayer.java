@@ -1,6 +1,5 @@
 package com.example.retailsale;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +37,6 @@ public class PhotoPlayer extends Activity implements OnClickListener {
     private ProgressDialog progressDialog;
     
     private int position = 0;
-    File[] files;
     private List<LocalFileInfo> photoList = new ArrayList<LocalFileInfo>();
 
     @Override
@@ -230,4 +228,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 			}
 		}
 	};
+	
+	// scalableIV.setImageBitmap(Utility.covertByteArrayToBitmap(Utility.decodeBase64(Utility.readFile(photoList.get(positionTest).getFilePath()))));
+
 }
