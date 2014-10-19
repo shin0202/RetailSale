@@ -89,4 +89,6 @@
     <!-- Error String -->
     <string name="field_error">欄位錯誤</string>
 
+    <!-- API return message -->
+    <string name="login_successful">成功登入</string>
 </resources>

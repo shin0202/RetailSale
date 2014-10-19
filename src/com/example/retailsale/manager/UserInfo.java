@@ -78,7 +78,7 @@ public class UserInfo
 		private String message;
 		
 		@SerializedName("flag")
-		private String flag;
+		private boolean flag;
 
 		public String getUserSerial()
 		{
@@ -120,12 +120,12 @@ public class UserInfo
 			this.message = message;
 		}
 
-		public String getFlag()
+		public boolean getFlag()
 		{
 			return flag;
 		}
 
-		public void setFlag(String flag)
+		public void setFlag(boolean flag)
 		{
 			this.flag = flag;
 		}

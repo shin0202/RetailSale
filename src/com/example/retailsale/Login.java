@@ -63,8 +63,7 @@ public class Login extends Activity implements OnClickListener
 	{
 		switch (v.getId()) {
 		case R.id.login_btn:
-			saveData();
-			startWelcomeActivity();
+			login();
 			break;
 		}
 	}
@@ -74,19 +73,48 @@ public class Login extends Activity implements OnClickListener
 		startActivity(intent);
 	}
 	
-	private void login() {
-    	HttpManager httpManager = new HttpManager();
-    	httpManager.login(Login.this, "A123456", "1qaz@wsx", new GetLoginListener() {
-
+	private void login()
+	{
+		HttpManager httpManager = new HttpManager();
+		httpManager.login(Login.this, "A123456", "1qaz@wsx", new GetLoginListener()
+		{
 			@Override
 			public void onResult(Boolean isSuccess, UserInfo userInfo)
 			{
-				Log.d(TAG, "userSerial === " + userInfo.getValue().get(0).getUserSerial());
-				Log.d(TAG, "userGroup === " + userInfo.getValue().get(0).getUserGroup());
-				Log.d(TAG, "loginKey === " + userInfo.getValue().get(0).getLoginKey());
-				Log.d(TAG, "message === " + userInfo.getValue().get(0).getMessage());
+				if (isSuccess)
+				{
+					if (userInfo != null)
+					{
+						if (userInfo.getValue() != null && userInfo.getValue().size() > 0)
+						{
+							String userGroup = userInfo.getValue().get(0).getUserGroup();
+							String loginKey = userInfo.getValue().get(0).getLoginKey();
+							String message = userInfo.getValue().get(0).getMessage();
+							Log.d(TAG, "userGroup : " + userGroup + " loginKey : " + loginKey + " message : " + message);
+							if (message.equals(Login.this.getResources().getString(R.string.login_successful))) {
+								Log.d(TAG, "Message is successfully");
+								saveData();
+								startWelcomeActivity();
+							} else {
+								Log.d(TAG, "Message is failed");
+							}
+						}
+						else
+						{
+							Log.d(TAG, "value is null or size less/equal than 0");
+						}
+					}
+					else
+					{
+						Log.d(TAG, "userInfo is null");
+					}
+				}
+				else
+				{
+					Log.d(TAG, "Login failed");
+				}
 			}
-    	});
+		});
 	}
 	
 	private void saveData()

@@ -44,7 +44,7 @@ public class HttpManager
         
         GsonRequest<UserInfo> getDataOptionsGsonRequset = new GsonRequest<UserInfo>(Method.GET, uriLogin,
                 UserInfo.class, getLoginReqSuccessListener(loginListener),
-                getLoginReqErrorListener());
+                getLoginReqErrorListener(loginListener));
         getDataOptionsGsonRequset.setTag("login");
 
         VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionsGsonRequset);
@@ -62,7 +62,7 @@ public class HttpManager
         Log.e(TAG, "getLoginHistoryUri:" + getLoginHistoryUri);
         GsonListRequest<ArrayList<LoginHistory>> getLoginHistoriesGsonRequset = new GsonListRequest<ArrayList<LoginHistory>>(
                 Method.GET, getLoginHistoryUri, typeGet, getLoginHistoriesReqSuccessListener(getLoginHistoryListener),
-                getLoginHistoriesReqErrorListener());
+                getLoginHistoriesReqErrorListener(getLoginHistoryListener));
         getLoginHistoriesGsonRequset.setTag("getLoginHistory");
         VolleySingleton.getInstance(context).getRequestQueue().add(getLoginHistoriesGsonRequset);
     }
@@ -204,11 +204,13 @@ public class HttpManager
         };
     }
 
-    private Response.ErrorListener getLoginHistoriesReqErrorListener() {
+    private Response.ErrorListener getLoginHistoriesReqErrorListener(final GetLoginHistoryListener getLoginHistoryListener) {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "getLoginHistories error: " + error.toString());
+                if (getLoginHistoryListener != null)
+                    getLoginHistoryListener.onResult(false, null);
             }
         };
     }
@@ -276,11 +278,13 @@ public class HttpManager
         };
     }
 
-    private Response.ErrorListener getLoginReqErrorListener() {
+    private Response.ErrorListener getLoginReqErrorListener(final GetLoginListener getLoginListener) {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "getLogin error: " + error.toString());
+				if (getLoginListener != null)
+                	getLoginListener.onResult(false, null);
             }
         };
     }

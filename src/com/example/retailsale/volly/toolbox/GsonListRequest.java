@@ -38,7 +38,7 @@ public class GsonListRequest<T> extends Request<T>
 		header = new HashMap<String, String>();
 		params = new HashMap<String, String>();
 		header.put(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
-		header.put(Utility.JSONTag.FATCA_INFO, Utility.HeaderContent.FATCA_INFO);
+		header.put(Utility.JSONTag.FATCA_INFO, Utility.HeaderContent.FATCA_INFO_OPERATION);
 	}
 
 	public GsonListRequest(int method, String url, Type type, Response.Listener<T> listener,

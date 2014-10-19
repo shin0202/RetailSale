@@ -56,7 +56,7 @@ public class GsonRequest<T> extends Request<T>
 		params = new HashMap<String, String>();
 		
 		header.put(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
-		header.put(Utility.JSONTag.FATCA_INFO, Utility.HeaderContent.FATCA_INFO);
+		header.put(Utility.JSONTag.FATCA_INFO, Utility.HeaderContent.FATCA_INFO_OPERATION);
 	}
 
 	public GsonRequest(int method, String url, Class<T> clazz, Listener<T> listener,
