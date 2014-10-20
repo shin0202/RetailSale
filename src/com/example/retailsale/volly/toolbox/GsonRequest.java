@@ -103,8 +103,6 @@ public class GsonRequest<T> extends Request<T>
 			String json = new String(response.data, "utf-8");
 			Log.d(TAG, "json === " + json);
 			
-			Log.d(TAG, "json after === " + json);
-			
 			return clazz != null ? Response.success(gson.fromJson(json, clazz),
 					HttpHeaderParser.parseCacheHeaders(response)) : (Response<T>) Response.success(
 							gson.fromJson(json, type), HttpHeaderParser.parseCacheHeaders(response));

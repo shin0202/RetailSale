@@ -1,11 +1,11 @@
-package com.example.retailsale.manager;
+package com.example.retailsale.manager.login;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UserInfo
+public class GsonLoginInfo
 {
 	@SerializedName("odata.metadata")
 	private String metadata;

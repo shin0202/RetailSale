@@ -22,16 +22,16 @@ import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
 import com.example.retailsale.fragment.AddFragment;
-import com.example.retailsale.manager.CustomerInfo;
-import com.example.retailsale.manager.DataOptionType;
-import com.example.retailsale.manager.OptionAdapter;
+import com.example.retailsale.manager.addcustomer.CustomerInfo;
+import com.example.retailsale.manager.dataoption.GsonDataOptionType;
+import com.example.retailsale.manager.dataoption.OptionAdapter;
 import com.example.retailsale.util.Utility;
 
 public class OrderMeasure extends Activity implements OnClickListener, OnCheckedChangeListener
 {
 	private static final String TAG = "OrderMeasure";
 	private OptionAdapter requestAdapter, costAdapter, statusAdapter;
-	private List<DataOptionType> requestList, costList, statusList;
+	private List<GsonDataOptionType> requestList, costList, statusList;
 	
 	private boolean isSendNoteMsgChecked = false, isAsAboveChecked = false;
 	private CustomerInfo customerInfo;
@@ -255,9 +255,9 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 	}
 	
 	private void getOptionType() {
-	    requestList = new ArrayList<DataOptionType>();
-	    costList = new ArrayList<DataOptionType>();
-	    statusList = new ArrayList<DataOptionType>();
+	    requestList = new ArrayList<GsonDataOptionType>();
+	    costList = new ArrayList<GsonDataOptionType>();
+	    statusList = new ArrayList<GsonDataOptionType>();
 	    
 	    retialSaleDbAdapter = new RetialSaleDbAdapter(OrderMeasure.this);
 	    retialSaleDbAdapter.open();
@@ -287,13 +287,13 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
                     
                     switch (optionType) {
                     case RetialSaleDbAdapter.OPTION_RESERVATION_STATUS_IDNEX :
-                        statusList.add(new DataOptionType(optionSerial, optionName));
+                        statusList.add(new GsonDataOptionType(optionSerial, optionName));
                         break;
                     case RetialSaleDbAdapter.OPTION_RESERVATION_BUDGET_IDNEX :
-                        costList.add(new DataOptionType(optionSerial, optionName));
+                        costList.add(new GsonDataOptionType(optionSerial, optionName));
                         break;
                     case RetialSaleDbAdapter.OPTION_RESERVATION_SPACE_IDNEX:
-                        requestList.add(new DataOptionType(optionSerial, optionName));
+                        requestList.add(new GsonDataOptionType(optionSerial, optionName));
                         break;
                     }
                 }

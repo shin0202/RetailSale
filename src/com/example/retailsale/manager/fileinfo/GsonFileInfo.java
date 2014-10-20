@@ -1,8 +1,8 @@
-package com.example.retailsale.manager;
+package com.example.retailsale.manager.fileinfo;
 
 import com.google.gson.annotations.SerializedName;
 
-public class WebFileInfo
+public class GsonFileInfo
 {
 	@SerializedName("optType")
 	private String fileName;

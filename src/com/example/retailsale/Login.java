@@ -10,9 +10,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.retailsale.manager.GetLoginListener;
 import com.example.retailsale.manager.HttpManager;
-import com.example.retailsale.manager.UserInfo;
+import com.example.retailsale.manager.login.GetLoginListener;
+import com.example.retailsale.manager.login.GsonLoginInfo;
 
 public class Login extends Activity implements OnClickListener
 {
@@ -79,7 +79,7 @@ public class Login extends Activity implements OnClickListener
 		httpManager.login(Login.this, "A123456", "1qaz@wsx", new GetLoginListener()
 		{
 			@Override
-			public void onResult(Boolean isSuccess, UserInfo userInfo)
+			public void onResult(Boolean isSuccess, GsonLoginInfo userInfo)
 			{
 				if (isSuccess)
 				{

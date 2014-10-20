@@ -32,7 +32,7 @@ import android.widget.TextView;
 
 import com.example.retailsale.PhotoPlayer;
 import com.example.retailsale.R;
-import com.example.retailsale.manager.LocalFileInfo;
+import com.example.retailsale.manager.fileinfo.LocalFileInfo;
 import com.example.retailsale.util.Utility;
 
 public class BrowserFragment extends Fragment implements OnItemClickListener, OnClickListener

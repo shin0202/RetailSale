@@ -1,4 +1,4 @@
-package com.example.retailsale.manager;
+package com.example.retailsale.manager.addcustomer;
 
 import org.json.JSONObject;
 

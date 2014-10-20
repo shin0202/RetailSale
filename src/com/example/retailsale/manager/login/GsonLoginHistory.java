@@ -1,8 +1,8 @@
-package com.example.retailsale.manager;
+package com.example.retailsale.manager.login;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LoginHistory
+public class GsonLoginHistory
 {
 	@SerializedName("loginSerial")
 	private int loginSerial;

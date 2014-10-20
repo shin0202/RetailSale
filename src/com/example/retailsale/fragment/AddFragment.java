@@ -28,9 +28,9 @@ import com.example.retailsale.MainActivity;
 import com.example.retailsale.OrderMeasure;
 import com.example.retailsale.R;
 import com.example.retailsale.RetialSaleDbAdapter;
-import com.example.retailsale.manager.CustomerInfo;
-import com.example.retailsale.manager.DataOptionType;
-import com.example.retailsale.manager.OptionAdapter;
+import com.example.retailsale.manager.addcustomer.CustomerInfo;
+import com.example.retailsale.manager.dataoption.GsonDataOptionType;
+import com.example.retailsale.manager.dataoption.OptionAdapter;
 import com.example.retailsale.util.Utility;
 
 public class AddFragment extends Fragment implements OnClickListener, OnCheckedChangeListener
@@ -40,7 +40,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	public static final String SEND_CUSTOMER_INFO = "send_customer_info";
 	public static final String SEND_NOTE_MSG = "send_note_msg";
     private OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter;
-	private List<DataOptionType> infoList, jobList, ageList, sexList, titleList;
+	private List<GsonDataOptionType> infoList, jobList, ageList, sexList, titleList;
 	private boolean isChecked = false;
 	private CustomerInfo customerInfo;
 	private RetialSaleDbAdapter retialSaleDbAdapter;
@@ -420,11 +420,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 
 	private void getOptionType() {
 	    
-	    infoList = new ArrayList<DataOptionType>();
-	    jobList = new ArrayList<DataOptionType>();
-	    ageList = new ArrayList<DataOptionType>(); 
-	    sexList = new ArrayList<DataOptionType>();
-	    titleList = new ArrayList<DataOptionType>();
+	    infoList = new ArrayList<GsonDataOptionType>();
+	    jobList = new ArrayList<GsonDataOptionType>();
+	    ageList = new ArrayList<GsonDataOptionType>(); 
+	    sexList = new ArrayList<GsonDataOptionType>();
+	    titleList = new ArrayList<GsonDataOptionType>();
 	    
 	    // to get option type content
         Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
@@ -451,19 +451,19 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     
                     switch (optionType) {
                     case RetialSaleDbAdapter.OPTION_CUSTOMER_SEX_IDNEX :
-                        sexList.add(new DataOptionType(optionSerial, optionName));
+                        sexList.add(new GsonDataOptionType(optionSerial, optionName));
                         break;
                     case RetialSaleDbAdapter.OPTION_CUSTOMER_TITLE_IDNEX :
-                        titleList.add(new DataOptionType(optionSerial, optionName));
+                        titleList.add(new GsonDataOptionType(optionSerial, optionName));
                         break;
                     case RetialSaleDbAdapter.OPTION_CUSTOMER_INFO_IDNEX:
-                        infoList.add(new DataOptionType(optionSerial, optionName));
+                        infoList.add(new GsonDataOptionType(optionSerial, optionName));
                         break;
                     case RetialSaleDbAdapter.OPTION_CUSTOMER_JOB_IDNEX:
-                        jobList.add(new DataOptionType(optionSerial, optionName));
+                        jobList.add(new GsonDataOptionType(optionSerial, optionName));
                         break;
                     case RetialSaleDbAdapter.OPTION_CUSTOMER_AGE_IDNEX:
-                        ageList.add(new DataOptionType(optionSerial, optionName));
+                        ageList.add(new GsonDataOptionType(optionSerial, optionName));
                         break;
                     }
                 }

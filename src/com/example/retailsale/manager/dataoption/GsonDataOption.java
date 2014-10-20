@@ -1,8 +1,8 @@
-package com.example.retailsale.manager;
+package com.example.retailsale.manager.dataoption;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DataOption
+public class GsonDataOption
 {
 	@SerializedName("optType")
 	private int optType;

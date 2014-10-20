@@ -1,8 +1,8 @@
-package com.example.retailsale.manager;
+package com.example.retailsale.manager.service;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ServiceInfo
+public class GsonServiceInfo
 {
 	@SerializedName("serviceSerial")
 	private int serviceSerial;

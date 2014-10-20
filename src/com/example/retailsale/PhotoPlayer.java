@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.retailsale.fragment.BrowserFragment;
-import com.example.retailsale.manager.LocalFileInfo;
+import com.example.retailsale.manager.fileinfo.LocalFileInfo;
 import com.example.retailsale.photoview.PhotoViewAttacher;
 import com.example.retailsale.util.Utility;
 

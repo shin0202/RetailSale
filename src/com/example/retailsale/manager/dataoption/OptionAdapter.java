@@ -1,4 +1,4 @@
-package com.example.retailsale.manager;
+package com.example.retailsale.manager.dataoption;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import com.example.retailsale.R;
 public class OptionAdapter extends BaseAdapter {
     private static final String TAG = "OptionAdapter";
     private static final int BASE_INDEX = 1000;
-    private List<DataOptionType> optionList;
+    private List<GsonDataOptionType> optionList;
     private Context context;
     private ViewTag viewTag;
     
-    public OptionAdapter(Context context, List<DataOptionType> optionList) {
+    public OptionAdapter(Context context, List<GsonDataOptionType> optionList) {
         this.context = context;
         this.optionList = optionList;
     }

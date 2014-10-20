@@ -1,8 +1,8 @@
-package com.example.retailsale.manager;
+package com.example.retailsale.manager.dataoption;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DataOptionType
+public class GsonDataOptionType
 {
 	@SerializedName("typeSerial")
 	private int typeSerial;
@@ -10,7 +10,7 @@ public class DataOptionType
 	@SerializedName("typeName")
 	private String typeName;
 	
-	public DataOptionType(int typeSerial, String typeName) {
+	public GsonDataOptionType(int typeSerial, String typeName) {
 	    this.typeSerial = typeSerial;
 	    this.typeName = typeName;
 	}
