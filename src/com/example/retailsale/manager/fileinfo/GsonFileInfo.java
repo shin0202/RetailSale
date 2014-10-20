@@ -1,45 +1,73 @@
 package com.example.retailsale.manager.fileinfo;
 
+import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
 
 public class GsonFileInfo
 {
-	@SerializedName("optType")
-	private String fileName;
+	@SerializedName("odata.metadata")
+	private String metadata;
+	@SerializedName("value")
+	private List<FileInfo> value;
 	
-	@SerializedName("filePath")
-	private int filePath;
-
-	@SerializedName("fileData")
-	private String fileData;
-
-	public String getFileName()
+	public String getMetadata()
 	{
-		return fileName;
+		return metadata;
 	}
 
-	public void setFileName(String fileName)
+	public void setMetadata(String metadata)
 	{
-		this.fileName = fileName;
+		this.metadata = metadata;
 	}
 
-	public int getFilePath()
+	public List<FileInfo> getValue()
 	{
-		return filePath;
+		return value;
 	}
 
-	public void setFilePath(int filePath)
+	public void setValue(List<FileInfo> value)
 	{
-		this.filePath = filePath;
+		this.value = value;
 	}
 
-	public String getFileData()
+	public class FileInfo
 	{
-		return fileData;
-	}
+		@SerializedName("path")
+		private String path;
+		@SerializedName("fileName")
+		private String fileName;
+		@SerializedName("fileStream")
+		private String fileStream;
 
-	public void setFileData(String fileData)
-	{
-		this.fileData = fileData;
+		public String getFileName()
+		{
+			return fileName;
+		}
+
+		public void setFileName(String fileName)
+		{
+			this.fileName = fileName;
+		}
+
+		public String getPath()
+		{
+			return path;
+		}
+
+		public void setPath(String path)
+		{
+			this.path = path;
+		}
+
+		public String getFileStream()
+		{
+			return fileStream;
+		}
+
+		public void setFileStream(String fileStream)
+		{
+			this.fileStream = fileStream;
+		}
 	}
 }

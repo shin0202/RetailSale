@@ -1,5 +1,7 @@
 package com.example.retailsale;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +13,14 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.retailsale.manager.HttpManager;
+import com.example.retailsale.manager.dataoption.GetDataOptionListener;
+import com.example.retailsale.manager.dataoption.GsonDataOption;
+import com.example.retailsale.manager.dataoption.GsonDataOption.DataOption;
+import com.example.retailsale.manager.fileinfo.GetFileInfoListener;
+import com.example.retailsale.manager.fileinfo.GsonFileInfo;
+import com.example.retailsale.manager.fileinfo.GsonFileInfo.FileInfo;
+import com.example.retailsale.manager.folderinfo.GetFolderInfoListener;
+import com.example.retailsale.manager.folderinfo.GsonFolderInfo;
 import com.example.retailsale.manager.login.GetLoginListener;
 import com.example.retailsale.manager.login.GsonLoginInfo;
 
@@ -128,5 +138,131 @@ public class Login extends Activity implements OnClickListener
         settings = getSharedPreferences(DATA, 0);
         inputUserId.setText(settings.getString(ID_FIELD, ""));
         inputUserPassword.setText(settings.getString(PASSWORD_FIELD, ""));
+	}
+	
+	private void getDataOption()
+	{
+		HttpManager httpManager = new HttpManager();
+		httpManager.getDataOptions(Login.this, new GetDataOptionListener()
+		{
+			@Override
+			public void onResult(Boolean isSuccess, GsonDataOption dataOption)
+			{
+				if (isSuccess)
+				{
+					if (dataOption != null)
+					{
+						List<DataOption> value = dataOption.getValue();
+						if (value != null)
+						{
+							for (int i = 0; i < value.size(); i++)
+							{
+								int optSerial = value.get(i).getOptSerial();
+								String optName = value.get(i).getOptName();
+								String typeName = value.get(i).getTypeName();
+								boolean optLock = value.get(i).getOptLock();
+								
+								Log.d(TAG, "optSerial : " + optSerial + " optName : " + " typeName : " + typeName + " optLock : " + optLock);
+							}
+						}
+						else
+						{
+							Log.d(TAG, "value is null");
+						}
+					}
+					else
+					{
+						Log.d(TAG, "dataOption is null");
+					}
+				}
+				else
+				{
+					Log.d(TAG, "Get data option failed");
+				}
+			}
+		});
+	}
+	
+	private void getFile() {
+		HttpManager httpManager = new HttpManager();
+		httpManager.getFileInfo(Login.this, 2, 2, new GetFileInfoListener()
+		{
+			@Override
+			public void onResult(Boolean isSuccess, GsonFileInfo fileInfo)
+			{
+				if (isSuccess)
+				{
+					if (fileInfo != null)
+					{
+						List<FileInfo> value = fileInfo.getValue();
+						if (value != null)
+						{
+							for (int i = 0; i < value.size(); i++)
+							{
+								String path = value.get(i).getPath();
+								String fileName = value.get(i).getFileName();
+								String fileStream = value.get(i).getFileStream();
+								
+								Log.d(TAG, "path : " + path + " fileName : " + fileName + " fileStream : " + fileStream);
+							}
+						}
+						else
+						{
+							Log.d(TAG, "value is null");
+						}
+					}
+					else
+					{
+						Log.d(TAG, "fileInfo is null");
+					}
+				}
+				else
+				{
+					Log.d(TAG, "Get file info failed");
+				}
+			}
+		});
+	}
+	
+	private void getFolder() {
+		HttpManager httpManager = new HttpManager();
+		httpManager.getFolderInfo(Login.this, new GetFolderInfoListener()
+		{
+			@Override
+			public void onResult(Boolean isSuccess, GsonFolderInfo folderInfo)
+			{
+				if (isSuccess)
+				{
+					if (folderInfo != null)
+					{
+						Log.d(TAG, "value is " + folderInfo.getValue());
+//						List<FileInfo> value = fileInfo.getValue();
+//						if (value != null)
+//						{
+//							for (int i = 0; i < value.size(); i++)
+//							{
+//								String path = value.get(i).getPath();
+//								String fileName = value.get(i).getFileName();
+//								String fileStream = value.get(i).getFileStream();
+//								
+//								Log.d(TAG, "path : " + path + " fileName : " + fileName + " fileStream : " + fileStream);
+//							}
+//						}
+//						else
+//						{
+//							Log.d(TAG, "value is null");
+//						}
+					}
+					else
+					{
+						Log.d(TAG, "folderInfo is null");
+					}
+				}
+				else
+				{
+					Log.d(TAG, "Get folder info failed");
+				}
+			}
+		});
 	}
 }

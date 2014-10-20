@@ -1,6 +1,5 @@
 package com.example.retailsale.manager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONObject;
@@ -11,23 +10,19 @@ import android.util.Log;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.retailsale.manager.addcustomer.AddCustomerListener;
-import com.example.retailsale.manager.dataoption.GsonDataOption;
-import com.example.retailsale.manager.dataoption.GsonDataOptionType;
 import com.example.retailsale.manager.dataoption.GetDataOptionListener;
 import com.example.retailsale.manager.dataoption.GetDataOptionTypeListener;
+import com.example.retailsale.manager.dataoption.GsonDataOption;
+import com.example.retailsale.manager.dataoption.GsonDataOptionType;
 import com.example.retailsale.manager.fileinfo.GetFileInfoListener;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo;
-import com.example.retailsale.manager.login.GetLoginHistoryListener;
+import com.example.retailsale.manager.folderinfo.GetFolderInfoListener;
+import com.example.retailsale.manager.folderinfo.GsonFolderInfo;
 import com.example.retailsale.manager.login.GetLoginListener;
-import com.example.retailsale.manager.login.GsonLoginHistory;
 import com.example.retailsale.manager.login.GsonLoginInfo;
-import com.example.retailsale.manager.service.GetServiceContentListener;
-import com.example.retailsale.manager.service.GsonServiceInfo;
 import com.example.retailsale.util.Utility;
-import com.example.retailsale.volly.toolbox.GsonListRequest;
 import com.example.retailsale.volly.toolbox.GsonRequest;
 import com.example.retailsale.volly.toolbox.VolleySingleton;
 
@@ -52,10 +47,10 @@ public class HttpManager
     //////////////////////////////////////////////////////////////////////////////// Login related.
     public void login(Context context, String userAccount, String userPwd, final GetLoginListener loginListener) {
  
-    	String uriLogin = "http://192.168.49.128/KendoAPI/ODATA/userQuery(userAccount='" + userAccount + "',userPwd='" + userPwd + "')";
-        Log.e(TAG, "login() uriLogin = " + uriLogin);
+    	String loginUri = "http://192.168.49.128/KendoAPI/ODATA/userQuery(userAccount='" + userAccount + "',userPwd='" + userPwd + "')";
+        Log.e(TAG, "login() loginUri = " + loginUri);
         
-        GsonRequest<GsonLoginInfo> getDataOptionsGsonRequset = new GsonRequest<GsonLoginInfo>(Method.GET, uriLogin,
+        GsonRequest<GsonLoginInfo> getDataOptionsGsonRequset = new GsonRequest<GsonLoginInfo>(Method.GET, loginUri,
                 GsonLoginInfo.class, getLoginReqSuccessListener(loginListener),
                 getLoginReqErrorListener(loginListener));
         getDataOptionsGsonRequset.setTag("login");
@@ -66,22 +61,9 @@ public class HttpManager
     public void cancelLogin(Context context) {
         VolleySingleton.getInstance(context).getRequestQueue().cancelAll("login");
     }
-
-    public void getLoginHistory(Context context, GetLoginHistoryListener getLoginHistoryListener) {
-        java.lang.reflect.Type typeGet = new com.google.gson.reflect.TypeToken<ArrayList<GsonLoginHistory>>() {
-        }.getType();
-
-        String getLoginHistoryUri = String.format("http://www.cpami.gov.tw/opendata/fd2_json.php");
-        Log.e(TAG, "getLoginHistoryUri:" + getLoginHistoryUri);
-        GsonListRequest<ArrayList<GsonLoginHistory>> getLoginHistoriesGsonRequset = new GsonListRequest<ArrayList<GsonLoginHistory>>(
-                Method.GET, getLoginHistoryUri, typeGet, getLoginHistoriesReqSuccessListener(getLoginHistoryListener),
-                getLoginHistoriesReqErrorListener(getLoginHistoryListener));
-        getLoginHistoriesGsonRequset.setTag("getLoginHistory");
-        VolleySingleton.getInstance(context).getRequestQueue().add(getLoginHistoriesGsonRequset);
-    }
-
     //////////////////////////////////////////////////////////////////////////////////
 
+    //////////////////////////////////////////////////////////////////////////////// add customer
     public void addCustomerInfo(Context context, AddCustomerListener addCustomerListener,
             HashMap<String, String> paramsAddComsumerPost) {
         String addCustomerInfoUri = String.format("http://www.cpami.gov.tw/opendata/fd2_json.php");
@@ -94,42 +76,16 @@ public class HttpManager
 //		GsonRequest addCustomerInfoRequset = new GsonRequest(Method.POST, addCustomerInfoUri, null, paramsAddComsumerPost, addCustomerReqSuccessListener(addCustomerListener), addCustomerReqErrorListener());
 //		VolleySingleton.getInstance(context).getRequestQueue().add(addCustomerInfoRequset);
     }
+    ////////////////////////////////////////////////////////////////////////////////
 
-    public void getServiceContent(Context context, GetServiceContentListener getServiceContentListener) {
-        java.lang.reflect.Type typeGet = new com.google.gson.reflect.TypeToken<ArrayList<GsonServiceInfo>>() {
-        }.getType();
-
-        String serviceContentUri = String.format("http://www.cpami.gov.tw/opendata/fd2_json.php");
-        Log.e(TAG, "serviceContentUri:" + serviceContentUri);
-        GsonListRequest<ArrayList<GsonServiceInfo>> getServiceContentGsonRequset = new GsonListRequest<ArrayList<GsonServiceInfo>>(
-                Method.GET, serviceContentUri, typeGet, getServiceContentReqSuccessListener(getServiceContentListener),
-                getServiceContentReqErrorListener());
-        getServiceContentGsonRequset.setTag("getServiceContent");
-        VolleySingleton.getInstance(context).getRequestQueue().add(getServiceContentGsonRequset);
-    }
-
-    public void getDataOptions(Context context, GetDataOptionListener getDataOptionListener) {
-        String dataOptionsUri = String.format("http://www.cpami.gov.tw/opendata/fd2_json.php");
-//		JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, dataOptionsUri,
-//				null, new Response.Listener<JSONObject>()
-//				{
-//					@Override
-//					public void onResponse(JSONObject response)
-//					{
-//						Log.e(TAG, "response:" + response.toString());
-//					}
-//				}, new Response.ErrorListener()
-//				{
-//					@Override
-//					public void onErrorResponse(VolleyError error)
-//					{
-//						Log.e(TAG, "onErrorResponse:" + error.toString());
-//					}
-//				});
-
+    //////////////////////////////////////////////////////////////////////////////// data option
+    public void getDataOptions(Context context, GetDataOptionListener getDataOptionListener) {       
+    	String dataOptionsUri = "http://192.168.49.128/KendoAPI/ODATA/dataOptionParm";
+        Log.e(TAG, "getDataOptions() dataOptionsUri = " + dataOptionsUri);
+        
         GsonRequest<GsonDataOption> getDataOptionsGsonRequset = new GsonRequest<GsonDataOption>(Method.GET, dataOptionsUri,
-                GsonDataOption.class, getDataOptionReqSuccessListener(getDataOptionListener),
-                getDataOptionReqErrorListener());
+        		GsonDataOption.class, getDataOptionReqSuccessListener(getDataOptionListener),
+        		getDataOptionReqErrorListener(getDataOptionListener));
         getDataOptionsGsonRequset.setTag("getDataOptions");
 
         VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionsGsonRequset);
@@ -145,77 +101,32 @@ public class HttpManager
 
         VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionTypeGsonRequset);
     }
+    ////////////////////////////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////////////////////////// image related
-    public ImageLoader getImageLoader(Context context) {
-        return VolleySingleton.getInstance(context).getImageLoader();
-    }
+    //////////////////////////////////////////////////////////////////////////////// file info
+    public void getFileInfo(Context context, int pathId, int fileId, GetFileInfoListener getFileInfoListener) {
+    	String fileInfoUri = "http://192.168.49.128/KendoAPI/ODATA/fileContent(pathId=" + pathId + ",fileId=" + fileId + ")";
+        Log.e(TAG, "getFileInfo() fileInfoUri = " + fileInfoUri);
 
-    public void getBitmapFromWeb(Context context, String url, ImageLoader.ImageListener imageListener) {
-        ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
-        imageLoader.get(url, imageListener);
-    }
-
-    public void getFileInfo(Context context, GetFileInfoListener getFileInfoListener) {
-        String dataOptionTypeUri = String.format("http://www.cpami.gov.tw/opendata/fd2_json.php");
-
-        GsonRequest<GsonFileInfo> getFileInfoGsonRequset = new GsonRequest<GsonFileInfo>(Method.GET, dataOptionTypeUri,
-                GsonFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener), getFileInfoReqErrorListener());
+        GsonRequest<GsonFileInfo> getFileInfoGsonRequset = new GsonRequest<GsonFileInfo>(Method.GET, fileInfoUri,
+                GsonFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener), getFileInfoReqErrorListener(getFileInfoListener));
         getFileInfoGsonRequset.setTag("getFileInfo");
 
         VolleySingleton.getInstance(context).getRequestQueue().add(getFileInfoGsonRequset);
     }
-
     ////////////////////////////////////////////////////////////////////////////////
+    
+    //////////////////////////////////////////////////////////////////////////////// folder info
+    public void getFolderInfo(Context context, GetFolderInfoListener getFolderInfoListener) {
+    	String fileInfoUri = "http://192.168.49.128/KendoAPI/ODATA/folderInfo";
+        Log.e(TAG, "getFolderInfo() fileInfoUri = " + fileInfoUri);
 
-    ////////////////////////////////////////////////////////////////////////////////listener of login history
-    private Response.Listener<ArrayList<GsonLoginHistory>> getLoginHistoriesReqSuccessListener(
-            final GetLoginHistoryListener getLoginHistoryListener) {
-        return new Response.Listener<ArrayList<GsonLoginHistory>>() {
-            @Override
-            public void onResponse(ArrayList<GsonLoginHistory> response) {
-                Log.e(TAG, "getLoginHistories response: " + response.toString());
-                if (getLoginHistoryListener != null)
-                    getLoginHistoryListener.onResult(true, response);
-            }
-        };
+        GsonRequest<GsonFolderInfo> getFolderInfoGsonRequset = new GsonRequest<GsonFolderInfo>(Method.GET, fileInfoUri,
+        		GsonFolderInfo.class, getFolderInfoReqSuccessListener(getFolderInfoListener), getFolderInfoReqErrorListener(getFolderInfoListener));
+        getFolderInfoGsonRequset.setTag("getFolderInfo");
+
+        VolleySingleton.getInstance(context).getRequestQueue().add(getFolderInfoGsonRequset);
     }
-
-    private Response.ErrorListener getLoginHistoriesReqErrorListener(final GetLoginHistoryListener getLoginHistoryListener) {
-        return new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "getLoginHistories error: " + error.toString());
-                if (getLoginHistoryListener != null)
-                    getLoginHistoryListener.onResult(false, null);
-            }
-        };
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////////listener of service content
-    private Response.Listener<ArrayList<GsonServiceInfo>> getServiceContentReqSuccessListener(
-            final GetServiceContentListener getServiceContentListener) {
-        return new Response.Listener<ArrayList<GsonServiceInfo>>() {
-            @Override
-            public void onResponse(ArrayList<GsonServiceInfo> response) {
-                Log.e(TAG, "getServiceContent response: " + response.toString());
-                if (getServiceContentListener != null)
-                    getServiceContentListener.onResult(true, response);
-            }
-        };
-    }
-
-    private Response.ErrorListener getServiceContentReqErrorListener() {
-        return new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "getServiceContent error: " + error.toString());
-            }
-        };
-    }
-
     ////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////listener of data option
@@ -231,15 +142,17 @@ public class HttpManager
         };
     }
 
-    private Response.ErrorListener getDataOptionReqErrorListener() {
+    private Response.ErrorListener getDataOptionReqErrorListener(final GetDataOptionListener getDataOptionListener) {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "getDataOption error: " + error.toString());
+                
+                if (getDataOptionListener != null)
+                    getDataOptionListener.onResult(false, null);
             }
         };
     }
-
     ////////////////////////////////////////////////////////////////////////////////
     
     ////////////////////////////////////////////////////////////////////////////////listener of login
@@ -265,7 +178,6 @@ public class HttpManager
             }
         };
     }
-
     ////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////listener of data option type
@@ -289,7 +201,6 @@ public class HttpManager
             }
         };
     }
-
     ////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////listener of file info
@@ -297,23 +208,48 @@ public class HttpManager
         return new Response.Listener<GsonFileInfo>() {
             @Override
             public void onResponse(GsonFileInfo response) {
-                Log.e(TAG, "getDataOptionType success response: " + response.toString());
-                handleFileInfo(response);
+                Log.e(TAG, "getFileInfo success response: " + response.toString());
+//                handleFileInfo(response);
                 if (getFileInfoListener != null)
                     getFileInfoListener.onResult(true, response);
             }
         };
     }
 
-    private Response.ErrorListener getFileInfoReqErrorListener() {
+    private Response.ErrorListener getFileInfoReqErrorListener(final GetFileInfoListener getFileInfoListener) {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "getDataOptionType error: " + error.toString());
+                Log.e(TAG, "getFileInfo error: " + error.toString());
+                if (getFileInfoListener != null)
+                    getFileInfoListener.onResult(false, null);
+            }
+        };
+    }
+    ////////////////////////////////////////////////////////////////////////////////
+    
+    ////////////////////////////////////////////////////////////////////////////////listener of folder info
+    private Response.Listener<GsonFolderInfo> getFolderInfoReqSuccessListener(final GetFolderInfoListener getFolderInfoListener) {
+        return new Response.Listener<GsonFolderInfo>() {
+            @Override
+            public void onResponse(GsonFolderInfo response) {
+                Log.e(TAG, "getFolderInfo success response: " + response.toString());
+                if (getFolderInfoListener != null)
+                	getFolderInfoListener.onResult(true, response);
             }
         };
     }
 
+    private Response.ErrorListener getFolderInfoReqErrorListener(final GetFolderInfoListener getFolderInfoListener) {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "getFolderInfo error: " + error.toString());
+                if (getFolderInfoListener != null)
+                	getFolderInfoListener.onResult(false, null);
+            }
+        };
+    }
     ////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////// listener of add customer
@@ -342,18 +278,18 @@ public class HttpManager
     private void handleFileInfo(GsonFileInfo fileInfo) {        
         if (fileInfo != null) {
             // 1. get file path
-            StringBuilder path = new StringBuilder().append(Utility.FILE_PATH).append(fileInfo.getFilePath());
+            StringBuilder path = new StringBuilder().append(Utility.FILE_PATH).append(fileInfo.getValue().get(0).getPath());
             
             // 2. create the folder from file path
             Utility.createFolder(path.toString());
             
             // 3. generate the MD5 string from file name
-            String md5FileName = Utility.generateMD5String(fileInfo.getFileName());
+            String md5FileName = Utility.generateMD5String(fileInfo.getValue().get(0).getFileName());
             
             // 4. To mix md5 file name and file data to "newData", then write data to file path(newFileName)
-            StringBuilder newFileName = new StringBuilder().append(path.toString()).append(fileInfo.getFileName())
+            StringBuilder newFileName = new StringBuilder().append(path.toString()).append(fileInfo.getValue().get(0).getFileName())
                     .append(".txt");
-            StringBuilder newData = new StringBuilder().append(md5FileName).append(fileInfo.getFileData());
+            StringBuilder newData = new StringBuilder().append(md5FileName).append(fileInfo.getValue().get(0).getFileStream());
             
             Utility.writeFile(newFileName.toString(), newData.toString());
        

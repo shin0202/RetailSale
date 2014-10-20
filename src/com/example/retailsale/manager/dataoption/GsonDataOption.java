@@ -1,66 +1,85 @@
 package com.example.retailsale.manager.dataoption;
 
+import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
 
 public class GsonDataOption
 {
-	@SerializedName("optType")
-	private int optType;
-	
-	@SerializedName("optSerial")
-	private int optSerial;
+	@SerializedName("odata.metadata")
+	private String metadata;
+	@SerializedName("value")
+	private List<DataOption> value;
 
-	@SerializedName("optName")
-	private String optName;
-
-	@SerializedName("optLock")
-	private String optLock;
-	
-	public int getOptType()
+	public String getMetadata()
 	{
-
-		return optType;
+		return metadata;
 	}
 
-	public void setOptType(int optType)
+	public void setMetadata(String metadata)
 	{
-
-		this.optType = optType;
-	}
-	
-	public int getOptSerial()
-	{
-
-		return optSerial;
+		this.metadata = metadata;
 	}
 
-	public void setOptSerial(int optSerial)
+	public List<DataOption> getValue()
 	{
-
-		this.optSerial = optSerial;
-	}
-	
-	public String getOptName()
-	{
-
-		return optName;
+		return value;
 	}
 
-	public void setOptName(String optName)
+	public void setValue(List<DataOption> value)
 	{
-
-		this.optName = optName;
-	}
-	
-	public String getOptLock()
-	{
-
-		return optLock;
+		this.value = value;
 	}
 
-	public void setOptLock(String optLock)
+	public class DataOption
 	{
+		@SerializedName("typeName")
+		private String typeName;
+		@SerializedName("optSerial")
+		private int optSerial;
+		@SerializedName("optName")
+		private String optName;
+		@SerializedName("optLock")
+		private boolean optLock;
 
-		this.optLock = optLock;
+		public String getTypeName()
+		{
+			return typeName;
+		}
+
+		public void setTypeName(String typeName)
+		{
+			this.typeName = typeName;
+		}
+
+		public int getOptSerial()
+		{
+			return optSerial;
+		}
+
+		public void setOptSerial(int optSerial)
+		{
+			this.optSerial = optSerial;
+		}
+
+		public String getOptName()
+		{
+			return optName;
+		}
+
+		public void setOptName(String optName)
+		{
+			this.optName = optName;
+		}
+
+		public boolean getOptLock()
+		{
+			return optLock;
+		}
+
+		public void setOptLock(boolean optLock)
+		{
+			this.optLock = optLock;
+		}
 	}
 }
