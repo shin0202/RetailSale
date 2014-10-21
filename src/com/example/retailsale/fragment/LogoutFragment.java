@@ -50,9 +50,9 @@ public class LogoutFragment extends Fragment implements OnClickListener{
 	@Override
 	public void onClick(View v)
 	{
-		if (v.getId() == R.id.logout_btn) {
+		if (v.getId() == R.id.logout_btn) { // didn't clear option data, photo, customer data
 			Log.d(TAG, "Now logout");
-			Utility.saveData(mainActivity, "", "", "", "", "");
+			Utility.saveData(mainActivity, "", "", -1, -1, "");
 			mainActivity.finish();
 		}
 	}

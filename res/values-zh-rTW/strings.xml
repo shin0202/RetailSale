@@ -91,4 +91,17 @@
 
     <!-- API return message -->
     <string name="login_successful">成功登入</string>
+    
+    <!-- Option type name -->
+    <string name="option_user_type">使用者類型</string>
+    <string name="option_customer_sex">客戶性別</string>
+    <string name="option_customer_title">客戶稱謂</string>
+    <string name="option_customer_info">客戶訊息來源</string>
+    <string name="option_customer_job">客戶職業</string>
+    <string name="option_customer_age">客戶年齡</string>
+    <string name="option_service_type">服務類型</string>
+    <string name="option_user_store">使用者店別</string>
+    <string name="option_customer_status">銷售進度</string>
+    <string name="option_customer_budget">客戶預算</string>
+    <string name="option_customer_space">客戶格局需求</string>
 </resources>

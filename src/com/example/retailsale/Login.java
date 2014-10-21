@@ -103,15 +103,16 @@ public class Login extends Activity implements OnClickListener
 					{
 						if (userInfo.getValue() != null && userInfo.getValue().size() > 0)
 						{
-						    String userSerial = userInfo.getValue().get(0).getUserSerial();
-							String userGroup = userInfo.getValue().get(0).getUserGroup();
+						    int userSerial = userInfo.getValue().get(0).getUserSerial();
+							int userGroup = userInfo.getValue().get(0).getUserGroup();
 							String loginKey = userInfo.getValue().get(0).getLoginKey();
 							String message = userInfo.getValue().get(0).getMessage();
 							Log.d(TAG, " userSerial : " + userSerial + " userGroup : " + userGroup + " loginKey : " + loginKey + " message : " + message);
 							if (message.equals(Login.this.getResources().getString(R.string.login_successful))) {
 								Log.d(TAG, "Message is successfully");
 								Utility.saveData(Login.this, id, password, userSerial, userGroup, loginKey);
-								startWelcomeActivity();
+								getDataOption();
+//								startWelcomeActivity();
 							} else {
 								Log.d(TAG, "Message is failed");
 							}
@@ -172,6 +173,9 @@ public class Login extends Activity implements OnClickListener
 						List<DataOption> value = dataOption.getValue();
 						if (value != null)
 						{
+							RetialSaleDbAdapter retialSaleDbAdapter = new RetialSaleDbAdapter(Login.this);
+							retialSaleDbAdapter.open();
+							retialSaleDbAdapter.deleteAllOption();
 							for (int i = 0; i < value.size(); i++)
 							{
 								int optSerial = value.get(i).getOptSerial();
@@ -179,8 +183,11 @@ public class Login extends Activity implements OnClickListener
 								String typeName = value.get(i).getTypeName();
 								boolean optLock = value.get(i).getOptLock();
 								
-								Log.d(TAG, "optSerial : " + optSerial + " optName : " + " typeName : " + typeName + " optLock : " + optLock);
+								Log.d(TAG, "optSerial : " + optSerial + " optName : " + optName + " typeName : " + typeName + " optLock : " + optLock);
+								retialSaleDbAdapter.create(-1, typeName, optSerial, optName);
 							}
+							retialSaleDbAdapter.close();
+							startWelcomeActivity();
 						}
 						else
 						{

@@ -66,10 +66,10 @@ public class GsonLoginInfo
 	public class UserData
 	{
 		@SerializedName("userSerial")
-		private String userSerial;
+		private int userSerial;
 		
 		@SerializedName("userGroup")
-		private String userGroup;
+		private int userGroup;
 		
 		@SerializedName("loginKey")
 		private String loginKey;
@@ -80,22 +80,22 @@ public class GsonLoginInfo
 		@SerializedName("flag")
 		private boolean flag;
 
-		public String getUserSerial()
+		public int getUserSerial()
 		{
 			return userSerial;
 		}
 
-		public void setUserSerial(String userSerial)
+		public void setUserSerial(int userSerial)
 		{
 			this.userSerial = userSerial;
 		}
 
-		public String getUserGroup()
+		public int getUserGroup()
 		{
 			return userGroup;
 		}
 
-		public void setUserGroup(String userGroup)
+		public void setUserGroup(int userGroup)
 		{
 			this.userGroup = userGroup;
 		}

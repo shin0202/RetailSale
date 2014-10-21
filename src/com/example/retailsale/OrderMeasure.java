@@ -30,8 +30,8 @@ import com.example.retailsale.util.Utility;
 public class OrderMeasure extends Activity implements OnClickListener, OnCheckedChangeListener
 {
 	private static final String TAG = "OrderMeasure";
-	private OptionAdapter requestAdapter, costAdapter, statusAdapter;
-	private List<GsonDataOptionType> requestList, costList, statusList;
+	private OptionAdapter spaceAdapter, budgetAdapter, statusAdapter;
+	private List<GsonDataOptionType> spaceList, budgetList, statusList;
 	
 	private boolean isSendNoteMsgChecked = false, isAsAboveChecked = false;
 	private CustomerInfo customerInfo;
@@ -42,7 +42,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 	private CheckBox asAboveCheckBox;
 	private DatePicker measureDate;
 	private TimePicker measureTime;
-	private Spinner requestSpinner, costSpinner, statusSpinner;
+	private Spinner spaceSpinner, budgetSpinner, statusSpinner;
 	private TextView saleCreateDateTV, consumerNameTV, phoneNumberTV;
 	private EditText caseNameET, cantDescriptionET, consumerAddressET, contactAddressET, commentET;
 
@@ -117,8 +117,8 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		commentET = (EditText) findViewById(R.id.order_measure_consumer_comment);
 		
 		statusSpinner = (Spinner) findViewById(R.id.order_measure_sale_status_request);
-		requestSpinner = (Spinner) findViewById(R.id.order_measure_consumer_request);
-		costSpinner = (Spinner) findViewById(R.id.order_measure_consumer_cost);
+		spaceSpinner = (Spinner) findViewById(R.id.order_measure_consumer_request);
+		budgetSpinner = (Spinner) findViewById(R.id.order_measure_consumer_cost);
 		
 		cancelBtn.setOnClickListener(this);
 		saveBtn.setOnClickListener(this);
@@ -177,8 +177,8 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 			cantDescriptionET.setText(cantDescription);
 			statusSpinner.setSelection(statusPosition);
 			commentET.setText(comment);
-			requestSpinner.setSelection(requestPosition);
-			costSpinner.setSelection(costPosition);
+			spaceSpinner.setSelection(requestPosition);
+			budgetSpinner.setSelection(costPosition);
 		}
 	}
 	
@@ -226,10 +226,10 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		customerInfo.setReservationComment(commentET.getText().toString());
 		
 		// request
-		customerInfo.setReservationSpace(requestSpinner.getSelectedItemPosition());
+		customerInfo.setReservationSpace(spaceSpinner.getSelectedItemPosition());
 		
 		// cost
-		customerInfo.setReservationBudget(costSpinner.getSelectedItemPosition());
+		customerInfo.setReservationBudget(budgetSpinner.getSelectedItemPosition());
 		
 		// send result
 	    Intent resultIntent = new Intent();
@@ -255,8 +255,8 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 	}
 	
 	private void getOptionType() {
-	    requestList = new ArrayList<GsonDataOptionType>();
-	    costList = new ArrayList<GsonDataOptionType>();
+	    spaceList = new ArrayList<GsonDataOptionType>();
+	    budgetList = new ArrayList<GsonDataOptionType>();
 	    statusList = new ArrayList<GsonDataOptionType>();
 	    
 	    retialSaleDbAdapter = new RetialSaleDbAdapter(OrderMeasure.this);
@@ -266,6 +266,9 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
         int optionType, optionSerial;
         String optionAlias, optionName;
+        String statusType = this.getResources().getString(R.string.option_customer_status);
+        String budgetType = this.getResources().getString(R.string.option_customer_budget);
+        String spaceType = this.getResources().getString(R.string.option_customer_space);
         
         if (optionTypeCursor != null) {
             int count = optionTypeCursor.getCount();
@@ -285,16 +288,17 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
                     optionName = optionTypeCursor.getString(optionTypeCursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_NAME));
                     
-                    switch (optionType) {
-                    case RetialSaleDbAdapter.OPTION_RESERVATION_STATUS_IDNEX :
-                        statusList.add(new GsonDataOptionType(optionSerial, optionName));
-                        break;
-                    case RetialSaleDbAdapter.OPTION_RESERVATION_BUDGET_IDNEX :
-                        costList.add(new GsonDataOptionType(optionSerial, optionName));
-                        break;
-                    case RetialSaleDbAdapter.OPTION_RESERVATION_SPACE_IDNEX:
-                        requestList.add(new GsonDataOptionType(optionSerial, optionName));
-                        break;
+                    if (optionAlias.equals(statusType)) 
+                    {
+                    	statusList.add(new GsonDataOptionType(optionSerial, optionName));
+                    }
+                    else if (optionAlias.equals(budgetType))
+                    {
+                    	budgetList.add(new GsonDataOptionType(optionSerial, optionName));
+                    }
+                    else if (optionAlias.equals(spaceType))
+                    {
+                    	spaceList.add(new GsonDataOptionType(optionSerial, optionName));
                     }
                 }
             }
@@ -309,12 +313,12 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         statusSpinner.setAdapter(statusAdapter);
         
         // budget spinner
-        costAdapter = new OptionAdapter(OrderMeasure.this, costList);
-        costSpinner.setAdapter(costAdapter);
+        budgetAdapter = new OptionAdapter(OrderMeasure.this, budgetList);
+        budgetSpinner.setAdapter(budgetAdapter);
         
         // space spinner
-        requestAdapter = new OptionAdapter(OrderMeasure.this, requestList);
-        requestSpinner.setAdapter(requestAdapter);
+        spaceAdapter = new OptionAdapter(OrderMeasure.this, spaceList);
+        spaceSpinner.setAdapter(spaceAdapter);
 	}
 	
 	private void handleContactAddress(boolean isEnable) {

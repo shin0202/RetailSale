@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -121,7 +122,10 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		consumerVisitTimeTP.setIs24HourView(true);
 		
 	    // set & check option data
-        setOptionType();
+//        setOptionType(); login will do this, get data from server
+	    retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
+	    
+	    retialSaleDbAdapter.open();
         
         // get optionType
         getOptionType();
@@ -265,12 +269,18 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             int sendNoteValue = isSendMsg ? 1 : 0;
             String createDateTime = Utility.getCurrentDateTime();
             Log.d(TAG, "sendNoteValue is " + sendNoteValue + " createDateTime is " + createDateTime);
+            
+            SharedPreferences settings = mainActivity.getSharedPreferences(Utility.LoginField.DATA, 0);
+            
+            int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
+            int userGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
+            
             long id = retialSaleDbAdapter.create(customerInfo.getCustometName(), customerInfo.getCustomerHome(),
                     customerInfo.getCustomerMobile(), customerInfo.getCustomerCompany(),
                     customerInfo.getCustomerMail(), customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
                     customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(), customerInfo.getCustomerJob(),
                     customerInfo.getCustomerIntroducer(), customerInfo.getCustomerAge(),
-                    customerInfo.getCustomerVisitDate(), createDateTime, sendNoteValue,
+                    customerInfo.getCustomerVisitDate(), userSerial, userGroup, createDateTime, sendNoteValue,
                     customerInfo.getReservationWorkAlias(), customerInfo.getReservationStatusComment(),
                     customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
                     customerInfo.getReservationContact(), customerInfo.getReservationComment(),
@@ -430,6 +440,12 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
         int optionType, optionSerial;
         String optionAlias, optionName;
+        String sexType = mainActivity.getResources().getString(R.string.option_customer_sex);
+        String titleType = mainActivity.getResources().getString(R.string.option_customer_title);
+        String infoType = mainActivity.getResources().getString(R.string.option_customer_info);
+        String jobType = mainActivity.getResources().getString(R.string.option_customer_job);
+        String ageType = mainActivity.getResources().getString(R.string.option_customer_age);
+
         
         if (optionTypeCursor != null) {
             int count = optionTypeCursor.getCount();
@@ -449,23 +465,26 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     optionName = optionTypeCursor.getString(optionTypeCursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_NAME));
                     
-                    switch (optionType) {
-                    case RetialSaleDbAdapter.OPTION_CUSTOMER_SEX_IDNEX :
-                        sexList.add(new GsonDataOptionType(optionSerial, optionName));
-                        break;
-                    case RetialSaleDbAdapter.OPTION_CUSTOMER_TITLE_IDNEX :
-                        titleList.add(new GsonDataOptionType(optionSerial, optionName));
-                        break;
-                    case RetialSaleDbAdapter.OPTION_CUSTOMER_INFO_IDNEX:
-                        infoList.add(new GsonDataOptionType(optionSerial, optionName));
-                        break;
-                    case RetialSaleDbAdapter.OPTION_CUSTOMER_JOB_IDNEX:
-                        jobList.add(new GsonDataOptionType(optionSerial, optionName));
-                        break;
-                    case RetialSaleDbAdapter.OPTION_CUSTOMER_AGE_IDNEX:
-                        ageList.add(new GsonDataOptionType(optionSerial, optionName));
-                        break;
-                    }
+					if (optionAlias.equals(sexType))
+					{
+						sexList.add(new GsonDataOptionType(optionSerial, optionName));
+					}
+					else if (optionAlias.equals(titleType))
+					{
+						titleList.add(new GsonDataOptionType(optionSerial, optionName));
+					}
+					else if (optionAlias.equals(infoType))
+					{
+						infoList.add(new GsonDataOptionType(optionSerial, optionName));
+					}
+					else if (optionAlias.equals(jobType))
+					{
+						jobList.add(new GsonDataOptionType(optionSerial, optionName));
+					}
+					else if (optionAlias.equals(ageType))
+					{
+						ageList.add(new GsonDataOptionType(optionSerial, optionName));
+					}
                 }
             }
         } else {

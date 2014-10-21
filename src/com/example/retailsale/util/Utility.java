@@ -289,14 +289,14 @@ public class Utility
 		return header.toString();
 	}
 	
-	public static void saveData(Activity activity, String id, String password, String userSerial, String userGroup, String loginKey)
+	public static void saveData(Activity activity, String id, String password, int userSerial, int userGroup, String loginKey)
 	{
 		SharedPreferences settings = activity.getSharedPreferences(Utility.LoginField.DATA, 0);
 		settings.edit()
 		        .putString(Utility.LoginField.ID, id)
 				.putString(Utility.LoginField.PASSWORD, password)
-				.putString(Utility.LoginField.USER_SERIAL, userSerial)
-				.putString(Utility.LoginField.USER_GROUP, userGroup)
+				.putInt(Utility.LoginField.USER_SERIAL, userSerial)
+				.putInt(Utility.LoginField.USER_GROUP, userGroup)
 				.putString(Utility.LoginField.LOGIN_KEY, loginKey)
 				.commit();
 	}
