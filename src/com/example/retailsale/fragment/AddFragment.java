@@ -47,7 +47,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	private boolean isSendMsg = false;
 	
 	// views
-	private MainActivity mainActivty;
+	private MainActivity mainActivity;
 	private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner;
 	private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET,
 			emailET, customerBirthdayET, introducerET;
@@ -85,7 +85,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	{
 		super.onAttach(activity);
 		Log.d(TAG, "onAttach()");
-		mainActivty = (MainActivity) activity;
+		mainActivity = (MainActivity) activity;
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		{
 		case R.id.add_tab_save_btn:
 			saveData();
-			mainActivty.finishActivity();
+			mainActivity.finishActivity();
 			break;
 		case R.id.add_tab_new_btn:
 			startOrderMeasureActivity();

@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,8 +31,6 @@ public class Login extends Activity implements OnClickListener
 	private EditText  inputUserId;
 	private EditText inputUserPassword;
 	
-	private SharedPreferences settings;
-	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -45,7 +42,10 @@ public class Login extends Activity implements OnClickListener
     @Override
     protected void onResume() {
     	super.onResume();
-    	readData();
+    	boolean hadLogin = Utility.hadLogin(Login.this);
+    	
+    	if (hadLogin)
+    		startWelcomeActivity();
     }
     
     @Override
@@ -110,7 +110,7 @@ public class Login extends Activity implements OnClickListener
 							Log.d(TAG, " userSerial : " + userSerial + " userGroup : " + userGroup + " loginKey : " + loginKey + " message : " + message);
 							if (message.equals(Login.this.getResources().getString(R.string.login_successful))) {
 								Log.d(TAG, "Message is successfully");
-								saveData(id, password, userSerial, userGroup, loginKey);
+								Utility.saveData(Login.this, id, password, userSerial, userGroup, loginKey);
 								startWelcomeActivity();
 							} else {
 								Log.d(TAG, "Message is failed");
@@ -134,32 +134,28 @@ public class Login extends Activity implements OnClickListener
 		});
 	}
 	
-	private void saveData(String id, String password, String userSerial, String userGroup, String loginKey)
-	{
-		settings = getSharedPreferences(Utility.LoginField.DATA, 0);
-		settings.edit()
-		        .putString(Utility.LoginField.ID, id)
-				.putString(Utility.LoginField.PASSWORD, password)
-				.putString(Utility.LoginField.USER_SERIAL, userSerial)
-				.putString(Utility.LoginField.USER_GROUP, userGroup)
-				.putString(Utility.LoginField.LOGIN_KEY, loginKey)
-				.commit();
-	}
+//	private void saveData(String id, String password, String userSerial, String userGroup, String loginKey)
+//	{
+//		settings = getSharedPreferences(Utility.LoginField.DATA, 0);
+//		settings.edit()
+//		        .putString(Utility.LoginField.ID, id)
+//				.putString(Utility.LoginField.PASSWORD, password)
+//				.putString(Utility.LoginField.USER_SERIAL, userSerial)
+//				.putString(Utility.LoginField.USER_GROUP, userGroup)
+//				.putString(Utility.LoginField.LOGIN_KEY, loginKey)
+//				.commit();
+//	}
 	
-	private void readData() {
-        settings = getSharedPreferences(Utility.LoginField.DATA, 0);
+//	private void readData() 
+//	{
+//		SharedPreferences settings = getSharedPreferences(Utility.LoginField.DATA, 0);
 //        inputUserId.setText(settings.getString(Utility.LoginField.ID, ""));
 //        inputUserPassword.setText(settings.getString(Utility.LoginField.PASSWORD, ""));
 //        
 //        Log.d(TAG,
 //                "User group : " + settings.getString(Utility.LoginField.USER_GROUP, "") + " Login key : "
 //                        + settings.getString(Utility.LoginField.LOGIN_KEY, ""));
-        String id = settings.getString(Utility.LoginField.ID, "");
-        
-        if (id != null && !id.equals("")) {
-            startWelcomeActivity();
-        }
-	}
+//	}
 	
 	private void getDataOption()
 	{

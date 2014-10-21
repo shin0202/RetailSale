@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -285,5 +287,31 @@ public class Utility
 				.append(userName).append("\",\"UserHostAddress\":\"").append(userHostAddress).append("\",\"ActionName\":\"").append(actionName).append("\"}");
 		
 		return header.toString();
+	}
+	
+	public static void saveData(Activity activity, String id, String password, String userSerial, String userGroup, String loginKey)
+	{
+		SharedPreferences settings = activity.getSharedPreferences(Utility.LoginField.DATA, 0);
+		settings.edit()
+		        .putString(Utility.LoginField.ID, id)
+				.putString(Utility.LoginField.PASSWORD, password)
+				.putString(Utility.LoginField.USER_SERIAL, userSerial)
+				.putString(Utility.LoginField.USER_GROUP, userGroup)
+				.putString(Utility.LoginField.LOGIN_KEY, loginKey)
+				.commit();
+	}
+	
+	public static boolean hadLogin(Activity actiivty) {
+		SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, 0);
+        String id = settings.getString(Utility.LoginField.ID, "");
+        
+        if (id != null && !id.equals(""))
+        {
+        	return true;
+        }
+        else
+        {
+        	return false;
+        }
 	}
 }
