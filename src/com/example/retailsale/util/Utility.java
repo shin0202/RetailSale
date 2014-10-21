@@ -46,6 +46,16 @@ public class Utility
 		public static final String FATCA_INFO_LOGIN = "{\"LogType\":\"Login\",\"UserNo\":\"095050\",\"UserName\":\"\",\"UserHostAddress\":\"127.0.0.1\",\"ActionName\":\"http://fatcaweb/FATCA/FATCA/\"}";
 	}
 	
+	public class LoginField
+	{
+	    public static final String DATA = "data";
+	    public static final String ID = "id";
+	    public static final String PASSWORD = "password";
+	    public static final String USER_SERIAL = "user_serial";
+	    public static final String USER_GROUP = "user_group";
+	    public static final String LOGIN_KEY = "login_key";
+	}
+	
 	// for home, company
 	public static boolean isPhoneValid(String email) {
 		boolean isValid = false;

@@ -23,13 +23,11 @@ import com.example.retailsale.manager.folderinfo.GetFolderInfoListener;
 import com.example.retailsale.manager.folderinfo.GsonFolderInfo;
 import com.example.retailsale.manager.login.GetLoginListener;
 import com.example.retailsale.manager.login.GsonLoginInfo;
+import com.example.retailsale.util.Utility;
 
 public class Login extends Activity implements OnClickListener
 {
 	private static final String TAG = "Login";
-    private static final String DATA = "data";
-    private static final String ID_FIELD = "id";
-    private static final String PASSWORD_FIELD = "password";
 	
 	private EditText  inputUserId;
 	private EditText inputUserPassword;
@@ -73,7 +71,14 @@ public class Login extends Activity implements OnClickListener
 	{
 		switch (v.getId()) {
 		case R.id.login_btn:
-			login();
+            String id = inputUserId.getText().toString();
+            String password = inputUserPassword.getText().toString();
+
+            if (id.equals("")) {
+                id = "A123456";
+                password = "1qaz@wsx";
+            }
+			login(id, password);
 			break;
 		}
 	}
@@ -81,12 +86,13 @@ public class Login extends Activity implements OnClickListener
 	private void startWelcomeActivity() {
 		Intent intent = new Intent(Login.this, WelcomeActivity.class);
 		startActivity(intent);
+//		Login.this.finish();
 	}
 	
-	private void login()
-	{
+	private void login(final String id, final String password)
+	{	    
 		HttpManager httpManager = new HttpManager();
-		httpManager.login(Login.this, "A123456", "1qaz@wsx", new GetLoginListener()
+		httpManager.login(Login.this, id, password, new GetLoginListener()
 		{
 			@Override
 			public void onResult(Boolean isSuccess, GsonLoginInfo userInfo)
@@ -97,13 +103,14 @@ public class Login extends Activity implements OnClickListener
 					{
 						if (userInfo.getValue() != null && userInfo.getValue().size() > 0)
 						{
+						    String userSerial = userInfo.getValue().get(0).getUserSerial();
 							String userGroup = userInfo.getValue().get(0).getUserGroup();
 							String loginKey = userInfo.getValue().get(0).getLoginKey();
 							String message = userInfo.getValue().get(0).getMessage();
-							Log.d(TAG, "userGroup : " + userGroup + " loginKey : " + loginKey + " message : " + message);
+							Log.d(TAG, " userSerial : " + userSerial + " userGroup : " + userGroup + " loginKey : " + loginKey + " message : " + message);
 							if (message.equals(Login.this.getResources().getString(R.string.login_successful))) {
 								Log.d(TAG, "Message is successfully");
-								saveData();
+								saveData(id, password, userSerial, userGroup, loginKey);
 								startWelcomeActivity();
 							} else {
 								Log.d(TAG, "Message is failed");
@@ -127,17 +134,31 @@ public class Login extends Activity implements OnClickListener
 		});
 	}
 	
-	private void saveData()
+	private void saveData(String id, String password, String userSerial, String userGroup, String loginKey)
 	{
-		settings = getSharedPreferences(DATA, 0);
-		settings.edit().putString(ID_FIELD, inputUserId.getText().toString())
-				.putString(PASSWORD_FIELD, inputUserPassword.getText().toString()).commit();
+		settings = getSharedPreferences(Utility.LoginField.DATA, 0);
+		settings.edit()
+		        .putString(Utility.LoginField.ID, id)
+				.putString(Utility.LoginField.PASSWORD, password)
+				.putString(Utility.LoginField.USER_SERIAL, userSerial)
+				.putString(Utility.LoginField.USER_GROUP, userGroup)
+				.putString(Utility.LoginField.LOGIN_KEY, loginKey)
+				.commit();
 	}
 	
 	private void readData() {
-        settings = getSharedPreferences(DATA, 0);
-        inputUserId.setText(settings.getString(ID_FIELD, ""));
-        inputUserPassword.setText(settings.getString(PASSWORD_FIELD, ""));
+        settings = getSharedPreferences(Utility.LoginField.DATA, 0);
+//        inputUserId.setText(settings.getString(Utility.LoginField.ID, ""));
+//        inputUserPassword.setText(settings.getString(Utility.LoginField.PASSWORD, ""));
+//        
+//        Log.d(TAG,
+//                "User group : " + settings.getString(Utility.LoginField.USER_GROUP, "") + " Login key : "
+//                        + settings.getString(Utility.LoginField.LOGIN_KEY, ""));
+        String id = settings.getString(Utility.LoginField.ID, "");
+        
+        if (id != null && !id.equals("")) {
+            startWelcomeActivity();
+        }
 	}
 	
 	private void getDataOption()

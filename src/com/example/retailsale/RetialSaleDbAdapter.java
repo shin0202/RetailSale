@@ -45,16 +45,16 @@ public class RetialSaleDbAdapter
 	/************************************************************************** for add customer */
 	/************************************************************************** for order measure */
 	public static final String KEY_ADD_SEND_MSG = "send_msg";
-	public static final String KEY_ADD_CASE_NAME = "case_name";
-	public static final String KEY_ADD_STATUS_COMMENT = "status_comment";
-	public static final String KEY_ADD_SALE_STATUS = "sale_status";
-	public static final String KEY_ADD_CUSTOMER_ADDRESS = "customer_address";
-	public static final String KEY_ADD_CONTACT_ADDRESS = "contact_address";
-	public static final String KEY_ADD_COMMENT = "comment";
-	public static final String KEY_ADD_REQUEST = "request";
-	public static final String KEY_ADD_COST = "cost";
-	public static final String KEY_ADD_WORK_DATE_TIME = "work_date_time";
-	public static final String KEY_ADD_IS_UPLOAD = "is_upload"; // the field to check upload or not
+	public static final String KEY_WORK_ALIAS = "work_alias";
+	public static final String KEY_STATUS_COMMENT = "status_comment";
+	public static final String KEY_STATUS = "status";
+	public static final String KEY_WORK = "work";
+	public static final String KEY_CONTACT = "contact";
+	public static final String KEY_COMMENT = "comment";
+	public static final String KEY_SPACE = "space";
+	public static final String KEY_BUDGET = "budget";
+	public static final String KEY_WORK_DATE_TIME = "work_date_time";
+	public static final String KEY_IS_UPLOAD = "is_upload"; // the field to check upload or not
 	/************************************************************************** for order measure */
 	/************************************************************************** for data option */
 	public static final String KEY_DATA_OPTION_ID = "_id";
@@ -84,11 +84,11 @@ public class RetialSaleDbAdapter
 			+ KEY_ADD_BIRTHDAY + " TEXT," + KEY_ADD_MSG_FROM + " INTEGER," + KEY_ADD_TITLE
 			+ " INTEGER," + KEY_ADD_JOB + " INTEGER," + KEY_ADD_INTRODUCER + " TEXT," + KEY_ADD_AGE
 			+ " INTEGER," + KEY_ADD_VISIT_DATE_TIME + " TEXT," + KEY_ADD_CREATE_DATE + " TEXT,"
-			+ KEY_ADD_SEND_MSG + " INTEGER," + KEY_ADD_CASE_NAME + " TEXT,"
-			+ KEY_ADD_STATUS_COMMENT + " TEXT," + KEY_ADD_SALE_STATUS + " INTEGER,"
-			+ KEY_ADD_CUSTOMER_ADDRESS + " TEXT," + KEY_ADD_CONTACT_ADDRESS + " TEXT,"
-			+ KEY_ADD_COMMENT + " TEXT," + KEY_ADD_REQUEST + " INTEGER," + KEY_ADD_COST
-			+ " INTEGER," + KEY_ADD_WORK_DATE_TIME + " TEXT," + KEY_ADD_IS_UPLOAD +  " INTEGER" + ");";
+			+ KEY_ADD_SEND_MSG + " INTEGER," + KEY_WORK_ALIAS + " TEXT,"
+			+ KEY_STATUS_COMMENT + " TEXT," + KEY_STATUS + " INTEGER,"
+			+ KEY_WORK + " TEXT," + KEY_CONTACT + " TEXT,"
+			+ KEY_COMMENT + " TEXT," + KEY_SPACE + " INTEGER," + KEY_BUDGET
+			+ " INTEGER," + KEY_WORK_DATE_TIME + " TEXT," + KEY_IS_UPLOAD +  " INTEGER" + ");";
 	private static final String DATA_OPTION_CREATE = CREATE_TABLE_STRING + DATA_OPTION_TABLE + "("
 			+ KEY_DATA_OPTION_ID + " INTEGER PRIMARY KEY," + KEY_DATA_OPTION_TYPE + " INTEGER,"
 			+ KEY_DATA_OPTION_ALIAS + " TEXT," + KEY_DATA_OPTION_SERIAL + " INTEGER,"
@@ -233,10 +233,10 @@ public class RetialSaleDbAdapter
 				KEY_ADD_CUSTOMER_NAME, KEY_ADD_PHONE_NUMBER, KEY_ADD_CELL_PHONE_NUMBER,
 				KEY_ADD_COMPANY_PHONE, KEY_ADD_EMAIL, KEY_ADD_SEX, KEY_ADD_BIRTHDAY,
 				KEY_ADD_MSG_FROM, KEY_ADD_TITLE, KEY_ADD_JOB, KEY_ADD_INTRODUCER, KEY_ADD_AGE,
-				KEY_ADD_VISIT_DATE_TIME, KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG, KEY_ADD_CASE_NAME,
-				KEY_ADD_STATUS_COMMENT, KEY_ADD_SALE_STATUS, KEY_ADD_CUSTOMER_ADDRESS,
-				KEY_ADD_CONTACT_ADDRESS, KEY_ADD_COMMENT, KEY_ADD_REQUEST, KEY_ADD_COST,
-				KEY_ADD_WORK_DATE_TIME, KEY_ADD_IS_UPLOAD }, null, null, null, null, KEY_ADD_CREATE_DATE + ORDER_DESC);
+				KEY_ADD_VISIT_DATE_TIME, KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG, KEY_WORK_ALIAS,
+				KEY_STATUS_COMMENT, KEY_STATUS, KEY_WORK,
+				KEY_CONTACT, KEY_COMMENT, KEY_SPACE, KEY_BUDGET,
+				KEY_WORK_DATE_TIME, KEY_IS_UPLOAD }, null, null, null, null, KEY_ADD_CREATE_DATE + ORDER_DESC);
 	}
 
 	/** Get all option from option table */
@@ -251,9 +251,9 @@ public class RetialSaleDbAdapter
 	public long create(String customerName, String phoneNumber, String cellphoneNumer,
 			String companyPhone, String email, int sex, String birthday, int msgFrom,
 			int title, int job, String introducer, int age, String visitDateTime,
-			String createDate, int sendMsg, String caseName, String statusComment,
-			int saleStatus, String customerAddress, String contactAddress, String comment,
-			int request, int cost, String workDateTime, int isUpload)
+			String createDate, int sendMsg, String workAlias, String statusComment,
+			int status, String work, String contact, String comment,
+			int space, int budget, String workDateTime, int isUpload)
 	{
 		ContentValues args = new ContentValues();
 		args.put(KEY_ADD_CUSTOMER_NAME, customerName);
@@ -271,16 +271,17 @@ public class RetialSaleDbAdapter
 		args.put(KEY_ADD_VISIT_DATE_TIME, visitDateTime);
 		args.put(KEY_ADD_CREATE_DATE, createDate);
 		args.put(KEY_ADD_SEND_MSG, sendMsg);
-		args.put(KEY_ADD_CASE_NAME, caseName);
-		args.put(KEY_ADD_STATUS_COMMENT, statusComment);
-		args.put(KEY_ADD_SALE_STATUS, saleStatus);
-		args.put(KEY_ADD_CUSTOMER_ADDRESS, customerAddress);
-		args.put(KEY_ADD_CONTACT_ADDRESS, contactAddress);
-		args.put(KEY_ADD_COMMENT, comment);
-		args.put(KEY_ADD_REQUEST, request);
-		args.put(KEY_ADD_COST, cost);
-		args.put(KEY_ADD_WORK_DATE_TIME, workDateTime);
-		args.put(KEY_ADD_IS_UPLOAD, isUpload);
+		
+		args.put(KEY_WORK_ALIAS, workAlias);
+		args.put(KEY_STATUS_COMMENT, statusComment);
+		args.put(KEY_STATUS, status);
+		args.put(KEY_WORK, work);
+		args.put(KEY_CONTACT, contact);
+		args.put(KEY_COMMENT, comment);
+		args.put(KEY_SPACE, space);
+		args.put(KEY_BUDGET, budget);
+		args.put(KEY_WORK_DATE_TIME, workDateTime);
+		args.put(KEY_IS_UPLOAD, isUpload);
 		return db.insert(ADD_CUSTOMER_TABLE, null, args);
 	}
 
@@ -338,9 +339,9 @@ public class RetialSaleDbAdapter
 					KEY_ADD_CELL_PHONE_NUMBER, KEY_ADD_COMPANY_PHONE, KEY_ADD_EMAIL, KEY_ADD_SEX,
 					KEY_ADD_BIRTHDAY, KEY_ADD_MSG_FROM, KEY_ADD_TITLE, KEY_ADD_JOB,
 					KEY_ADD_INTRODUCER, KEY_ADD_AGE, KEY_ADD_VISIT_DATE_TIME, KEY_ADD_CREATE_DATE,
-					KEY_ADD_SEND_MSG, KEY_ADD_CASE_NAME, KEY_ADD_STATUS_COMMENT,
-					KEY_ADD_SALE_STATUS, KEY_ADD_CUSTOMER_ADDRESS, KEY_ADD_CONTACT_ADDRESS,
-					KEY_ADD_COMMENT, KEY_ADD_REQUEST, KEY_ADD_COST, KEY_ADD_WORK_DATE_TIME, KEY_ADD_IS_UPLOAD },
+					KEY_ADD_SEND_MSG, KEY_WORK_ALIAS, KEY_STATUS_COMMENT,
+					KEY_STATUS, KEY_WORK, KEY_CONTACT,
+					KEY_COMMENT, KEY_SPACE, KEY_BUDGET, KEY_WORK_DATE_TIME, KEY_IS_UPLOAD },
 					KEY_ADD_CUSTOMER_ID + "=" + rowId, null, null, null, null, null);
 			if (cursor != null) { return cursor; }
 			return null;
@@ -373,9 +374,9 @@ public class RetialSaleDbAdapter
 	public boolean updateCustomer(String rowID, String customerName, String phoneNumber,
 			String cellphoneNumer, String companyPhone, String email, int sex, String birthday,
 			int msgFrom, int title, int job, String introducer, int age,
-			String visitDateTime, String createDate, int sendMsg, String caseName,
-			String statusComment, int saleStatus, String customerAddress,
-			String contactAddress, String comment, int request, int cost, String workDateTime, int isUpload)
+			String visitDateTime, String createDate, int sendMsg, String workAlias,
+			String statusComment, int status, String work,
+			String contact, String comment, int space, int budget, String workDateTime, int isUpload)
 	{
 		if (db.isOpen())
 		{
@@ -395,16 +396,16 @@ public class RetialSaleDbAdapter
 			args.put(KEY_ADD_VISIT_DATE_TIME, visitDateTime);
 			args.put(KEY_ADD_CREATE_DATE, createDate);
 			args.put(KEY_ADD_SEND_MSG, sendMsg);
-			args.put(KEY_ADD_CASE_NAME, caseName);
-			args.put(KEY_ADD_STATUS_COMMENT, statusComment);
-			args.put(KEY_ADD_SALE_STATUS, saleStatus);
-			args.put(KEY_ADD_CUSTOMER_ADDRESS, customerAddress);
-			args.put(KEY_ADD_CONTACT_ADDRESS, contactAddress);
-			args.put(KEY_ADD_COMMENT, comment);
-			args.put(KEY_ADD_REQUEST, request);
-			args.put(KEY_ADD_COST, cost);
-			args.put(KEY_ADD_WORK_DATE_TIME, workDateTime);
-			args.put(KEY_ADD_IS_UPLOAD, isUpload);
+			args.put(KEY_WORK_ALIAS, workAlias);
+			args.put(KEY_STATUS_COMMENT, statusComment);
+			args.put(KEY_STATUS, status);
+			args.put(KEY_WORK, work);
+			args.put(KEY_CONTACT, contact);
+			args.put(KEY_COMMENT, comment);
+			args.put(KEY_SPACE, space);
+			args.put(KEY_BUDGET, budget);
+			args.put(KEY_WORK_DATE_TIME, workDateTime);
+			args.put(KEY_IS_UPLOAD, isUpload);
 			return db.update(ADD_CUSTOMER_TABLE, args, KEY_ADD_CUSTOMER_ID + "=" + rowID,
 					null) > 0;
 		}

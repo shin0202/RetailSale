@@ -13,8 +13,8 @@
     <string name="system_title">門市管理系統</string>
     <string name="user_id">使用者帳號</string>
     <string name="user_pwd">使用者密碼</string>
-    <string name="user_id_hint">請輸入使用者帳號</string>
-    <string name="user_pwd_hint">請輸入使用者密碼</string>
+    <string name="user_id_hint">請輸入使用者帳號(A123456)</string>
+    <string name="user_pwd_hint">請輸入使用者密碼(1qaz@wsx)</string>
 
     <!-- tab name -->
     <string name="add_consumer">新增客戶資料</string>
