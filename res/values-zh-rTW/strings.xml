@@ -26,16 +26,16 @@
     <string name="add_tab_customer_name">客戶姓名</string>
     <string name="add_tab_customer_name_hint">請輸入客戶姓名</string>
     <string name="add_tab_phone_number">住家電話</string>
-    <string name="add_tab_phone_number_hint">請輸入住家電話</string>
+    <string name="add_tab_phone_number_hint">請輸入住家電話(02-12345678)</string>
     <string name="add_tab_phone_number_company">公司電話</string>
-    <string name="add_tab_phone_number_company_hint">請輸入公司電話</string>
+    <string name="add_tab_phone_number_company_hint">請輸入公司電話(02-12345678#0000)</string>
     <string name="add_tab_cellphone_number">手機電話</string>
-    <string name="add_tab_cellphone_number_hint">請輸入手機電話</string>
+    <string name="add_tab_cellphone_number_hint">請輸入手機電話(0912345678)</string>
     <string name="add_tab_select_info">訊息來源</string>
     <string name="add_tab_select_job">職業</string>
     <string name="add_tab_leave_info">客戶不留基本資料</string>
     <string name="add_tab_email">電子郵件</string>
-    <string name="add_tab_email_hint">請輸入電子郵件</string>
+    <string name="add_tab_email_hint">請輸入電子郵件(john@xxx.xxx)</string>
     <string name="add_tab_age">年齡</string>
     <string name="add_tab_sex">性別</string>
 
@@ -47,7 +47,7 @@
     <string name="add_tab_create_date">建立日期</string>
     <string name="add_tab_title">稱謂</string>
     <string name="add_tab_customer_birthday">客戶生日</string>
-    <string name="add_tab_customer_birthday_hint">請輸入客戶生日</string>
+    <string name="add_tab_customer_birthday_hint">請輸入客戶生日(19880202)</string>
     <string name="add_tab_customer_introducer">介紹人</string>
     <string name="add_tab_customer_introducer_hint">請輸入介紹人</string>
     <string name="add_tab_customer_visit_time">來店時間</string>
@@ -88,6 +88,11 @@
 
     <!-- Error String -->
     <string name="field_error">欄位錯誤</string>
+    <string name="home_phone_field_error">住家電話欄位錯誤</string>
+    <string name="cell_phone_field_error">手機電話欄位錯誤</string>
+    <string name="company_phone_field_error">公司電話欄位錯誤</string>
+    <string name="email_field_error">郵件信箱欄位欄位錯誤</string>
+    <string name="birthday_field_error">客戶生日欄位錯誤</string>
 
     <!-- API return message -->
     <string name="login_successful">成功登入</string>

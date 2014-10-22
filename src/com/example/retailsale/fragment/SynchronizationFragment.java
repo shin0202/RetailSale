@@ -14,13 +14,8 @@ import com.example.retailsale.MainActivity;
 import com.example.retailsale.R;
 
 public class SynchronizationFragment extends Fragment implements OnClickListener {
-//    private Context context;
     private LinearLayout uploadConsumer, downloadPicture, syncData;
     private TextView showTitle, showDescription, showMessage;
-    
-//    public SynchronizationFragment(Context context) {
-//        this.context = context;
-//    }
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +27,6 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 	{
 		super.onAttach(activity);
 		MainActivity mainActivity = (MainActivity) activity;
-		// value = mainActivity.getSyncData();
 	}
         
     @Override
@@ -90,8 +84,6 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-//		TextView txtResult = (TextView) this.getView().findViewById(R.id.textView1);
-//		txtResult.setText(value);
 	}
 
     @Override

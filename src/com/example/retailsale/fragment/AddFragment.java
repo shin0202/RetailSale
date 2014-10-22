@@ -224,31 +224,31 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		// check phone number
 		if (!isChecked && !Utility.isPhoneValid(phoneNumber))
 		{
-			showToast(this.getActivity().getResources().getString(R.string.field_error));
+			showToast(this.getActivity().getResources().getString(R.string.home_phone_field_error));
 			return;
 		}
 		// check cellphone number
 		if (!isChecked && !Utility.isCellphoneValid(cellPhoneNumber))
 		{
-			showToast(this.getActivity().getResources().getString(R.string.field_error));
+			showToast(this.getActivity().getResources().getString(R.string.cell_phone_field_error));
 			return;
 		}
 		// check company phone number
-		if (!isChecked && !companyPhoneNumber.equals("") && !Utility.isPhoneValid(phoneNumber))
+		if (!isChecked && !companyPhoneNumber.equals("") && !Utility.isCompanyPhoneValid(phoneNumber))
 		{
-			showToast(this.getActivity().getResources().getString(R.string.field_error));
+			showToast(this.getActivity().getResources().getString(R.string.company_phone_field_error));
 			return;
 		}
 		// check email
 		if (!isChecked && !Utility.isEmailValid(email))
 		{
-			showToast(this.getActivity().getResources().getString(R.string.field_error));
+			showToast(this.getActivity().getResources().getString(R.string.email_field_error));
 			return;
 		}
 		// check birthday
 		if (!isChecked && !Utility.isBirthdayValid(customerBirthday))
 		{
-			showToast(this.getActivity().getResources().getString(R.string.field_error));
+			showToast(this.getActivity().getResources().getString(R.string.birthday_field_error));
 			return;
 		}
 		

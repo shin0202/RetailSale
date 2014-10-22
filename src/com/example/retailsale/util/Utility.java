@@ -58,12 +58,12 @@ public class Utility
 	    public static final String LOGIN_KEY = "login_key";
 	}
 	
-	// for home, company
-	public static boolean isPhoneValid(String email) {
+	// for home
+	public static boolean isPhoneValid(String number) {
 		boolean isValid = false;
 
 		String expression = "[0-9]{2,3}-[0-9]{6,8}";
-		CharSequence inputStr = email;
+		CharSequence inputStr = number;
 
 		Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(inputStr);
@@ -73,12 +73,33 @@ public class Utility
 		return isValid;
 	}
 	
+	   // for company
+    public static boolean isCompanyPhoneValid(String number) {
+        boolean isValid = false;
+        String expression;
+        if (number.contains("#")) {
+            expression = "[0-9]{2,3}-[0-9]{6,8}#[0-9]{1,4}";
+        } else {
+            expression = "[0-9]{2,3}-[0-9]{6,8}";
+        }
+        
+        CharSequence inputStr = number;
+
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(inputStr);
+        if (matcher.matches()) {
+            isValid = true;
+        }
+        return isValid;
+    }
+	
 	// for cellphone
-	public static boolean isCellphoneValid(String email) {
+	public static boolean isCellphoneValid(String number) {
 		boolean isValid = false;
 
-		String expression = "[0-9]{4}-[0-9]{6}";
-		CharSequence inputStr = email;
+//		String expression = "[0-9]{4}-[0-9]{6}";
+		String expression = "[0-9]{10}";
+		CharSequence inputStr = number;
 
 		Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(inputStr);

@@ -58,6 +58,21 @@ public class GsonRequest<T> extends Request<T>
 		header.put(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
 		header.put(Utility.JSONTag.FATCA_INFO, Utility.HeaderContent.FATCA_INFO_OPERATION);
 	}
+	
+    public GsonRequest(int method, String url, Class<T> clazz, Listener<T> listener, ErrorListener errorListener,
+            String logType, String userNo, String userName, String userHostAddress, String actionName) {
+        super(method, url, errorListener);
+        this.clazz = clazz;
+        this.listener = listener;
+        gson = new Gson();
+
+        header = new HashMap<String, String>();
+        params = new HashMap<String, String>();
+
+        header.put(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
+        header.put(Utility.JSONTag.FATCA_INFO,
+                Utility.getFactaInfoHeader(logType, userNo, userName, userHostAddress, actionName));
+    }
 
 	public GsonRequest(int method, String url, Class<T> clazz, Listener<T> listener,
 			ErrorListener errorListener, Gson gson)

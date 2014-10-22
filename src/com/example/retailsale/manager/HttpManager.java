@@ -28,9 +28,18 @@ import com.example.retailsale.volly.toolbox.VolleySingleton;
 
 public class HttpManager
 {
-	private final static String TAG = "HttpManager";
+	private static final String TAG = "HttpManager";
+	
+	private static final String USER_HOST = "127.0.0.1";
+	
+	private static final String ACTION_NAME = "http://fatcaweb/FATCA/FATCA/";
+	
+	private class LogType 
+	{
+	    public static final String Login = "Login";
+	    public static final String Operation = "Operation";
+	}
 
-	// PostMailListener postMailListener;
 	public HttpManager()
 	{
 	}
@@ -50,9 +59,13 @@ public class HttpManager
     	String loginUri = "http://192.168.49.128/KendoAPI/ODATA/userQuery(userAccount='" + userAccount + "',userPwd='" + userPwd + "')";
         Log.e(TAG, "login() loginUri = " + loginUri);
         
+//        GsonRequest<GsonLoginInfo> getDataOptionsGsonRequset = new GsonRequest<GsonLoginInfo>(Method.GET, loginUri,
+//                GsonLoginInfo.class, getLoginReqSuccessListener(loginListener),
+//                getLoginReqErrorListener(loginListener));
+        
         GsonRequest<GsonLoginInfo> getDataOptionsGsonRequset = new GsonRequest<GsonLoginInfo>(Method.GET, loginUri,
                 GsonLoginInfo.class, getLoginReqSuccessListener(loginListener),
-                getLoginReqErrorListener(loginListener));
+                getLoginReqErrorListener(loginListener), LogType.Login, "095050", "", USER_HOST, ACTION_NAME);
         getDataOptionsGsonRequset.setTag("login");
 
         VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionsGsonRequset);
@@ -79,28 +92,33 @@ public class HttpManager
     ////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////// data option
-    public void getDataOptions(Context context, GetDataOptionListener getDataOptionListener) {       
-    	String dataOptionsUri = "http://192.168.49.128/KendoAPI/ODATA/dataOptionParm";
+    public void getDataOptions(Context context, GetDataOptionListener getDataOptionListener) {
+        String dataOptionsUri = "http://192.168.49.128/KendoAPI/ODATA/dataOptionParm";
         Log.e(TAG, "getDataOptions() dataOptionsUri = " + dataOptionsUri);
-        
-        GsonRequest<GsonDataOption> getDataOptionsGsonRequset = new GsonRequest<GsonDataOption>(Method.GET, dataOptionsUri,
-        		GsonDataOption.class, getDataOptionReqSuccessListener(getDataOptionListener),
-        		getDataOptionReqErrorListener(getDataOptionListener));
+
+//        GsonRequest<GsonDataOption> getDataOptionsGsonRequset = new GsonRequest<GsonDataOption>(Method.GET, dataOptionsUri,
+//        		GsonDataOption.class, getDataOptionReqSuccessListener(getDataOptionListener),
+//        		getDataOptionReqErrorListener(getDataOptionListener));
+
+        GsonRequest<GsonDataOption> getDataOptionsGsonRequset = new GsonRequest<GsonDataOption>(Method.GET,
+                dataOptionsUri, GsonDataOption.class, getDataOptionReqSuccessListener(getDataOptionListener),
+                getDataOptionReqErrorListener(getDataOptionListener), LogType.Operation, "095050", "", USER_HOST, ACTION_NAME);
+
         getDataOptionsGsonRequset.setTag("getDataOptions");
 
         VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionsGsonRequset);
     }
 
-    public void getDataOptionType(Context context, GetDataOptionTypeListener getDataOptionTypeListener) {
-        String dataOptionTypeUri = String.format("http://www.cpami.gov.tw/opendata/fd2_json.php");
-
-        GsonRequest<GsonDataOptionType> getDataOptionTypeGsonRequset = new GsonRequest<GsonDataOptionType>(Method.GET,
-                dataOptionTypeUri, GsonDataOptionType.class,
-                getDataOptionTypeReqSuccessListener(getDataOptionTypeListener), getDataOptionTypeReqErrorListener());
-        getDataOptionTypeGsonRequset.setTag("getDataOptionType");
-
-        VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionTypeGsonRequset);
-    }
+//    public void getDataOptionType(Context context, GetDataOptionTypeListener getDataOptionTypeListener) {
+//        String dataOptionTypeUri = String.format("http://www.cpami.gov.tw/opendata/fd2_json.php");
+//
+//        GsonRequest<GsonDataOptionType> getDataOptionTypeGsonRequset = new GsonRequest<GsonDataOptionType>(Method.GET,
+//                dataOptionTypeUri, GsonDataOptionType.class,
+//                getDataOptionTypeReqSuccessListener(getDataOptionTypeListener), getDataOptionTypeReqErrorListener());
+//        getDataOptionTypeGsonRequset.setTag("getDataOptionType");
+//
+//        VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionTypeGsonRequset);
+//    }
     ////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////// file info
@@ -108,8 +126,14 @@ public class HttpManager
     	String fileInfoUri = "http://192.168.49.128/KendoAPI/ODATA/fileContent(pathId=" + pathId + ",fileId=" + fileId + ")";
         Log.e(TAG, "getFileInfo() fileInfoUri = " + fileInfoUri);
 
+//        GsonRequest<GsonFileInfo> getFileInfoGsonRequset = new GsonRequest<GsonFileInfo>(Method.GET, fileInfoUri,
+//                GsonFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener),
+//                getFileInfoReqErrorListener(getFileInfoListener));
+        
         GsonRequest<GsonFileInfo> getFileInfoGsonRequset = new GsonRequest<GsonFileInfo>(Method.GET, fileInfoUri,
-                GsonFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener), getFileInfoReqErrorListener(getFileInfoListener));
+                GsonFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener),
+                getFileInfoReqErrorListener(getFileInfoListener), LogType.Operation, "095050", "", USER_HOST, ACTION_NAME);
+        
         getFileInfoGsonRequset.setTag("getFileInfo");
 
         VolleySingleton.getInstance(context).getRequestQueue().add(getFileInfoGsonRequset);
@@ -118,11 +142,15 @@ public class HttpManager
     
     //////////////////////////////////////////////////////////////////////////////// folder info
     public void getFolderInfo(Context context, GetFolderInfoListener getFolderInfoListener) {
-    	String fileInfoUri = "http://192.168.49.128/KendoAPI/ODATA/folderInfo";
+        String fileInfoUri = "http://192.168.49.128/KendoAPI/ODATA/folderInfo";
         Log.e(TAG, "getFolderInfo() fileInfoUri = " + fileInfoUri);
 
+//        GsonRequest<GsonFolderInfo> getFolderInfoGsonRequset = new GsonRequest<GsonFolderInfo>(Method.GET, fileInfoUri,
+//        		GsonFolderInfo.class, getFolderInfoReqSuccessListener(getFolderInfoListener), getFolderInfoReqErrorListener(getFolderInfoListener));
+
         GsonRequest<GsonFolderInfo> getFolderInfoGsonRequset = new GsonRequest<GsonFolderInfo>(Method.GET, fileInfoUri,
-        		GsonFolderInfo.class, getFolderInfoReqSuccessListener(getFolderInfoListener), getFolderInfoReqErrorListener(getFolderInfoListener));
+                GsonFolderInfo.class, getFolderInfoReqSuccessListener(getFolderInfoListener),
+                getFolderInfoReqErrorListener(getFolderInfoListener), LogType.Operation, "095050", "", USER_HOST, ACTION_NAME);
         getFolderInfoGsonRequset.setTag("getFolderInfo");
 
         VolleySingleton.getInstance(context).getRequestQueue().add(getFolderInfoGsonRequset);
@@ -181,26 +209,26 @@ public class HttpManager
     ////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////listener of data option type
-    private Response.Listener<GsonDataOptionType> getDataOptionTypeReqSuccessListener(
-            final GetDataOptionTypeListener getDataOptionTypeListener) {
-        return new Response.Listener<GsonDataOptionType>() {
-            @Override
-            public void onResponse(GsonDataOptionType response) {
-                Log.e(TAG, "getDataOptionType success response: " + response.toString());
-                if (getDataOptionTypeListener != null)
-                    getDataOptionTypeListener.onResult(true, response);
-            }
-        };
-    }
-
-    private Response.ErrorListener getDataOptionTypeReqErrorListener() {
-        return new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "getDataOptionType error: " + error.toString());
-            }
-        };
-    }
+//    private Response.Listener<GsonDataOptionType> getDataOptionTypeReqSuccessListener(
+//            final GetDataOptionTypeListener getDataOptionTypeListener) {
+//        return new Response.Listener<GsonDataOptionType>() {
+//            @Override
+//            public void onResponse(GsonDataOptionType response) {
+//                Log.e(TAG, "getDataOptionType success response: " + response.toString());
+//                if (getDataOptionTypeListener != null)
+//                    getDataOptionTypeListener.onResult(true, response);
+//            }
+//        };
+//    }
+//
+//    private Response.ErrorListener getDataOptionTypeReqErrorListener() {
+//        return new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.e(TAG, "getDataOptionType error: " + error.toString());
+//            }
+//        };
+//    }
     ////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////listener of file info
