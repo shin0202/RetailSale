@@ -43,21 +43,6 @@ public class GsonRequest<T> extends Request<T>
 	private Map<String, String> params;
 	private Map<String, String> header;
 	private Type type;
-
-	public GsonRequest(int method, String url, Class<T> clazz, Listener<T> listener,
-			ErrorListener errorListener)
-	{
-		super(method, url, errorListener);
-		this.clazz = clazz;
-		this.listener = listener;
-		gson = new Gson();
-		
-		header = new HashMap<String, String>();
-		params = new HashMap<String, String>();
-		
-		header.put(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
-		header.put(Utility.JSONTag.FATCA_INFO, Utility.HeaderContent.FATCA_INFO_OPERATION);
-	}
 	
     public GsonRequest(int method, String url, Class<T> clazz, Listener<T> listener, ErrorListener errorListener,
             String logType, String userNo, String userName, String userHostAddress, String actionName) {
@@ -83,14 +68,22 @@ public class GsonRequest<T> extends Request<T>
 		this.gson = gson;
 	}
 	
-	public GsonRequest(int method, String url, Type type, Map<String, String> params,
-			Listener<T> listener, ErrorListener errorListener)
-	{
-		super(method, url, errorListener);
-		this.params = params;
-		this.type = type;
-		this.listener = listener;
-	}
+//	public GsonRequest(int method, String url, Type type, Map<String, String> params,
+//			Listener<T> listener, ErrorListener errorListener, String logType, String userNo, String userName, String userHostAddress, String actionName)
+//	{
+//		super(method, url, errorListener);
+//		
+//        header = new HashMap<String, String>();
+//        params = new HashMap<String, String>();
+//
+//        header.put(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
+//        header.put(Utility.JSONTag.FATCA_INFO,
+//                Utility.getFactaInfoHeader(logType, userNo, userName, userHostAddress, actionName));
+//		
+////		this.params = params;
+//		this.type = type;
+//		this.listener = listener;
+//	}
 
 	@Override
 	protected void deliverResponse(T response)
@@ -108,6 +101,12 @@ public class GsonRequest<T> extends Request<T>
     public Map<String, String> getHeaders() throws AuthFailureError {
         return header;
     }
+    
+	@Override
+	public String getBodyContentType()
+	{
+		return "";
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

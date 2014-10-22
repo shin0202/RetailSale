@@ -1,8 +1,18 @@
 package com.example.retailsale.manager;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Map;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,12 +20,9 @@ import android.util.Log;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.retailsale.manager.addcustomer.AddCustomerListener;
 import com.example.retailsale.manager.dataoption.GetDataOptionListener;
-import com.example.retailsale.manager.dataoption.GetDataOptionTypeListener;
 import com.example.retailsale.manager.dataoption.GsonDataOption;
-import com.example.retailsale.manager.dataoption.GsonDataOptionType;
 import com.example.retailsale.manager.fileinfo.GetFileInfoListener;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo;
 import com.example.retailsale.manager.folderinfo.GetFolderInfoListener;
@@ -30,11 +37,11 @@ public class HttpManager
 {
 	private static final String TAG = "HttpManager";
 	
-	private static final String USER_HOST = "127.0.0.1";
+	public static final String USER_HOST = "127.0.0.1";
 	
-	private static final String ACTION_NAME = "http://fatcaweb/FATCA/FATCA/";
+	public static final String ACTION_NAME = "http://fatcaweb/FATCA/FATCA/";
 	
-	private class LogType 
+	public class LogType 
 	{
 	    public static final String Login = "Login";
 	    public static final String Operation = "Operation";
@@ -78,17 +85,107 @@ public class HttpManager
 
     //////////////////////////////////////////////////////////////////////////////// add customer
     public void addCustomerInfo(Context context, AddCustomerListener addCustomerListener,
-            HashMap<String, String> paramsAddComsumerPost) {
-        String addCustomerInfoUri = String.format("http://www.cpami.gov.tw/opendata/fd2_json.php");
+            Map<String, String> paramsAddComsumerPost) {
+        String addCustomerInfoUri = "http://192.168.49.128/KendoAPI/ODATA/customerData";
+        
+//		Map<String, String> param = new HashMap<String, String>();
+//		
+//		param.put("customerAccount", "C20142000180054700");
+//		param.put("custometName", "Hello");
+//		param.put("customerMobile", "無資料");
+//		param.put("customerHome", "2727-8831");
+//		param.put("customerCompany", "2727-8831");
+//		param.put("customerSex", "8");
+//		param.put("customerTitle", "10");
+//		param.put("customerMail", "johnwang@hotmail.com");
+//		param.put("customerVisitDate", "2014-10-08T16:00:00");
+//		param.put("customerInfo", "13");
+//		
+//		param.put("customerIntroducer", null);
+//		param.put("customerJob", "15");
+//		param.put("customerAge", null);
+//		param.put("customerBirth", "2014-10-15");
+//		param.put("creator", "23");
+//		param.put("creatorGroup", "23");
+//		param.put("createTime", "2014-10-07T10:19:32");
 
-        JsonObjectRequest addCustomerInfoRequset = new JsonObjectRequest(Method.POST, addCustomerInfoUri,
-                new JSONObject(paramsAddComsumerPost), addCustomerReqSuccessListener(addCustomerListener),
-                addCustomerReqErrorListener());
-        VolleySingleton.getInstance(context).getRequestQueue().add(addCustomerInfoRequset);
+//        JsonObjectRequest addCustomerInfoRequset = new JsonObjectRequest(Method.POST, addCustomerInfoUri,
+//                new JSONObject(paramsAddComsumerPost), addCustomerReqSuccessListener(addCustomerListener),
+//                addCustomerReqErrorListener(addCustomerListener));
+//        VolleySingleton.getInstance(context).getRequestQueue().add(addCustomerInfoRequset);
 
 //		GsonRequest addCustomerInfoRequset = new GsonRequest(Method.POST, addCustomerInfoUri, null, paramsAddComsumerPost, addCustomerReqSuccessListener(addCustomerListener), addCustomerReqErrorListener());
 //		VolleySingleton.getInstance(context).getRequestQueue().add(addCustomerInfoRequset);
+        
+//		GsonJSONRequest addCustomerInfoRequset = new GsonJSONRequest(Method.POST,
+//				addCustomerInfoUri, paramsAddComsumerPost,
+//				addCustomerReqSuccessListener(addCustomerListener),
+//				addCustomerReqErrorListener(addCustomerListener), LogType.Login, "095050", "",
+//				USER_HOST, ACTION_NAME);
+//		VolleySingleton.getInstance(context).getRequestQueue().add(addCustomerInfoRequset);
     }
+    
+	public void addCustomerInfo(Context context, AddCustomerListener addCustomerListener,
+			String logType, String userNo, String userName, String userHostAddress,
+			String actionName)
+	{
+		String addCustomerInfoUri = "http://192.168.49.128/KendoAPI/ODATA/customerData";
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost(addCustomerInfoUri);
+		httppost.setHeader(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
+		httppost.setHeader(Utility.JSONTag.FATCA_INFO,
+				Utility.getFactaInfoHeader(logType, userNo, userName, userHostAddress, actionName));
+		try
+		{
+			// Add your data
+			JSONStringer json = null;
+			try
+			{
+				json = new JSONStringer().object().key("customerAccount")
+						.value("C20141006180054701").key("custometName").value("Test123")
+						.key("customerMobile").value("無資料123").key("customerHome")
+						.value("2727-8831").key("customerCompany").value("2727-8831")
+						.key("customerSex").value(8).key("customerTitle").value(10)
+						.key("customerMail").value("john@gmail.com").key("customerVisitDate")
+						.value("2014-10-08T16:00:00").key("customerInfo").value(13)
+						.key("customerIntroducer").value("john").key("customerJob").value(15)
+						.key("customerAge").value(10).key("customerBirth").value("2014-10-15")
+						.key("creator").value(23).key("creatorGroup").value(23).key("createTime")
+						.value("2014-10-07T10:19:32").endObject();
+				Log.d(TAG, "json === " + json.toString());
+			}
+			catch (JSONException e)
+			{
+				e.printStackTrace();
+			}
+			StringEntity stringEntity = new StringEntity(json.toString(), "UTF-8");
+			stringEntity.setContentType("application/json");
+			httppost.setEntity(stringEntity);
+			// Execute HTTP Post Request
+			HttpResponse response = httpclient.execute(httppost);
+			if (response != null)
+			{
+				Log.d(TAG, "response === " + response.getStatusLine().toString());
+			}
+			else
+			{
+				Log.d(TAG, "response is null");
+			}
+			httpclient.getConnectionManager().shutdown();
+		}
+		catch (ClientProtocolException e)
+		{
+			e.printStackTrace();
+		}
+		catch (MalformedURLException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
     ////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////// data option
@@ -292,11 +389,20 @@ public class HttpManager
         };
     }
 
-    private Response.ErrorListener addCustomerReqErrorListener() {
+    private Response.ErrorListener addCustomerReqErrorListener(final AddCustomerListener addCustomerListener) {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "addCustomer error: " + error.toString());
+                if (addCustomerListener != null) try
+				{
+					addCustomerListener.onResult(false, new JSONObject().put("message", "Error"));
+				}
+				catch (JSONException e)
+				{
+					e.printStackTrace();
+					addCustomerListener.onResult(false, null);
+				}
             }
         };
     }

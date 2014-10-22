@@ -44,8 +44,6 @@ public class Utility
 	public class HeaderContent 
 	{
 		public static final String CONTENT_TYPE = "application/json;charset=utf-8";
-		public static final String FATCA_INFO_OPERATION = "{\"LogType\":\"Operation\",\"UserNo\":\"095050\",\"UserName\":\"\",\"UserHostAddress\":\"127.0.0.1\",\"ActionName\":\"http://fatcaweb/FATCA/FATCA/\"}";
-		public static final String FATCA_INFO_LOGIN = "{\"LogType\":\"Login\",\"UserNo\":\"095050\",\"UserName\":\"\",\"UserHostAddress\":\"127.0.0.1\",\"ActionName\":\"http://fatcaweb/FATCA/FATCA/\"}";
 	}
 	
 	public class LoginField
