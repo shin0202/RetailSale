@@ -72,6 +72,20 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 	public void onPause()
 	{
 		super.onPause();
+		
+		if (albumList != null) {
+		    albumList.clear();
+		    albumList = null;
+		}
+		
+        if (photoList != null) {
+            photoList.clear();
+            photoList = null;
+        }
+        
+        if (photosAdapterView != null) {
+            photosAdapterView = null;
+        }
 	}
 
 	@Override
@@ -281,7 +295,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 				listFilesInFolder(new File(albumList.get((Integer) v.getTag()).getFilePath()));
 				if (photoList.size() != 0)
 				{
-					photosAdapterView = new PhotosAdapterView(getActivity(), photoList);
+					photosAdapterView = new PhotosAdapterView(getActivity(), photoList, PhotosAdapterView.BROWSER_TAB);
 					photoGrid.setAdapter(photosAdapterView);
 				}
 			}
@@ -304,73 +318,6 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             albums.removeAllViews();
         }
     }
-
-	private class PhotosAdapterView extends BaseAdapter
-	{
-		public static final int BASE_INDEX = 1000;
-		private List<LocalFileInfo> photoList;
-//		private Context context;
-		// Views
-		private LayoutInflater layoutInflater;
-		private ViewTag viewTag;
-
-		public PhotosAdapterView(Context context, List<LocalFileInfo> photoList)
-		{
-			this.photoList = photoList;
-			layoutInflater = LayoutInflater.from(context);
-		}
-
-		@Override
-		public int getCount()
-		{
-			return photoList.size();
-		}
-
-		@Override
-		public Object getItem(int position)
-		{
-			return photoList.get(position);
-		}
-
-		@Override
-		public long getItemId(int position)
-		{
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent)
-		{
-			if (convertView == null)
-			{
-				convertView = layoutInflater.inflate(R.layout.cell_of_browser_tab, null);
-				viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.browser_photo),
-						(TextView) convertView.findViewById(R.id.photo_name));
-				convertView.setTag(viewTag);
-			}
-			else
-			{
-				viewTag = (ViewTag) convertView.getTag();
-			}
-			convertView.setId(BASE_INDEX + position);
-			viewTag.showName.setText(photoList.get(position).getFileName());
-			// to show img
-			// viewTag.showPhoto.setImageBitmap(bm);
-			return convertView;
-		}
-
-		class ViewTag
-		{
-			ImageView showPhoto;
-			TextView showName;
-
-			public ViewTag(ImageView showPhoto, TextView showName)
-			{
-				this.showPhoto = showPhoto;
-				this.showName = showName;
-			}
-		}
-	}
 
 	private class LoadFileThread extends Thread
 	{
@@ -431,7 +378,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 			case SET_ADAPTER:
                 if (photoList.size() != 0)
                 {
-                    photosAdapterView = new PhotosAdapterView(getActivity(), photoList);
+                    photosAdapterView = new PhotosAdapterView(getActivity(), photoList, PhotosAdapterView.BROWSER_TAB);
                     photoGrid.setAdapter(photosAdapterView);
                 }
 			    break;

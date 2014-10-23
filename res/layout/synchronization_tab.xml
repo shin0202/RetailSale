@@ -60,6 +60,15 @@
         android:layout_weight="1"
         android:orientation="vertical" >
 
+        <GridView
+            android:id="@+id/sync_tab_files_grid"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:cacheColorHint="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="5"
+            android:verticalSpacing="@dimen/browser_tab_vertical_spacing" />
+
         <TextView
             android:id="@+id/sync_tab_item_title"
             style="@style/syncTabRightTextViewStyle" />
@@ -77,5 +86,14 @@
             android:id="@+id/sync_tab_item_message"
             style="@style/syncTabRightTextViewStyle" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/sync_tab_start_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:text="@string/start"
+        android:textStyle="bold" />
 
 </LinearLayout>
