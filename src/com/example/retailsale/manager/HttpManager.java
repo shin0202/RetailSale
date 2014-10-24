@@ -16,11 +16,13 @@ import org.json.JSONStringer;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.retailsale.fragment.SynchronizationFragment;
 import com.example.retailsale.manager.addcustomer.AddCustomerListener;
 import com.example.retailsale.manager.dataoption.GetDataOptionListener;
 import com.example.retailsale.manager.dataoption.GsonDataOption;
@@ -128,7 +130,7 @@ public class HttpManager
     
 	public void addCustomerInfo(Context context, AddCustomerListener addCustomerListener,
 			String logType, String userNo, String userName, String userHostAddress,
-			String actionName)
+			String actionName, JSONStringer json)
 	{
 		String addCustomerInfoUri = "http://192.168.49.128/KendoAPI/ODATA/customerData";
 		HttpClient httpclient = new DefaultHttpClient();
@@ -139,26 +141,25 @@ public class HttpManager
 		try
 		{
 			// Add your data
-			JSONStringer json = null;
-			try
-			{
-				json = new JSONStringer().object().key("customerAccount")
-						.value("C20141006180054701").key("custometName").value("Test123")
-						.key("customerMobile").value("無資料123").key("customerHome")
-						.value("2727-8831").key("customerCompany").value("2727-8831")
-						.key("customerSex").value(8).key("customerTitle").value(10)
-						.key("customerMail").value("john@gmail.com").key("customerVisitDate")
-						.value("2014-10-08T16:00:00").key("customerInfo").value(13)
-						.key("customerIntroducer").value("john").key("customerJob").value(15)
-						.key("customerAge").value(10).key("customerBirth").value("2014-10-15")
-						.key("creator").value(23).key("creatorGroup").value(23).key("createTime")
-						.value("2014-10-07T10:19:32").endObject();
-				Log.d(TAG, "json === " + json.toString());
-			}
-			catch (JSONException e)
-			{
-				e.printStackTrace();
-			}
+//			try
+//			{
+//				json = new JSONStringer().object().key("customerAccount")
+//						.value("C20141006180054701").key("custometName").value("Test123")
+//						.key("customerMobile").value("無資料123").key("customerHome")
+//						.value("2727-8831").key("customerCompany").value("2727-8831")
+//						.key("customerSex").value(8).key("customerTitle").value(10)
+//						.key("customerMail").value("john@gmail.com").key("customerVisitDate")
+//						.value("2014-10-08T16:00:00").key("customerInfo").value(13)
+//						.key("customerIntroducer").value("john").key("customerJob").value(15)
+//						.key("customerAge").value(10).key("customerBirth").value("2014-10-15")
+//						.key("creator").value(23).key("creatorGroup").value(23).key("createTime")
+//						.value("2014-10-07T10:19:32").endObject();
+//				Log.d(TAG, "json === " + json.toString());
+//			}
+//			catch (JSONException e)
+//			{
+//				e.printStackTrace();
+//			}
 			StringEntity stringEntity = new StringEntity(json.toString(), "UTF-8");
 			stringEntity.setContentType("application/json");
 			httppost.setEntity(stringEntity);
@@ -379,57 +380,63 @@ public class HttpManager
     ////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////// listener of add customer
-    private Response.Listener<JSONObject> addCustomerReqSuccessListener(final AddCustomerListener addCustomerListener) {
-        return new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.e(TAG, "addCustomer response: " + response.toString());
-                if (addCustomerListener != null)
-                    addCustomerListener.onResult(true, response);
-            }
-        };
-    }
-
-    private Response.ErrorListener addCustomerReqErrorListener(final AddCustomerListener addCustomerListener) {
-        return new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "addCustomer error: " + error.toString());
-                if (addCustomerListener != null) try
-				{
-					addCustomerListener.onResult(false, new JSONObject().put("message", "Error"));
-				}
-				catch (JSONException e)
-				{
-					e.printStackTrace();
-					addCustomerListener.onResult(false, null);
-				}
-            }
-        };
-    }
+//    private Response.Listener<JSONObject> addCustomerReqSuccessListener(final AddCustomerListener addCustomerListener) {
+//        return new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                Log.e(TAG, "addCustomer response: " + response.toString());
+//                if (addCustomerListener != null)
+//                    addCustomerListener.onResult(true, response);
+//            }
+//        };
+//    }
+//
+//    private Response.ErrorListener addCustomerReqErrorListener(final AddCustomerListener addCustomerListener) {
+//        return new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.e(TAG, "addCustomer error: " + error.toString());
+//                if (addCustomerListener != null) try
+//				{
+//					addCustomerListener.onResult(false, new JSONObject().put("message", "Error"));
+//				}
+//				catch (JSONException e)
+//				{
+//					e.printStackTrace();
+//					addCustomerListener.onResult(false, null);
+//				}
+//            }
+//        };
+//    }
 
     ////////////////////////////////////////////////////////////////////////////////
 
     private void handleFileInfo(GsonFileInfo fileInfo, Handler handler) {        
         if (fileInfo != null) {
+            String fileName = fileInfo.getValue().get(0).getFileName();
+            String filePath = fileInfo.getValue().get(0).getPath();
+            
+            Message msg = new Message();
+            msg.what = SynchronizationFragment.SelectedItem.DOWNLOAD_PICTURE;
+            msg.obj = fileName;
+            
+            handler.sendMessage(msg);
         	        	
             // 1. get file path
-        	String path = fileInfo.getValue().get(0).getPath().replace(Utility.REPLACE_SERVER_FOLDER, Utility.FILE_PATH_2).replace("\\", "/");
+        	String path = filePath.replace(Utility.REPLACE_SERVER_FOLDER, Utility.FILE_PATH_2).replace("\\", "/");
             
 //            // 2. create the folder from file path
 //            Utility.createFolder(path.toString());
             
             // 3. generate the MD5 string from file name
-            String md5FileName = Utility.generateMD5String(fileInfo.getValue().get(0).getFileName());
+            String md5FileName = Utility.generateMD5String(fileName);
             Log.d(TAG, "md5FileName  is  ~~~~~~~~~~~~~~~~~~~~ " + md5FileName);
             
             // 4. To mix md5 file name and file data to "newData", then write data to file path(newFileName)
-            StringBuilder newFileName = new StringBuilder().append(path.toString()).append("/").append(fileInfo.getValue().get(0).getFileName())
+            StringBuilder newFileName = new StringBuilder().append(path.toString()).append("/").append(fileName)
                     .append(".txt");
             
             Log.d(TAG, "newFileName  is  ~~~~~~~~~~~~~~~~~~~~ " + newFileName.toString());
-            
-            Log.d(TAG, "original data  is  ~~~~~~~~~~~~~~~~~~~~ " + fileInfo.getValue().get(0).getFileStream());
             
             Log.d(TAG, "*************************************************************** " );
             
@@ -439,7 +446,6 @@ public class HttpManager
             
             Utility.writeFile(newFileName.toString(), newData.toString());
             
-            handler.sendEmptyMessage(0);
        
 //            // 5. to read file and remove md5
 //            String readContent = readFile(newFileName.toString());

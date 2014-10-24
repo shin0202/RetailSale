@@ -7,9 +7,12 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,9 +30,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blackloud.ice.MainList.AddCustomerJsonTag;
+import com.example.retailsale.Login;
 import com.example.retailsale.MainActivity;
 import com.example.retailsale.R;
+import com.example.retailsale.RetialSaleDbAdapter;
 import com.example.retailsale.manager.HttpManager;
+import com.example.retailsale.manager.addcustomer.AddCustomerListener;
 import com.example.retailsale.manager.fileinfo.GetFileInfoListener;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo.FileInfo;
@@ -46,6 +53,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     private GridView filesGrid;
     private View dividerView;
     private ProgressDialog progressDialog;
+    private Button startBtn;
     
     private List<LocalFolderInfo> localFolderInfoList;
     private List<LocalFileInfo> localFileInfoList;
@@ -53,7 +61,10 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     private PhotosAdapterView photosAdapterView;
     private String currentFolderName;
     
-    private class SelectedItem {
+    private int currentCount = 0;
+    private int needCount = 0;
+    
+    public static final class SelectedItem {
         public static final int UPLOAD_CUSTOMER = 0;
         public static final int DOWNLOAD_PICTURE = 1;
         public static final int SYNC_DATA = 2;
@@ -72,6 +83,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     @Override
     public void onPause() {
         super.onPause();
+        
+        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
         
         if (localFolderInfoList != null) {
             localFolderInfoList.clear();
@@ -110,7 +123,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         filesGrid = (GridView) view.findViewById(R.id.sync_tab_files_grid);
         filesGrid.setOnItemClickListener(this);
         
-        Button startBtn = (Button) view.findViewById(R.id.sync_tab_start_btn);
+        startBtn = (Button) view.findViewById(R.id.sync_tab_start_btn);
         
         dividerView = (View) view.findViewById(R.id.sync_tab_divider_line);
         
@@ -137,6 +150,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         
         filesGrid.setVisibility(View.GONE);
         dividerView.setVisibility(View.GONE);
+        
+        startBtn.setText(SynchronizationFragment.this.getResources().getString(R.string.start_upload));
     }
     
     private void focusDownloadPicture() {
@@ -152,6 +167,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         
         filesGrid.setVisibility(View.VISIBLE);
         dividerView.setVisibility(View.VISIBLE);
+        
+        startBtn.setText(SynchronizationFragment.this.getResources().getString(R.string.start_download));
     }
     
     private void focusSyncData() {
@@ -167,6 +184,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         
         filesGrid.setVisibility(View.GONE);
         dividerView.setVisibility(View.GONE);
+        
+        startBtn.setText(SynchronizationFragment.this.getResources().getString(R.string.start_sync));
     }
     
 	@Override
@@ -215,17 +234,21 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     private void handleEvent() {
         switch (selectedItem) {
         case SelectedItem.UPLOAD_CUSTOMER:
+            addCustomer();
             break;
         case SelectedItem.DOWNLOAD_PICTURE:
             if (!selectFolder(currentFolderName))
             	showMessage.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_sync_no_file));
             break;
         case SelectedItem.SYNC_DATA:
+            syncData();
             break;
         }
     }
     
+    /* *************************************************Download Related******************************************************* */
     private void getFolderListFromServer() {
+        dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
         HttpManager httpManager = new HttpManager();
         httpManager.getFolderInfo(SynchronizationFragment.this.getActivity(), new GetFolderInfoListener() {
             @Override
@@ -238,12 +261,15 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                             handleFolder(value);
                         } else {
                             Log.d(TAG, "value is null");
+                            dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                         }
                     } else {
                         Log.d(TAG, "folderInfo is null");
+                        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                     }
                 } else {
                     Log.d(TAG, "Get folder info failed");
+                    dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                 }
             }
         });
@@ -302,6 +328,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
         } catch (JSONException e) {
             e.printStackTrace();
+            dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
         }
     }
     
@@ -335,10 +362,13 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         photosAdapterView = new PhotosAdapterView(SynchronizationFragment.this.getActivity(), localFileInfoList,
                 PhotosAdapterView.SYNC_TAB);
         filesGrid.setAdapter(photosAdapterView);
+        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
     }
     
     private boolean selectFolder(String folderName) {
+        dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
     	boolean hadFile = false;
+    	needCount = 0;
         for (int i = 0; i < localFolderInfoList.size(); i++) {
             LocalFolderInfo localFolderInfo = localFolderInfoList.get(i);
             String path = localFolderInfo.getFolderPath();
@@ -353,12 +383,15 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                     String fileId = localFolderInfo.getFileId(j);
                     Log.d(TAG, "fileFolderId : " + fileFolderId + " fileId : " + fileId);
                     hadFile = true;
+                    needCount++;
                     getFile(fileFolderId, fileId);
                 }
             } else {
                 Log.d(TAG, "no contain " + folderName);
             }
         }
+        
+        Log.d(TAG, "needCount : " + needCount);
         return hadFile;
     }
     
@@ -368,6 +401,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 Integer.valueOf(fileId), new GetFileInfoListener() {
                     @Override
                     public void onResult(Boolean isSuccess, GsonFileInfo fileInfo) {
+                        currentCount++;
                         if (isSuccess) {
                             if (fileInfo != null) {
                                 List<FileInfo> value = fileInfo.getValue();
@@ -379,8 +413,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
                                         Log.d(TAG, "path : " + path + " fileName : " + fileName + " fileStream : "
                                                 + fileStream);
-                                        showMessage.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_sync_download_success)
-                                        		+ fileName);
+                                        showMessage.setText(fileName
+                                                + SynchronizationFragment.this.getResources().getString(
+                                                        R.string.sync_tab_sync_save_success));
                                     }
                                 } else {
                                     Log.d(TAG, "value is null");
@@ -391,8 +426,161 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                         } else {
                             Log.d(TAG, "Get file info failed");
                         }
+                        
+                        if (currentCount == needCount) {
+                            dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                        }
                     }
                 }, showMessageHandler);
+    }
+    
+    /* *************************************************Download Related******************************************************* */
+    
+    private void addCustomer() {
+        RetialSaleDbAdapter retialSaleDbAdapter = new RetialSaleDbAdapter(SynchronizationFragment.this.getActivity());
+        retialSaleDbAdapter.open();
+                
+        int creator = Utility.getCreator(SynchronizationFragment.this.getActivity());
+        int creatorGroup = Utility.getCreatorGroup(SynchronizationFragment.this.getActivity());
+        
+        Log.d(TAG, "creator is " + creator);
+        
+        needCount = 0;
+        dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+        
+        Cursor cursor = retialSaleDbAdapter.getCustomerByCreator(creator);
+        
+        if (cursor != null) {
+            needCount = cursor.getCount();
+            if (needCount > 0) {
+                while (cursor.moveToNext()) {
+                    String customerAccount = "-1";
+                    String custometName =  cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_NAME));
+                    String customerMobile = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_MOBILE));
+                    String customerHome = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_HOME));
+                    String customerCompany = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_COMPANY));
+                    int customerSex = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_SEX));
+                    int customerTitle = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_TITLE));
+                    String customerMail = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_EMAIL));
+                    String customerVisitDate = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_VISIT_DATE));
+                    int customerInfo = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_INFO));
+                    String customerIntroducer = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_INTRODUCER));
+                    int customerJob = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_JOB));
+                    int customerAge = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_AGE));
+                    String customerBirth = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_BIRTHDAY));
+                    // creator
+                    // creatorGroup;
+                    String createDate = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CREATE_DATE));
+                    
+                    
+                    /***************************************************************/
+                    
+                    int reservationSerial = -1;
+                    int customerSerial = -1;
+                    String reservationDate = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_RESERVATION_DATE));
+                    String reservationWork = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_WORK));
+                    String reservationWorkAlias = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_WORK_ALIAS));
+                    String reservationContact = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_CONTACT));
+                    int reservationSpace = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_SPACE));
+                    int reservationStatus = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_STATUS));
+                    String reservationUpateTime = createDate;       // not incorrect?
+                    String reservationStatusComment = cursor.getString(cursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_STATUS_COMMENT));
+                    int reservationBudget = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_BUDGET));
+                    String reservationDataSerial = "-1";
+                    // creator
+                    // creatorGroup
+                    // createDate
+                    
+                    // didn't have the field "comment", "send note"
+                    JSONStringer json = null, customerReservationJson = null;
+                    try {
+                        customerReservationJson = new JSONStringer().object()
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_SERIAL).value(-1)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_SERIAL).value(-1)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_DATE).value("2014-10-23T14:55:13")
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_WORK).value("WORK")
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_WORK_ALIAS).value("WORK_ALIAS")
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_CONTACT).value("CONTACT")
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_SPACE).value(10)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_STATUS).value(10)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_UPDATE_TIME).value("2014-10-08T16:00:00")
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_STATUS_COMMENT).value("STATUS_COMMENT")
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_BUDGET).value(10)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_DATA_SERIAL).value("-1")
+                                .key(Utility.AddCustomerJsonTag.CREATOR).value(1)
+                                .key(Utility.AddCustomerJsonTag.CREATOR_GROUP).value(1)
+                                .key(Utility.AddCustomerJsonTag.CREATE_TIME).value("2014-10-08T16:00:00").endObject();
+                        Log.d(TAG, "customerReservationJson === " + customerReservationJson.toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    
+                    try {
+//                        JSONStringer json = new JSONStringer().object().key("customerAccount").value("C20141006180054701")
+//                                .key("custometName").value("Test123").key("customerMobile").value("無資料123")
+//                                .key("customerHome").value("2727-8831").key("customerCompany").value("2727-8831")
+//                                .key("customerSex").value(8).key("customerTitle").value(10).key("customerMail")
+//                                .value("john@gmail.com").key("customerVisitDate").value("2014-10-08T16:00:00")
+//                                .key("customerInfo").value(13).key("customerIntroducer").value("john")
+//                                .key("customerJob").value(15).key("customerAge").value(10).key("customerBirth")
+//                                .value("2014-10-15").key("creator").value(23).key("creatorGroup").value(23)
+//                                .key("createTime").value("2014-10-07T10:19:32").endObject();
+                        json = new JSONStringer().object()
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_ACCOUNT).value(customerAccount)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_NAME).value(custometName)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_Mobile).value(customerMobile)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_HOME).value(customerHome)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_COMPANY).value(customerCompany)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_SEX).value(customerSex)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_TITLE).value(customerTitle)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_MAIL).value(customerMail)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_VISIT_DATE).value(customerVisitDate)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_INFO).value(customerInfo)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_INTRODUCER).value(customerIntroducer)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_JOB).value(customerJob)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_AGE).value(customerAge)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_BIRTH).value(customerBirth)
+                                .key(Utility.AddCustomerJsonTag.CREATOR).value(creator)
+                                .key(Utility.AddCustomerJsonTag.CREATOR_GROUP).value(creatorGroup)
+                                .key(Utility.AddCustomerJsonTag.CREATE_TIME).value(createDate)
+//                                .key(Utility.AddCustomerJsonTag.CUSTOMER_RESERVATION).value(customerReservationJson)
+                                .endObject();
+                        Log.d(TAG, "json === " + json.toString());
+                        POSTThread postThread = new POSTThread(json, custometName, showMessageHandler);
+                        postThread.start();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                    }
+                }
+            } else {
+                dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+            }
+            cursor.close();
+        } else {
+            dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+        }
+        
+        retialSaleDbAdapter.close();
+    }
+    
+    private void addCustomerInfo(JSONStringer json)
+    {
+        HttpManager httpManager = new HttpManager();
+        
+        httpManager.addCustomerInfo(SynchronizationFragment.this.getActivity(), new AddCustomerListener()
+        {
+            @Override
+            public void onResult(Boolean isSuccess, JSONObject information)
+            {
+                Log.d(TAG, "isSuccess === " + isSuccess);
+            }
+        }, HttpManager.LogType.Login, "095050", "", HttpManager.USER_HOST, HttpManager.ACTION_NAME, json);
+    }
+    
+    private void syncData() {
+        
     }
     
 	private Handler dialogHandler = new Handler()
@@ -418,12 +606,39 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 		}
 	};
 	
-	private Handler showMessageHandler = new Handler()
-	{
-		@Override
-		public void handleMessage(Message msg)
-		{
-            showMessage.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_sync_save_success));
-		}
-	};
+    private Handler showMessageHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+            case SelectedItem.UPLOAD_CUSTOMER:
+                break;
+            case SelectedItem.DOWNLOAD_PICTURE:
+                String fileName = (String)msg.obj;
+                                
+                showMessage.setText(fileName
+                        + SynchronizationFragment.this.getResources().getString(
+                                R.string.sync_tab_sync_download_success));
+                break;
+            case SelectedItem.SYNC_DATA:
+                break;
+            }
+        }
+    };
+    
+    private class POSTThread extends Thread {
+        private JSONStringer json;
+        private String custometName;
+        private Handler handler;
+        
+        public POSTThread(JSONStringer json, String custometName, Handler handler) {
+            this.json = json;
+            this.custometName = custometName;
+            this.handler = handler;
+        }
+        
+        @Override
+        public void run() {
+            addCustomerInfo(json);
+        }
+    }
 }

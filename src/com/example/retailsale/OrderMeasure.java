@@ -302,11 +302,10 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
                     }
                 }
             }
+            optionTypeCursor.close();
         } else {
             Log.d(TAG, "option cursor is null ");
         }
-        
-        optionTypeCursor.close();
         
         // status spinner
         statusAdapter = new OptionAdapter(OrderMeasure.this, statusList);

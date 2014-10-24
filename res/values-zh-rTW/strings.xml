@@ -7,7 +7,9 @@
     <string name="cancel">取消</string>
     <string name="back">返回</string>
     <string name="new_item">新增</string>
-    <string name="start">開始</string>
+    <string name="start_upload">開始上傳</string>
+    <string name="start_download">開始下載</string>
+    <string name="start_sync">開始同步</string>
     <string name="select">選取</string>
     <string name="incorrect">無效</string>
     <string name="loading">讀取中</string>

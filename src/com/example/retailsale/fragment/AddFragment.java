@@ -487,11 +487,10 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 					}
                 }
             }
+            optionTypeCursor.close();
         } else {
             Log.d(TAG, "option cursor is null ");
         }
-        
-        optionTypeCursor.close();
         
       // msg spinner
       infoAdapter = new OptionAdapter(this.getActivity(), infoList);

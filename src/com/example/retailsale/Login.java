@@ -310,6 +310,6 @@ public class Login extends Activity implements OnClickListener
 			{
 				Log.d(TAG, "isSuccess === " + isSuccess);
 			}
-		}, HttpManager.LogType.Login, "095050", "", HttpManager.USER_HOST, HttpManager.ACTION_NAME);
+		}, HttpManager.LogType.Login, "095050", "", HttpManager.USER_HOST, HttpManager.ACTION_NAME, null);
 	}
 }

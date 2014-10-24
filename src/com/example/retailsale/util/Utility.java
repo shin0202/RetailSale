@@ -43,6 +43,42 @@ public class Utility
 		public static final String FATCA_INFO = "FATCA-INFO";
 	}
 	
+	public class AddCustomerJsonTag
+	{
+	    public static final String CUSTOMER_ACCOUNT = "customerAccount";
+	    public static final String CUSTOMER_NAME = "custometName";
+	    public static final String CUSTOMER_Mobile = "customerMobile";
+	    public static final String CUSTOMER_HOME = "customerHome";
+	    public static final String CUSTOMER_COMPANY = "customerCompany";
+	    public static final String CUSTOMER_SEX = "customerSex";
+	    public static final String CUSTOMER_TITLE = "customerTitle";
+	    public static final String CUSTOMER_MAIL = "customerMail";
+	    public static final String CUSTOMER_VISIT_DATE = "customerVisitDate";
+	    public static final String CUSTOMER_INFO = "customerInfo";
+	    public static final String CUSTOMER_INTRODUCER = "customerIntroducer";
+	    public static final String CUSTOMER_JOB = "customerJob";
+	    public static final String CUSTOMER_AGE = "customerAge";
+	    public static final String CUSTOMER_BIRTH = "customerBirth";
+	    public static final String CREATOR = "creator";
+	    public static final String CREATOR_GROUP = "creatorGroup";
+	    public static final String CREATE_TIME = "createTime";
+	    
+	    public static final String CUSTOMER_RESERVATION = "customerReservation";
+	    
+	    public static final String RESERVATION_SERIAL = "ReservationSerial";
+	    public static final String CUSTOMER_SERIAL = "customerSerial";
+	    public static final String RESERVATION_DATE = "ReservationDate";
+	    public static final String RESERVATION_WORK = "ReservationWork";
+	    public static final String RESERVATION_WORK_ALIAS = "ReservationWorkAlias";
+	    public static final String RESERVATION_CONTACT = "ReservationContact";
+	    public static final String RESERVATION_SPACE = "ReservationSpace";
+	    public static final String RESERVATION_STATUS = "ReservationStatus";
+	    public static final String RESERVATION_UPDATE_TIME = "ReservationUpateTime";
+	    public static final String RESERVATION_STATUS_COMMENT = "ReservationStatusComment";
+	    public static final String RESERVATION_BUDGET = "ReservationBudget";
+	    public static final String RESERVATION_DATA_SERIAL = "ReservationDataSerial";
+	}
+	
 	public class HeaderContent 
 	{
 		public static final String CONTENT_TYPE = "application/json;charset=utf-8";
@@ -335,4 +371,22 @@ public class Utility
         	return false;
         }
 	}
+	
+    public static int getCreator(Activity actiivty) {
+        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, 0);
+        int creator = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
+
+        Log.d(TAG, "creator is " + creator);
+
+        return creator;
+    }
+    
+    public static int getCreatorGroup(Activity actiivty) {
+        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, 0);
+        int creatorGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
+
+        Log.d(TAG, "creator group is " + creatorGroup);
+
+        return creatorGroup;
+    }
 }
