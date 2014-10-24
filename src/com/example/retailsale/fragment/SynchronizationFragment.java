@@ -9,41 +9,49 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.retailsale.Login;
 import com.example.retailsale.MainActivity;
 import com.example.retailsale.R;
 import com.example.retailsale.manager.HttpManager;
 import com.example.retailsale.manager.fileinfo.GetFileInfoListener;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo;
-import com.example.retailsale.manager.fileinfo.LocalFileInfo;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo.FileInfo;
+import com.example.retailsale.manager.fileinfo.LocalFileInfo;
 import com.example.retailsale.manager.folderinfo.GetFolderInfoListener;
 import com.example.retailsale.manager.folderinfo.GsonFolderInfo;
 import com.example.retailsale.manager.folderinfo.LocalFolderInfo;
 import com.example.retailsale.util.Utility;
 
-public class SynchronizationFragment extends Fragment implements OnClickListener {
+public class SynchronizationFragment extends Fragment implements OnClickListener, OnItemClickListener {
     private static final String TAG = "SynchronizationFragment";
     private LinearLayout uploadConsumer, downloadPicture, syncData;
     private TextView showTitle, showDescription, showMessage;
     private GridView filesGrid;
+    private View dividerView;
+    private ProgressDialog progressDialog;
     
     private List<LocalFolderInfo> localFolderInfoList;
     private List<LocalFileInfo> localFileInfoList;
     private int selectedItem;
     private PhotosAdapterView photosAdapterView;
+    private String currentFolderName;
     
     private class SelectedItem {
         public static final int UPLOAD_CUSTOMER = 0;
@@ -100,8 +108,11 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         showMessage = (TextView) view.findViewById(R.id.sync_tab_item_message);
         
         filesGrid = (GridView) view.findViewById(R.id.sync_tab_files_grid);
+        filesGrid.setOnItemClickListener(this);
         
-        Button startBtn = (Button) view.findViewById(R.id.sync_tab_start_btn);;
+        Button startBtn = (Button) view.findViewById(R.id.sync_tab_start_btn);
+        
+        dividerView = (View) view.findViewById(R.id.sync_tab_divider_line);
         
         uploadConsumer.setOnClickListener(this);
         downloadPicture.setOnClickListener(this);
@@ -124,7 +135,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         
         selectedItem = SelectedItem.UPLOAD_CUSTOMER;
         
-        filesGrid.setVisibility(View.INVISIBLE);
+        filesGrid.setVisibility(View.GONE);
+        dividerView.setVisibility(View.GONE);
     }
     
     private void focusDownloadPicture() {
@@ -139,6 +151,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         selectedItem = SelectedItem.DOWNLOAD_PICTURE;
         
         filesGrid.setVisibility(View.VISIBLE);
+        dividerView.setVisibility(View.VISIBLE);
     }
     
     private void focusSyncData() {
@@ -152,7 +165,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         
         selectedItem = SelectedItem.SYNC_DATA;
         
-        filesGrid.setVisibility(View.INVISIBLE);
+        filesGrid.setVisibility(View.GONE);
+        dividerView.setVisibility(View.GONE);
     }
     
 	@Override
@@ -169,8 +183,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             break;
         case R.id.sync_tab_download_layout:
             focusDownloadPicture();
-            getFolderListFromServerTest();
-//            getFolderListFromServer();
+//            getFolderListFromServerTest();
+            getFolderListFromServer();
             break;
         case R.id.sync_tab_sync_layout:
             focusSyncData();
@@ -181,12 +195,30 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         }
     }
     
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+	{
+		if (position < localFileInfoList.size())
+		{
+			currentFolderName = localFileInfoList.get(position).getFileName();
+			Toast.makeText(
+					SynchronizationFragment.this.getActivity(),
+					SynchronizationFragment.this.getResources().getString(R.string.select)
+							+ currentFolderName, Toast.LENGTH_SHORT).show();
+		}
+		else
+		{	
+			showMessage.setText(SynchronizationFragment.this.getResources().getString(R.string.incorrect));
+		}
+	}
+    
     private void handleEvent() {
         switch (selectedItem) {
         case SelectedItem.UPLOAD_CUSTOMER:
             break;
         case SelectedItem.DOWNLOAD_PICTURE:
-            selectFolder("123");
+            if (!selectFolder(currentFolderName))
+            	showMessage.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_sync_no_file));
             break;
         case SelectedItem.SYNC_DATA:
             break;
@@ -279,6 +311,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             localFileInfoList.clear();
         }
         
+        localFileInfoList = new ArrayList<LocalFileInfo>();
+        
         if (folder.listFiles() != null)
         {
             for (final File fileEntry : folder.listFiles())
@@ -303,7 +337,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         filesGrid.setAdapter(photosAdapterView);
     }
     
-    private void selectFolder(String folderName) {
+    private boolean selectFolder(String folderName) {
+    	boolean hadFile = false;
         for (int i = 0; i < localFolderInfoList.size(); i++) {
             LocalFolderInfo localFolderInfo = localFolderInfoList.get(i);
             String path = localFolderInfo.getFolderPath();
@@ -312,16 +347,19 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
             if (path.contains(folderName)) {
                 Log.d(TAG, "it contains " + folderName);
+
                 for (int j = 0; j < localFolderInfo.getFileListSize(); j++) {
                     String fileFolderId = localFolderInfo.getFileFolderId(j);
                     String fileId = localFolderInfo.getFileId(j);
                     Log.d(TAG, "fileFolderId : " + fileFolderId + " fileId : " + fileId);
+                    hadFile = true;
                     getFile(fileFolderId, fileId);
                 }
             } else {
                 Log.d(TAG, "no contain " + folderName);
             }
         }
+        return hadFile;
     }
     
     private void getFile(String folderId, String fileId) {
@@ -341,6 +379,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
                                         Log.d(TAG, "path : " + path + " fileName : " + fileName + " fileStream : "
                                                 + fileStream);
+                                        showMessage.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_sync_download_success)
+                                        		+ fileName);
                                     }
                                 } else {
                                     Log.d(TAG, "value is null");
@@ -352,6 +392,38 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                             Log.d(TAG, "Get file info failed");
                         }
                     }
-                });
+                }, showMessageHandler);
     }
+    
+	private Handler dialogHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg)
+		{
+			switch (msg.what)
+			{
+			case Utility.SHOW_WAITING_DIALOG:
+				Log.d(TAG, "show waiting dialog ");
+				progressDialog = ProgressDialog
+						.show(SynchronizationFragment.this.getActivity(),
+								"",
+								SynchronizationFragment.this.getResources().getString(
+										R.string.loading));
+				break;
+			case Utility.DISMISS_WAITING_DIALOG:
+				Log.d(TAG, "dismiss dialog ");
+				if (progressDialog != null) progressDialog.dismiss();
+				break;
+			}
+		}
+	};
+	
+	private Handler showMessageHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg)
+		{
+            showMessage.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_sync_save_success));
+		}
+	};
 }

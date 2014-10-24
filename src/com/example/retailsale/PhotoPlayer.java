@@ -219,7 +219,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 			{
 			case Utility.SHOW_WAITING_DIALOG:
 				Log.d(TAG, "show waiting dialog ");
-				progressDialog = ProgressDialog.show(PhotoPlayer.this, "", "讀取中");
+				progressDialog = ProgressDialog.show(PhotoPlayer.this, "", PhotoPlayer.this.getResources().getString(R.string.loading));
 				break;
 			case Utility.DISMISS_WAITING_DIALOG:
 				Log.d(TAG, "dismiss dialog ");

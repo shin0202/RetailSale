@@ -6,7 +6,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -345,7 +343,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 			{
 			case Utility.SHOW_WAITING_DIALOG:
 				Log.d(TAG, "show waiting dialog ");
-				progressDialog = ProgressDialog.show(BrowserFragment.this.getActivity(), "", "讀取中");
+				progressDialog = ProgressDialog.show(BrowserFragment.this.getActivity(), "", BrowserFragment.this.getResources().getString(R.string.loading));
 				break;
 			case Utility.DISMISS_WAITING_DIALOG:
 				Log.d(TAG, "dismiss dialog ");

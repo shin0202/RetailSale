@@ -18,9 +18,6 @@ import com.example.retailsale.manager.addcustomer.AddCustomerListener;
 import com.example.retailsale.manager.dataoption.GetDataOptionListener;
 import com.example.retailsale.manager.dataoption.GsonDataOption;
 import com.example.retailsale.manager.dataoption.GsonDataOption.DataOption;
-import com.example.retailsale.manager.fileinfo.GetFileInfoListener;
-import com.example.retailsale.manager.fileinfo.GsonFileInfo;
-import com.example.retailsale.manager.fileinfo.GsonFileInfo.FileInfo;
 import com.example.retailsale.manager.folderinfo.GetFolderInfoListener;
 import com.example.retailsale.manager.folderinfo.GsonFolderInfo;
 import com.example.retailsale.manager.login.GetLoginListener;
@@ -219,7 +216,7 @@ public class Login extends Activity implements OnClickListener
 		});
 	}
 	
-	private void getFile() {
+/*	private void getFile() {
 		HttpManager httpManager = new HttpManager();
 		httpManager.getFileInfo(Login.this, 2, 2, new GetFileInfoListener()
 		{
@@ -258,7 +255,7 @@ public class Login extends Activity implements OnClickListener
 				}
 			}
 		});
-	}
+	} */
 	
 	private void getFolder() {
 		HttpManager httpManager = new HttpManager();

@@ -8,6 +8,9 @@
     <string name="back">返回</string>
     <string name="new_item">新增</string>
     <string name="start">開始</string>
+    <string name="select">選取</string>
+    <string name="incorrect">無效</string>
+    <string name="loading">讀取中</string>
 
     <!-- Login -->
     <string name="login">登入</string>
@@ -86,6 +89,9 @@
     <string name="sync_tab_download_message">下載訊息</string>
     <string name="sync_tab_sync_description">同步說明</string>
     <string name="sync_tab_sync_message">同步訊息</string>
+    <string name="sync_tab_sync_no_file">沒有可下載檔案</string>
+    <string name="sync_tab_sync_download_success">下載成功</string>
+    <string name="sync_tab_sync_save_success">儲存成功</string>
 
     <!-- Error String -->
     <string name="field_error">欄位錯誤</string>

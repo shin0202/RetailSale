@@ -3,11 +3,13 @@ package com.example.retailsale.fragment;
 import java.util.List;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.retailsale.R;
@@ -61,11 +63,11 @@ public class PhotosAdapterView extends BaseAdapter
             
             switch (selectdTab) {
             case BROWSER_TAB:
-                viewTag.showPhoto.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT));
+                viewTag.showPhoto.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                		LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
                 break;
             case SYNC_TAB:
-                viewTag.showPhoto.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
+                viewTag.showPhoto.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 100, Gravity.CENTER));
                 break;
             }
             

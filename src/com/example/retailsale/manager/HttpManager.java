@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import org.json.JSONStringer;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import com.android.volley.Request.Method;
@@ -219,7 +220,7 @@ public class HttpManager
     ////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////// file info
-    public void getFileInfo(Context context, int pathId, int fileId, GetFileInfoListener getFileInfoListener) {
+    public void getFileInfo(Context context, int pathId, int fileId, GetFileInfoListener getFileInfoListener, Handler handler) {
     	String fileInfoUri = "http://192.168.49.128/KendoAPI/ODATA/fileContent(pathId=" + pathId + ",fileId=" + fileId + ")";
         Log.e(TAG, "getFileInfo() fileInfoUri = " + fileInfoUri);
 
@@ -228,7 +229,7 @@ public class HttpManager
 //                getFileInfoReqErrorListener(getFileInfoListener));
         
         GsonRequest<GsonFileInfo> getFileInfoGsonRequset = new GsonRequest<GsonFileInfo>(Method.GET, fileInfoUri,
-                GsonFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener),
+                GsonFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener, handler),
                 getFileInfoReqErrorListener(getFileInfoListener), LogType.Operation, "095050", "", USER_HOST, ACTION_NAME);
         
         getFileInfoGsonRequset.setTag("getFileInfo");
@@ -329,12 +330,12 @@ public class HttpManager
     ////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////listener of file info
-    private Response.Listener<GsonFileInfo> getFileInfoReqSuccessListener(final GetFileInfoListener getFileInfoListener) {
+    private Response.Listener<GsonFileInfo> getFileInfoReqSuccessListener(final GetFileInfoListener getFileInfoListener, final Handler handler) {
         return new Response.Listener<GsonFileInfo>() {
             @Override
             public void onResponse(GsonFileInfo response) {
                 Log.e(TAG, "getFileInfo success response: " + response.toString());
-//                handleFileInfo(response);
+                handleFileInfo(response, handler);
                 if (getFileInfoListener != null)
                     getFileInfoListener.onResult(true, response);
             }
@@ -409,23 +410,36 @@ public class HttpManager
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    private void handleFileInfo(GsonFileInfo fileInfo) {        
+    private void handleFileInfo(GsonFileInfo fileInfo, Handler handler) {        
         if (fileInfo != null) {
+        	        	
             // 1. get file path
-            StringBuilder path = new StringBuilder().append(Utility.FILE_PATH).append(fileInfo.getValue().get(0).getPath());
+        	String path = fileInfo.getValue().get(0).getPath().replace(Utility.REPLACE_SERVER_FOLDER, Utility.FILE_PATH_2).replace("\\", "/");
             
-            // 2. create the folder from file path
-            Utility.createFolder(path.toString());
+//            // 2. create the folder from file path
+//            Utility.createFolder(path.toString());
             
             // 3. generate the MD5 string from file name
             String md5FileName = Utility.generateMD5String(fileInfo.getValue().get(0).getFileName());
+            Log.d(TAG, "md5FileName  is  ~~~~~~~~~~~~~~~~~~~~ " + md5FileName);
             
             // 4. To mix md5 file name and file data to "newData", then write data to file path(newFileName)
-            StringBuilder newFileName = new StringBuilder().append(path.toString()).append(fileInfo.getValue().get(0).getFileName())
+            StringBuilder newFileName = new StringBuilder().append(path.toString()).append("/").append(fileInfo.getValue().get(0).getFileName())
                     .append(".txt");
+            
+            Log.d(TAG, "newFileName  is  ~~~~~~~~~~~~~~~~~~~~ " + newFileName.toString());
+            
+            Log.d(TAG, "original data  is  ~~~~~~~~~~~~~~~~~~~~ " + fileInfo.getValue().get(0).getFileStream());
+            
+            Log.d(TAG, "*************************************************************** " );
+            
             StringBuilder newData = new StringBuilder().append(md5FileName).append(fileInfo.getValue().get(0).getFileStream());
             
+            Log.d(TAG, "newData  is  ~~~~~~~~~~~~~~~~~~~~ " + newData.toString());
+            
             Utility.writeFile(newFileName.toString(), newData.toString());
+            
+            handler.sendEmptyMessage(0);
        
 //            // 5. to read file and remove md5
 //            String readContent = readFile(newFileName.toString());
