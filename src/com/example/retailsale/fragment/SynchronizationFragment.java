@@ -34,6 +34,9 @@ import com.example.retailsale.MainActivity;
 import com.example.retailsale.R;
 import com.example.retailsale.RetialSaleDbAdapter;
 import com.example.retailsale.manager.HttpManager;
+import com.example.retailsale.manager.dataoption.GetDataOptionListener;
+import com.example.retailsale.manager.dataoption.GsonDataOption;
+import com.example.retailsale.manager.dataoption.GsonDataOption.DataOption;
 import com.example.retailsale.manager.fileinfo.GetFileInfoListener;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo.FileInfo;
@@ -62,6 +65,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     
     private int currentCount = 0;
     private int needCount = 0;
+    
+    private RetialSaleDbAdapter retialSaleDbAdapter;
     
     public static final class SelectedItem {
         public static final int UPLOAD_CUSTOMER = 0;
@@ -436,7 +441,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     
     /* *************************************************Upload Related******************************************************* */
     private void addCustomer() {
-        RetialSaleDbAdapter retialSaleDbAdapter = new RetialSaleDbAdapter(SynchronizationFragment.this.getActivity());
+        retialSaleDbAdapter = new RetialSaleDbAdapter(SynchronizationFragment.this.getActivity());
         retialSaleDbAdapter.open();
                 
         int creator = Utility.getCreator(SynchronizationFragment.this.getActivity());
@@ -448,12 +453,13 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         currentCount = 0;
         dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
         
-        Cursor cursor = retialSaleDbAdapter.getCustomerByCreator(creator);
+        Cursor cursor = retialSaleDbAdapter.getCustomerByCreatorNotUpload(creator);
         
         if (cursor != null) {
             needCount = cursor.getCount();
             if (needCount > 0) {
                 while (cursor.moveToNext()) {
+                	long rowId = cursor.getLong(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_ID));
                     String customerAccount = "-1";
                     String custometName =  cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_NAME));
                     String customerMobile = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_MOBILE));
@@ -506,9 +512,12 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                 .key(Utility.AddCustomerJsonTag.CREATOR).value(creator)
                                 .key(Utility.AddCustomerJsonTag.CREATOR_GROUP).value(creatorGroup)
                                 .key(Utility.AddCustomerJsonTag.CREATE_TIME).value(createDate).endObject();
-                        Log.d(TAG, "customerReservationJson === " + customerReservationJson.toString());
+//                        Log.d(TAG, "customerReservationJson === " + customerReservationJson.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                        showMessage("", R.string.sync_tab_sync_db_error);
+                        break;
                     }
                     
                     try {
@@ -532,38 +541,120 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                 .key(Utility.AddCustomerJsonTag.CREATE_TIME).value(createDate)
                                 .key(Utility.AddCustomerJsonTag.CUSTOMER_RESERVATION).value(customerReservationJson)
                                 .endObject();
-                        Log.d(TAG, "json === " + json.toString());
-                        POSTThread postThread = new POSTThread(json, custometName, showMessageHandler);
+//                        Log.d(TAG, "json === " + json.toString());
+                        POSTThread postThread = new POSTThread(json, custometName, showMessageHandler, rowId, retialSaleDbAdapter);
                         postThread.start();
                     } catch (JSONException e) {
                         e.printStackTrace();
                         dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                        showMessage("", R.string.sync_tab_sync_db_error);
+                        break;
                     }
                 }
             } else {
                 dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                showMessage("", R.string.sync_tab_sync_no_customer);
             }
             cursor.close();
         } else {
             dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+            showMessage("", R.string.sync_tab_sync_no_customer);
         }
         
-        retialSaleDbAdapter.close();
+//        retialSaleDbAdapter.close();
     }
     
-	private void addCustomerInfo(JSONStringer json, String custometName, Handler handler)
+	private void addCustomerInfo(JSONStringer json, String custometName, Handler handler, long rowId, RetialSaleDbAdapter retialSaleDbAdapter)
 	{
 		HttpManager httpManager = new HttpManager();
 		httpManager.addCustomerInfo(SynchronizationFragment.this.getActivity(), custometName,
 				handler, HttpManager.LogType.Login, "095050", "", HttpManager.USER_HOST,
-				HttpManager.ACTION_NAME, json);
+				HttpManager.ACTION_NAME, json, rowId, retialSaleDbAdapter);
 	}
 	
 	/* *************************************************Upload Related******************************************************* */
     
+	/* *************************************************Sync Related******************************************************* */
     private void syncData() {
-        
+        // 1. clear all folder
+    	boolean isSuccess = Utility.removeDirectory(new File(Utility.FILE_PATH));
+    	
+    	if (isSuccess)
+    	{
+    		showMessage(Utility.FILE_PATH, R.string.sync_tab_sync_clear_folder_success);
+    	}
+    	else
+    	{
+    		showMessage(Utility.FILE_PATH, R.string.sync_tab_sync_clear_folder_failed);
+    	}
+    	
+    	// 2. clear data option in DB
+    	RetialSaleDbAdapter retialSaleDbAdapter = new RetialSaleDbAdapter(SynchronizationFragment.this.getActivity());
+    	retialSaleDbAdapter.open();
+    	isSuccess = retialSaleDbAdapter.deleteAllOption();
+    	
+    	if (isSuccess)
+    	{
+    		showMessage("", R.string.sync_tab_sync_clear_data_option_success);
+    	}
+    	else
+    	{
+    		showMessage("", R.string.sync_tab_sync_clear_data_option_failed);
+    	}
+    	
+    	// 3. download data option from server
+    	getDataOption(retialSaleDbAdapter);
     }
+    
+	private void getDataOption(final RetialSaleDbAdapter retialSaleDbAdapter)
+	{
+		HttpManager httpManager = new HttpManager();
+		httpManager.getDataOptions(SynchronizationFragment.this.getActivity(), new GetDataOptionListener()
+		{
+			@Override
+			public void onResult(Boolean isSuccess, GsonDataOption dataOption)
+			{
+				if (isSuccess)
+				{
+					if (dataOption != null)
+					{
+						List<DataOption> value = dataOption.getValue();
+						if (value != null)
+						{
+							for (int i = 0; i < value.size(); i++)
+							{
+								int optSerial = value.get(i).getOptSerial();
+								String optName = value.get(i).getOptName();
+								String typeName = value.get(i).getTypeName();
+								boolean optLock = value.get(i).getOptLock();
+								
+								Log.d(TAG, "optSerial : " + optSerial + " optName : " + optName + " typeName : " + typeName + " optLock : " + optLock);
+								retialSaleDbAdapter.create(-1, typeName, optSerial, optName);
+							}
+							retialSaleDbAdapter.close();
+							showMessage("", R.string.sync_tab_sync_download_data_option_success);
+						}
+						else
+						{
+							Log.d(TAG, "value is null");
+							showMessage("", R.string.sync_tab_sync_download_data_option_failed);
+						}
+					}
+					else
+					{
+						Log.d(TAG, "dataOption is null");
+						showMessage("", R.string.sync_tab_sync_download_data_option_failed);
+					}
+				}
+				else
+				{
+					Log.d(TAG, "Get data option failed");
+					showMessage("", R.string.sync_tab_sync_download_data_option_failed);
+				}
+			}
+		});
+	}
+	/* *************************************************Sync Related******************************************************* */
     
 	private Handler dialogHandler = new Handler()
 	{
@@ -597,6 +688,10 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             	
             	if (currentCount == needCount) {
             		dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+            		
+            		if (retialSaleDbAdapter.isDbOpen()) {
+            			retialSaleDbAdapter.close();
+            		}
             	}
             	
                 String customerName = (String)msg.obj;
@@ -635,16 +730,20 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         private JSONStringer json;
         private String custometName;
         private Handler handler;
+        private long rowId;
+        private RetialSaleDbAdapter retialSaleDbAdapter;
         
-        public POSTThread(JSONStringer json, String custometName, Handler handler) {
+        public POSTThread(JSONStringer json, String custometName, Handler handler, long rowId, RetialSaleDbAdapter retialSaleDbAdapter) {
             this.json = json;
             this.custometName = custometName;
             this.handler = handler;
+            this.rowId = rowId;
+            this.retialSaleDbAdapter = retialSaleDbAdapter;
         }
         
         @Override
         public void run() {
-            addCustomerInfo(json, custometName, handler);
+            addCustomerInfo(json, custometName, handler, rowId, retialSaleDbAdapter);
         }
     }
 }

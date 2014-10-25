@@ -25,7 +25,7 @@
     <dimen name="input_layout_margin_left">5dp</dimen>
 
     <!-- Text view style for add tab -->
-    <dimen name="add_tab_txt_style_width">150dp</dimen>
+    <dimen name="add_tab_txt_style_width">130dp</dimen>
     <dimen name="add_tab_txt_style_size">16sp</dimen>
     <dimen name="add_tab_txt_input_style_height">32dp</dimen>
     <dimen name="add_tab_txt_input_style_padding_left_right">10dp</dimen>

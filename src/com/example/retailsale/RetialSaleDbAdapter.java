@@ -81,17 +81,16 @@ public class RetialSaleDbAdapter
 	public static final int UPLOAD = 1;
 	private static final String ADD_CUSTOMER_CREATE = CREATE_TABLE_STRING + ADD_CUSTOMER_TABLE
 			+ "(" + KEY_ADD_CUSTOMER_ID + " INTEGER PRIMARY KEY," + KEY_ADD_CUSTOMER_NAME
-			+ " TEXT," + KEY_ADD_HOME + " TEXT," + KEY_ADD_MOBILE + " TEXT,"
-			+ KEY_ADD_COMPANY + " TEXT," + KEY_ADD_EMAIL + " TEXT," + KEY_ADD_SEX
-			+ " INTEGER," + KEY_ADD_BIRTHDAY + " TEXT," + KEY_ADD_INFO + " INTEGER,"
-			+ KEY_ADD_TITLE + " INTEGER," + KEY_ADD_JOB + " INTEGER," + KEY_ADD_INTRODUCER
-			+ " TEXT," + KEY_ADD_AGE + " INTEGER," + KEY_ADD_VISIT_DATE + " TEXT,"
-			+ KEY_ADD_CREATOR + " INTEGER," + KEY_ADD_CREATOR_GROUP + " INTEGER,"
-			+ KEY_ADD_CREATE_DATE + " TEXT," + KEY_ADD_SEND_MSG + " INTEGER," + KEY_WORK_ALIAS
-			+ " TEXT," + KEY_STATUS_COMMENT + " TEXT," + KEY_STATUS + " INTEGER," + KEY_WORK
-			+ " TEXT," + KEY_CONTACT + " TEXT," + KEY_COMMENT + " TEXT," + KEY_SPACE + " INTEGER,"
-			+ KEY_BUDGET + " INTEGER," + KEY_RESERVATION_DATE + " TEXT," + KEY_IS_UPLOAD + " INTEGER"
-			+ ");";
+			+ " TEXT," + KEY_ADD_HOME + " TEXT," + KEY_ADD_MOBILE + " TEXT," + KEY_ADD_COMPANY
+			+ " TEXT," + KEY_ADD_EMAIL + " TEXT," + KEY_ADD_SEX + " INTEGER," + KEY_ADD_BIRTHDAY
+			+ " TEXT," + KEY_ADD_INFO + " INTEGER," + KEY_ADD_TITLE + " INTEGER," + KEY_ADD_JOB
+			+ " INTEGER," + KEY_ADD_INTRODUCER + " TEXT," + KEY_ADD_AGE + " INTEGER,"
+			+ KEY_ADD_VISIT_DATE + " TEXT," + KEY_ADD_CREATOR + " INTEGER," + KEY_ADD_CREATOR_GROUP
+			+ " INTEGER," + KEY_ADD_CREATE_DATE + " TEXT," + KEY_ADD_SEND_MSG + " INTEGER,"
+			+ KEY_WORK_ALIAS + " TEXT," + KEY_STATUS_COMMENT + " TEXT," + KEY_STATUS + " INTEGER,"
+			+ KEY_WORK + " TEXT," + KEY_CONTACT + " TEXT," + KEY_COMMENT + " TEXT," + KEY_SPACE
+			+ " INTEGER," + KEY_BUDGET + " INTEGER," + KEY_RESERVATION_DATE + " TEXT,"
+			+ KEY_IS_UPLOAD + " INTEGER" + ");";
 	private static final String DATA_OPTION_CREATE = CREATE_TABLE_STRING + DATA_OPTION_TABLE + "("
 			+ KEY_DATA_OPTION_ID + " INTEGER PRIMARY KEY," + KEY_DATA_OPTION_TYPE + " INTEGER,"
 			+ KEY_DATA_OPTION_ALIAS + " TEXT," + KEY_DATA_OPTION_SERIAL + " INTEGER,"
@@ -108,7 +107,7 @@ public class RetialSaleDbAdapter
 		{
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 			this.context = context;
-//			createDatabase();
+			// createDatabase();
 		}
 
 		/**
@@ -234,14 +233,13 @@ public class RetialSaleDbAdapter
 	public Cursor getAllCustomer()
 	{
 		return db.query(ADD_CUSTOMER_TABLE, new String[] { KEY_ADD_CUSTOMER_ID,
-				KEY_ADD_CUSTOMER_NAME, KEY_ADD_HOME, KEY_ADD_MOBILE,
-				KEY_ADD_COMPANY, KEY_ADD_EMAIL, KEY_ADD_SEX, KEY_ADD_BIRTHDAY,
-				KEY_ADD_INFO, KEY_ADD_TITLE, KEY_ADD_JOB, KEY_ADD_INTRODUCER, KEY_ADD_AGE,
-				KEY_ADD_VISIT_DATE, KEY_ADD_CREATOR, KEY_ADD_CREATOR_GROUP,
-				KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG, KEY_WORK_ALIAS, KEY_STATUS_COMMENT,
-				KEY_STATUS, KEY_WORK, KEY_CONTACT, KEY_COMMENT, KEY_SPACE, KEY_BUDGET,
-				KEY_RESERVATION_DATE, KEY_IS_UPLOAD }, null, null, null, null, KEY_ADD_CREATE_DATE
-				+ ORDER_DESC);
+				KEY_ADD_CUSTOMER_NAME, KEY_ADD_HOME, KEY_ADD_MOBILE, KEY_ADD_COMPANY,
+				KEY_ADD_EMAIL, KEY_ADD_SEX, KEY_ADD_BIRTHDAY, KEY_ADD_INFO, KEY_ADD_TITLE,
+				KEY_ADD_JOB, KEY_ADD_INTRODUCER, KEY_ADD_AGE, KEY_ADD_VISIT_DATE, KEY_ADD_CREATOR,
+				KEY_ADD_CREATOR_GROUP, KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG, KEY_WORK_ALIAS,
+				KEY_STATUS_COMMENT, KEY_STATUS, KEY_WORK, KEY_CONTACT, KEY_COMMENT, KEY_SPACE,
+				KEY_BUDGET, KEY_RESERVATION_DATE, KEY_IS_UPLOAD }, null, null, null, null,
+				KEY_ADD_CREATE_DATE + ORDER_DESC);
 	}
 
 	/** Get all option from option table */
@@ -253,12 +251,12 @@ public class RetialSaleDbAdapter
 	}
 
 	/** Insert customer to customer table */
-	public long create(String customerName, String home, String mobile,
-			String company, String email, int sex, String birthday, int info, int title,
-			int job, String introducer, int age, String visitDate, int creator,
-			int creatorGroup, String createDate, int sendMsg, String workAlias,
-			String statusComment, int status, String work, String contact, String comment,
-			int space, int budget, String reservationDate, int isUpload)
+	public long create(String customerName, String home, String mobile, String company,
+			String email, int sex, String birthday, int info, int title, int job,
+			String introducer, int age, String visitDate, int creator, int creatorGroup,
+			String createDate, int sendMsg, String workAlias, String statusComment, int status,
+			String work, String contact, String comment, int space, int budget,
+			String reservationDate, int isUpload)
 	{
 		ContentValues args = new ContentValues();
 		args.put(KEY_ADD_CUSTOMER_NAME, customerName);
@@ -340,14 +338,13 @@ public class RetialSaleDbAdapter
 		if (db.isOpen())
 		{
 			Cursor cursor = db.query(true, ADD_CUSTOMER_TABLE, new String[] { KEY_ADD_CUSTOMER_ID,
-					KEY_ADD_CUSTOMER_NAME, KEY_ADD_HOME, KEY_ADD_MOBILE,
-					KEY_ADD_COMPANY, KEY_ADD_EMAIL, KEY_ADD_SEX, KEY_ADD_BIRTHDAY,
-					KEY_ADD_INFO, KEY_ADD_TITLE, KEY_ADD_JOB, KEY_ADD_INTRODUCER, KEY_ADD_AGE,
-					KEY_ADD_VISIT_DATE, KEY_ADD_CREATOR, KEY_ADD_CREATOR_GROUP,
-					KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG, KEY_WORK_ALIAS, KEY_STATUS_COMMENT,
-					KEY_STATUS, KEY_WORK, KEY_CONTACT, KEY_COMMENT, KEY_SPACE, KEY_BUDGET,
-					KEY_RESERVATION_DATE, KEY_IS_UPLOAD }, KEY_ADD_CUSTOMER_ID + "=" + rowId, null,
-					null, null, null, null);
+					KEY_ADD_CUSTOMER_NAME, KEY_ADD_HOME, KEY_ADD_MOBILE, KEY_ADD_COMPANY,
+					KEY_ADD_EMAIL, KEY_ADD_SEX, KEY_ADD_BIRTHDAY, KEY_ADD_INFO, KEY_ADD_TITLE,
+					KEY_ADD_JOB, KEY_ADD_INTRODUCER, KEY_ADD_AGE, KEY_ADD_VISIT_DATE,
+					KEY_ADD_CREATOR, KEY_ADD_CREATOR_GROUP, KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG,
+					KEY_WORK_ALIAS, KEY_STATUS_COMMENT, KEY_STATUS, KEY_WORK, KEY_CONTACT,
+					KEY_COMMENT, KEY_SPACE, KEY_BUDGET, KEY_RESERVATION_DATE, KEY_IS_UPLOAD },
+					KEY_ADD_CUSTOMER_ID + "=" + rowId, null, null, null, null, null);
 			if (cursor != null) { return cursor; }
 			return null;
 		}
@@ -356,29 +353,50 @@ public class RetialSaleDbAdapter
 			return null;
 		}
 	}
-	
-	   /** Query single customer by creator */
-    public Cursor getCustomerByCreator(int creator) throws SQLException
-    {
-        if (db.isOpen())
-        {
-            Cursor cursor = db.query(true, ADD_CUSTOMER_TABLE, new String[] { KEY_ADD_CUSTOMER_ID,
-                    KEY_ADD_CUSTOMER_NAME, KEY_ADD_HOME, KEY_ADD_MOBILE,
-                    KEY_ADD_COMPANY, KEY_ADD_EMAIL, KEY_ADD_SEX, KEY_ADD_BIRTHDAY,
-                    KEY_ADD_INFO, KEY_ADD_TITLE, KEY_ADD_JOB, KEY_ADD_INTRODUCER, KEY_ADD_AGE,
-                    KEY_ADD_VISIT_DATE, KEY_ADD_CREATOR, KEY_ADD_CREATOR_GROUP,
-                    KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG, KEY_WORK_ALIAS, KEY_STATUS_COMMENT,
-                    KEY_STATUS, KEY_WORK, KEY_CONTACT, KEY_COMMENT, KEY_SPACE, KEY_BUDGET,
-                    KEY_RESERVATION_DATE, KEY_IS_UPLOAD }, KEY_ADD_CREATOR + "=" + creator, null,
-                    null, null, null, null);
-            if (cursor != null) { return cursor; }
-            return null;
-        }
-        else
-        {
-            return null;
-        }
-    }
+
+	/** Query single customer by creator */
+	public Cursor getCustomerByCreator(int creator) throws SQLException
+	{
+		if (db.isOpen())
+		{
+			Cursor cursor = db.query(true, ADD_CUSTOMER_TABLE, new String[] { KEY_ADD_CUSTOMER_ID,
+					KEY_ADD_CUSTOMER_NAME, KEY_ADD_HOME, KEY_ADD_MOBILE, KEY_ADD_COMPANY,
+					KEY_ADD_EMAIL, KEY_ADD_SEX, KEY_ADD_BIRTHDAY, KEY_ADD_INFO, KEY_ADD_TITLE,
+					KEY_ADD_JOB, KEY_ADD_INTRODUCER, KEY_ADD_AGE, KEY_ADD_VISIT_DATE,
+					KEY_ADD_CREATOR, KEY_ADD_CREATOR_GROUP, KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG,
+					KEY_WORK_ALIAS, KEY_STATUS_COMMENT, KEY_STATUS, KEY_WORK, KEY_CONTACT,
+					KEY_COMMENT, KEY_SPACE, KEY_BUDGET, KEY_RESERVATION_DATE, KEY_IS_UPLOAD },
+					KEY_ADD_CREATOR + "=" + creator, null, null, null, null, null);
+			if (cursor != null) { return cursor; }
+			return null;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/** Query single customer by creator and not upload */
+	public Cursor getCustomerByCreatorNotUpload(int creator) throws SQLException
+	{
+		if (db.isOpen())
+		{
+			Cursor cursor = db.query(true, ADD_CUSTOMER_TABLE, new String[] { KEY_ADD_CUSTOMER_ID,
+					KEY_ADD_CUSTOMER_NAME, KEY_ADD_HOME, KEY_ADD_MOBILE, KEY_ADD_COMPANY,
+					KEY_ADD_EMAIL, KEY_ADD_SEX, KEY_ADD_BIRTHDAY, KEY_ADD_INFO, KEY_ADD_TITLE,
+					KEY_ADD_JOB, KEY_ADD_INTRODUCER, KEY_ADD_AGE, KEY_ADD_VISIT_DATE,
+					KEY_ADD_CREATOR, KEY_ADD_CREATOR_GROUP, KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG,
+					KEY_WORK_ALIAS, KEY_STATUS_COMMENT, KEY_STATUS, KEY_WORK, KEY_CONTACT,
+					KEY_COMMENT, KEY_SPACE, KEY_BUDGET, KEY_RESERVATION_DATE, KEY_IS_UPLOAD },
+					KEY_ADD_CREATOR + "=" + creator + " AND " + KEY_IS_UPLOAD + "=" + NOTUPLOAD, null, null, null, null, null);
+			if (cursor != null) { return cursor; }
+			return null;
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	/** Query single option */
 	public Cursor getOption(String rowId) throws SQLException
@@ -397,14 +415,32 @@ public class RetialSaleDbAdapter
 			return null;
 		}
 	}
+	
+	/** Query user group option */
+	public Cursor getOptionByOptionSerial(int optionSerial) throws SQLException
+	{
+		if (db.isOpen())
+		{
+			Cursor cursor = db.query(true, DATA_OPTION_TABLE, new String[] { KEY_DATA_OPTION_ID,
+					KEY_DATA_OPTION_TYPE, KEY_DATA_OPTION_ALIAS, KEY_DATA_OPTION_SERIAL,
+					KEY_DATA_OPTION_NAME }, KEY_DATA_OPTION_SERIAL + "=" + optionSerial, null, null, null,
+					null, null);
+			if (cursor != null) { return cursor; }
+			return null;
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	/** Update the customer table */
-	public boolean updateCustomer(String rowID, String customerName, String home,
-			String mobile, String company, String email, int sex, String birthday,
-			int info, int title, int job, String introducer, int age, String visitDate,
-			int creator, int creatorGroup, String createDate, int sendMsg, String workAlias,
-			String statusComment, int status, String work, String contact, String comment,
-			int space, int budget, String workDate, int isUpload)
+	public boolean updateCustomer(String rowID, String customerName, String home, String mobile,
+			String company, String email, int sex, String birthday, int info, int title, int job,
+			String introducer, int age, String visitDate, int creator, int creatorGroup,
+			String createDate, int sendMsg, String workAlias, String statusComment, int status,
+			String work, String contact, String comment, int space, int budget, String workDate,
+			int isUpload)
 	{
 		if (db.isOpen())
 		{
@@ -444,6 +480,21 @@ public class RetialSaleDbAdapter
 		}
 	}
 
+	/** Update the customer table(only isUploaded) */
+	public boolean updateCustomer(long rowID, int isUpload)
+	{
+		if (db.isOpen())
+		{
+			ContentValues args = new ContentValues();
+			args.put(KEY_IS_UPLOAD, isUpload);
+			return db.update(ADD_CUSTOMER_TABLE, args, KEY_ADD_CUSTOMER_ID + "=" + rowID, null) > 0;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	/** Update the option table */
 	public boolean updateOption(int rowID, String optionType, String optionAlias, int optionSerial,
 			String optionName)
@@ -469,9 +520,9 @@ public class RetialSaleDbAdapter
 	{
 		if (db.isOpen())
 		{
-			Cursor cursor = db.rawQuery("SELECT * FROM mails WHERE " + KEY_ADD_INFO + " = "
-					+ "\"" + info + "\"" + " AND " + KEY_ADD_CREATE_DATE + " = " + "\""
-					+ createDate + "\"", null);
+			Cursor cursor = db.rawQuery("SELECT * FROM mails WHERE " + KEY_ADD_INFO + " = " + "\""
+					+ info + "\"" + " AND " + KEY_ADD_CREATE_DATE + " = " + "\"" + createDate
+					+ "\"", null);
 			if (cursor != null)
 			{
 				cursor.moveToFirst();

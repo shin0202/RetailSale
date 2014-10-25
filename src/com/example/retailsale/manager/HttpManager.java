@@ -20,6 +20,7 @@ import android.util.Log;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.retailsale.RetialSaleDbAdapter;
 import com.example.retailsale.fragment.SynchronizationFragment;
 import com.example.retailsale.manager.addcustomer.AddCustomerListener;
 import com.example.retailsale.manager.dataoption.GetDataOptionListener;
@@ -128,7 +129,7 @@ public class HttpManager
     
 	public void addCustomerInfo(Context context, String custometName, Handler handler,
 			String logType, String userNo, String userName, String userHostAddress,
-			String actionName, JSONStringer json)
+			String actionName, JSONStringer json, long rowId, RetialSaleDbAdapter retialSaleDbAdapter)
 	{
 		String addCustomerInfoUri = "http://192.168.49.128/KendoAPI/ODATA/customerData_Mobile";
 		HttpClient httpclient = new DefaultHttpClient();
@@ -136,28 +137,13 @@ public class HttpManager
 		httppost.setHeader(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
 		httppost.setHeader(Utility.JSONTag.FATCA_INFO,
 				Utility.getFactaInfoHeader(logType, userNo, userName, userHostAddress, actionName));
+		
+		Message msg = new Message();
+        msg.what = SynchronizationFragment.SelectedItem.UPLOAD_CUSTOMER;
+        msg.obj = custometName;
 		try
 		{
 			// Add your data
-//			try
-//			{
-//				json = new JSONStringer().object().key("customerAccount")
-//						.value("C20141006180054701").key("custometName").value("Test123")
-//						.key("customerMobile").value("無資料123").key("customerHome")
-//						.value("2727-8831").key("customerCompany").value("2727-8831")
-//						.key("customerSex").value(8).key("customerTitle").value(10)
-//						.key("customerMail").value("john@gmail.com").key("customerVisitDate")
-//						.value("2014-10-08T16:00:00").key("customerInfo").value(13)
-//						.key("customerIntroducer").value("john").key("customerJob").value(15)
-//						.key("customerAge").value(10).key("customerBirth").value("2014-10-15")
-//						.key("creator").value(23).key("creatorGroup").value(23).key("createTime")
-//						.value("2014-10-07T10:19:32").endObject();
-//				Log.d(TAG, "json === " + json.toString());
-//			}
-//			catch (JSONException e)
-//			{
-//				e.printStackTrace();
-//			}
 			StringEntity stringEntity = new StringEntity(json.toString(), "UTF-8");
 			stringEntity.setContentType("application/json");
 			httppost.setEntity(stringEntity);
@@ -165,16 +151,14 @@ public class HttpManager
 			HttpResponse response = httpclient.execute(httppost);
 			if (response != null)
 			{
-	            Message msg = new Message();
-	            msg.what = SynchronizationFragment.SelectedItem.UPLOAD_CUSTOMER;
-	            msg.obj = custometName;
 	            msg.arg1 = response.getStatusLine().getStatusCode();
 	            
-	            handler.sendMessage(msg);
 				Log.d(TAG, "response === " + response.getStatusLine().toString());
+				retialSaleDbAdapter.updateCustomer(rowId, RetialSaleDbAdapter.UPLOAD);
 			}
 			else
 			{
+				msg.arg1 = Utility.FAILED_UPLOAD;
 				Log.d(TAG, "response is null");
 			}
 			httpclient.getConnectionManager().shutdown();
@@ -182,15 +166,19 @@ public class HttpManager
 		catch (ClientProtocolException e)
 		{
 			e.printStackTrace();
+			msg.arg1 = Utility.FAILED_UPLOAD;
 		}
 		catch (MalformedURLException e)
 		{
 			e.printStackTrace();
+			msg.arg1 = Utility.FAILED_UPLOAD;
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
+			msg.arg1 = Utility.FAILED_UPLOAD;
 		}
+		handler.sendMessage(msg);
 	}
     ////////////////////////////////////////////////////////////////////////////////
 

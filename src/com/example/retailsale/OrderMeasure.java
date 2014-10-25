@@ -156,6 +156,11 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 						customerInfo.getReservationStatus(), customerInfo.getReservationComment(),
 						customerInfo.getReservationSpace(), customerInfo.getReservationBudget());
 			}
+			
+			if (customerInfo != null) {
+				consumerNameTV.setText(customerInfo.getCustometName());
+				phoneNumberTV.setText(customerInfo.getCustomerHome());
+			}
 		}
 	}
 	

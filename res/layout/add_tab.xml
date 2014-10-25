@@ -16,7 +16,7 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="450dp"
+        android:layout_height="550dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/add_tab_new_btn"
@@ -248,13 +248,12 @@
 
                     <TextView
                         android:id="@+id/add_tab_designer_store"
-                        style="@style/addTabTextViewStyle"
-                        android:text="@string/add_tab_designer_store" />
+                        style="@style/addTabTextViewStyle" />
                 </LinearLayout>
 
                 <!-- Show designer name layout -->
 
-                <LinearLayout
+                <!--  <LinearLayout
                     android:id="@+id/add_tab_designer_name_layout"
                     style="@style/inputLayoutStyle"
                     android:orientation="horizontal" >
@@ -268,7 +267,7 @@
                         android:id="@+id/add_tab_designer_name"
                         style="@style/addTabTextViewStyle"
                         android:text="@string/add_tab_designer_name" />
-                </LinearLayout>
+                </LinearLayout> -->
 
                 <!-- Show create date layout -->
 
@@ -285,7 +284,7 @@
                     <TextView
                         android:id="@+id/add_tab_create_date"
                         style="@style/addTabTextViewStyle"
-                        android:text="@string/add_tab_create_date" />
+                        android:text="@string/no_data" />
                 </LinearLayout>
 
                 <!-- title -->
@@ -359,15 +358,8 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/add_tab_consumer_visit_date_time_layout"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/input_layout_margin_left"
-                    android:orientation="vertical" >
-
-                    <TextView
+                
+                                    <TextView
                         android:id="@+id/add_tab_consumer_visit_date_time_field"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -375,6 +367,22 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/add_tab_txt_style_size"
                         android:text="@string/add_tab_customer_visit_time" />
+
+                <LinearLayout
+                    android:id="@+id/add_tab_consumer_visit_date_time_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/input_layout_margin_left"
+                    android:orientation="horizontal" >
+
+                 <!--     <TextView
+                        android:id="@+id/add_tab_consumer_visit_date_time_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/add_tab_txt_style_size"
+                        android:text="@string/add_tab_customer_visit_time" /> -->
 
                     <DatePicker
                         android:id="@+id/add_tab_consumer_visit_datePicker"

@@ -39,6 +39,7 @@ public class Utility
 	public static final int DISMISS_WAITING_DIALOG = -999;
 	public static final int SUCCESS = 1;
 	public static final int FAILED = 0;
+	public static final int FAILED_UPLOAD = -123;
 	
 	public class JSONTag 
 	{
@@ -397,4 +398,30 @@ public class Utility
 
         return creatorGroup;
     }
+    
+	public static boolean removeDirectory(File directory)
+	{
+		if (directory == null) return false;
+		if (!directory.exists()) return true;
+		if (!directory.isDirectory()) return false;
+		String[] list = directory.list();
+		// Some JVMs return null for File.list() when the
+		// directory is empty.
+		if (list != null)
+		{
+			for (int i = 0; i < list.length; i++)
+			{
+				File entry = new File(directory, list[i]);
+				if (entry.isDirectory())
+				{
+					if (!removeDirectory(entry)) return false;
+				}
+				else
+				{
+					if (!entry.delete()) return false;
+				}
+			}
+		}
+		return directory.delete();
+	}
 }

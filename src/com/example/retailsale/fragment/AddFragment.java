@@ -40,13 +40,12 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	private static final int REQUEST_ORDER_MEASURE = 999;
 	public static final String SEND_CUSTOMER_INFO = "send_customer_info";
 	public static final String SEND_NOTE_MSG = "send_note_msg";
-    private OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter;
+	private OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter;
 	private List<GsonDataOptionType> infoList, jobList, ageList, sexList, titleList;
 	private boolean isChecked = false;
 	private CustomerInfo customerInfo;
 	private RetialSaleDbAdapter retialSaleDbAdapter;
 	private boolean isSendMsg = false;
-	
 	// views
 	private MainActivity mainActivity;
 	private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner;
@@ -77,7 +76,6 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	{
 		super.onPause();
 		Log.d(TAG, "onPause()");
-		
 		retialSaleDbAdapter.close();
 	}
 
@@ -92,7 +90,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-	    Log.d(TAG, "onCreateView()");
+		Log.d(TAG, "onCreateView()");
 		View view = inflater.inflate(R.layout.add_tab, container, false);
 		infoSpinner = (Spinner) view.findViewById(R.id.add_tab_info_from);
 		jobSpinner = (Spinner) view.findViewById(R.id.add_tab_job);
@@ -109,27 +107,24 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		introducerET = (EditText) view.findViewById(R.id.add_tab_edit_introducer);
 		emailET = (EditText) view.findViewById(R.id.add_tab_edit_email);
 		leaveInfoCB = (CheckBox) view.findViewById(R.id.add_tab_leave_info_checkbox);
-		consumerVisitDateDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_visit_datePicker);
-		consumerVisitTimeTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_visit_timePicker);
-				
+		consumerVisitDateDP = (DatePicker) view
+				.findViewById(R.id.add_tab_consumer_visit_datePicker);
+		consumerVisitTimeTP = (TimePicker) view
+				.findViewById(R.id.add_tab_consumer_visit_timePicker);
+		designerStoreTV = (TextView) view.findViewById(R.id.add_tab_designer_store);
 		// save btn
 		saveBtn.setOnClickListener(this);
 		newBtn.setOnClickListener(this);
-
 		// leave info
 		leaveInfoCB.setOnCheckedChangeListener(this);
 		// time picker to set 24h
 		consumerVisitTimeTP.setIs24HourView(true);
-		
-	    // set & check option data
-//        setOptionType(); login will do this, get data from server
-	    retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
-	    
-	    retialSaleDbAdapter.open();
-        
-        // get optionType
-        getOptionType();
-		
+		// set & check option data
+		// setOptionType(); login will do this, get data from server
+		retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
+		retialSaleDbAdapter.open();
+		// get optionType
+		getOptionType();
 		return view;
 	}
 
@@ -214,8 +209,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		int titleSelectedPosition = titleSpinner.getSelectedItemPosition();
 		Log.d(TAG, "msgSelectedPosition: " + msgSelectedPosition + " jobSelectedPosition: "
 				+ jobSelectedPosition + " ageSelectedPosition: " + ageSelectedPosition
-				+ " sexSelectedPosition: " + sexSelectedPosition
-				+ " titleSelectedPosition: " + titleSelectedPosition);
+				+ " sexSelectedPosition: " + sexSelectedPosition + " titleSelectedPosition: "
+				+ titleSelectedPosition);
 		Log.d(TAG, "date: " + dateString + "time : " + timeString);
 		Log.d(TAG, "customerName : " + customerName + " phoneNumber: " + phoneNumber
 				+ " cellPhoneNumber: " + cellPhoneNumber + " companyPhoneNumber: "
@@ -234,9 +229,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 			return;
 		}
 		// check company phone number
-		if (!isChecked && !companyPhoneNumber.equals("") && !Utility.isCompanyPhoneValid(phoneNumber))
+		if (!isChecked && !companyPhoneNumber.equals("")
+				&& !Utility.isCompanyPhoneValid(phoneNumber))
 		{
-			showToast(this.getActivity().getResources().getString(R.string.company_phone_field_error));
+			showToast(this.getActivity().getResources()
+					.getString(R.string.company_phone_field_error));
 			return;
 		}
 		// check email
@@ -251,7 +248,6 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 			showToast(this.getActivity().getResources().getString(R.string.birthday_field_error));
 			return;
 		}
-		
 		if (customerInfo == null)
 		{
 			customerInfo = new CustomerInfo("customerAccount", customerName, cellPhoneNumber,
@@ -261,43 +257,46 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 							+ timeString);
 		}
 	}
-	
-	private void saveData() {
-	    setCustomerData();
-	    openDatabase();
-        if (customerInfo != null) {
-            int sendNoteValue = isSendMsg ? 1 : 0;
-            String createDateTime = Utility.getCurrentDateTime();
-            Log.d(TAG, "sendNoteValue is " + sendNoteValue + " createDateTime is " + createDateTime);
-            
-            SharedPreferences settings = mainActivity.getSharedPreferences(Utility.LoginField.DATA, 0);
-            
-            int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
-            int userGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
-            
-            Log.d(TAG, "userSerial === " + userSerial + "userGroup === " + userGroup);
-            
-            long id = retialSaleDbAdapter.create(customerInfo.getCustometName(), customerInfo.getCustomerHome(),
-                    customerInfo.getCustomerMobile(), customerInfo.getCustomerCompany(),
-                    customerInfo.getCustomerMail(), customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
-                    customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(), customerInfo.getCustomerJob(),
-                    customerInfo.getCustomerIntroducer(), customerInfo.getCustomerAge(),
-                    customerInfo.getCustomerVisitDate(), userSerial, userGroup, createDateTime, sendNoteValue,
-                    customerInfo.getReservationWorkAlias(), customerInfo.getReservationStatusComment(),
-                    customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
-                    customerInfo.getReservationContact(), customerInfo.getReservationComment(),
-                    customerInfo.getReservationSpace(), customerInfo.getReservationBudget(),
-                    customerInfo.getReservationDate(), RetialSaleDbAdapter.NOTUPLOAD);
-            
-            Log.d(TAG, "id is " + id);
-        } else {
-            Log.d(TAG, "customerInfo is null, cannot access data to db.");
-        }
+
+	private void saveData()
+	{
+		setCustomerData();
+		openDatabase();
+		if (customerInfo != null)
+		{
+			int sendNoteValue = isSendMsg ? 1 : 0;
+			String createDateTime = Utility.getCurrentDateTime();
+			Log.d(TAG, "sendNoteValue is " + sendNoteValue + " createDateTime is " + createDateTime);
+			SharedPreferences settings = mainActivity.getSharedPreferences(Utility.LoginField.DATA,
+					0);
+			int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
+			int userGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
+			Log.d(TAG, "userSerial === " + userSerial + "userGroup === " + userGroup);
+			long id = retialSaleDbAdapter.create(customerInfo.getCustometName(),
+					customerInfo.getCustomerHome(), customerInfo.getCustomerMobile(),
+					customerInfo.getCustomerCompany(), customerInfo.getCustomerMail(),
+					customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
+					customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(),
+					customerInfo.getCustomerJob(), customerInfo.getCustomerIntroducer(),
+					customerInfo.getCustomerAge(), customerInfo.getCustomerVisitDate(), userSerial,
+					userGroup, createDateTime, sendNoteValue,
+					customerInfo.getReservationWorkAlias(),
+					customerInfo.getReservationStatusComment(),
+					customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
+					customerInfo.getReservationContact(), customerInfo.getReservationComment(),
+					customerInfo.getReservationSpace(), customerInfo.getReservationBudget(),
+					customerInfo.getReservationDate(), RetialSaleDbAdapter.NOTUPLOAD);
+			Log.d(TAG, "id is " + id);
+		}
+		else
+		{
+			Log.d(TAG, "customerInfo is null, cannot access data to db.");
+		}
 	}
 
 	private void startOrderMeasureActivity()
 	{
-	    setCustomerData();
+		setCustomerData();
 		if (customerInfo != null)
 		{
 			Intent orderintent = new Intent(this.getActivity(), OrderMeasure.class);
@@ -335,138 +334,125 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	{
 		Toast.makeText(this.getActivity(), showString, Toast.LENGTH_SHORT).show();
 	}
-	
-	private void openDatabase() {
-        if (retialSaleDbAdapter == null) {
-            retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
-        }
 
-        if (!retialSaleDbAdapter.isDbOpen()) { // not open, then open it
-            retialSaleDbAdapter.open();
-        }
-	}
-	
-	private void setOptionType() {
-	    retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
-	    
-	    retialSaleDbAdapter.open();
-	    
-	    // to get option type content
-	    Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
-	    
-        if (optionTypeCursor != null) {
-            int count = optionTypeCursor.getCount();
-
-            Log.d(TAG, "option type count is === " + count);
-
-            optionTypeCursor.close();
-
-            if (count == 0) { // if no content then create
-                // userType
-                retialSaleDbAdapter.create(0, "userType", 1, "設計師兼店長");
-                retialSaleDbAdapter.create(0, "userType", 2, "設計師");
-                retialSaleDbAdapter.create(0, "userType", 3, "離職員工");
-
-                // customerSex
-                retialSaleDbAdapter.create(1, "customerSex", 0, "無");
-                retialSaleDbAdapter.create(1, "customerSex", 1, "男");
-                retialSaleDbAdapter.create(1, "customerSex", 2, "女");
-
-                // customerTitle
-                retialSaleDbAdapter.create(2, "customerTitle", 1, "先生");
-                retialSaleDbAdapter.create(2, "customerTitle", 2, "小姐");
-                retialSaleDbAdapter.create(2, "customerTitle", 3, "來賓");
-
-                // customerInfo
-                retialSaleDbAdapter.create(3, "customerInfo", 0, "無");
-                retialSaleDbAdapter.create(3, "customerInfo", 1, "廣告");
-                retialSaleDbAdapter.create(3, "customerInfo", 2, "新聞");
-                retialSaleDbAdapter.create(3, "customerInfo", 3, "雜誌");
-                retialSaleDbAdapter.create(3, "customerInfo", 4, "報紙");
-
-                // customerJob
-                retialSaleDbAdapter.create(4, "customerJob", 0, "無");
-                retialSaleDbAdapter.create(4, "customerJob", 1, "服務業");
-                retialSaleDbAdapter.create(4, "customerJob", 2, "老師");
-                retialSaleDbAdapter.create(4, "customerJob", 3, "學生");
-                retialSaleDbAdapter.create(4, "customerJob", 4, "程式員");
-
-                // customerAge
-                retialSaleDbAdapter.create(5, "customerAge", 0, "無");
-                retialSaleDbAdapter.create(5, "customerAge", 1, "20-30歲");
-                retialSaleDbAdapter.create(5, "customerAge", 2, "30-40歲");
-                retialSaleDbAdapter.create(5, "customerAge", 3, "40-50歲");
-                retialSaleDbAdapter.create(5, "customerAge", 4, "50歲以上");
-
-                // serviceType
-                retialSaleDbAdapter.create(6, "serviceType", 1, "圖片服務");
-                retialSaleDbAdapter.create(6, "serviceType", 2, "新增服務");
-
-                // userGroup
-                retialSaleDbAdapter.create(7, "userGroup", 1, "1號店");
-                retialSaleDbAdapter.create(7, "userGroup", 2, "2號店");
-
-                // reservationStatus
-                retialSaleDbAdapter.create(8, "reservationStatus", 1, "來店客");
-                retialSaleDbAdapter.create(8, "reservationStatus", 2, "電話客");
-
-                // reservationBudget
-                retialSaleDbAdapter.create(9, "reservationBudget", 0, "無");
-                retialSaleDbAdapter.create(9, "reservationBudget", 1, "0-20萬");
-                retialSaleDbAdapter.create(9, "reservationBudget", 2, "20-30萬");
-                retialSaleDbAdapter.create(9, "reservationBudget", 3, "30-40萬");
-                retialSaleDbAdapter.create(9, "reservationBudget", 4, "40萬以上");
-
-                // reservationSpace
-                retialSaleDbAdapter.create(10, "reservationSpace", 0, "無");
-                retialSaleDbAdapter.create(10, "reservationSpace", 1, "客廳");
-                retialSaleDbAdapter.create(10, "reservationSpace", 2, "廚房");
-                retialSaleDbAdapter.create(10, "reservationSpace", 3, "玄關");
-            } else {
-                // all exist, no need to create
-            }
-        } else {
-            Log.d(TAG, "option cursor is null ");
-        }
+	private void openDatabase()
+	{
+		if (retialSaleDbAdapter == null)
+		{
+			retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
+		}
+		if (!retialSaleDbAdapter.isDbOpen())
+		{ // not open, then open it
+			retialSaleDbAdapter.open();
+		}
 	}
 
-	private void getOptionType() {
-	    
-	    infoList = new ArrayList<GsonDataOptionType>();
-	    jobList = new ArrayList<GsonDataOptionType>();
-	    ageList = new ArrayList<GsonDataOptionType>(); 
-	    sexList = new ArrayList<GsonDataOptionType>();
-	    titleList = new ArrayList<GsonDataOptionType>();
-	    
-	    // to get option type content
-        Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
-        int optionType, optionSerial;
-        String optionAlias, optionName;
-        String sexType = mainActivity.getResources().getString(R.string.option_customer_sex);
-        String titleType = mainActivity.getResources().getString(R.string.option_customer_title);
-        String infoType = mainActivity.getResources().getString(R.string.option_customer_info);
-        String jobType = mainActivity.getResources().getString(R.string.option_customer_job);
-        String ageType = mainActivity.getResources().getString(R.string.option_customer_age);
+	private void setOptionType()
+	{
+		retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
+		retialSaleDbAdapter.open();
+		// to get option type content
+		Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
+		if (optionTypeCursor != null)
+		{
+			int count = optionTypeCursor.getCount();
+			Log.d(TAG, "option type count is === " + count);
+			optionTypeCursor.close();
+			if (count == 0)
+			{ // if no content then create
+				// userType
+				retialSaleDbAdapter.create(0, "userType", 1, "設計師兼店長");
+				retialSaleDbAdapter.create(0, "userType", 2, "設計師");
+				retialSaleDbAdapter.create(0, "userType", 3, "離職員工");
+				// customerSex
+				retialSaleDbAdapter.create(1, "customerSex", 0, "無");
+				retialSaleDbAdapter.create(1, "customerSex", 1, "男");
+				retialSaleDbAdapter.create(1, "customerSex", 2, "女");
+				// customerTitle
+				retialSaleDbAdapter.create(2, "customerTitle", 1, "先生");
+				retialSaleDbAdapter.create(2, "customerTitle", 2, "小姐");
+				retialSaleDbAdapter.create(2, "customerTitle", 3, "來賓");
+				// customerInfo
+				retialSaleDbAdapter.create(3, "customerInfo", 0, "無");
+				retialSaleDbAdapter.create(3, "customerInfo", 1, "廣告");
+				retialSaleDbAdapter.create(3, "customerInfo", 2, "新聞");
+				retialSaleDbAdapter.create(3, "customerInfo", 3, "雜誌");
+				retialSaleDbAdapter.create(3, "customerInfo", 4, "報紙");
+				// customerJob
+				retialSaleDbAdapter.create(4, "customerJob", 0, "無");
+				retialSaleDbAdapter.create(4, "customerJob", 1, "服務業");
+				retialSaleDbAdapter.create(4, "customerJob", 2, "老師");
+				retialSaleDbAdapter.create(4, "customerJob", 3, "學生");
+				retialSaleDbAdapter.create(4, "customerJob", 4, "程式員");
+				// customerAge
+				retialSaleDbAdapter.create(5, "customerAge", 0, "無");
+				retialSaleDbAdapter.create(5, "customerAge", 1, "20-30歲");
+				retialSaleDbAdapter.create(5, "customerAge", 2, "30-40歲");
+				retialSaleDbAdapter.create(5, "customerAge", 3, "40-50歲");
+				retialSaleDbAdapter.create(5, "customerAge", 4, "50歲以上");
+				// serviceType
+				retialSaleDbAdapter.create(6, "serviceType", 1, "圖片服務");
+				retialSaleDbAdapter.create(6, "serviceType", 2, "新增服務");
+				// userGroup
+				retialSaleDbAdapter.create(7, "userGroup", 1, "1號店");
+				retialSaleDbAdapter.create(7, "userGroup", 2, "2號店");
+				// reservationStatus
+				retialSaleDbAdapter.create(8, "reservationStatus", 1, "來店客");
+				retialSaleDbAdapter.create(8, "reservationStatus", 2, "電話客");
+				// reservationBudget
+				retialSaleDbAdapter.create(9, "reservationBudget", 0, "無");
+				retialSaleDbAdapter.create(9, "reservationBudget", 1, "0-20萬");
+				retialSaleDbAdapter.create(9, "reservationBudget", 2, "20-30萬");
+				retialSaleDbAdapter.create(9, "reservationBudget", 3, "30-40萬");
+				retialSaleDbAdapter.create(9, "reservationBudget", 4, "40萬以上");
+				// reservationSpace
+				retialSaleDbAdapter.create(10, "reservationSpace", 0, "無");
+				retialSaleDbAdapter.create(10, "reservationSpace", 1, "客廳");
+				retialSaleDbAdapter.create(10, "reservationSpace", 2, "廚房");
+				retialSaleDbAdapter.create(10, "reservationSpace", 3, "玄關");
+			}
+			else
+			{
+				// all exist, no need to create
+			}
+		}
+		else
+		{
+			Log.d(TAG, "option cursor is null ");
+		}
+	}
 
-        
-        if (optionTypeCursor != null) {
-            int count = optionTypeCursor.getCount();
-            if (count > 0)
-            {
-                while (optionTypeCursor.moveToNext())
-                {
-                    optionType = optionTypeCursor.getInt(optionTypeCursor
-                            .getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_TYPE));
-                    
-                    optionSerial = optionTypeCursor.getInt(optionTypeCursor
-                            .getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_SERIAL));
-                    
-                    optionAlias = optionTypeCursor.getString(optionTypeCursor
-                            .getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_ALIAS));
-                    
-                    optionName = optionTypeCursor.getString(optionTypeCursor
-                            .getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_NAME));
-                    
+	private void getOptionType()
+	{
+		infoList = new ArrayList<GsonDataOptionType>();
+		jobList = new ArrayList<GsonDataOptionType>();
+		ageList = new ArrayList<GsonDataOptionType>();
+		sexList = new ArrayList<GsonDataOptionType>();
+		titleList = new ArrayList<GsonDataOptionType>();
+		// to get option type content
+		Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
+		int optionType, optionSerial;
+		String optionAlias, optionName;
+		String sexType = mainActivity.getResources().getString(R.string.option_customer_sex);
+		String titleType = mainActivity.getResources().getString(R.string.option_customer_title);
+		String infoType = mainActivity.getResources().getString(R.string.option_customer_info);
+		String jobType = mainActivity.getResources().getString(R.string.option_customer_job);
+		String ageType = mainActivity.getResources().getString(R.string.option_customer_age);
+		if (optionTypeCursor != null)
+		{
+			int count = optionTypeCursor.getCount();
+			if (count > 0)
+			{
+				while (optionTypeCursor.moveToNext())
+				{
+					optionType = optionTypeCursor.getInt(optionTypeCursor
+							.getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_TYPE));
+					optionSerial = optionTypeCursor.getInt(optionTypeCursor
+							.getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_SERIAL));
+					optionAlias = optionTypeCursor.getString(optionTypeCursor
+							.getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_ALIAS));
+					optionName = optionTypeCursor.getString(optionTypeCursor
+							.getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_NAME));
 					if (optionAlias.equals(sexType))
 					{
 						sexList.add(new GsonDataOptionType(optionSerial, optionName));
@@ -487,31 +473,55 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 					{
 						ageList.add(new GsonDataOptionType(optionSerial, optionName));
 					}
-                }
-            }
-            optionTypeCursor.close();
-        } else {
-            Log.d(TAG, "option cursor is null ");
-        }
-        
-      // msg spinner
-      infoAdapter = new OptionAdapter(this.getActivity(), infoList);
-      infoSpinner.setAdapter(infoAdapter);
-      
-      // job spinner
-      jobAdapter = new OptionAdapter(this.getActivity(), jobList);
-      jobSpinner.setAdapter(jobAdapter);
-      
-      // age spinner
-      ageAdapter = new OptionAdapter(this.getActivity(), ageList);
-      ageSpinner.setAdapter(ageAdapter);
-      
-      // sex spinner
-      sexAdapter = new OptionAdapter(this.getActivity(), sexList);
-      sexSpinner.setAdapter(sexAdapter);
-      
-      // title spinner
-      titleAdapter = new OptionAdapter(this.getActivity(), titleList);
-      titleSpinner.setAdapter(titleAdapter);
+				}
+			}
+			optionTypeCursor.close();
+		}
+		else
+		{
+			Log.d(TAG, "option cursor is null ");
+		}
+		// msg spinner
+		infoAdapter = new OptionAdapter(this.getActivity(), infoList);
+		infoSpinner.setAdapter(infoAdapter);
+		// job spinner
+		jobAdapter = new OptionAdapter(this.getActivity(), jobList);
+		jobSpinner.setAdapter(jobAdapter);
+		// age spinner
+		ageAdapter = new OptionAdapter(this.getActivity(), ageList);
+		ageSpinner.setAdapter(ageAdapter);
+		// sex spinner
+		sexAdapter = new OptionAdapter(this.getActivity(), sexList);
+		sexSpinner.setAdapter(sexAdapter);
+		// title spinner
+		titleAdapter = new OptionAdapter(this.getActivity(), titleList);
+		titleSpinner.setAdapter(titleAdapter);
+		Cursor userStoreCursor = retialSaleDbAdapter.getOptionByOptionSerial(Utility
+				.getCreatorGroup(AddFragment.this.getActivity()));
+		
+		String userStoreOptionName;
+		
+		if (userStoreCursor != null)
+		{
+			int count = userStoreCursor.getCount();
+			if (count > 0)
+			{
+				while (userStoreCursor.moveToNext())
+				{
+					userStoreOptionName = userStoreCursor.getString(optionTypeCursor
+							.getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_NAME));
+					
+					designerStoreTV.setText(userStoreOptionName);
+				}
+			}
+			else
+			{
+				designerStoreTV.setText(AddFragment.this.getActivity().getResources().getString(R.string.no_data));
+			}
+		}
+		else
+		{
+			designerStoreTV.setText(AddFragment.this.getActivity().getResources().getString(R.string.no_data));
+		}
 	}
 }

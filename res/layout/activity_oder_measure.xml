@@ -26,7 +26,7 @@
         <TextView
             android:id="@+id/order_measure_sale_create_date"
             style="@style/orderMeasureTextViewStyle"
-            android:text="20140928160050" />
+            android:text="@string/no_data" />
 
         <TextView
             android:id="@+id/order_measure_consumer_name_field"
@@ -35,8 +35,7 @@
 
         <TextView
             android:id="@+id/order_measure_consumer_name"
-            style="@style/orderMeasureTextViewStyle"
-            android:text="John Wang" />
+            style="@style/orderMeasureTextViewStyle" />
 
         <TextView
             android:id="@+id/order_measure_consumer_phone_number_field"
@@ -45,8 +44,7 @@
 
         <TextView
             android:id="@+id/order_measure_consumer_phone_number"
-            style="@style/orderMeasureTextViewStyle"
-            android:text="02-1111-1111" />
+            style="@style/orderMeasureTextViewStyle"/>
 
         <TextView
             android:id="@+id/order_measure_send_note_msg"

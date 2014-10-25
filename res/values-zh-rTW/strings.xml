@@ -13,6 +13,7 @@
     <string name="select">選取</string>
     <string name="incorrect">無效</string>
     <string name="loading">讀取中</string>
+    <string name="no_data">無資料</string>
 
     <!-- Login -->
     <string name="login">登入</string>
@@ -92,6 +93,8 @@
     <string name="sync_tab_sync_description">同步說明</string>
     <string name="sync_tab_sync_message">同步訊息</string>
     <string name="sync_tab_sync_no_file">沒有可下載檔案</string>
+    <string name="sync_tab_sync_no_customer">沒有可上傳客戶</string>
+    <string name="sync_tab_sync_db_error">資料庫問題, 請重試</string>
     <string name="sync_tab_sync_get_server_directory_success">取得伺服器資料夾成功</string>
     <string name="sync_tab_sync_get_server_directory_failed">取得伺服器資料夾失敗</string>
     <string name="sync_tab_sync_download_success">下載成功</string>
@@ -100,6 +103,12 @@
     <string name="sync_tab_sync_save_failed">儲存失敗</string>
     <string name="sync_tab_sync_upload_success">上傳成功</string>
     <string name="sync_tab_sync_upload_failed">上傳失敗</string>
+    <string name="sync_tab_sync_clear_folder_success">清除資料夾成功</string>
+    <string name="sync_tab_sync_clear_folder_failed">清除資料夾失敗</string>
+    <string name="sync_tab_sync_clear_data_option_success">清除資料選項成功</string>
+    <string name="sync_tab_sync_clear_data_option_failed">清除資料選項失敗</string>
+    <string name="sync_tab_sync_download_data_option_success">下載資料選項成功</string>
+    <string name="sync_tab_sync_download_data_option_failed">下載資料選項失敗</string>
 
     <!-- Error String -->
     <string name="field_error">欄位錯誤</string>
