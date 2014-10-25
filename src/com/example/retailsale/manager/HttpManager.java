@@ -10,8 +10,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.json.JSONStringer;
 
 import android.content.Context;
@@ -94,9 +92,9 @@ public class HttpManager
 //		Map<String, String> param = new HashMap<String, String>();
 //		
 //		param.put("customerAccount", "C20142000180054700");
-//		param.put("custometName", "Hello");
-//		param.put("customerMobile", "無資料");
-//		param.put("customerHome", "2727-8831");
+//		param.put("custometName", "Shin");
+//		param.put("customerMobile", "無資料"); 0912345678
+//		param.put("customerHome", "2727-8831"); 02-12345678
 //		param.put("customerCompany", "2727-8831");
 //		param.put("customerSex", "8");
 //		param.put("customerTitle", "10");
@@ -104,7 +102,7 @@ public class HttpManager
 //		param.put("customerVisitDate", "2014-10-08T16:00:00");
 //		param.put("customerInfo", "13");
 //		
-//		param.put("customerIntroducer", null);
+//		param.put("customerIntroducer", "john");
 //		param.put("customerJob", "15");
 //		param.put("customerAge", null);
 //		param.put("customerBirth", "2014-10-15");
@@ -128,11 +126,11 @@ public class HttpManager
 //		VolleySingleton.getInstance(context).getRequestQueue().add(addCustomerInfoRequset);
     }
     
-	public void addCustomerInfo(Context context, AddCustomerListener addCustomerListener,
+	public void addCustomerInfo(Context context, String custometName, Handler handler,
 			String logType, String userNo, String userName, String userHostAddress,
 			String actionName, JSONStringer json)
 	{
-		String addCustomerInfoUri = "http://192.168.49.128/KendoAPI/ODATA/customerData";
+		String addCustomerInfoUri = "http://192.168.49.128/KendoAPI/ODATA/customerData_Mobile";
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost(addCustomerInfoUri);
 		httppost.setHeader(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
@@ -167,6 +165,12 @@ public class HttpManager
 			HttpResponse response = httpclient.execute(httppost);
 			if (response != null)
 			{
+	            Message msg = new Message();
+	            msg.what = SynchronizationFragment.SelectedItem.UPLOAD_CUSTOMER;
+	            msg.obj = custometName;
+	            msg.arg1 = response.getStatusLine().getStatusCode();
+	            
+	            handler.sendMessage(msg);
 				Log.d(TAG, "response === " + response.getStatusLine().toString());
 			}
 			else
@@ -415,12 +419,6 @@ public class HttpManager
         if (fileInfo != null) {
             String fileName = fileInfo.getValue().get(0).getFileName();
             String filePath = fileInfo.getValue().get(0).getPath();
-            
-            Message msg = new Message();
-            msg.what = SynchronizationFragment.SelectedItem.DOWNLOAD_PICTURE;
-            msg.obj = fileName;
-            
-            handler.sendMessage(msg);
         	        	
             // 1. get file path
         	String path = filePath.replace(Utility.REPLACE_SERVER_FOLDER, Utility.FILE_PATH_2).replace("\\", "/");
@@ -444,7 +442,14 @@ public class HttpManager
             
             Log.d(TAG, "newData  is  ~~~~~~~~~~~~~~~~~~~~ " + newData.toString());
             
-            Utility.writeFile(newFileName.toString(), newData.toString());
+            int status = Utility.writeFile(newFileName.toString(), newData.toString());
+            
+            Message msg = new Message();
+            msg.what = SynchronizationFragment.SelectedItem.DOWNLOAD_PICTURE;
+            msg.obj = fileName;
+            msg.arg1 = status;
+            
+            handler.sendMessage(msg);
             
        
 //            // 5. to read file and remove md5

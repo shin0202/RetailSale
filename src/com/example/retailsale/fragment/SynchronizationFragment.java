@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +12,6 @@ import org.json.JSONStringer;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,13 +30,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blackloud.ice.MainList.AddCustomerJsonTag;
-import com.example.retailsale.Login;
 import com.example.retailsale.MainActivity;
 import com.example.retailsale.R;
 import com.example.retailsale.RetialSaleDbAdapter;
 import com.example.retailsale.manager.HttpManager;
-import com.example.retailsale.manager.addcustomer.AddCustomerListener;
 import com.example.retailsale.manager.fileinfo.GetFileInfoListener;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo.FileInfo;
@@ -48,6 +45,7 @@ import com.example.retailsale.util.Utility;
 
 public class SynchronizationFragment extends Fragment implements OnClickListener, OnItemClickListener {
     private static final String TAG = "SynchronizationFragment";
+    
     private LinearLayout uploadConsumer, downloadPicture, syncData;
     private TextView showTitle, showDescription, showMessage;
     private GridView filesGrid;
@@ -60,6 +58,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     private int selectedItem;
     private PhotosAdapterView photosAdapterView;
     private String currentFolderName;
+    private StringBuilder messageStringBuilder;
     
     private int currentCount = 0;
     private int needCount = 0;
@@ -132,6 +131,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         syncData.setOnClickListener(this);
         startBtn.setOnClickListener(this);
         
+        messageStringBuilder = new StringBuilder();
+        
         focusUploadConsumer();
         
         return view;
@@ -144,7 +145,6 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         
         showTitle.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_upload_consumer));
         showDescription.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_upload_description));
-        showMessage.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_upload_message));
         
         selectedItem = SelectedItem.UPLOAD_CUSTOMER;
         
@@ -161,7 +161,6 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         
         showTitle.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_download_picture));
         showDescription.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_download_description));
-        showMessage.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_download_message));
         
         selectedItem = SelectedItem.DOWNLOAD_PICTURE;
         
@@ -178,7 +177,6 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         
         showTitle.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_sync_data));
         showDescription.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_sync_description));
-        showMessage.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_sync_message));
         
         selectedItem = SelectedItem.SYNC_DATA;
         
@@ -202,7 +200,6 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             break;
         case R.id.sync_tab_download_layout:
             focusDownloadPicture();
-//            getFolderListFromServerTest();
             getFolderListFromServer();
             break;
         case R.id.sync_tab_sync_layout:
@@ -246,6 +243,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         }
     }
     
+	private void showMessage(String itemName, int resID)
+	{
+		messageStringBuilder.append(itemName)
+				.append(SynchronizationFragment.this.getResources().getString(resID))
+				.append(Utility.LINE_FEED);
+		showMessage.setText(messageStringBuilder.toString());
+	}
+    
     /* *************************************************Download Related******************************************************* */
     private void getFolderListFromServer() {
         dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
@@ -262,30 +267,20 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                         } else {
                             Log.d(TAG, "value is null");
                             dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                            showMessage("", R.string.sync_tab_sync_get_server_directory_failed);
                         }
                     } else {
                         Log.d(TAG, "folderInfo is null");
                         dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                        showMessage("", R.string.sync_tab_sync_get_server_directory_failed);
                     }
                 } else {
                     Log.d(TAG, "Get folder info failed");
                     dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                    showMessage("", R.string.sync_tab_sync_get_server_directory_failed);
                 }
             }
         });
-    }
-    
-    private void getFolderListFromServerTest() {
-        handleFolder(
-                "[{\"Id\":1,\"path\":\"C:\\\\Project\\\\_code\\\\testFolder\"," +
-                "\"file\":[{\"folderId\":1,\"fileId\":1,\"fileName\":\"127121.jpg\"}]}," +
-        		"{\"Id\":2,\"path\":\"C:\\\\Project\\\\_code\\\\testFolder\\\\123\"," +
-        		"\"file\":[{\"folderId\":2,\"fileId\":2,\"fileName\":\"127121.jpg\"}]}," +
-        		"{\"Id\":3,\"path\":\"C:\\\\Project\\\\_code\\\\testFolder\\\\456\"," +
-        		"\"file\":[{\"folderId\":3,\"fileId\":3,\"fileName\":\"127121.jpg\"}]}," +
-        		"{\"Id\":4,\"path\":\"C:\\\\Project\\\\_code\\\\testFolder\\\\789\"," +
-        		"\"file\":[{\"folderId\":4,\"fileId\":4,\"fileName\":\"127121 - 複製.jpg\"}," +
-        		"{\"folderId\":4,\"fileId\":5,\"fileName\":\"127121.jpg\"}]}]");
     }
     
     private void handleFolder(String json) {
@@ -363,12 +358,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 PhotosAdapterView.SYNC_TAB);
         filesGrid.setAdapter(photosAdapterView);
         dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+        showMessage("", R.string.sync_tab_sync_get_server_directory_success);
     }
     
     private boolean selectFolder(String folderName) {
         dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
     	boolean hadFile = false;
     	needCount = 0;
+    	currentCount = 0;
         for (int i = 0; i < localFolderInfoList.size(); i++) {
             LocalFolderInfo localFolderInfo = localFolderInfoList.get(i);
             String path = localFolderInfo.getFolderPath();
@@ -411,20 +408,21 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                         String fileName = value.get(i).getFileName();
                                         String fileStream = value.get(i).getFileStream();
 
-                                        Log.d(TAG, "path : " + path + " fileName : " + fileName + " fileStream : "
-                                                + fileStream);
-                                        showMessage.setText(fileName
-                                                + SynchronizationFragment.this.getResources().getString(
-                                                        R.string.sync_tab_sync_save_success));
+//                                        Log.d(TAG, "path : " + path + " fileName : " + fileName + " fileStream : "
+//                                                + fileStream);
+                                        showMessage(fileName, R.string.sync_tab_sync_download_success);
                                     }
                                 } else {
                                     Log.d(TAG, "value is null");
+                                    showMessage("", R.string.sync_tab_sync_download_failed);
                                 }
                             } else {
                                 Log.d(TAG, "fileInfo is null");
+                                showMessage("", R.string.sync_tab_sync_download_failed);
                             }
                         } else {
                             Log.d(TAG, "Get file info failed");
+                            showMessage("", R.string.sync_tab_sync_download_failed);
                         }
                         
                         if (currentCount == needCount) {
@@ -436,6 +434,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     
     /* *************************************************Download Related******************************************************* */
     
+    /* *************************************************Upload Related******************************************************* */
     private void addCustomer() {
         RetialSaleDbAdapter retialSaleDbAdapter = new RetialSaleDbAdapter(SynchronizationFragment.this.getActivity());
         retialSaleDbAdapter.open();
@@ -446,6 +445,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         Log.d(TAG, "creator is " + creator);
         
         needCount = 0;
+        currentCount = 0;
         dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
         
         Cursor cursor = retialSaleDbAdapter.getCustomerByCreator(creator);
@@ -468,8 +468,6 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                     int customerJob = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_JOB));
                     int customerAge = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_AGE));
                     String customerBirth = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_BIRTHDAY));
-                    // creator
-                    // creatorGroup;
                     String createDate = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CREATE_DATE));
                     
                     
@@ -488,44 +486,32 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                             .getColumnIndex(RetialSaleDbAdapter.KEY_STATUS_COMMENT));
                     int reservationBudget = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_BUDGET));
                     String reservationDataSerial = "-1";
-                    // creator
-                    // creatorGroup
-                    // createDate
                     
                     // didn't have the field "comment", "send note"
                     JSONStringer json = null, customerReservationJson = null;
                     try {
                         customerReservationJson = new JSONStringer().object()
-                                .key(Utility.AddCustomerJsonTag.RESERVATION_SERIAL).value(-1)
-                                .key(Utility.AddCustomerJsonTag.CUSTOMER_SERIAL).value(-1)
-                                .key(Utility.AddCustomerJsonTag.RESERVATION_DATE).value("2014-10-23T14:55:13")
-                                .key(Utility.AddCustomerJsonTag.RESERVATION_WORK).value("WORK")
-                                .key(Utility.AddCustomerJsonTag.RESERVATION_WORK_ALIAS).value("WORK_ALIAS")
-                                .key(Utility.AddCustomerJsonTag.RESERVATION_CONTACT).value("CONTACT")
-                                .key(Utility.AddCustomerJsonTag.RESERVATION_SPACE).value(10)
-                                .key(Utility.AddCustomerJsonTag.RESERVATION_STATUS).value(10)
-                                .key(Utility.AddCustomerJsonTag.RESERVATION_UPDATE_TIME).value("2014-10-08T16:00:00")
-                                .key(Utility.AddCustomerJsonTag.RESERVATION_STATUS_COMMENT).value("STATUS_COMMENT")
-                                .key(Utility.AddCustomerJsonTag.RESERVATION_BUDGET).value(10)
-                                .key(Utility.AddCustomerJsonTag.RESERVATION_DATA_SERIAL).value("-1")
-                                .key(Utility.AddCustomerJsonTag.CREATOR).value(1)
-                                .key(Utility.AddCustomerJsonTag.CREATOR_GROUP).value(1)
-                                .key(Utility.AddCustomerJsonTag.CREATE_TIME).value("2014-10-08T16:00:00").endObject();
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_SERIAL).value(reservationSerial)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_SERIAL).value(customerSerial)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_DATE).value(reservationDate)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_WORK).value(reservationWork)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_WORK_ALIAS).value(reservationWorkAlias)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_CONTACT).value(reservationContact)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_SPACE).value(reservationSpace)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_STATUS).value(reservationStatus)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_UPDATE_TIME).value(reservationUpateTime)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_STATUS_COMMENT).value(reservationStatusComment)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_BUDGET).value(reservationBudget)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_DATA_SERIAL).value(reservationDataSerial)
+                                .key(Utility.AddCustomerJsonTag.CREATOR).value(creator)
+                                .key(Utility.AddCustomerJsonTag.CREATOR_GROUP).value(creatorGroup)
+                                .key(Utility.AddCustomerJsonTag.CREATE_TIME).value(createDate).endObject();
                         Log.d(TAG, "customerReservationJson === " + customerReservationJson.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     
                     try {
-//                        JSONStringer json = new JSONStringer().object().key("customerAccount").value("C20141006180054701")
-//                                .key("custometName").value("Test123").key("customerMobile").value("無資料123")
-//                                .key("customerHome").value("2727-8831").key("customerCompany").value("2727-8831")
-//                                .key("customerSex").value(8).key("customerTitle").value(10).key("customerMail")
-//                                .value("john@gmail.com").key("customerVisitDate").value("2014-10-08T16:00:00")
-//                                .key("customerInfo").value(13).key("customerIntroducer").value("john")
-//                                .key("customerJob").value(15).key("customerAge").value(10).key("customerBirth")
-//                                .value("2014-10-15").key("creator").value(23).key("creatorGroup").value(23)
-//                                .key("createTime").value("2014-10-07T10:19:32").endObject();
                         json = new JSONStringer().object()
                                 .key(Utility.AddCustomerJsonTag.CUSTOMER_ACCOUNT).value(customerAccount)
                                 .key(Utility.AddCustomerJsonTag.CUSTOMER_NAME).value(custometName)
@@ -544,7 +530,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                 .key(Utility.AddCustomerJsonTag.CREATOR).value(creator)
                                 .key(Utility.AddCustomerJsonTag.CREATOR_GROUP).value(creatorGroup)
                                 .key(Utility.AddCustomerJsonTag.CREATE_TIME).value(createDate)
-//                                .key(Utility.AddCustomerJsonTag.CUSTOMER_RESERVATION).value(customerReservationJson)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_RESERVATION).value(customerReservationJson)
                                 .endObject();
                         Log.d(TAG, "json === " + json.toString());
                         POSTThread postThread = new POSTThread(json, custometName, showMessageHandler);
@@ -565,19 +551,15 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         retialSaleDbAdapter.close();
     }
     
-    private void addCustomerInfo(JSONStringer json)
-    {
-        HttpManager httpManager = new HttpManager();
-        
-        httpManager.addCustomerInfo(SynchronizationFragment.this.getActivity(), new AddCustomerListener()
-        {
-            @Override
-            public void onResult(Boolean isSuccess, JSONObject information)
-            {
-                Log.d(TAG, "isSuccess === " + isSuccess);
-            }
-        }, HttpManager.LogType.Login, "095050", "", HttpManager.USER_HOST, HttpManager.ACTION_NAME, json);
-    }
+	private void addCustomerInfo(JSONStringer json, String custometName, Handler handler)
+	{
+		HttpManager httpManager = new HttpManager();
+		httpManager.addCustomerInfo(SynchronizationFragment.this.getActivity(), custometName,
+				handler, HttpManager.LogType.Login, "095050", "", HttpManager.USER_HOST,
+				HttpManager.ACTION_NAME, json);
+	}
+	
+	/* *************************************************Upload Related******************************************************* */
     
     private void syncData() {
         
@@ -611,13 +593,37 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         public void handleMessage(Message msg) {
             switch (msg.what) {
             case SelectedItem.UPLOAD_CUSTOMER:
+            	currentCount++;
+            	
+            	if (currentCount == needCount) {
+            		dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+            	}
+            	
+                String customerName = (String)msg.obj;
+                int statusCode = msg.arg1;
+                
+                if (statusCode == HttpStatus.SC_CREATED)
+                {
+                    showMessage(customerName, R.string.sync_tab_sync_upload_success);
+                }
+                else
+                {
+                    showMessage(customerName, R.string.sync_tab_sync_upload_failed);
+                }
                 break;
             case SelectedItem.DOWNLOAD_PICTURE:
                 String fileName = (String)msg.obj;
-                                
-                showMessage.setText(fileName
-                        + SynchronizationFragment.this.getResources().getString(
-                                R.string.sync_tab_sync_download_success));
+                int status = msg.arg1;
+                
+                if (status == Utility.SUCCESS) 
+                {
+                	showMessage(fileName, R.string.sync_tab_sync_save_success);
+                }
+                else
+                {
+                	showMessage(fileName, R.string.sync_tab_sync_save_failed);
+                }
+                
                 break;
             case SelectedItem.SYNC_DATA:
                 break;
@@ -638,7 +644,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         
         @Override
         public void run() {
-            addCustomerInfo(json);
+            addCustomerInfo(json, custometName, handler);
         }
     }
 }

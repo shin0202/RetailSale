@@ -204,7 +204,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		String dateString = Utility.covertDateToString(consumerVisitDateDP.getYear(),
 				consumerVisitDateDP.getMonth() + 1, consumerVisitDateDP.getDayOfMonth());
 		String timeString = Utility.covertTimeToString(consumerVisitTimeTP.getCurrentHour(),
-				consumerVisitTimeTP.getCurrentMinute());
+				consumerVisitTimeTP.getCurrentMinute()) + ":00";
 		String customerName = customerNameET.getText().toString();
 		String introducer = introducerET.getText().toString();
 		int msgSelectedPosition = infoSpinner.getSelectedItemPosition();
@@ -216,7 +216,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 				+ jobSelectedPosition + " ageSelectedPosition: " + ageSelectedPosition
 				+ " sexSelectedPosition: " + sexSelectedPosition
 				+ " titleSelectedPosition: " + titleSelectedPosition);
-		Log.d(TAG, "date: " + dateString + " time : " + timeString);
+		Log.d(TAG, "date: " + dateString + "time : " + timeString);
 		Log.d(TAG, "customerName : " + customerName + " phoneNumber: " + phoneNumber
 				+ " cellPhoneNumber: " + cellPhoneNumber + " companyPhoneNumber: "
 				+ companyPhoneNumber + " email: " + email + " birthday: " + customerBirthday
@@ -274,6 +274,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             
             int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
             int userGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
+            
+            Log.d(TAG, "userSerial === " + userSerial + "userGroup === " + userGroup);
             
             long id = retialSaleDbAdapter.create(customerInfo.getCustometName(), customerInfo.getCustomerHome(),
                     customerInfo.getCustomerMobile(), customerInfo.getCustomerCompany(),

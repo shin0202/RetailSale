@@ -29,13 +29,16 @@ public class Utility
 	private static final String TAG = "Utility";
 	private static final int BOUNDS = 10;
 	private static final String FILL_ZERO = "0";
-	private static final String FILL_SLASH = "/";
+	private static final String FILL_DASH = "-";
+	public static final String LINE_FEED = "\n";
 //	public static final String FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/retailSale/";
 	public static final String FILE_PATH = "/sdcard/retailSale/";
 	public static final String FILE_PATH_2 = "/sdcard/retailSale";
 	public static final String REPLACE_SERVER_FOLDER = "C:\\Project\\_code\\testFolder";
 	public static final int SHOW_WAITING_DIALOG = 999;
 	public static final int DISMISS_WAITING_DIALOG = -999;
+	public static final int SUCCESS = 1;
+	public static final int FAILED = 0;
 	
 	public class JSONTag 
 	{
@@ -151,7 +154,7 @@ public class Utility
 		      return false;
 
 		    //set the format to use as a constructor argument
-		    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 		    if (inDate.trim().length() != dateFormat.toPattern().length())
 		      return false;
@@ -186,17 +189,17 @@ public class Utility
 		Log.d(TAG, "year: " + year + " month: " + month + " day: " + day);
 		StringBuilder dateTimeString = new StringBuilder();
 		
-		dateTimeString.append(year).append(FILL_SLASH);
+		dateTimeString.append(year).append(FILL_DASH);
 		
 		if (month < BOUNDS) {
 			dateTimeString.append(FILL_ZERO);
 		}
-		dateTimeString.append(month).append(FILL_SLASH);
+		dateTimeString.append(month).append(FILL_DASH);
 		
 		if (day < BOUNDS) {
 			dateTimeString.append(FILL_ZERO);
 		}
-		dateTimeString.append(day).append(" ");
+		dateTimeString.append(day).append("T");
 		
 		return dateTimeString.toString();
 	}
@@ -221,9 +224,9 @@ public class Utility
 	public static String getCurrentDateTime() {
 	    String dateTime = "";
 	    
-	    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    Date date = new Date();
-	    dateTime = dateFormat.format(date).toString();
+	    dateTime = dateFormat.format(date).toString().replace(" ", "T");
 	    
 	    return dateTime;
 	}
@@ -261,7 +264,7 @@ public class Utility
         return readContent.toString();
     }
     
-    public static void writeFile(String path, String data) {
+    public static int writeFile(String path, String data) {
         try {
             File fakeFile = new File(path);
             if (!fakeFile.exists()) {
@@ -270,8 +273,13 @@ public class Utility
             BufferedWriter output = new BufferedWriter(new FileWriter(fakeFile));
             output.write(data);
             output.close();
+            return 1;
         } catch (IOException e) {
             e.printStackTrace();
+            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
     }
     

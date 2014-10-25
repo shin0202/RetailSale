@@ -2,8 +2,6 @@ package com.example.retailsale;
 
 import java.util.List;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.retailsale.manager.HttpManager;
-import com.example.retailsale.manager.addcustomer.AddCustomerListener;
 import com.example.retailsale.manager.dataoption.GetDataOptionListener;
 import com.example.retailsale.manager.dataoption.GsonDataOption;
 import com.example.retailsale.manager.dataoption.GsonDataOption.DataOption;
@@ -299,17 +296,17 @@ public class Login extends Activity implements OnClickListener
 		});
 	}
 	
-	private void addCustomer()
-	{
-		HttpManager httpManager = new HttpManager();
-		
-		httpManager.addCustomerInfo(Login.this, new AddCustomerListener()
-		{
-			@Override
-			public void onResult(Boolean isSuccess, JSONObject information)
-			{
-				Log.d(TAG, "isSuccess === " + isSuccess);
-			}
-		}, HttpManager.LogType.Login, "095050", "", HttpManager.USER_HOST, HttpManager.ACTION_NAME, null);
-	}
+//	private void addCustomer()
+//	{
+//		HttpManager httpManager = new HttpManager();
+//		
+//		httpManager.addCustomerInfo(Login.this, new AddCustomerListener()
+//		{
+//			@Override
+//			public void onResult(Boolean isSuccess, JSONObject information)
+//			{
+//				Log.d(TAG, "isSuccess === " + isSuccess);
+//			}
+//		}, HttpManager.LogType.Login, "095050", "", HttpManager.USER_HOST, HttpManager.ACTION_NAME, null);
+//	}
 }

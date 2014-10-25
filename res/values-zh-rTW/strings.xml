@@ -92,8 +92,14 @@
     <string name="sync_tab_sync_description">同步說明</string>
     <string name="sync_tab_sync_message">同步訊息</string>
     <string name="sync_tab_sync_no_file">沒有可下載檔案</string>
+    <string name="sync_tab_sync_get_server_directory_success">取得伺服器資料夾成功</string>
+    <string name="sync_tab_sync_get_server_directory_failed">取得伺服器資料夾失敗</string>
     <string name="sync_tab_sync_download_success">下載成功</string>
+    <string name="sync_tab_sync_download_failed">下載失敗</string>
     <string name="sync_tab_sync_save_success">儲存成功</string>
+    <string name="sync_tab_sync_save_failed">儲存失敗</string>
+    <string name="sync_tab_sync_upload_success">上傳成功</string>
+    <string name="sync_tab_sync_upload_failed">上傳失敗</string>
 
     <!-- Error String -->
     <string name="field_error">欄位錯誤</string>

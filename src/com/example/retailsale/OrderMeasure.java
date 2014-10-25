@@ -204,7 +204,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		int minute = measureTime.getCurrentMinute();
 		String dateString = Utility.covertDateToString(year, month, day);
 		
-		String timeString = Utility.covertTimeToString(hour, minute);
+		String timeString = Utility.covertTimeToString(hour, minute) + ":00";
 		Log.d(TAG, "date: " + dateString + " time : " + timeString);
 		Log.d(TAG, "hour: " + hour + " minute : " + minute);
 		customerInfo.setReservationYear(year);
@@ -213,7 +213,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		customerInfo.setReservationHour(hour);
 		customerInfo.setReservationMinute(minute);
 		
-		customerInfo.setReservationDate(dateString);
+		customerInfo.setReservationDate(dateString + timeString);
 		customerInfo.setReservationTime(timeString);
 		
 		// can't sale description
