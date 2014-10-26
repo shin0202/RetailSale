@@ -186,6 +186,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 loadFileThread.start();
             } else {
                 Log.d(TAG, "it is in retalesale folder, no need back! ");
+                BrowserFragment.this.getActivity().finish();
             }
         }
     }

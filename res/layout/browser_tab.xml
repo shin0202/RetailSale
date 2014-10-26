@@ -11,7 +11,7 @@
         android:layout_height="@dimen/browser_tab_grid_height"
         android:cacheColorHint="@android:color/transparent"
         android:listSelector="@android:color/transparent"
-        android:numColumns="5"
+        android:numColumns="4"
         android:verticalSpacing="@dimen/browser_tab_vertical_spacing" />
 
     <LinearLayout
@@ -30,12 +30,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" />
         </HorizontalScrollView>
-
-        <Button
-            android:id="@+id/browser_back_btn"
-            style="@style/btnStyle"
-			android:layout_gravity="center"
-            android:text="@string/back" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/browser_back_btn"
+        style="@style/btnStyle"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/back" />
 
 </RelativeLayout>

@@ -56,7 +56,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         }
 
         // Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
-        attacher = new PhotoViewAttacher(scalableIV);
+        attacher = new PhotoViewAttacher(scalableIV, PhotoPlayer.this);
         
 		if (currentPosition < photoList.size())
 		{
@@ -293,4 +293,34 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 			}
 		}
 	};
+	
+	public void changeImage(boolean isNext)
+	{
+		if (isNext)	// change to next
+		{
+			if (currentPosition + 1 < photoList.size())
+			{
+				currentPosition += 1;
+				decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition).getFileName());
+				attacher.update();
+			}
+			else
+			{
+				
+			}
+		}
+		else		// change to preview
+		{
+			if (currentPosition - 1 < 0)
+			{
+				currentPosition -= 1;
+				decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition).getFileName());
+				attacher.update();
+			}
+			else
+			{
+				
+			}
+		}
+	}
 }

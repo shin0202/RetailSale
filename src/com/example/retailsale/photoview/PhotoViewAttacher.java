@@ -15,6 +15,13 @@
  *******************************************************************************/
 package com.example.retailsale.photoview;
 
+import static android.view.MotionEvent.ACTION_CANCEL;
+import static android.view.MotionEvent.ACTION_DOWN;
+import static android.view.MotionEvent.ACTION_UP;
+
+import java.lang.ref.WeakReference;
+
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -34,16 +41,11 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import java.lang.ref.WeakReference;
-
+import com.example.retailsale.PhotoPlayer;
 import com.example.retailsale.photoview.gestures.OnGestureListener;
 import com.example.retailsale.photoview.gestures.VersionedGestureDetector;
 import com.example.retailsale.photoview.log.LogManager;
 import com.example.retailsale.photoview.scrollproxy.ScrollerProxy;
-
-import static android.view.MotionEvent.ACTION_CANCEL;
-import static android.view.MotionEvent.ACTION_DOWN;
-import static android.view.MotionEvent.ACTION_UP;
 
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         OnGestureListener,
@@ -53,7 +55,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     // let debug flag be dynamic, but still Proguard can be used to remove from
     // release builds
-    private static final boolean DEBUG = Log.isLoggable(LOG_TAG, Log.DEBUG);
+//    private static final boolean DEBUG = true;
 
     static final Interpolator sInterpolator = new AccelerateDecelerateInterpolator();
     int ZOOM_DURATION = DEFAULT_ZOOM_DURATION;
@@ -145,7 +147,48 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     private boolean mZoomEnabled;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
+    
+    private Activity activity;
 
+    public PhotoViewAttacher(ImageView imageView, Activity activity) {
+        mImageView = new WeakReference<ImageView>(imageView);
+        this.activity = activity;
+
+        imageView.setDrawingCacheEnabled(true);
+        imageView.setOnTouchListener(this);
+
+        ViewTreeObserver observer = imageView.getViewTreeObserver();
+        if (null != observer)
+            observer.addOnGlobalLayoutListener(this);
+
+        // Make sure we using MATRIX Scale Type
+        setImageViewScaleTypeMatrix(imageView);
+
+        if (imageView.isInEditMode()) {
+            return;
+        }
+        // Create Gesture Detectors...
+        mScaleDragDetector = VersionedGestureDetector.newInstance(
+                imageView.getContext(), this);
+
+        mGestureDetector = new GestureDetector(imageView.getContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+
+                    // forward long click listener
+                    @Override
+                    public void onLongPress(MotionEvent e) {
+                        if (null != mLongClickListener) {
+                            mLongClickListener.onLongClick(getImageView());
+                        }
+                    }
+                });
+
+        mGestureDetector.setOnDoubleTapListener(new DefaultOnDoubleTapListener(this));
+
+        // Finally, update the UI so that we're zoomable
+        setZoomable(true);
+    }
+    
     public PhotoViewAttacher(ImageView imageView) {
         mImageView = new WeakReference<ImageView>(imageView);
 
@@ -350,10 +393,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             return; // Do not drag if we are already scaling
         }
 
-        if (DEBUG) {
-            LogManager.getLogger().d(LOG_TAG,
-                    String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy));
-        }
+//        if (DEBUG) {
+//            LogManager.getLogger().d(LOG_TAG,
+//                    String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy));
+//        }
 
         ImageView imageView = getImageView();
         mSuppMatrix.postTranslate(dx, dy);
@@ -386,17 +429,28 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public void onFling(float startX, float startY, float velocityX,
                               float velocityY) {
-        if (DEBUG) {
-            LogManager.getLogger().d(
-                    LOG_TAG,
-                    "onFling. sX: " + startX + " sY: " + startY + " Vx: "
+//        if (DEBUG) {
+//            LogManager.getLogger().d(
+//                    LOG_TAG,
+//                    "onFling. sX: " + startX + " sY: " + startY + " Vx: "
+//                            + velocityX + " Vy: " + velocityY);
+//        }
+    	
+    	Log.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: "
                             + velocityX + " Vy: " + velocityY);
-        }
-        ImageView imageView = getImageView();
-        mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
-        mCurrentFlingRunnable.fling(getImageViewWidth(imageView),
-                getImageViewHeight(imageView), (int) velocityX, (int) velocityY);
-        imageView.post(mCurrentFlingRunnable);
+    	if (velocityX > 0)
+    	{
+    		((PhotoPlayer)activity).changeImage(true);
+    	}
+    	else
+    	{
+    		((PhotoPlayer)activity).changeImage(false);
+    	}
+//        ImageView imageView = getImageView();
+//        mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
+//        mCurrentFlingRunnable.fling(getImageViewWidth(imageView),
+//                getImageViewHeight(imageView), (int) velocityX, (int) velocityY);
+//        imageView.post(mCurrentFlingRunnable);
     }
 
     @Override
@@ -436,12 +490,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void onScale(float scaleFactor, float focusX, float focusY) {
-        if (DEBUG) {
-            LogManager.getLogger().d(
-                    LOG_TAG,
-                    String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f",
-                            scaleFactor, focusX, focusY));
-        }
+//        if (DEBUG) {
+//            LogManager.getLogger().d(
+//                    LOG_TAG,
+//                    String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f",
+//                            scaleFactor, focusX, focusY));
+//        }
 
         if (getScale() < mMaxScale || scaleFactor < 1f) {
             mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
@@ -1013,9 +1067,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
 
         public void cancelFling() {
-            if (DEBUG) {
-                LogManager.getLogger().d(LOG_TAG, "Cancel Fling");
-            }
+//            if (DEBUG) {
+//                LogManager.getLogger().d(LOG_TAG, "Cancel Fling");
+//            }
             mScroller.forceFinished(true);
         }
 
@@ -1047,12 +1101,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             mCurrentX = startX;
             mCurrentY = startY;
 
-            if (DEBUG) {
-                LogManager.getLogger().d(
-                        LOG_TAG,
-                        "fling. StartX:" + startX + " StartY:" + startY
-                                + " MaxX:" + maxX + " MaxY:" + maxY);
-            }
+//            if (DEBUG) {
+//                LogManager.getLogger().d(
+//                        LOG_TAG,
+//                        "fling. StartX:" + startX + " StartY:" + startY
+//                                + " MaxX:" + maxX + " MaxY:" + maxY);
+//            }
 
             // If we actually can move, fling the scroller
             if (startX != maxX || startY != maxY) {
@@ -1073,13 +1127,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 final int newX = mScroller.getCurrX();
                 final int newY = mScroller.getCurrY();
 
-                if (DEBUG) {
-                    LogManager.getLogger().d(
-                            LOG_TAG,
-                            "fling run(). CurrentX:" + mCurrentX + " CurrentY:"
-                                    + mCurrentY + " NewX:" + newX + " NewY:"
-                                    + newY);
-                }
+//                if (DEBUG) {
+//                    LogManager.getLogger().d(
+//                            LOG_TAG,
+//                            "fling run(). CurrentX:" + mCurrentX + " CurrentY:"
+//                                    + mCurrentY + " NewX:" + newX + " NewY:"
+//                                    + newY);
+//                }
 
                 mSuppMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
                 setImageViewMatrix(getDrawMatrix());

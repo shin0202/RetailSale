@@ -50,11 +50,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.retailsale.MainTab"
-            android:configChanges="keyboard|keyboardHidden|orientation"
-            android:screenOrientation="landscape" >
-        </activity>
-        <activity
             android:name="com.example.retailsale.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:screenOrientation="landscape"

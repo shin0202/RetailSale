@@ -6,7 +6,9 @@
     <ImageView
         android:id="@+id/photo_player_display"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+	android:layout_centerInParent="true"
+        />
 
     <HorizontalScrollView
         android:layout_width="match_parent"

@@ -15,6 +15,7 @@ public class MainActivity extends FragmentActivity
 {
     private TabHost tabHost;
     private TabManager tabManager;
+    private int currentTab;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -31,7 +32,6 @@ public class MainActivity extends FragmentActivity
 		
         tabManager = new TabManager(this, tabHost, R.id.realtabcontent);
         
-        tabHost.setCurrentTab(0);//設定一開始就跳到第一個分頁
         tabManager.addTab(
         		tabHost.newTabSpec(browserString).setIndicator(browserString),
         		BrowserFragment.class, null);
@@ -44,6 +44,23 @@ public class MainActivity extends FragmentActivity
         tabManager.addTab(
         		tabHost.newTabSpec(logoutString).setIndicator(logoutString),
         		LogoutFragment.class, null);
+        
+        getBundle();
+        
+        tabHost.setCurrentTab(currentTab); // set the current tab
+	}
+	
+	private void getBundle() {
+		Bundle bundle = this.getIntent().getExtras();
+		
+		if (bundle != null)
+		{
+			currentTab = bundle.getInt(WelcomeActivity.TAB_POSITION);
+		}
+		else
+		{
+			currentTab = 0;
+		}
 	}
 
 	public String getBrowserData()

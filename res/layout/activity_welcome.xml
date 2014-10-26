@@ -2,9 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/welcome"
-    >
-    
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/welcome_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="500dp"
+        android:layout_gravity="center"
+        android:src="@drawable/welcome" />
+
+    <Button
+        android:id="@+id/welcome_browser_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="300dp"
+        android:layout_marginRight="300dp"
+        android:text="@string/browser_all_photo"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/welcome_add_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="300dp"
+        android:layout_marginRight="300dp"
+        android:text="@string/add_consumer"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/welcome_sync_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="300dp"
+        android:layout_marginRight="300dp"
+        android:text="@string/sync_with_server"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/welcome_logout_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="300dp"
+        android:layout_marginRight="300dp"
+        android:text="@string/logout"
+        android:textStyle="bold" />
 
 </LinearLayout>
