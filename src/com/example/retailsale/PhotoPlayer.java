@@ -1,5 +1,7 @@
 package com.example.retailsale;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -54,6 +57,9 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 
         // Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
         attacher = new PhotoViewAttacher(scalableIV);
+        
+        position = 0;
+        scalableIV.setImageBitmap(decodeSampledBitmapFromUri(photoList.get(position).getFilePath(), photoList.get(position).getFileName()));
     }
     
     @Override
@@ -72,7 +78,6 @@ public class PhotoPlayer extends Activity implements OnClickListener {
     
     private void findViews() {
         scalableIV = (ImageView) findViewById(R.id.photo_player_display);
-        scalableIV.setImageResource(R.drawable.test);
         
 //      scalableIV.setFit(true);
 //      scalableIV.setMaxZoom(10);
@@ -129,7 +134,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
                 
                 if (photoList != null && photoList.size() > 0 && position < photoList.size())
                 {
-                	scalableIV.setImageBitmap(decodeSampledBitmapFromUri(photoList.get(position).getFilePath()));
+                	scalableIV.setImageBitmap(decodeSampledBitmapFromUri(photoList.get(position).getFilePath(), photoList.get(position).getFileName()));
                 
                 	// If you later call scalableIV.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
                 	attacher.update();
@@ -170,17 +175,81 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         return bm;
     }
     
-    private Bitmap decodeSampledBitmapFromUri(String path) 
+    private Bitmap decodeSampledBitmapFromUri(String path, String fileName) 
     {
         Bitmap bm = null;
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
 
-        bm = BitmapFactory.decodeFile(path, options);
+//        bm = BitmapFactory.decodeFile(path, options);
+        
+		// 5. to read file and remove md5
+		String readContent = Utility.readFile(path);
+		Log.d(TAG, "readContent is " + readContent);
+		Log.d(TAG, "*********************************************************** ");
+		String realFileName = fileName.replace(".txt", "");
+		Log.d(TAG, "realFileName is " + realFileName);
+		Log.d(TAG, "*********************************************************** ");
+		String md5String = Utility.generateMD5String(realFileName);
+		Log.d(TAG, "md5String is " + md5String);
+		Log.d(TAG, "*********************************************************** ");
+		
+		
+		
+		
+		
+		String realData = readContent.replace(md5String, "").replace("/", "");
+		Log.d(TAG, "realData is " + realData);
+		Log.d(TAG, "*********************************************************** ");
+		// 6. decode Base64 to byte[]
+		String encodeString = Utility.encodeBase64(realData);
+		
+		
+		byte[] photo = Utility.decodeBase64(encodeTobase64());
+		
+		try {
+			bm = BitmapFactory.decodeByteArray(photo, 0, photo.length, options);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} catch (OutOfMemoryError e) {
+			e.printStackTrace();
+		}
 
         return bm;
     }
+    
+	public static String encodeTobase64()
+	{
+	    Bitmap immagex = BitmapFactory.decodeFile("/sdcard/retailSale/123/test1.jpg");
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+	    immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+	    byte[] b = baos.toByteArray();
+	    String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
+	    
+	    Log.d(TAG, " imageEncoded is " + imageEncoded);
+
+	    return imageEncoded;
+	}
+    
+	public static String encodeTobase64_2()
+	{
+	    Bitmap immagex = BitmapFactory.decodeFile("/sdcard/retailSale/123/test1.jpg");
+	    
+	    int bytes = immagex.getByteCount();
+	    
+	    ByteBuffer buffer = ByteBuffer.allocate(bytes);
+	    
+	    immagex.copyPixelsToBuffer(buffer);
+	    
+	    byte[] array = buffer.array();
+	    
+	    String imageEncoded = Base64.encodeToString(array, Base64.DEFAULT);
+	    
+	    Log.d(TAG, " imageEncoded is " + imageEncoded);
+
+	    return imageEncoded;
+	}
 
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) 
     {

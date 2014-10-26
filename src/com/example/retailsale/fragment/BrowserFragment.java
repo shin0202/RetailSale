@@ -47,8 +47,8 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 	private String currentParentPath;
 	private int currentAlbumPosition;
 	private PhotosAdapterView photosAdapterView;
-	private List<LocalFileInfo> albumList = new ArrayList<LocalFileInfo>();
-	private List<LocalFileInfo> photoList = new ArrayList<LocalFileInfo>();
+	private List<LocalFileInfo> albumList;
+	private List<LocalFileInfo> photoList;
 	private ProgressDialog progressDialog;
 	// views
 	private LinearLayout albums;
@@ -58,18 +58,26 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "onCreate  ");
 	}
 
 	@Override
 	public void onResume()
 	{
 		super.onResume();
+		Log.d(TAG, "onResume  ");
+		albumList = new ArrayList<LocalFileInfo>();
+		photoList = new ArrayList<LocalFileInfo>();
+		LoadFileThread loadFileThread = new LoadFileThread(Utility.FILE_PATH);
+		loadFileThread.start();
 	}
 
 	@Override
 	public void onPause()
 	{
 		super.onPause();
+		
+		Log.d(TAG, "onPauses  ");
 		
 		if (albumList != null) {
 		    albumList.clear();
@@ -90,6 +98,8 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 	public void onDestroy()
 	{
 		super.onDestroy();
+		
+		Log.d(TAG, "onDestroy  ");
 	}
 
 	@Override
@@ -98,6 +108,8 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 		super.onAttach(activity);
 //		MainActivity mainActivity = (MainActivity) activity;
 		// value = mainActivity.getBrowserData();
+		
+		Log.d(TAG, "onAttach  ");
 	}
 
 	@Override
@@ -111,8 +123,10 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 		backBtn.setOnClickListener(this);
 		removeAllAlbums();
 //		handlePageRefresh(Utility.FILE_PATH);
-		LoadFileThread loadFileThread = new LoadFileThread(Utility.FILE_PATH);
-		loadFileThread.start();
+//		LoadFileThread loadFileThread = new LoadFileThread(Utility.FILE_PATH);
+//		loadFileThread.start();
+		
+		Log.d(TAG, "onCreateView  ");
 		
 		return view;
 	}
@@ -155,6 +169,8 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 //		 TextView txtResult = (TextView)
 //		 this.getView().findViewById(R.id.textView1);
 //		 txtResult.setText(value);
+		
+		Log.d(TAG, "onActivityCreated  ");
 	}
 	
     @Override
@@ -288,13 +304,21 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 			{
 				Log.d(TAG, "albumNum " + v.getTag());
 				currentAlbumPosition = (Integer) v.getTag();
-				photoList.clear();
-				photosAdapterView = null;
-				listFilesInFolder(new File(albumList.get((Integer) v.getTag()).getFilePath()));
-				if (photoList.size() != 0)
+				if (photoList != null)
 				{
-					photosAdapterView = new PhotosAdapterView(getActivity(), photoList, PhotosAdapterView.BROWSER_TAB);
-					photoGrid.setAdapter(photosAdapterView);
+					photoList.clear();
+					if (photosAdapterView != null)
+					{
+						photosAdapterView.notifyDataSetChanged();
+						photosAdapterView = null;
+					}
+					listFilesInFolder(new File(albumList.get((Integer) v.getTag()).getFilePath()));
+					if (photoList.size() != 0)
+					{
+						photosAdapterView = new PhotosAdapterView(getActivity(), photoList,
+								PhotosAdapterView.BROWSER_TAB);
+						photoGrid.setAdapter(photosAdapterView);
+					}
 				}
 			}
 		});

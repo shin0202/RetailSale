@@ -2,6 +2,7 @@ package com.example.retailsale.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -302,6 +303,23 @@ public class Utility
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        String base64 = Base64.encodeToString(data, Base64.DEFAULT);
+        Log.d(TAG, "encode string is " + base64);
+        
+        return base64;
+    }
+    
+    public static String encodeBase64FromPath(String path) {
+    	Bitmap bm = BitmapFactory.decodeFile(path);
+    	ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+    	bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
+//    	byte[] b = baos.toByteArray(); 
+        byte[] data = baos.toByteArray();
+//        try {
+//            data = content.getBytes("UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
         String base64 = Base64.encodeToString(data, Base64.DEFAULT);
         Log.d(TAG, "encode string is " + base64);
         
