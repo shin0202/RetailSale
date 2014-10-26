@@ -1,7 +1,5 @@
 package com.example.retailsale;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +11,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -39,8 +36,11 @@ public class PhotoPlayer extends Activity implements OnClickListener {
     PhotoViewAttacher attacher;
     private ProgressDialog progressDialog;
     
-    private int position = 0;
+    private int showAlbumCount = 0;
+    private int currentPosition = 0;
     private List<LocalFileInfo> photoList = new ArrayList<LocalFileInfo>();
+    
+    private Bitmap bm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,22 +58,27 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         // Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
         attacher = new PhotoViewAttacher(scalableIV);
         
-        position = 0;
-        scalableIV.setImageBitmap(decodeSampledBitmapFromUri(photoList.get(position).getFilePath(), photoList.get(position).getFileName()));
+		if (currentPosition < photoList.size())
+		{
+			decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(),
+					photoList.get(currentPosition).getFileName());
+		}
+		else
+		{
+			Log.d(TAG, "showAlbumCount over to photoList size");
+		}
     }
     
     @Override
     protected void onResume() {
         super.onResume();
-        
-        position = 0;
     }
     
     @Override
     protected void onPause() {
         super.onPause();
         
-        position = 0;
+        showAlbumCount = 0;
     }
     
     private void findViews() {
@@ -90,13 +95,15 @@ public class PhotoPlayer extends Activity implements OnClickListener {
     
     private void getBundle() {
         Bundle bundle = this.getIntent().getExtras();
+        currentPosition = 0;
         
         if (bundle != null) {
             photoList = bundle.getParcelableArrayList(BrowserFragment.FILE_LIST);
-            
+            currentPosition = bundle.getInt(BrowserFragment.FILE_POSITION);
+            Log.d(TAG, "currentPosition is " + currentPosition);
             if (photoList != null) {
                 for (int i = 0; i < photoList.size(); i++) {
-                    Log.d(TAG, "Get data position : " + i + " name: " + photoList.get(i).getFileName() + 
+                    Log.d(TAG, "Get data showAlbumCount : " + i + " name: " + photoList.get(i).getFileName() + 
                             " path: " + photoList.get(i).getFilePath() + " type: " + photoList.get(i).getFileType());
                 }
             } else {
@@ -122,8 +129,8 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 //        imageView.setImageBitmap(bm);
         imageView.setImageDrawable(PhotoPlayer.this.getResources().getDrawable(R.drawable.img));
-        imageView.setTag(position);
-        position++;
+        imageView.setTag(showAlbumCount);
+        showAlbumCount++;
         imageView.setOnClickListener(new View.OnClickListener() {
             
             @Override
@@ -134,8 +141,8 @@ public class PhotoPlayer extends Activity implements OnClickListener {
                 
                 if (photoList != null && photoList.size() > 0 && position < photoList.size())
                 {
-                	scalableIV.setImageBitmap(decodeSampledBitmapFromUri(photoList.get(position).getFilePath(), photoList.get(position).getFileName()));
-                
+                	currentPosition = position;
+                	decodeSampledBitmapFromUri(photoList.get(position).getFilePath(), photoList.get(position).getFileName());
                 	// If you later call scalableIV.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
                 	attacher.update();
                 }
@@ -148,7 +155,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 		textView.setGravity(Gravity.CENTER_HORIZONTAL);
 		textView.setTextSize(16);
 		textView.setTextColor(Color.BLACK);
-		textView.setText(name);
+		textView.setText(name.replace(Utility.REPLACE_STRING, ""));
 
         layout.addView(imageView);
         layout.addView(textView);
@@ -175,9 +182,16 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         return bm;
     }
     
-    private Bitmap decodeSampledBitmapFromUri(String path, String fileName) 
+    private void decodeSampledBitmapFromUri(final String path, final String fileName) 
     {
-        Bitmap bm = null;
+    	dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+//        Bitmap bm = null;
+        scalableIV.setImageBitmap(null);
+        
+        if (bm != null) {
+        	bm.recycle();
+        	bm = null;
+        }
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -186,27 +200,21 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         
 		// 5. to read file and remove md5
 		String readContent = Utility.readFile(path);
-		Log.d(TAG, "readContent is " + readContent);
+//		Log.d(TAG, "readContent is " + readContent);
 		Log.d(TAG, "*********************************************************** ");
 		String realFileName = fileName.replace(".txt", "");
-		Log.d(TAG, "realFileName is " + realFileName);
+//		Log.d(TAG, "realFileName is " + realFileName);
 		Log.d(TAG, "*********************************************************** ");
 		String md5String = Utility.generateMD5String(realFileName);
-		Log.d(TAG, "md5String is " + md5String);
+//		Log.d(TAG, "md5String is " + md5String);
 		Log.d(TAG, "*********************************************************** ");
 		
-		
-		
-		
-		
-		String realData = readContent.replace(md5String, "").replace("/", "");
-		Log.d(TAG, "realData is " + realData);
+		String realData = readContent.replace(md5String, "");
+//		Log.d(TAG, "realData is " + realData);
 		Log.d(TAG, "*********************************************************** ");
 		// 6. decode Base64 to byte[]
-		String encodeString = Utility.encodeBase64(realData);
-		
-		
-		byte[] photo = Utility.decodeBase64(encodeTobase64());
+        
+		byte[] photo = Utility.decodeBase64(realData);
 		
 		try {
 			bm = BitmapFactory.decodeByteArray(photo, 0, photo.length, options);
@@ -215,41 +223,29 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 		} catch (OutOfMemoryError e) {
 			e.printStackTrace();
 		}
-
-        return bm;
+		
+//		Utility.writeFile("/sdcard/retailSale/123/java2.txt", Utility
+//				.encodeBase64(new BitmapFactory.decodeFile("/sdcard/retailSale/123/test1.jpg")));
+//		Log.d(TAG,
+//				"****************************HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH******************************* ");
+//		byte[] photo = Utility.decodeBase64(Utility.readFile("/sdcard/retailSale/123/java2.txt"));
+//		try
+//		{
+//			bm = BitmapFactory.decodeByteArray(photo, 0, photo.length, options);
+//		}
+//		catch (Exception e)
+//		{
+//			e.printStackTrace();
+//		}
+//		catch (OutOfMemoryError e)
+//		{
+//			e.printStackTrace();
+//		}
+		
+		scalableIV.setImageBitmap(bm);
+		
+		dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
     }
-    
-	public static String encodeTobase64()
-	{
-	    Bitmap immagex = BitmapFactory.decodeFile("/sdcard/retailSale/123/test1.jpg");
-	    ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-	    immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-	    byte[] b = baos.toByteArray();
-	    String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
-	    
-	    Log.d(TAG, " imageEncoded is " + imageEncoded);
-
-	    return imageEncoded;
-	}
-    
-	public static String encodeTobase64_2()
-	{
-	    Bitmap immagex = BitmapFactory.decodeFile("/sdcard/retailSale/123/test1.jpg");
-	    
-	    int bytes = immagex.getByteCount();
-	    
-	    ByteBuffer buffer = ByteBuffer.allocate(bytes);
-	    
-	    immagex.copyPixelsToBuffer(buffer);
-	    
-	    byte[] array = buffer.array();
-	    
-	    String imageEncoded = Base64.encodeToString(array, Base64.DEFAULT);
-	    
-	    Log.d(TAG, " imageEncoded is " + imageEncoded);
-
-	    return imageEncoded;
-	}
 
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) 
     {
@@ -297,7 +293,4 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 			}
 		}
 	};
-	
-	// scalableIV.setImageBitmap(Utility.covertByteArrayToBitmap(Utility.decodeBase64(Utility.readFile(photoList.get(positionTest).getFilePath()))));
-
 }

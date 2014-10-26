@@ -39,6 +39,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 	private static final String GET_NAME = "get_name";
 	private static final String GET_PATH = "get_path";
 	public static final String FILE_LIST = "file_list";
+	public static final String FILE_POSITION = "file_position";
 	private static final int LOAD_FILE_ERROR = 0;
 	private static final int LOAD_FILE_COMPLETE = 1;
 	private static final int ADD_VIEW = 2;
@@ -106,8 +107,6 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 	public void onAttach(Activity activity)
 	{
 		super.onAttach(activity);
-//		MainActivity mainActivity = (MainActivity) activity;
-		// value = mainActivity.getBrowserData();
 		
 		Log.d(TAG, "onAttach  ");
 	}
@@ -122,9 +121,6 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 		Button backBtn = (Button) view.findViewById(R.id.browser_back_btn);
 		backBtn.setOnClickListener(this);
 		removeAllAlbums();
-//		handlePageRefresh(Utility.FILE_PATH);
-//		LoadFileThread loadFileThread = new LoadFileThread(Utility.FILE_PATH);
-//		loadFileThread.start();
 		
 		Log.d(TAG, "onCreateView  ");
 		
@@ -146,6 +142,10 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 					Bundle bundle = new Bundle();
 					bundle.putParcelableArrayList(FILE_LIST,
 							(ArrayList<? extends Parcelable>) photoList);
+					
+					Log.d(TAG, "position === " + position);
+					
+					bundle.putInt(FILE_POSITION, position);
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}
@@ -166,9 +166,6 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-//		 TextView txtResult = (TextView)
-//		 this.getView().findViewById(R.id.textView1);
-//		 txtResult.setText(value);
 		
 		Log.d(TAG, "onActivityCreated  ");
 	}
@@ -211,11 +208,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 		} else {
 		    Log.d(TAG, "size is  " + albumList.size());
 		}
-//		if (photoList.size() != 0)
-//		{
-//			photosAdapterView = new PhotosAdapterView(getActivity(), photoList);
-//			photoGrid.setAdapter(photosAdapterView);
-//		}
+
 		uiHandler.sendEmptyMessage(SET_ADAPTER);
 	}
 

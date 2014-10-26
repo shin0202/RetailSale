@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.retailsale.R;
 import com.example.retailsale.manager.fileinfo.LocalFileInfo;
+import com.example.retailsale.util.Utility;
 
 public class PhotosAdapterView extends BaseAdapter
 {
@@ -78,7 +79,7 @@ public class PhotosAdapterView extends BaseAdapter
             viewTag = (ViewTag) convertView.getTag();
         }
         convertView.setId(BASE_INDEX + position);
-        viewTag.showName.setText(photoList.get(position).getFileName());
+        viewTag.showName.setText(photoList.get(position).getFileName().replace(Utility.REPLACE_STRING, ""));
         // to show img
         // viewTag.showPhoto.setImageBitmap(bm);
         return convertView;

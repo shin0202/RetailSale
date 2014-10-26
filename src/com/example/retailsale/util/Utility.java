@@ -36,6 +36,7 @@ public class Utility
 	public static final String FILE_PATH = "/sdcard/retailSale/";
 	public static final String FILE_PATH_2 = "/sdcard/retailSale";
 	public static final String REPLACE_SERVER_FOLDER = "C:\\Project\\_code\\testFolder";
+	public static final String REPLACE_STRING = ".jpg.txt";
 	public static final int SHOW_WAITING_DIALOG = 999;
 	public static final int DISMISS_WAITING_DIALOG = -999;
 	public static final int SUCCESS = 1;
@@ -250,7 +251,7 @@ public class Utility
             String line = "";
             try {
                 while ((line = reader.readLine()) != null) {
-                    readContent.append(line);
+                    readContent.append(line).append("\n");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -288,7 +289,7 @@ public class Utility
     public static byte[] decodeBase64(String content) {
         byte[] data = Base64.decode(content, Base64.DEFAULT);
         try {
-            String text = new String(data, "UTF-8");
+            String text = new String(data, "UTF-16");
             Log.d(TAG, "decode string is " + text);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -299,7 +300,7 @@ public class Utility
     public static String encodeBase64(String content) {
         byte[] data = null;
         try {
-            data = content.getBytes("UTF-8");
+            data = content.getBytes("UTF-16");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -308,6 +309,18 @@ public class Utility
         
         return base64;
     }
+    
+	public static String encodeBase64(Bitmap bm)
+	{
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+	    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+	    byte[] b = baos.toByteArray();
+	    String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
+	    
+	    Log.d(TAG, " imageEncoded is " + imageEncoded);
+
+	    return imageEncoded;
+	}
     
     public static String encodeBase64FromPath(String path) {
     	Bitmap bm = BitmapFactory.decodeFile(path);
