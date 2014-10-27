@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.ToggleButton;
 
 import com.example.retailsale.fragment.AddFragment;
 import com.example.retailsale.manager.addcustomer.CustomerInfo;
@@ -144,7 +143,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 			Log.d(TAG, "customer visit date is " + customerInfo.getCustomerVisitDate());
 			String reservationDate = customerInfo.getReservationDate();
 			Log.d(TAG, "reservation date is " + reservationDate);
-			if (reservationDate == null)
+			if (reservationDate == null || "".equals(reservationDate))
 			{
 //				setInfo(true);
 			} else {
@@ -193,6 +192,8 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		
 		// work address
 		customerInfo.setReservationWork(consumerAddressET.getText().toString());
+		
+		Log.d(TAG, "work is " + customerInfo.getReservationWork());
 		
 		// contact address
 		if (asAboveCheckBox.isChecked()) {

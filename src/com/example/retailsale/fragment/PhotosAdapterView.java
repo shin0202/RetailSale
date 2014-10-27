@@ -3,13 +3,11 @@ package com.example.retailsale.fragment;
 import java.util.List;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.retailsale.R;
@@ -58,17 +56,23 @@ public class PhotosAdapterView extends BaseAdapter
     {
         if (convertView == null)
         {
-            convertView = layoutInflater.inflate(R.layout.cell_of_browser_tab, null);
-            viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.browser_photo),
-                    (TextView) convertView.findViewById(R.id.photo_name));
+//            convertView = layoutInflater.inflate(R.layout.cell_of_browser_tab, null);
+//            viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.browser_photo),
+//                    (TextView) convertView.findViewById(R.id.photo_name));
             
             switch (selectdTab) {
             case BROWSER_TAB:
-                viewTag.showPhoto.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                		LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+//                viewTag.showPhoto.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+//                		LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+                convertView = layoutInflater.inflate(R.layout.cell_of_browser_tab, null);
+                viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.browser_photo),
+                        (TextView) convertView.findViewById(R.id.photo_name));
                 break;
             case SYNC_TAB:
-                viewTag.showPhoto.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 100, Gravity.CENTER));
+//                viewTag.showPhoto.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 100, Gravity.CENTER));
+                convertView = layoutInflater.inflate(R.layout.cell_of_sync_tab_browser, null);
+                viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.sync_browser_photo),
+                        (TextView) convertView.findViewById(R.id.sync_browser_name));
                 break;
             }
             

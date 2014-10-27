@@ -44,7 +44,7 @@
     <dimen name="scrollview_img_size">120dp</dimen>
     
     <!-- order_measure_comsumer_info_2 -->
-    <dimen name="order_measure_comsumer_info_2_edit_width">160dp</dimen>
+    <dimen name="order_measure_comsumer_info_2_edit_width">120dp</dimen>
     <dimen name="order_measure_comsumer_info_2_margin_left">5dp</dimen>
     <dimen name="order_measure_comsumer_checkbox_margin_left">50dp</dimen>
 

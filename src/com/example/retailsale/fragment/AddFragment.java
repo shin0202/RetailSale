@@ -147,7 +147,6 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		{
 		case R.id.add_tab_save_btn:
 			saveData();
-			mainActivity.finishActivity();
 			break;
 		case R.id.add_tab_new_btn:
 			startOrderMeasureActivity();
@@ -191,7 +190,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		}
 	}
 
-	private void setCustomerData()
+	private boolean setCustomerData()
 	{
 		String phoneNumber = phoneNumberET.getText().toString();
 		String cellPhoneNumber = cellPhoneNumberET.getText().toString();
@@ -220,67 +219,89 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 				+ " introducer: " + introducer);
 		
 		// check phone number
-		if (!isChecked && !Utility.isPhoneValid(phoneNumber))
-		{
-			showToast(this.getActivity().getResources().getString(R.string.home_phone_field_error));
-			return;
-		}
-		// check cellphone number
-		if (!isChecked && !Utility.isCellphoneValid(cellPhoneNumber))
-		{
-			showToast(this.getActivity().getResources().getString(R.string.cell_phone_field_error));
-			return;
-		}
-		// check company phone number
-		if (!isChecked && !companyPhoneNumber.equals("")
-				&& !Utility.isCompanyPhoneValid(phoneNumber))
-		{
-			showToast(this.getActivity().getResources()
-					.getString(R.string.company_phone_field_error));
-			return;
-		}
-		// check email
-		if (!isChecked && !Utility.isEmailValid(email))
-		{
-			showToast(this.getActivity().getResources().getString(R.string.email_field_error));
-			return;
-		}
+//		if (!isChecked && !Utility.isPhoneValid(phoneNumber))
+//		{
+//			showToast(this.getActivity().getResources().getString(R.string.home_phone_field_error));
+//			return false;
+//		}
+//		// check cellphone number
+//		if (!isChecked && !Utility.isCellphoneValid(cellPhoneNumber))
+//		{
+//			showToast(this.getActivity().getResources().getString(R.string.cell_phone_field_error));
+//			return false;
+//		}
+//		// check company phone number
+//		if (!isChecked && !companyPhoneNumber.equals("")
+//				&& !Utility.isCompanyPhoneValid(phoneNumber))
+//		{
+//			showToast(this.getActivity().getResources()
+//					.getString(R.string.company_phone_field_error));
+//			return false;
+//		}
+//		// check email
+//		if (!isChecked && !Utility.isEmailValid(email))
+//		{
+//			showToast(this.getActivity().getResources().getString(R.string.email_field_error));
+//			return false;
+//		}
 		// check birthday
-		if (!isChecked && !Utility.isBirthdayValid(customerBirthday))
-		{
-			showToast(this.getActivity().getResources().getString(R.string.birthday_field_error));
-			return;
-		}
+//		if (!isChecked && !Utility.isBirthdayValid(customerBirthday))
+//		{
+//			showToast(this.getActivity().getResources().getString(R.string.birthday_field_error));
+//			return false;
+//		}
 		
 		if (customerInfo == null)
 		{
-            if (isChecked) 
-            {
-                customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE, customerName, cellPhoneNumber, phoneNumber,
-                        companyPhoneNumber, sexSelectedPosition, titleSelectedPosition, email, dateString + timeString,
-                        msgSelectedPosition, introducer, jobSelectedPosition, ageSelectedPosition, customerBirthday,
-                        Utility.getCreator(getActivity()), Utility.getCreatorGroup(getActivity()), dateString
-                                + timeString, dateString + timeString, timeString, "", "", "", 0, 0, "", "", 0, "");
-            } 
-            else
-            {
-                String noData = AddFragment.this.getResources().getString(R.string.no_data);
-                customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE, noData, noData, noData, noData, 0, 0, noData,
-                        dateString + timeString, 0, noData, 0, 0, noData, Utility.getCreator(getActivity()),
-                        Utility.getCreatorGroup(getActivity()), dateString + timeString, dateString + timeString,
-                        timeString, "", "", "", 0, 0, "", "", 0, "");
-            }
+			if (isChecked)
+			{
+				String noData = AddFragment.this.getResources().getString(R.string.no_data);
+				customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE, noData, noData, noData,
+						noData, 0, 0, noData, dateString + timeString, 0, noData, 0, 0, noData,
+						Utility.getCreator(getActivity()), Utility.getCreatorGroup(getActivity()),
+						dateString + timeString, "", "", "", "", "", 0, 0, "", "", 0, "");
+			}
+			else
+			{
+				customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE, customerName,
+						cellPhoneNumber, phoneNumber, companyPhoneNumber, sexSelectedPosition,
+						titleSelectedPosition, email, dateString + timeString, msgSelectedPosition,
+						introducer, jobSelectedPosition, ageSelectedPosition, customerBirthday,
+						Utility.getCreator(getActivity()), Utility.getCreatorGroup(getActivity()),
+						dateString + timeString, "", "", "", "", "", 0, 0, "", "", 0, "");
+			}
 		}
+		else {
+			customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE, customerName, cellPhoneNumber,
+					phoneNumber, companyPhoneNumber, sexSelectedPosition, titleSelectedPosition,
+					email, dateString + timeString, msgSelectedPosition, introducer,
+					jobSelectedPosition, ageSelectedPosition, customerBirthday,
+					Utility.getCreator(getActivity()), Utility.getCreatorGroup(getActivity()), dateString + timeString);
+		}
+		
+		return true;
 	}
 
 	private void saveData()
 	{
-		setCustomerData();
+		if (!setCustomerData())
+			return;
+		
+//		String reservationDate = customerInfo.getReservationDate();
+//		
+//		if (reservationDate.equals(""))
+//		{
+//			Log.d(TAG, "reservationDate is empty ");
+//			customerInfo.setReservationDate(customerInfo.getCreateTime());
+//		}
+		
 		openDatabase();
 		
 	      // to check work address had, but contact address not, then contact equals to work?
         String workAddress = customerInfo.getReservationWork();
         String contactAddress = customerInfo.getReservationContact();
+        
+        Log.d(TAG, "saveData() customerInfo === " + customerInfo.toString());
         
         if (!workAddress.equals("") && contactAddress.equals(""))
         {
@@ -308,42 +329,43 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	
 	private void insertToDB()
 	{
-	       if (customerInfo != null)
-	        {
-	            int sendNoteValue = isSendMsg ? 1 : 0;
-	            String createDateTime = Utility.getCurrentDateTime();
-	            Log.d(TAG, "sendNoteValue is " + sendNoteValue + " createDateTime is " + createDateTime);
-	            SharedPreferences settings = mainActivity.getSharedPreferences(Utility.LoginField.DATA,
-	                    0);
-	            int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
-	            int userGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
-	            Log.d(TAG, "userSerial === " + userSerial + "userGroup === " + userGroup);
-	            long id = retialSaleDbAdapter.create(customerInfo.getCustometName(),
-	                    customerInfo.getCustomerHome(), customerInfo.getCustomerMobile(),
-	                    customerInfo.getCustomerCompany(), customerInfo.getCustomerMail(),
-	                    customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
-	                    customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(),
-	                    customerInfo.getCustomerJob(), customerInfo.getCustomerIntroducer(),
-	                    customerInfo.getCustomerAge(), customerInfo.getCustomerVisitDate(), userSerial,
-	                    userGroup, createDateTime, sendNoteValue,
-	                    customerInfo.getReservationWorkAlias(),
-	                    customerInfo.getReservationStatusComment(),
-	                    customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
-	                    customerInfo.getReservationContact(), customerInfo.getReservationComment(),
-	                    customerInfo.getReservationSpace(), customerInfo.getReservationBudget(),
-	                    customerInfo.getReservationDate(), RetialSaleDbAdapter.NOTUPLOAD);
-	            Log.d(TAG, "id is " + id);
-	        }
-	        else
-	        {
-	            Log.d(TAG, "customerInfo is null, cannot access data to db.");
-	        }
+		if (customerInfo != null)
+		{
+			int sendNoteValue = isSendMsg ? 1 : 0;
+			String createDateTime = Utility.getCurrentDateTime();
+			Log.d(TAG, "sendNoteValue is " + sendNoteValue + " createDateTime is " + createDateTime);
+			SharedPreferences settings = mainActivity.getSharedPreferences(Utility.LoginField.DATA,
+					0);
+			int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
+			int userGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
+			Log.d(TAG, "userSerial === " + userSerial + "userGroup === " + userGroup);
+			long id = retialSaleDbAdapter.create(customerInfo.getCustometName(),
+					customerInfo.getCustomerHome(), customerInfo.getCustomerMobile(),
+					customerInfo.getCustomerCompany(), customerInfo.getCustomerMail(),
+					customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
+					customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(),
+					customerInfo.getCustomerJob(), customerInfo.getCustomerIntroducer(),
+					customerInfo.getCustomerAge(), customerInfo.getCustomerVisitDate(), userSerial,
+					userGroup, createDateTime, sendNoteValue,
+					customerInfo.getReservationWorkAlias(),
+					customerInfo.getReservationStatusComment(),
+					customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
+					customerInfo.getReservationContact(), customerInfo.getReservationComment(),
+					customerInfo.getReservationSpace(), customerInfo.getReservationBudget(),
+					customerInfo.getReservationDate(), RetialSaleDbAdapter.NOTUPLOAD);
+			Log.d(TAG, "id is " + id);
+			
+			mainActivity.finishActivity();
+		}
+		else
+		{
+			Log.d(TAG, "customerInfo is null, cannot access data to db.");
+		}
 	}
 
 	private void startOrderMeasureActivity()
 	{
-		setCustomerData();
-		if (customerInfo != null)
+		if (setCustomerData())
 		{
 			Intent orderintent = new Intent(this.getActivity(), OrderMeasure.class);
 			orderintent.putExtra(SEND_CUSTOMER_INFO, customerInfo);
@@ -390,81 +412,6 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		if (!retialSaleDbAdapter.isDbOpen())
 		{ // not open, then open it
 			retialSaleDbAdapter.open();
-		}
-	}
-
-	private void setOptionType()
-	{
-		retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
-		retialSaleDbAdapter.open();
-		// to get option type content
-		Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
-		if (optionTypeCursor != null)
-		{
-			int count = optionTypeCursor.getCount();
-			Log.d(TAG, "option type count is === " + count);
-			optionTypeCursor.close();
-			if (count == 0)
-			{ // if no content then create
-				// userType
-				retialSaleDbAdapter.create(0, "userType", 1, "設計師兼店長");
-				retialSaleDbAdapter.create(0, "userType", 2, "設計師");
-				retialSaleDbAdapter.create(0, "userType", 3, "離職員工");
-				// customerSex
-				retialSaleDbAdapter.create(1, "customerSex", 0, "無");
-				retialSaleDbAdapter.create(1, "customerSex", 1, "男");
-				retialSaleDbAdapter.create(1, "customerSex", 2, "女");
-				// customerTitle
-				retialSaleDbAdapter.create(2, "customerTitle", 1, "先生");
-				retialSaleDbAdapter.create(2, "customerTitle", 2, "小姐");
-				retialSaleDbAdapter.create(2, "customerTitle", 3, "來賓");
-				// customerInfo
-				retialSaleDbAdapter.create(3, "customerInfo", 0, "無");
-				retialSaleDbAdapter.create(3, "customerInfo", 1, "廣告");
-				retialSaleDbAdapter.create(3, "customerInfo", 2, "新聞");
-				retialSaleDbAdapter.create(3, "customerInfo", 3, "雜誌");
-				retialSaleDbAdapter.create(3, "customerInfo", 4, "報紙");
-				// customerJob
-				retialSaleDbAdapter.create(4, "customerJob", 0, "無");
-				retialSaleDbAdapter.create(4, "customerJob", 1, "服務業");
-				retialSaleDbAdapter.create(4, "customerJob", 2, "老師");
-				retialSaleDbAdapter.create(4, "customerJob", 3, "學生");
-				retialSaleDbAdapter.create(4, "customerJob", 4, "程式員");
-				// customerAge
-				retialSaleDbAdapter.create(5, "customerAge", 0, "無");
-				retialSaleDbAdapter.create(5, "customerAge", 1, "20-30歲");
-				retialSaleDbAdapter.create(5, "customerAge", 2, "30-40歲");
-				retialSaleDbAdapter.create(5, "customerAge", 3, "40-50歲");
-				retialSaleDbAdapter.create(5, "customerAge", 4, "50歲以上");
-				// serviceType
-				retialSaleDbAdapter.create(6, "serviceType", 1, "圖片服務");
-				retialSaleDbAdapter.create(6, "serviceType", 2, "新增服務");
-				// userGroup
-				retialSaleDbAdapter.create(7, "userGroup", 1, "1號店");
-				retialSaleDbAdapter.create(7, "userGroup", 2, "2號店");
-				// reservationStatus
-				retialSaleDbAdapter.create(8, "reservationStatus", 1, "來店客");
-				retialSaleDbAdapter.create(8, "reservationStatus", 2, "電話客");
-				// reservationBudget
-				retialSaleDbAdapter.create(9, "reservationBudget", 0, "無");
-				retialSaleDbAdapter.create(9, "reservationBudget", 1, "0-20萬");
-				retialSaleDbAdapter.create(9, "reservationBudget", 2, "20-30萬");
-				retialSaleDbAdapter.create(9, "reservationBudget", 3, "30-40萬");
-				retialSaleDbAdapter.create(9, "reservationBudget", 4, "40萬以上");
-				// reservationSpace
-				retialSaleDbAdapter.create(10, "reservationSpace", 0, "無");
-				retialSaleDbAdapter.create(10, "reservationSpace", 1, "客廳");
-				retialSaleDbAdapter.create(10, "reservationSpace", 2, "廚房");
-				retialSaleDbAdapter.create(10, "reservationSpace", 3, "玄關");
-			}
-			else
-			{
-				// all exist, no need to create
-			}
-		}
-		else
-		{
-			Log.d(TAG, "option cursor is null ");
 		}
 	}
 

@@ -33,7 +33,7 @@ import com.example.retailsale.R;
 import com.example.retailsale.manager.fileinfo.LocalFileInfo;
 import com.example.retailsale.util.Utility;
 
-public class BrowserFragment extends Fragment implements OnItemClickListener, OnClickListener
+public class BrowserFragment extends Fragment implements OnItemClickListener, OnClickListener//, OnTouchListener
 {
 	private static final String TAG = "BrowserFragment";
 	private static final String GET_NAME = "get_name";
@@ -54,6 +54,9 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 	// views
 	private LinearLayout albums;
 	private GridView photoGrid;
+	private Button backBtn;
+	
+	private boolean isHide = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -118,7 +121,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 		photoGrid = (GridView) view.findViewById(R.id.browser_tab_files_grid);
 		photoGrid.setOnItemClickListener(this);
 		albums = (LinearLayout) view.findViewById(R.id.albums);
-		Button backBtn = (Button) view.findViewById(R.id.browser_back_btn);
+		backBtn = (Button) view.findViewById(R.id.browser_back_btn);
 		backBtn.setOnClickListener(this);
 		removeAllAlbums();
 		
@@ -213,7 +216,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 		uiHandler.sendEmptyMessage(SET_ADAPTER);
 	}
 
-	public void listFolder(final File folder)
+	private void listFolder(final File folder)
 	{
 		if (albumList != null)
 		{
@@ -245,7 +248,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 		}
 	}
 
-	public void listFilesInFolder(final File folder)
+	private void listFilesInFolder(final File folder)
 	{
 		if (photoList != null)
 		{
@@ -401,4 +404,20 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 			}
 		}
 	};
+
+//	@Override
+//	public boolean onTouch(View v, MotionEvent event)
+//	{
+//		if (isHide)
+//		{
+//			isHide = false;
+//			albums.setVisibility(View.VISIBLE);
+//		}
+//		else
+//		{
+//			isHide = true;
+//			albums.setVisibility(View.INVISIBLE);
+//		}
+//		return false;
+//	}
 }

@@ -16,6 +16,10 @@
     <LinearLayout
         android:id="@+id/order_measure_comsumer_info"
         style="@style/orderMeasureLayoutStyle"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/order_measure_cancel_btn"
+        android:layout_toLeftOf="@+id/order_measure_save_btn"
+        android:layout_marginLeft="90dp"
         android:layout_marginTop="@dimen/order_measure_layout_first_margin_top" >
 
         <TextView
@@ -46,12 +50,12 @@
             android:id="@+id/order_measure_consumer_phone_number"
             style="@style/orderMeasureTextViewStyle"/>
 
-        <TextView
+        <!--<TextView
             android:id="@+id/order_measure_send_note_msg"
             style="@style/orderMeasureTextViewStyle"
             android:text="@string/order_measure_send_note_msg" />
 
-        <!-- <ToggleButton
+         <ToggleButton
             android:id="@+id/order_measure_send_note_msg_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,6 +66,10 @@
     <LinearLayout
         android:id="@+id/order_measure_comsumer_info_2"
         style="@style/orderMeasureLayoutStyle"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/order_measure_cancel_btn"
+        android:layout_toLeftOf="@+id/order_measure_save_btn"
+        android:layout_marginLeft="90dp"
         android:layout_below="@+id/order_measure_comsumer_info" >
 
         <TextView
@@ -95,13 +103,17 @@
 
         <Spinner
             android:id="@+id/order_measure_sale_status_request"
-            android:layout_width="@dimen/add_tab_txt_style_width"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/order_measure_consumer_address_layout"
         style="@style/orderMeasureLayoutStyle"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/order_measure_cancel_btn"
+        android:layout_toLeftOf="@+id/order_measure_save_btn"
+        android:layout_marginLeft="90dp"
         android:layout_below="@+id/order_measure_comsumer_info_2" >
 
         <TextView
@@ -118,6 +130,10 @@
     <LinearLayout
         android:id="@+id/order_measure_consumer_contact_address_layout"
         style="@style/orderMeasureLayoutStyle"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/order_measure_cancel_btn"
+        android:layout_toLeftOf="@+id/order_measure_save_btn"
+        android:layout_marginLeft="90dp"
         android:layout_below="@+id/order_measure_consumer_address_layout" >
 
         <CheckBox
@@ -159,6 +175,10 @@
     <LinearLayout
         android:id="@+id/order_measure_consumer_selection_layout"
         style="@style/orderMeasureLayoutStyle"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/order_measure_cancel_btn"
+        android:layout_toLeftOf="@+id/order_measure_save_btn"
+        android:layout_marginLeft="90dp"
         android:layout_below="@+id/order_measure_consumer_contact_address_layout" >
 
         <TextView
@@ -185,6 +205,9 @@
     <LinearLayout
         android:id="@+id/order_measure_consumer_date_time_layout"
         style="@style/orderMeasureLayoutStyle"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/order_measure_cancel_btn"
+        android:layout_toLeftOf="@+id/order_measure_save_btn"
         android:layout_below="@+id/order_measure_consumer_selection_layout" >
 
         <TextView

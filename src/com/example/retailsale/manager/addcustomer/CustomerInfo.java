@@ -492,6 +492,31 @@ public class CustomerInfo implements Parcelable
 	{
 		this.reservationComment = reservationComment;
 	}
+	
+	public void modifyCustomerInfo(String customerAccount, String custometName, String customerMobile,
+			String customerHome, String customerCompany, int customerSex, int customerTitle,
+			String customerMail, String customerVisitDate, int customerInfo,
+			String customerIntroducer, int customerJob, int customerAge, String customerBirth,
+			int creator, int creatorGroup, String createTime)
+	{
+		this.customerAccount = customerAccount;
+		this.custometName = custometName;
+		this.customerMobile = customerMobile;
+		this.customerHome = customerHome;
+		this.customerCompany = customerCompany;
+		this.customerSex = customerSex;
+		this.customerTitle = customerTitle;
+		this.customerMail = customerMail;
+		this.customerVisitDate = customerVisitDate;
+		this.customerInfo = customerInfo;
+		this.customerIntroducer = customerIntroducer;
+		this.customerJob = customerJob;
+		this.customerAge = customerAge;
+		this.customerBirth = customerBirth;
+		this.creator = creator;
+		this.creatorGroup = creatorGroup;
+		this.createTime = createTime;
+	}
 
 	// ///////////////////////////////// Parcel need add
 	// ////////////////////////////////////////////

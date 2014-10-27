@@ -311,7 +311,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 		}
 		else		// change to preview
 		{
-			if (currentPosition - 1 < 0)
+			if (currentPosition - 1 > 0)
 			{
 				currentPosition -= 1;
 				decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition).getFileName());

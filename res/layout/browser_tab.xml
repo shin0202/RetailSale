@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/browser_tab_relativelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/darkorange"
@@ -11,7 +12,7 @@
         android:layout_height="@dimen/browser_tab_grid_height"
         android:cacheColorHint="@android:color/transparent"
         android:listSelector="@android:color/transparent"
-        android:numColumns="4"
+        android:numColumns="3"
         android:verticalSpacing="@dimen/browser_tab_vertical_spacing" />
 
     <LinearLayout

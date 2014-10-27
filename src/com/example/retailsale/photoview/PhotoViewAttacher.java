@@ -149,7 +149,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     
     private Activity activity;
 
-    public PhotoViewAttacher(ImageView imageView, Activity activity) {
+    public PhotoViewAttacher(ImageView imageView, final Activity activity) {
         mImageView = new WeakReference<ImageView>(imageView);
         this.activity = activity;
 
@@ -179,6 +179,20 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                         if (null != mLongClickListener) {
                             mLongClickListener.onLongClick(getImageView());
                         }
+                    }
+                    
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,  
+                            float velocityY) {
+                    	
+                        if (e1.getX() - e2.getX() > 120) {  
+                        	((PhotoPlayer)activity).changeImage(true);
+                            return true;  
+                        } else if (e1.getX() - e2.getX() < -120) {  
+                        	((PhotoPlayer)activity).changeImage(false);
+                            return true;  
+                        } 
+                    	return false;
                     }
                 });
 
@@ -434,11 +448,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     	{
     		((PhotoPlayer)activity).changeImage(false);
     	}
-//        ImageView imageView = getImageView();
-//        mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
-//        mCurrentFlingRunnable.fling(getImageViewWidth(imageView),
-//                getImageViewHeight(imageView), (int) velocityX, (int) velocityY);
-//        imageView.post(mCurrentFlingRunnable);
+        ImageView imageView = getImageView();
+        mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
+        mCurrentFlingRunnable.fling(getImageViewWidth(imageView),
+                getImageViewHeight(imageView), (int) velocityX, (int) velocityY);
+        imageView.post(mCurrentFlingRunnable);
     }
 
     @Override
