@@ -460,7 +460,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             if (needCount > 0) {
                 while (cursor.moveToNext()) {
                 	long rowId = cursor.getLong(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_ID));
-                    String customerAccount = "-1";
+                    String customerAccount = Utility.DEFAULT_VALUE;
                     String custometName =  cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_NAME));
                     String customerMobile = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_MOBILE));
                     String customerHome = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_HOME));
@@ -491,7 +491,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                     String reservationStatusComment = cursor.getString(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_STATUS_COMMENT));
                     int reservationBudget = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_BUDGET));
-                    String reservationDataSerial = "-1";
+                    String reservationDataSerial = Utility.DEFAULT_VALUE;
                     
                     // didn't have the field "comment", "send note"
                     JSONStringer json = null, customerReservationJson = null;

@@ -51,12 +51,12 @@
             style="@style/orderMeasureTextViewStyle"
             android:text="@string/order_measure_send_note_msg" />
 
-        <ToggleButton
+        <!-- <ToggleButton
             android:id="@+id/order_measure_send_note_msg_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textOff="No"
-            android:textOn="Yes" />
+            android:textOn="Yes" /> -->
     </LinearLayout>
 
     <LinearLayout
@@ -140,7 +140,7 @@
             android:hint="@string/order_measure_consumer_contact_address_hint" />
     </LinearLayout>
 
-    <LinearLayout
+    <!--  <LinearLayout
         android:id="@+id/order_measure_consumer_comment_layout"
         style="@style/orderMeasureLayoutStyle"
         android:layout_below="@+id/order_measure_consumer_contact_address_layout" >
@@ -154,12 +154,12 @@
             android:id="@+id/order_measure_consumer_comment"
             style="@style/inputTextStyle"
             android:hint="@string/order_measure_consumer_comment_hint" />
-    </LinearLayout>
+    </LinearLayout> -->
 
     <LinearLayout
         android:id="@+id/order_measure_consumer_selection_layout"
         style="@style/orderMeasureLayoutStyle"
-        android:layout_below="@+id/order_measure_consumer_comment_layout" >
+        android:layout_below="@+id/order_measure_consumer_contact_address_layout" >
 
         <TextView
             android:id="@+id/order_measure_consumer_request_field"

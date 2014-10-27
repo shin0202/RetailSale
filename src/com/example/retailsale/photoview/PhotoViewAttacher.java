@@ -44,7 +44,6 @@ import android.widget.ImageView.ScaleType;
 import com.example.retailsale.PhotoPlayer;
 import com.example.retailsale.photoview.gestures.OnGestureListener;
 import com.example.retailsale.photoview.gestures.VersionedGestureDetector;
-import com.example.retailsale.photoview.log.LogManager;
 import com.example.retailsale.photoview.scrollproxy.ScrollerProxy;
 
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
@@ -393,11 +392,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             return; // Do not drag if we are already scaling
         }
 
-//        if (DEBUG) {
-//            LogManager.getLogger().d(LOG_TAG,
-//                    String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy));
-//        }
-
         ImageView imageView = getImageView();
         mSuppMatrix.postTranslate(dx, dy);
         checkAndDisplayMatrix();
@@ -429,12 +423,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public void onFling(float startX, float startY, float velocityX,
                               float velocityY) {
-//        if (DEBUG) {
-//            LogManager.getLogger().d(
-//                    LOG_TAG,
-//                    "onFling. sX: " + startX + " sY: " + startY + " Vx: "
-//                            + velocityX + " Vy: " + velocityY);
-//        }
     	
     	Log.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: "
                             + velocityX + " Vy: " + velocityY);
@@ -490,12 +478,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void onScale(float scaleFactor, float focusX, float focusY) {
-//        if (DEBUG) {
-//            LogManager.getLogger().d(
-//                    LOG_TAG,
-//                    String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f",
-//                            scaleFactor, focusX, focusY));
-//        }
 
         if (getScale() < mMaxScale || scaleFactor < 1f) {
             mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
@@ -649,10 +631,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (null != imageView) {
             // Check to see if the scale is within bounds
             if (scale < mMinScale || scale > mMaxScale) {
-                LogManager
-                        .getLogger()
-                        .i(LOG_TAG,
-                                "Scale must be within the range of minScale and maxScale");
+                Log.i(LOG_TAG, "Scale must be within the range of minScale and maxScale");
                 return;
             }
 
@@ -1067,9 +1046,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
 
         public void cancelFling() {
-//            if (DEBUG) {
-//                LogManager.getLogger().d(LOG_TAG, "Cancel Fling");
-//            }
             mScroller.forceFinished(true);
         }
 
@@ -1101,13 +1077,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             mCurrentX = startX;
             mCurrentY = startY;
 
-//            if (DEBUG) {
-//                LogManager.getLogger().d(
-//                        LOG_TAG,
-//                        "fling. StartX:" + startX + " StartY:" + startY
-//                                + " MaxX:" + maxX + " MaxY:" + maxY);
-//            }
-
             // If we actually can move, fling the scroller
             if (startX != maxX || startY != maxY) {
                 mScroller.fling(startX, startY, velocityX, velocityY, minX,
@@ -1126,14 +1095,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
                 final int newX = mScroller.getCurrX();
                 final int newY = mScroller.getCurrY();
-
-//                if (DEBUG) {
-//                    LogManager.getLogger().d(
-//                            LOG_TAG,
-//                            "fling run(). CurrentX:" + mCurrentX + " CurrentY:"
-//                                    + mCurrentY + " NewX:" + newX + " NewY:"
-//                                    + newY);
-//                }
 
                 mSuppMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
                 setImageViewMatrix(getDrawMatrix());

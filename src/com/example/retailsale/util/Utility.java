@@ -42,6 +42,7 @@ public class Utility
 	public static final int SUCCESS = 1;
 	public static final int FAILED = 0;
 	public static final int FAILED_UPLOAD = -123;
+	public static final String DEFAULT_VALUE = "-1";
 	
 	public class JSONTag 
 	{

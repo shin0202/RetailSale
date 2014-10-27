@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -216,6 +218,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 				+ " cellPhoneNumber: " + cellPhoneNumber + " companyPhoneNumber: "
 				+ companyPhoneNumber + " email: " + email + " birthday: " + customerBirthday
 				+ " introducer: " + introducer);
+		
 		// check phone number
 		if (!isChecked && !Utility.isPhoneValid(phoneNumber))
 		{
@@ -248,13 +251,25 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 			showToast(this.getActivity().getResources().getString(R.string.birthday_field_error));
 			return;
 		}
+		
 		if (customerInfo == null)
 		{
-			customerInfo = new CustomerInfo("customerAccount", customerName, cellPhoneNumber,
-					phoneNumber, companyPhoneNumber, sexSelectedPosition, titleSelectedPosition,
-					email, dateString + timeString, msgSelectedPosition, introducer,
-					jobSelectedPosition, ageSelectedPosition, customerBirthday, -1, -1, dateString
-							+ timeString);
+            if (isChecked) 
+            {
+                customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE, customerName, cellPhoneNumber, phoneNumber,
+                        companyPhoneNumber, sexSelectedPosition, titleSelectedPosition, email, dateString + timeString,
+                        msgSelectedPosition, introducer, jobSelectedPosition, ageSelectedPosition, customerBirthday,
+                        Utility.getCreator(getActivity()), Utility.getCreatorGroup(getActivity()), dateString
+                                + timeString, dateString + timeString, timeString, "", "", "", 0, 0, "", "", 0, "");
+            } 
+            else
+            {
+                String noData = AddFragment.this.getResources().getString(R.string.no_data);
+                customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE, noData, noData, noData, noData, 0, 0, noData,
+                        dateString + timeString, 0, noData, 0, 0, noData, Utility.getCreator(getActivity()),
+                        Utility.getCreatorGroup(getActivity()), dateString + timeString, dateString + timeString,
+                        timeString, "", "", "", 0, 0, "", "", 0, "");
+            }
 		}
 	}
 
@@ -262,36 +277,67 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 	{
 		setCustomerData();
 		openDatabase();
-		if (customerInfo != null)
-		{
-			int sendNoteValue = isSendMsg ? 1 : 0;
-			String createDateTime = Utility.getCurrentDateTime();
-			Log.d(TAG, "sendNoteValue is " + sendNoteValue + " createDateTime is " + createDateTime);
-			SharedPreferences settings = mainActivity.getSharedPreferences(Utility.LoginField.DATA,
-					0);
-			int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
-			int userGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
-			Log.d(TAG, "userSerial === " + userSerial + "userGroup === " + userGroup);
-			long id = retialSaleDbAdapter.create(customerInfo.getCustometName(),
-					customerInfo.getCustomerHome(), customerInfo.getCustomerMobile(),
-					customerInfo.getCustomerCompany(), customerInfo.getCustomerMail(),
-					customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
-					customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(),
-					customerInfo.getCustomerJob(), customerInfo.getCustomerIntroducer(),
-					customerInfo.getCustomerAge(), customerInfo.getCustomerVisitDate(), userSerial,
-					userGroup, createDateTime, sendNoteValue,
-					customerInfo.getReservationWorkAlias(),
-					customerInfo.getReservationStatusComment(),
-					customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
-					customerInfo.getReservationContact(), customerInfo.getReservationComment(),
-					customerInfo.getReservationSpace(), customerInfo.getReservationBudget(),
-					customerInfo.getReservationDate(), RetialSaleDbAdapter.NOTUPLOAD);
-			Log.d(TAG, "id is " + id);
-		}
-		else
-		{
-			Log.d(TAG, "customerInfo is null, cannot access data to db.");
-		}
+		
+	      // to check work address had, but contact address not, then contact equals to work?
+        String workAddress = customerInfo.getReservationWork();
+        String contactAddress = customerInfo.getReservationContact();
+        
+        if (!workAddress.equals("") && contactAddress.equals(""))
+        {
+            showAlertDialog();
+        }
+        else
+        {
+            insertToDB();
+        }
+	}
+	
+	private void showAlertDialog()
+	{
+        new AlertDialog.Builder(AddFragment.this.getActivity())
+                .setTitle(AddFragment.this.getResources().getString(R.string.add_tab_check_address_title))
+                .setMessage(AddFragment.this.getResources().getString(R.string.add_tab_check_address_message))
+                .setPositiveButton(AddFragment.this.getResources().getString(R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                customerInfo.setReservationContact(customerInfo.getReservationWork());
+                                insertToDB();
+                            }
+                        }).setNegativeButton(AddFragment.this.getResources().getString(R.string.cancel), null).show();
+	}
+	
+	private void insertToDB()
+	{
+	       if (customerInfo != null)
+	        {
+	            int sendNoteValue = isSendMsg ? 1 : 0;
+	            String createDateTime = Utility.getCurrentDateTime();
+	            Log.d(TAG, "sendNoteValue is " + sendNoteValue + " createDateTime is " + createDateTime);
+	            SharedPreferences settings = mainActivity.getSharedPreferences(Utility.LoginField.DATA,
+	                    0);
+	            int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
+	            int userGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
+	            Log.d(TAG, "userSerial === " + userSerial + "userGroup === " + userGroup);
+	            long id = retialSaleDbAdapter.create(customerInfo.getCustometName(),
+	                    customerInfo.getCustomerHome(), customerInfo.getCustomerMobile(),
+	                    customerInfo.getCustomerCompany(), customerInfo.getCustomerMail(),
+	                    customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
+	                    customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(),
+	                    customerInfo.getCustomerJob(), customerInfo.getCustomerIntroducer(),
+	                    customerInfo.getCustomerAge(), customerInfo.getCustomerVisitDate(), userSerial,
+	                    userGroup, createDateTime, sendNoteValue,
+	                    customerInfo.getReservationWorkAlias(),
+	                    customerInfo.getReservationStatusComment(),
+	                    customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
+	                    customerInfo.getReservationContact(), customerInfo.getReservationComment(),
+	                    customerInfo.getReservationSpace(), customerInfo.getReservationBudget(),
+	                    customerInfo.getReservationDate(), RetialSaleDbAdapter.NOTUPLOAD);
+	            Log.d(TAG, "id is " + id);
+	        }
+	        else
+	        {
+	            Log.d(TAG, "customerInfo is null, cannot access data to db.");
+	        }
 	}
 
 	private void startOrderMeasureActivity()

@@ -38,20 +38,20 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 	private RetialSaleDbAdapter retialSaleDbAdapter;
 	
 	// views
-	private ToggleButton sendNoteMsgTB;
+//	private ToggleButton sendNoteMsgTB;
 	private CheckBox asAboveCheckBox;
 	private DatePicker measureDate;
 	private TimePicker measureTime;
 	private Spinner spaceSpinner, budgetSpinner, statusSpinner;
 	private TextView saleCreateDateTV, consumerNameTV, phoneNumberTV;
-	private EditText caseNameET, cantDescriptionET, consumerAddressET, contactAddressET, commentET;
+	private EditText caseNameET, cantDescriptionET, consumerAddressET, contactAddressET;//, commentET;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_oder_measure);
-//		customerInfo = new CustomerInfo();
+
 		findViews();
 		getBundle();
 		
@@ -103,7 +103,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 	{
 		Button cancelBtn = (Button) findViewById(R.id.order_measure_cancel_btn);
 		Button saveBtn = (Button) findViewById(R.id.order_measure_save_btn);
-		sendNoteMsgTB = (ToggleButton) findViewById(R.id.order_measure_send_note_msg_btn);
+//		sendNoteMsgTB = (ToggleButton) findViewById(R.id.order_measure_send_note_msg_btn);
 		asAboveCheckBox = (CheckBox) findViewById(R.id.order_measure_as_above_checkbox);
 		measureDate = (DatePicker) findViewById(R.id.order_measure_datePicker);
 		measureTime = (TimePicker) findViewById(R.id.order_measure_timePicker);
@@ -114,7 +114,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		cantDescriptionET = (EditText) findViewById(R.id.order_measure_cant_description);
 		consumerAddressET = (EditText) findViewById(R.id.order_measure_consumer_address);
 		contactAddressET = (EditText) findViewById(R.id.order_measure_consumer_contact_address);
-		commentET = (EditText) findViewById(R.id.order_measure_consumer_comment);
+//		commentET = (EditText) findViewById(R.id.order_measure_consumer_comment);
 		
 		statusSpinner = (Spinner) findViewById(R.id.order_measure_sale_status_request);
 		spaceSpinner = (Spinner) findViewById(R.id.order_measure_consumer_request);
@@ -127,7 +127,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		measureTime.setIs24HourView(true);
 		
 		// send note msg toggle btn
-		sendNoteMsgTB.setOnCheckedChangeListener(this);
+//		sendNoteMsgTB.setOnCheckedChangeListener(this);
 		
 		// as above check box
 		asAboveCheckBox.setOnCheckedChangeListener(this);
@@ -140,7 +140,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 			customerInfo = intent.getParcelableExtra(AddFragment.SEND_CUSTOMER_INFO);
 			isSendNoteMsgChecked = intent.getBooleanExtra(AddFragment.SEND_NOTE_MSG, isSendNoteMsgChecked);
 			Log.d(TAG, "isSendNoteMsgChecked is " + isSendNoteMsgChecked);
-			sendNoteMsgTB.setChecked(isSendNoteMsgChecked);
+//			sendNoteMsgTB.setChecked(isSendNoteMsgChecked);
 			Log.d(TAG, "customer visit date is " + customerInfo.getCustomerVisitDate());
 			String reservationDate = customerInfo.getReservationDate();
 			Log.d(TAG, "reservation date is " + reservationDate);
@@ -181,7 +181,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 			measureTime.setCurrentMinute(reservationMinute);
 			cantDescriptionET.setText(cantDescription);
 			statusSpinner.setSelection(statusPosition);
-			commentET.setText(comment);
+//			commentET.setText(comment);
 			spaceSpinner.setSelection(requestPosition);
 			budgetSpinner.setSelection(costPosition);
 		}
@@ -228,7 +228,8 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		customerInfo.setReservationStatus(statusSpinner.getSelectedItemPosition());
 		
 		// comment
-		customerInfo.setReservationComment(commentET.getText().toString());
+//		customerInfo.setReservationComment(commentET.getText().toString());
+		customerInfo.setReservationComment("");
 		
 		// request
 		customerInfo.setReservationSpace(spaceSpinner.getSelectedItemPosition());
@@ -247,10 +248,10 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
 	{
 		switch (buttonView.getId()) {
-		case R.id.order_measure_send_note_msg_btn:
-			Log.d(TAG, "To change note msg, the isChecked" + isChecked);
-			isSendNoteMsgChecked = isChecked;
-			break;
+//		case R.id.order_measure_send_note_msg_btn:
+//			Log.d(TAG, "To change note msg, the isChecked" + isChecked);
+//			isSendNoteMsgChecked = isChecked;
+//			break;
 		case R.id.order_measure_as_above_checkbox:
 			Log.d(TAG, "To change as above checkbox, the isChecked" + isChecked);
 			isAsAboveChecked = isChecked;
