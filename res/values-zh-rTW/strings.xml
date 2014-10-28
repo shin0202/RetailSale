@@ -112,6 +112,7 @@
     <string name="sync_tab_sync_clear_data_option_failed">清除資料選項失敗</string>
     <string name="sync_tab_sync_download_data_option_success">下載資料選項成功</string>
     <string name="sync_tab_sync_download_data_option_failed">下載資料選項失敗</string>
+    <string name="sync_tab_sync_no_select_any_folder">沒有選取任一資料夾, 無法下載</string>
 
     <!-- Error String -->
     <string name="field_error">欄位錯誤</string>

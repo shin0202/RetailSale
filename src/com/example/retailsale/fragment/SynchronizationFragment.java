@@ -367,6 +367,15 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     }
     
     private boolean selectFolder(String folderName) {
+    	if (folderName == null) {
+			Toast.makeText(
+					SynchronizationFragment.this.getActivity(),
+					SynchronizationFragment.this.getResources().getString(
+							R.string.sync_tab_sync_no_select_any_folder), Toast.LENGTH_SHORT)
+					.show();
+			return true;
+    	}
+    	
         dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
     	boolean hadFile = false;
     	needCount = 0;
