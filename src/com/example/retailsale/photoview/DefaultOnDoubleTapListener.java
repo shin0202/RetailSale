@@ -1,6 +1,7 @@
 package com.example.retailsale.photoview;
 
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
  * To be used via {@link uk.co.senab.photoview.PhotoViewAttacher#setOnDoubleTapListener(android.view.GestureDetector.OnDoubleTapListener)}
  */
 public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapListener {
+	private static final String TAG = "DefaultOnDoubleTapListener";
 
     private PhotoViewAttacher photoViewAttacher;
 
@@ -34,9 +36,12 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
+    	Log.d(TAG, "onSingleTapConfirmed!!!!!!!!!!!!!!!!!!!!!!!");
         if (this.photoViewAttacher == null)
             return false;
 
+        photoViewAttacher.handlePlayerController();
+        
         ImageView imageView = photoViewAttacher.getImageView();
 
         if (null != photoViewAttacher.getOnPhotoTapListener()) {

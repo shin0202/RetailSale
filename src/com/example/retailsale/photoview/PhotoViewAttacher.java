@@ -181,6 +181,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,  
                             float velocityY) {
                     	
+                    	Log.d(LOG_TAG, "onFling. e1.getX(): " + e1.getX() + " e2.getX(): " + e2.getX());
+                    	
                         if (e1.getX() - e2.getX() > 120) {  
                         	((PhotoPlayer)activity).changeImage(true);
                             return true;  
@@ -189,12 +191,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                             return true;  
                         } 
                     	return false;
-                    }
-                    
-                    @Override
-                    public boolean onSingleTapConfirmed(MotionEvent event) {
-                        Log.d(LOG_TAG, "onSingleTapConfirmed: " + event.toString());
-                        return true;
                     }
                 });
 
@@ -440,16 +436,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     public void onFling(float startX, float startY, float velocityX,
                               float velocityY) {
     	
-    	Log.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: "
-                            + velocityX + " Vy: " + velocityY);
-    	if (velocityX > 0)
-    	{
-    		((PhotoPlayer)activity).changeImage(true);
-    	}
-    	else
-    	{
-    		((PhotoPlayer)activity).changeImage(false);
-    	}
         ImageView imageView = getImageView();
         mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
         mCurrentFlingRunnable.fling(getImageViewWidth(imageView),
@@ -951,6 +937,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (null == imageView)
             return 0;
         return imageView.getHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
+    }
+    
+    public void handlePlayerController()
+    {
+    	if (activity != null)
+    		((PhotoPlayer)activity).handleController();
     }
 
     /**

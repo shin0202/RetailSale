@@ -30,17 +30,18 @@ import com.example.retailsale.util.Utility;
 public class PhotoPlayer extends Activity implements OnClickListener {
     private static final String TAG = "PhotoPlayer";
 
+    // views
     private LinearLayout photosLayout;
     private ImageView scalableIV;
     private Button backBtn;
     PhotoViewAttacher attacher;
     private ProgressDialog progressDialog;
+    private Bitmap bm;
     
     private int showAlbumCount = 0;
     private int currentPosition = 0;
     private List<LocalFileInfo> photoList = new ArrayList<LocalFileInfo>();
-    
-    private Bitmap bm;
+    private boolean hideController = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,35 +51,39 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         findViews();
         
         getBundle();
-        
-        for (int i = 0; i < photoList.size(); i++) {
-            photosLayout.addView(insertPhoto(photoList.get(i).getFileName(), photoList.get(i).getFilePath()));
-        }
-
-        // Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
-        attacher = new PhotoViewAttacher(scalableIV, PhotoPlayer.this);
-        
-		if (currentPosition < photoList.size())
-		{
-			decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(),
-					photoList.get(currentPosition).getFileName());
-		}
-		else
-		{
-			Log.d(TAG, "showAlbumCount over to photoList size");
-		}
     }
     
     @Override
     protected void onResume() {
         super.onResume();
+        
+        hideController = false;
+        
+		backBtn.setVisibility(View.VISIBLE);
+		photosLayout.setVisibility(View.VISIBLE);
+        
+        setPhotosLayout();
+        
+        // Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
+        if (attacher == null)
+        	attacher = new PhotoViewAttacher(scalableIV, PhotoPlayer.this);
+        
+        setInitImage();
     }
     
     @Override
     protected void onPause() {
         super.onPause();
         
+        hideController = false;
+        
         showAlbumCount = 0;
+        
+        removeAllAlbums();
+        
+        scalableIV.setImageBitmap(null);
+        
+        recycleBitmap();
     }
     
     @Override
@@ -121,6 +126,26 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         } else {
             Log.d(TAG, "It is no data from BrowserFragment(bundle is null)!");
         }
+    }
+    
+    private void setPhotosLayout()
+    {
+        for (int i = 0; i < photoList.size(); i++) {
+            photosLayout.addView(insertPhoto(photoList.get(i).getFileName(), photoList.get(i).getFilePath()));
+        }
+    }
+    
+    private void setInitImage()
+    {
+		if (currentPosition < photoList.size())
+		{
+			decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(),
+					photoList.get(currentPosition).getFileName());
+		}
+		else
+		{
+			Log.d(TAG, "showAlbumCount over to photoList size");
+		}
     }
 
     private View insertPhoto(String name, String path) {
@@ -171,6 +196,19 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         
         return layout;
     }
+    
+    private void removeAllAlbums() {
+        if (photosLayout != null) {
+        	photosLayout.removeAllViews();
+        }
+    }
+    
+    private void recycleBitmap() {
+        if (bm != null) {
+        	bm.recycle();
+        	bm = null;
+        }
+    }
 
     private Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) 
     {
@@ -197,10 +235,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 //        Bitmap bm = null;
         scalableIV.setImageBitmap(null);
         
-        if (bm != null) {
-        	bm.recycle();
-        	bm = null;
-        }
+        recycleBitmap();
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -331,5 +366,20 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 				
 			}
 		}
+	}
+	
+	public void handleController() 
+	{
+		if (hideController)
+		{
+			backBtn.setVisibility(View.VISIBLE);
+			photosLayout.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			backBtn.setVisibility(View.INVISIBLE);
+			photosLayout.setVisibility(View.INVISIBLE);
+		}
+		hideController = !hideController;
 	}
 }
