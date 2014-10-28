@@ -219,31 +219,31 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 				+ " introducer: " + introducer);
 		
 		// check phone number
-//		if (!isChecked && !Utility.isPhoneValid(phoneNumber))
-//		{
-//			showToast(this.getActivity().getResources().getString(R.string.home_phone_field_error));
-//			return false;
-//		}
-//		// check cellphone number
-//		if (!isChecked && !Utility.isCellphoneValid(cellPhoneNumber))
-//		{
-//			showToast(this.getActivity().getResources().getString(R.string.cell_phone_field_error));
-//			return false;
-//		}
-//		// check company phone number
-//		if (!isChecked && !companyPhoneNumber.equals("")
-//				&& !Utility.isCompanyPhoneValid(phoneNumber))
-//		{
-//			showToast(this.getActivity().getResources()
-//					.getString(R.string.company_phone_field_error));
-//			return false;
-//		}
-//		// check email
-//		if (!isChecked && !Utility.isEmailValid(email))
-//		{
-//			showToast(this.getActivity().getResources().getString(R.string.email_field_error));
-//			return false;
-//		}
+		if (!isChecked && !Utility.isPhoneValid(phoneNumber))
+		{
+			showToast(this.getActivity().getResources().getString(R.string.home_phone_field_error));
+			return;
+		}
+		// check cellphone number
+		if (!isChecked && !Utility.isCellphoneValid(cellPhoneNumber))
+		{
+			showToast(this.getActivity().getResources().getString(R.string.cell_phone_field_error));
+			return;
+		}
+		// check company phone number
+		if (!isChecked && !companyPhoneNumber.equals("")
+				&& !Utility.isCompanyPhoneValid(phoneNumber))
+		{
+			showToast(this.getActivity().getResources()
+					.getString(R.string.company_phone_field_error));
+			return;
+		}
+		// check email
+		if (!isChecked && !Utility.isEmailValid(email))
+		{
+			showToast(this.getActivity().getResources().getString(R.string.email_field_error));
+			return;
+		}
 		// check birthday
 //		if (!isChecked && !Utility.isBirthdayValid(customerBirthday))
 //		{
