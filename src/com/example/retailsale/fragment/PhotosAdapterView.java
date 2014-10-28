@@ -70,9 +70,9 @@ public class PhotosAdapterView extends BaseAdapter
                 break;
             case SYNC_TAB:
 //                viewTag.showPhoto.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 100, Gravity.CENTER));
-                convertView = layoutInflater.inflate(R.layout.cell_of_sync_tab_browser, null);
-                viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.sync_browser_photo),
-                        (TextView) convertView.findViewById(R.id.sync_browser_name));
+                convertView = layoutInflater.inflate(R.layout.cell_of_sync_tab_download_browser, null);
+                viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.download_browser_photo),
+                        (TextView) convertView.findViewById(R.id.download_browser_name));
                 break;
             }
             

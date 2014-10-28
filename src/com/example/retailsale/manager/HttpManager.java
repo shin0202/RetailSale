@@ -13,6 +13,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONStringer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -88,7 +90,7 @@ public class HttpManager
     //////////////////////////////////////////////////////////////////////////////// add customer
     public void addCustomerInfo(Context context, AddCustomerListener addCustomerListener,
             Map<String, String> paramsAddComsumerPost) {
-        String addCustomerInfoUri = "http://192.168.49.128/KendoAPI/ODATA/customerData";
+//        String addCustomerInfoUri = "http://192.168.49.128/KendoAPI/ODATA/customerData";
         
 //		Map<String, String> param = new HashMap<String, String>();
 //		
@@ -407,9 +409,13 @@ public class HttpManager
         if (fileInfo != null) {
             String fileName = fileInfo.getValue().get(0).getFileName();
             String filePath = fileInfo.getValue().get(0).getPath();
+            String fileStream = fileInfo.getValue().get(0).getFileStream();
         	        	
             // 1. get file path
         	String path = filePath.replace(Utility.REPLACE_SERVER_FOLDER, Utility.FILE_PATH_2).replace("\\", "/");
+        	
+        	// 1.1 to generate thumbnail
+//        	generateThumbnail(fileName, path, fileStream);
             
 //            // 2. create the folder from file path
 //            Utility.createFolder(path.toString());
@@ -426,7 +432,7 @@ public class HttpManager
             
             Log.d(TAG, "*************************************************************** " );
             
-            StringBuilder newData = new StringBuilder().append(md5FileName).append(fileInfo.getValue().get(0).getFileStream());
+            StringBuilder newData = new StringBuilder().append(md5FileName).append(fileStream);
             
             Log.d(TAG, "newData  is  ~~~~~~~~~~~~~~~~~~~~ " + newData.toString());
             
@@ -438,17 +444,34 @@ public class HttpManager
             msg.arg1 = status;
             
             handler.sendMessage(msg);
+        }
+    }
+    
+    private void generateThumbnail(final String fileName, final String filePath, final String fileStream)
+    {
+        Bitmap bm = null;
+        String baseThumbnail;
+        StringBuilder newFileName = new StringBuilder().append(filePath.toString()).append("/").append(fileName);
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        byte[] photo = Utility.decodeBase64(fileStream);
+        
+        try {
+            bm = BitmapFactory.decodeByteArray(photo, 0, photo.length, options);
+            baseThumbnail = Utility.encodeBase64(bm, 10);
+            Utility.writeFile(newFileName.toString(), baseThumbnail.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+        } finally {
+            if (bm != null) {
+                bm.recycle();
+                bm = null;
+            }
             
-       
-//            // 5. to read file and remove md5
-//            String readContent = readFile(newFileName.toString());
-//            Log.d(TAG, "readContent is " + readContent);
-//            String realData = readContent.replace(md5FileName, "");
-//            Log.d(TAG, "realData is " + realData);
-//            
-//            // 6. decode Base64 to byte[]
-//            String encodeString = encodeBase64(realData);
-//            decodeBase64(encodeString);
+            if (photo != null) {
+                photo = null;
+            }
         }
     }
 }

@@ -222,13 +222,13 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		if (!isChecked && !Utility.isPhoneValid(phoneNumber))
 		{
 			showToast(this.getActivity().getResources().getString(R.string.home_phone_field_error));
-			return;
+			return false;
 		}
 		// check cellphone number
 		if (!isChecked && !Utility.isCellphoneValid(cellPhoneNumber))
 		{
 			showToast(this.getActivity().getResources().getString(R.string.cell_phone_field_error));
-			return;
+			return false;
 		}
 		// check company phone number
 		if (!isChecked && !companyPhoneNumber.equals("")
@@ -236,13 +236,13 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		{
 			showToast(this.getActivity().getResources()
 					.getString(R.string.company_phone_field_error));
-			return;
+			return false;
 		}
 		// check email
 		if (!isChecked && !Utility.isEmailValid(email))
 		{
 			showToast(this.getActivity().getResources().getString(R.string.email_field_error));
-			return;
+			return false;
 		}
 		// check birthday
 //		if (!isChecked && !Utility.isBirthdayValid(customerBirthday))

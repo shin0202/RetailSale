@@ -311,10 +311,10 @@ public class Utility
         return base64;
     }
     
-	public static String encodeBase64(Bitmap bm)
+	public static String encodeBase64(Bitmap bm, int quality)
 	{
 	    ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-	    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+	    bm.compress(Bitmap.CompressFormat.JPEG, quality, baos); // quality default is 100
 	    byte[] b = baos.toByteArray();
 	    String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
 	    
