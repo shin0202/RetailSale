@@ -81,6 +81,15 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         showAlbumCount = 0;
     }
     
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        
+        if (attacher != null) {
+            attacher.cleanup();
+        }
+    }
+    
     private void findViews() {
         scalableIV = (ImageView) findViewById(R.id.photo_player_display);
         
@@ -298,7 +307,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 	{
 		if (isNext)	// change to next
 		{
-			if (currentPosition + 1 < photoList.size())
+			if (currentPosition < photoList.size() - 1)
 			{
 				currentPosition += 1;
 				decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition).getFileName());
@@ -311,7 +320,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 		}
 		else		// change to preview
 		{
-			if (currentPosition - 1 > 0)
+			if (currentPosition > 0)
 			{
 				currentPosition -= 1;
 				decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition).getFileName());

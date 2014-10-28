@@ -52,10 +52,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     private static final String LOG_TAG = "PhotoViewAttacher";
 
-    // let debug flag be dynamic, but still Proguard can be used to remove from
-    // release builds
-//    private static final boolean DEBUG = true;
-
     static final Interpolator sInterpolator = new AccelerateDecelerateInterpolator();
     int ZOOM_DURATION = DEFAULT_ZOOM_DURATION;
 
@@ -193,6 +189,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                             return true;  
                         } 
                     	return false;
+                    }
+                    
+                    @Override
+                    public boolean onSingleTapConfirmed(MotionEvent event) {
+                        Log.d(LOG_TAG, "onSingleTapConfirmed: " + event.toString());
+                        return true;
                     }
                 });
 
