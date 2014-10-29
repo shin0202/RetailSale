@@ -83,6 +83,8 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 		
 		Log.d(TAG, "onPauses  ");
 		
+		removeAllAlbums();
+		
 		if (albumList != null) {
 		    albumList.clear();
 		    albumList = null;

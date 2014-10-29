@@ -144,9 +144,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     }
     
     private void focusUploadConsumer() {
-        uploadConsumer.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.lemonchiffon));
-        downloadPicture.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.antiquewhite));
-        syncData.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.antiquewhite));
+        uploadConsumer.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.sync_item_focus));
+        downloadPicture.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.sync_item_normal));
+        syncData.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.sync_item_normal));
         
         showTitle.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_upload_consumer));
         showDescription.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_upload_description));
@@ -160,9 +160,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     }
     
     private void focusDownloadPicture() {
-        uploadConsumer.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.antiquewhite));
-        downloadPicture.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.lemonchiffon));
-        syncData.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.antiquewhite));
+        uploadConsumer.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.sync_item_normal));
+        downloadPicture.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.sync_item_focus));
+        syncData.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.sync_item_normal));
         
         showTitle.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_download_picture));
         showDescription.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_download_description));
@@ -176,9 +176,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     }
     
     private void focusSyncData() {
-        uploadConsumer.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.antiquewhite));
-        downloadPicture.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.antiquewhite));
-        syncData.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.lemonchiffon));
+        uploadConsumer.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.sync_item_normal));
+        downloadPicture.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.sync_item_normal));
+        syncData.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(R.color.sync_item_focus));
         
         showTitle.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_sync_data));
         showDescription.setText(SynchronizationFragment.this.getResources().getString(R.string.sync_tab_sync_description));

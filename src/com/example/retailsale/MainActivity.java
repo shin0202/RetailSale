@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import com.example.retailsale.fragment.AddFragment;
 import com.example.retailsale.fragment.BrowserFragment;
@@ -48,6 +49,22 @@ public class MainActivity extends FragmentActivity
         getBundle();
         
         tabHost.setCurrentTab(currentTab); // set the current tab
+        
+        setTabColor(tabHost);
+	}
+	
+	public void setTabColor(TabHost tabhost)
+	{
+		for (int i = 0; i < tabhost.getTabWidget().getChildCount(); i++)
+		{
+			tabhost.getTabWidget().getChildAt(i)
+					.setBackgroundColor(getResources().getColor(R.color.common_btn_tab_bg_normal)); // unselected
+			TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i)
+					.findViewById(android.R.id.title); // Unselected Tabs
+			tv.setTextColor(getResources().getColor(R.color.common_layout_bg));
+		}
+		tabhost.getTabWidget().getChildAt(tabhost.getCurrentTab())
+				.setBackgroundColor(getResources().getColor(R.color.common_btn_tab_bg_focus)); // selected
 	}
 	
 	private void getBundle() {

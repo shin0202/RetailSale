@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 
+import com.example.retailsale.MainActivity;
+
 public class TabManager implements OnTabChangeListener
 {
 
@@ -76,6 +78,8 @@ public class TabManager implements OnTabChangeListener
     @Override
     public void onTabChanged(String tabId) {
      TabInfo newTab = tabs.get(tabId);
+     
+     ((MainActivity)activity).setTabColor(tabhost);
 
         if (lastTab != newTab) {
             FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();

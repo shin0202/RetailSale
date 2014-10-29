@@ -11,6 +11,8 @@
         style="@style/btnStyle"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:background="@drawable/common_btn_selector"
+        android:textColor="@color/white"
         android:text="@string/cancel" />
 
     <LinearLayout
@@ -235,6 +237,8 @@
         style="@style/btnStyle"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:background="@drawable/common_btn_selector"
+        android:textColor="@color/white"
         android:text="@string/save" />
 
 </RelativeLayout>

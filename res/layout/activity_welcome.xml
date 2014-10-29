@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/welcome_layout_bg"
     android:orientation="vertical" >
 
     <ImageView
@@ -9,14 +10,22 @@
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:layout_gravity="center"
-        android:src="@drawable/welcome" />
+        android:src="@drawable/welcome" 
+        android:background="@color/white"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        />
 
     <Button
         android:id="@+id/welcome_browser_btn"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/common_btn_selector"
         android:text="@string/browser_all_photo"
+        android:textColor="@color/white"
         android:textStyle="bold" />
 
     <Button
@@ -24,7 +33,10 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/common_btn_selector"
         android:text="@string/add_consumer"
+        android:textColor="@color/white"
         android:textStyle="bold" />
 
     <Button
@@ -32,7 +44,10 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/common_btn_selector"
         android:text="@string/sync_with_server"
+        android:textColor="@color/white"
         android:textStyle="bold" />
 
     <Button
@@ -40,7 +55,10 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/common_btn_selector"
         android:text="@string/logout"
+        android:textColor="@color/white"
         android:textStyle="bold" />
 
 </LinearLayout>

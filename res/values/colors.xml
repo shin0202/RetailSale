@@ -49,9 +49,20 @@
 		<color name="mintcream">#F5FFFA</color><!--薄荷色 -->
 		<color name="whitesmoke">#F5F5F5</color><!--烟白色 -->
 		
+		<!-- Common Color -->
+		<color name="common_layout_bg">#FFF9ED</color>
+		<color name="common_btn_tab_bg_normal">#564E6E</color>
+		<color name="common_btn_tab_bg_focus">#0088A8</color>
+		
 		<!-- Login -->
-		<color name="login_logo_bg">#00FFFF</color>
-
+		<color name="login_bg">#564E6E</color>
+		
+		<!-- Welcome -->
+		<color name="welcome_layout_bg">#E2DEED</color>
+		
+		<!-- Sync Tab -->
+		<color name="sync_item_normal">#E2DEED</color>
+		<color name="sync_item_focus">#D6CFC0</color>
 </resources>
 
 
