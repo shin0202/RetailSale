@@ -3,6 +3,8 @@ package com.example.retailsale.manager.folderinfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.retailsale.util.Utility;
+
 public class LocalFolderInfo
 {
     private String folderId;
@@ -43,28 +45,28 @@ public class LocalFolderInfo
         if (fileList != null)
             return fileList.size();
         else
-            return 0;
+            return Utility.DEFAULT_ZERO_VALUE;
     }
     
     public String getFileFolderId(int index) {
         if (fileList != null)
             return fileList.get(index).getFolderId();
         else
-            return "";
+            return Utility.SPACE_STRING;
     }
     
     public String getFileId(int index) {
         if (fileList != null)
             return fileList.get(index).getFileId();
         else
-            return "";
+            return Utility.SPACE_STRING;
     }
     
     public String getFileName(int index) {
         if (fileList != null)
             return fileList.get(index).getFileName();
         else
-            return "";
+            return Utility.SPACE_STRING;
     }
     
     private class FileObject

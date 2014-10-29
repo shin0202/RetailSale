@@ -37,12 +37,17 @@ public class Utility
 	public static final String FILE_PATH_2 = "/sdcard/retailSale";
 	public static final String REPLACE_SERVER_FOLDER = "C:\\Project\\_code\\testFolder";
 	public static final String REPLACE_STRING = ".jpg.txt";
+	public static final String REPLACE_JPEG_STRING = ".jpg";
+	public static final String REPLACE_TXT_STRING = ".txt";
+	public static final String SPACE_STRING = "";
 	public static final int SHOW_WAITING_DIALOG = 999;
 	public static final int DISMISS_WAITING_DIALOG = -999;
 	public static final int SUCCESS = 1;
 	public static final int FAILED = 0;
 	public static final int FAILED_UPLOAD = -123;
-	public static final String DEFAULT_VALUE = "-1";
+	public static final String DEFAULT_VALUE_STRING = "-1";
+	public static final int DEFAULT_ZERO_VALUE = 0;
+	public static final int DEFAULT_NEGATIVE_VALUE = -1;
 	
 	public class JSONTag 
 	{
@@ -226,7 +231,7 @@ public class Utility
 	}
 	
 	public static String getCurrentDateTime() {
-	    String dateTime = "";
+	    String dateTime = Utility.SPACE_STRING;
 	    
 	    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    Date date = new Date();
@@ -249,7 +254,7 @@ public class Utility
         StringBuilder readContent = new StringBuilder();
         try {
             reader = new BufferedReader(new FileReader(path));
-            String line = "";
+            String line = Utility.SPACE_STRING;
             try {
                 while ((line = reader.readLine()) != null) {
                     readContent.append(line).append("\n");
@@ -280,10 +285,10 @@ public class Utility
             return 1;
         } catch (IOException e) {
             e.printStackTrace();
-            return 0;
+            return Utility.DEFAULT_ZERO_VALUE;
         } catch (Exception e) {
             e.printStackTrace();
-            return 0;
+            return Utility.DEFAULT_ZERO_VALUE;
         }
     }
     
@@ -343,7 +348,7 @@ public class Utility
     public static String generateMD5String(String source) {
         // test string
 //        String testString = "catch12";
-//        String resultString = "";
+//        String resultString = Utility.SPACE_STRING;
 //        
 //        resultString = testMD52(testString);
 //        Log.d(TAG, "resultString === " + resultString);
@@ -366,7 +371,7 @@ public class Utility
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return "";
+        return Utility.SPACE_STRING;
     }
 	
 	public static Bitmap covertByteArrayToBitmap(byte[] data) 
@@ -389,7 +394,7 @@ public class Utility
 	
 	public static void saveData(Activity activity, String id, String password, int userSerial, int userGroup, String loginKey)
 	{
-		SharedPreferences settings = activity.getSharedPreferences(Utility.LoginField.DATA, 0);
+		SharedPreferences settings = activity.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
 		settings.edit()
 		        .putString(Utility.LoginField.ID, id)
 				.putString(Utility.LoginField.PASSWORD, password)
@@ -400,10 +405,10 @@ public class Utility
 	}
 	
 	public static boolean hadLogin(Activity actiivty) {
-		SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, 0);
+		SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
         String id = settings.getString(Utility.LoginField.ID, "");
         
-        if (id != null && !id.equals(""))
+        if (id != null && !id.equals(Utility.SPACE_STRING))
         {
         	return true;
         }
@@ -414,7 +419,7 @@ public class Utility
 	}
 	
     public static int getCreator(Activity actiivty) {
-        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, 0);
+        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
         int creator = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
 
         Log.d(TAG, "creator is " + creator);
@@ -423,7 +428,7 @@ public class Utility
     }
     
     public static int getCreatorGroup(Activity actiivty) {
-        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, 0);
+        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
         int creatorGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
 
         Log.d(TAG, "creator group is " + creatorGroup);

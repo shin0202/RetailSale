@@ -364,7 +364,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 			{
 			case Utility.SHOW_WAITING_DIALOG:
 				Log.d(TAG, "show waiting dialog ");
-				progressDialog = ProgressDialog.show(BrowserFragment.this.getActivity(), "", BrowserFragment.this.getResources().getString(R.string.loading));
+				progressDialog = ProgressDialog.show(BrowserFragment.this.getActivity(), Utility.SPACE_STRING, BrowserFragment.this.getResources().getString(R.string.loading));
 				break;
 			case Utility.DISMISS_WAITING_DIALOG:
 				Log.d(TAG, "dismiss dialog ");

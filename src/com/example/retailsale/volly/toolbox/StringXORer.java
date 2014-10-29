@@ -4,6 +4,8 @@ package com.example.retailsale.volly.toolbox;
 //import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Base64;
 
+import com.example.retailsale.util.Utility;
+
 //import android.util.Base64;
 
 
@@ -33,7 +35,7 @@ public class StringXORer {
 
     private static String base64Encode(byte[] bytes) {
 //        BASE64Encoder enc = new BASE64Encoder();
-//        return enc.encode(bytes).replaceAll("\\s", "");
+//        return enc.encode(bytes).replaceAll("\\s", Utility.SPACE_STRING);
     	
     	String outputString = new String(Base64.encodeBase64(bytes));
     	

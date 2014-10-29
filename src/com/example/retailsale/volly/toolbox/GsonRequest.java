@@ -105,7 +105,7 @@ public class GsonRequest<T> extends Request<T>
 	@Override
 	public String getBodyContentType()
 	{
-		return "";
+		return Utility.SPACE_STRING;
 	}
 
 	@SuppressWarnings("unchecked")

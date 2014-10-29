@@ -231,7 +231,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 			return false;
 		}
 		// check company phone number
-		if (!isChecked && !companyPhoneNumber.equals("")
+		if (!isChecked && !companyPhoneNumber.equals(Utility.SPACE_STRING)
 				&& !Utility.isCompanyPhoneValid(phoneNumber))
 		{
 			showToast(this.getActivity().getResources()
@@ -255,24 +255,25 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		{
 			if (isChecked)
 			{
-				String noData = AddFragment.this.getResources().getString(R.string.no_data);
-				customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE, noData, noData, noData,
-						noData, 0, 0, noData, dateString + timeString, 0, noData, 0, 0, noData,
-						Utility.getCreator(getActivity()), Utility.getCreatorGroup(getActivity()),
-						dateString + timeString, "", "", "", "", "", 0, 0, "", "", 0, "");
+                String noData = AddFragment.this.getResources().getString(R.string.no_data);
+                customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, noData, noData, noData, noData, 0, 0, noData,
+                        dateString + timeString, 0, noData, 0, 0, noData, Utility.getCreator(getActivity()),
+                        Utility.getCreatorGroup(getActivity()), dateString + timeString, Utility.SPACE_STRING,
+                        Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, 0, 0,
+                        Utility.SPACE_STRING, Utility.SPACE_STRING, 0, Utility.SPACE_STRING);
 			}
 			else
 			{
-				customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE, customerName,
-						cellPhoneNumber, phoneNumber, companyPhoneNumber, sexSelectedPosition,
-						titleSelectedPosition, email, dateString + timeString, msgSelectedPosition,
-						introducer, jobSelectedPosition, ageSelectedPosition, customerBirthday,
-						Utility.getCreator(getActivity()), Utility.getCreatorGroup(getActivity()),
-						dateString + timeString, "", "", "", "", "", 0, 0, "", "", 0, "");
+                customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber, phoneNumber,
+                        companyPhoneNumber, sexSelectedPosition, titleSelectedPosition, email, dateString + timeString,
+                        msgSelectedPosition, introducer, jobSelectedPosition, ageSelectedPosition, customerBirthday,
+                        Utility.getCreator(getActivity()), Utility.getCreatorGroup(getActivity()), dateString
+                                + timeString, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
+                        Utility.SPACE_STRING, Utility.SPACE_STRING, 0, 0, Utility.SPACE_STRING, Utility.SPACE_STRING, 0, Utility.SPACE_STRING);
 			}
 		}
 		else {
-			customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE, customerName, cellPhoneNumber,
+			customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber,
 					phoneNumber, companyPhoneNumber, sexSelectedPosition, titleSelectedPosition,
 					email, dateString + timeString, msgSelectedPosition, introducer,
 					jobSelectedPosition, ageSelectedPosition, customerBirthday,
@@ -289,7 +290,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 		
 //		String reservationDate = customerInfo.getReservationDate();
 //		
-//		if (reservationDate.equals(""))
+//		if (reservationDate.equals(Utility.SPACE_STRING))
 //		{
 //			Log.d(TAG, "reservationDate is empty ");
 //			customerInfo.setReservationDate(customerInfo.getCreateTime());
@@ -303,7 +304,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         Log.d(TAG, "saveData() customerInfo === " + customerInfo.toString());
         
-        if (!workAddress.equals("") && contactAddress.equals(""))
+        if (!workAddress.equals(Utility.SPACE_STRING) && contactAddress.equals(Utility.SPACE_STRING))
         {
             showAlertDialog();
         }

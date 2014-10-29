@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.retailsale.util.Utility;
 import com.google.gson.annotations.SerializedName;
 
 public class CustomerInfo implements Parcelable
@@ -523,7 +524,7 @@ public class CustomerInfo implements Parcelable
 	@Override
 	public int describeContents()
 	{
-		return 0;
+		return Utility.DEFAULT_ZERO_VALUE;
 	}
 
 	@Override

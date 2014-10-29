@@ -189,7 +189,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 		textView.setGravity(Gravity.CENTER_HORIZONTAL);
 		textView.setTextSize(16);
 		textView.setTextColor(Color.BLACK);
-		textView.setText(name.replace(Utility.REPLACE_STRING, ""));
+		textView.setText(name.replace(Utility.REPLACE_STRING, Utility.SPACE_STRING));
 
         layout.addView(imageView);
         layout.addView(textView);
@@ -246,14 +246,14 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 		String readContent = Utility.readFile(path);
 //		Log.d(TAG, "readContent is " + readContent);
 		Log.d(TAG, "*********************************************************** ");
-		String realFileName = fileName.replace(".txt", "");
+		String realFileName = fileName.replace(Utility.REPLACE_TXT_STRING, Utility.SPACE_STRING);
 //		Log.d(TAG, "realFileName is " + realFileName);
 		Log.d(TAG, "*********************************************************** ");
 		String md5String = Utility.generateMD5String(realFileName);
 //		Log.d(TAG, "md5String is " + md5String);
 		Log.d(TAG, "*********************************************************** ");
 		
-		String realData = readContent.replace(md5String, "");
+		String realData = readContent.replace(md5String, Utility.SPACE_STRING);
 //		Log.d(TAG, "realData is " + realData);
 		Log.d(TAG, "*********************************************************** ");
 		// 6. decode Base64 to byte[]
@@ -328,7 +328,7 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 			{
 			case Utility.SHOW_WAITING_DIALOG:
 				Log.d(TAG, "show waiting dialog ");
-				progressDialog = ProgressDialog.show(PhotoPlayer.this, "", PhotoPlayer.this.getResources().getString(R.string.loading));
+				progressDialog = ProgressDialog.show(PhotoPlayer.this, Utility.SPACE_STRING, PhotoPlayer.this.getResources().getString(R.string.loading));
 				break;
 			case Utility.DISMISS_WAITING_DIALOG:
 				Log.d(TAG, "dismiss dialog ");

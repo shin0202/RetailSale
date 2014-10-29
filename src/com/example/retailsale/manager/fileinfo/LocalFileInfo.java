@@ -2,6 +2,8 @@ package com.example.retailsale.manager.fileinfo;
 
 import java.lang.reflect.Field;
 
+import com.example.retailsale.util.Utility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -42,7 +44,7 @@ public class LocalFileInfo implements Parcelable {
     @Override
     public int describeContents()
     {
-        return 0;
+        return Utility.DEFAULT_ZERO_VALUE;
     }
 
     @Override

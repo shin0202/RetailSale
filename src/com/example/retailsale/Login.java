@@ -155,13 +155,13 @@ public class Login extends Activity implements OnClickListener
 	
 //	private void readData() 
 //	{
-//		SharedPreferences settings = getSharedPreferences(Utility.LoginField.DATA, 0);
-//        inputUserId.setText(settings.getString(Utility.LoginField.ID, ""));
-//        inputUserPassword.setText(settings.getString(Utility.LoginField.PASSWORD, ""));
+//		SharedPreferences settings = getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
+//        inputUserId.setText(settings.getString(Utility.LoginField.ID, Utility.SPACE_STRING));
+//        inputUserPassword.setText(settings.getString(Utility.LoginField.PASSWORD, Utility.SPACE_STRING));
 //        
 //        Log.d(TAG,
-//                "User group : " + settings.getString(Utility.LoginField.USER_GROUP, "") + " Login key : "
-//                        + settings.getString(Utility.LoginField.LOGIN_KEY, ""));
+//                "User group : " + settings.getString(Utility.LoginField.USER_GROUP, Utility.SPACE_STRING) + " Login key : "
+//                        + settings.getString(Utility.LoginField.LOGIN_KEY, Utility.SPACE_STRING));
 //	}
 	
 	private void getDataOption()
@@ -307,6 +307,6 @@ public class Login extends Activity implements OnClickListener
 //			{
 //				Log.d(TAG, "isSuccess === " + isSuccess);
 //			}
-//		}, HttpManager.LogType.Login, "095050", "", HttpManager.USER_HOST, HttpManager.ACTION_NAME, null);
+//		}, HttpManager.LogType.Login, "095050", Utility.SPACE_STRING, HttpManager.USER_HOST, HttpManager.ACTION_NAME, null);
 //	}
 }

@@ -83,7 +83,7 @@ public class PhotosAdapterView extends BaseAdapter
             viewTag = (ViewTag) convertView.getTag();
         }
         convertView.setId(BASE_INDEX + position);
-        viewTag.showName.setText(photoList.get(position).getFileName().replace(Utility.REPLACE_STRING, ""));
+        viewTag.showName.setText(photoList.get(position).getFileName().replace(Utility.REPLACE_STRING, Utility.SPACE_STRING));
         // to show img
         // viewTag.showPhoto.setImageBitmap(bm);
         return convertView;

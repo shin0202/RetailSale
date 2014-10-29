@@ -52,7 +52,8 @@ public class LogoutFragment extends Fragment implements OnClickListener{
 	{
 		if (v.getId() == R.id.logout_btn) { // didn't clear option data, photo, customer data
 			Log.d(TAG, "Now logout");
-			Utility.saveData(mainActivity, "", "", -1, -1, "");
+            Utility.saveData(mainActivity, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.DEFAULT_NEGATIVE_VALUE,
+                    Utility.DEFAULT_NEGATIVE_VALUE, Utility.SPACE_STRING);
 			mainActivity.finish();
 		}
 	}

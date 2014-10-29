@@ -272,17 +272,17 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                         } else {
                             Log.d(TAG, "value is null");
                             dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-                            showMessage("", R.string.sync_tab_sync_get_server_directory_failed);
+                            showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_get_server_directory_failed);
                         }
                     } else {
                         Log.d(TAG, "folderInfo is null");
                         dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-                        showMessage("", R.string.sync_tab_sync_get_server_directory_failed);
+                        showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_get_server_directory_failed);
                     }
                 } else {
                     Log.d(TAG, "Get folder info failed");
                     dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-                    showMessage("", R.string.sync_tab_sync_get_server_directory_failed);
+                    showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_get_server_directory_failed);
                 }
             }
         });
@@ -363,7 +363,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 PhotosAdapterView.SYNC_TAB);
         filesGrid.setAdapter(photosAdapterView);
         dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-        showMessage("", R.string.sync_tab_sync_get_server_directory_success);
+        showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_get_server_directory_success);
     }
     
     private boolean selectFolder(String folderName) {
@@ -428,15 +428,15 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                     }
                                 } else {
                                     Log.d(TAG, "value is null");
-                                    showMessage("", R.string.sync_tab_sync_download_failed);
+                                    showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_download_failed);
                                 }
                             } else {
                                 Log.d(TAG, "fileInfo is null");
-                                showMessage("", R.string.sync_tab_sync_download_failed);
+                                showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_download_failed);
                             }
                         } else {
                             Log.d(TAG, "Get file info failed");
-                            showMessage("", R.string.sync_tab_sync_download_failed);
+                            showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_download_failed);
                         }
                         
                         if (currentCount == needCount) {
@@ -469,7 +469,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             if (needCount > 0) {
                 while (cursor.moveToNext()) {
                 	long rowId = cursor.getLong(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_ID));
-                    String customerAccount = Utility.DEFAULT_VALUE;
+                    String customerAccount = Utility.DEFAULT_VALUE_STRING;
                     String custometName =  cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_NAME));
                     String customerMobile = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_MOBILE));
                     String customerHome = cursor.getString(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_ADD_HOME));
@@ -500,7 +500,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                     String reservationStatusComment = cursor.getString(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_STATUS_COMMENT));
                     int reservationBudget = cursor.getInt(cursor.getColumnIndex(RetialSaleDbAdapter.KEY_BUDGET));
-                    String reservationDataSerial = Utility.DEFAULT_VALUE;
+                    String reservationDataSerial = Utility.DEFAULT_VALUE_STRING;
                     
                     // didn't have the field "comment", "send note"
                     JSONStringer json = null, customerReservationJson = null;
@@ -525,7 +525,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                     } catch (JSONException e) {
                         e.printStackTrace();
                         dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-                        showMessage("", R.string.sync_tab_sync_db_error);
+                        showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_db_error);
                         break;
                     }
                     
@@ -556,18 +556,18 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                     } catch (JSONException e) {
                         e.printStackTrace();
                         dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-                        showMessage("", R.string.sync_tab_sync_db_error);
+                        showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_db_error);
                         break;
                     }
                 }
             } else {
                 dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-                showMessage("", R.string.sync_tab_sync_no_customer);
+                showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_no_customer);
             }
             cursor.close();
         } else {
             dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-            showMessage("", R.string.sync_tab_sync_no_customer);
+            showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_no_customer);
         }
         
 //        retialSaleDbAdapter.close();
@@ -577,7 +577,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 	{
 		HttpManager httpManager = new HttpManager();
 		httpManager.addCustomerInfo(SynchronizationFragment.this.getActivity(), custometName,
-				handler, HttpManager.LogType.Login, "095050", "", HttpManager.USER_HOST,
+				handler, HttpManager.LogType.Login, "095050", Utility.SPACE_STRING, HttpManager.USER_HOST,
 				HttpManager.ACTION_NAME, json, rowId, retialSaleDbAdapter);
 	}
 	
@@ -604,11 +604,11 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     	
     	if (isSuccess)
     	{
-    		showMessage("", R.string.sync_tab_sync_clear_data_option_success);
+    		showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_clear_data_option_success);
     	}
     	else
     	{
-    		showMessage("", R.string.sync_tab_sync_clear_data_option_failed);
+    		showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_clear_data_option_failed);
     	}
     	
     	// 3. download data option from server
@@ -641,24 +641,24 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 								retialSaleDbAdapter.create(-1, typeName, optSerial, optName);
 							}
 							retialSaleDbAdapter.close();
-							showMessage("", R.string.sync_tab_sync_download_data_option_success);
+							showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_download_data_option_success);
 						}
 						else
 						{
 							Log.d(TAG, "value is null");
-							showMessage("", R.string.sync_tab_sync_download_data_option_failed);
+							showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_download_data_option_failed);
 						}
 					}
 					else
 					{
 						Log.d(TAG, "dataOption is null");
-						showMessage("", R.string.sync_tab_sync_download_data_option_failed);
+						showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_download_data_option_failed);
 					}
 				}
 				else
 				{
 					Log.d(TAG, "Get data option failed");
-					showMessage("", R.string.sync_tab_sync_download_data_option_failed);
+					showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_download_data_option_failed);
 				}
 			}
 		});
@@ -676,7 +676,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 				Log.d(TAG, "show waiting dialog ");
 				progressDialog = ProgressDialog
 						.show(SynchronizationFragment.this.getActivity(),
-								"",
+						        Utility.SPACE_STRING,
 								SynchronizationFragment.this.getResources().getString(
 										R.string.loading));
 				break;

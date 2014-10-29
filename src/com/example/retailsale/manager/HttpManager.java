@@ -15,6 +15,7 @@ import org.json.JSONStringer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -76,7 +77,7 @@ public class HttpManager
         
         GsonRequest<GsonLoginInfo> getDataOptionsGsonRequset = new GsonRequest<GsonLoginInfo>(Method.GET, loginUri,
                 GsonLoginInfo.class, getLoginReqSuccessListener(loginListener),
-                getLoginReqErrorListener(loginListener), LogType.Login, "095050", "", USER_HOST, ACTION_NAME);
+                getLoginReqErrorListener(loginListener), LogType.Login, "095050", Utility.SPACE_STRING, USER_HOST, ACTION_NAME);
         getDataOptionsGsonRequset.setTag("login");
 
         VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionsGsonRequset);
@@ -124,7 +125,7 @@ public class HttpManager
 //		GsonJSONRequest addCustomerInfoRequset = new GsonJSONRequest(Method.POST,
 //				addCustomerInfoUri, paramsAddComsumerPost,
 //				addCustomerReqSuccessListener(addCustomerListener),
-//				addCustomerReqErrorListener(addCustomerListener), LogType.Login, "095050", "",
+//				addCustomerReqErrorListener(addCustomerListener), LogType.Login, "095050", Utility.SPACE_STRING,
 //				USER_HOST, ACTION_NAME);
 //		VolleySingleton.getInstance(context).getRequestQueue().add(addCustomerInfoRequset);
     }
@@ -195,7 +196,7 @@ public class HttpManager
 
         GsonRequest<GsonDataOption> getDataOptionsGsonRequset = new GsonRequest<GsonDataOption>(Method.GET,
                 dataOptionsUri, GsonDataOption.class, getDataOptionReqSuccessListener(getDataOptionListener),
-                getDataOptionReqErrorListener(getDataOptionListener), LogType.Operation, "095050", "", USER_HOST, ACTION_NAME);
+                getDataOptionReqErrorListener(getDataOptionListener), LogType.Operation, "095050", Utility.SPACE_STRING, USER_HOST, ACTION_NAME);
 
         getDataOptionsGsonRequset.setTag("getDataOptions");
 
@@ -225,7 +226,7 @@ public class HttpManager
         
         GsonRequest<GsonFileInfo> getFileInfoGsonRequset = new GsonRequest<GsonFileInfo>(Method.GET, fileInfoUri,
                 GsonFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener, handler),
-                getFileInfoReqErrorListener(getFileInfoListener), LogType.Operation, "095050", "", USER_HOST, ACTION_NAME);
+                getFileInfoReqErrorListener(getFileInfoListener), LogType.Operation, "095050", Utility.SPACE_STRING, USER_HOST, ACTION_NAME);
         
         getFileInfoGsonRequset.setTag("getFileInfo");
 
@@ -243,7 +244,7 @@ public class HttpManager
 
         GsonRequest<GsonFolderInfo> getFolderInfoGsonRequset = new GsonRequest<GsonFolderInfo>(Method.GET, fileInfoUri,
                 GsonFolderInfo.class, getFolderInfoReqSuccessListener(getFolderInfoListener),
-                getFolderInfoReqErrorListener(getFolderInfoListener), LogType.Operation, "095050", "", USER_HOST, ACTION_NAME);
+                getFolderInfoReqErrorListener(getFolderInfoListener), LogType.Operation, "095050", Utility.SPACE_STRING, USER_HOST, ACTION_NAME);
         getFolderInfoGsonRequset.setTag("getFolderInfo");
 
         VolleySingleton.getInstance(context).getRequestQueue().add(getFolderInfoGsonRequset);
@@ -457,8 +458,20 @@ public class HttpManager
         
         try {
             bm = BitmapFactory.decodeByteArray(photo, 0, photo.length, options);
-            baseThumbnail = Utility.encodeBase64(bm, 10);
-            Utility.writeFile(newFileName.toString(), baseThumbnail.toString());
+            int width = bm.getWidth();
+            int height = bm.getHeight();
+            int newWidth = 120;
+            int newHeight = 120;
+            
+            float scaleWidth = ((float) newWidth) / width;
+            float scaleHeight = ((float) newHeight) / height;
+            
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleWidth, scaleHeight);
+            
+            bm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
+            baseThumbnail = Utility.encodeBase64(bm, 100);
+            Utility.writeFile(newFileName.toString().replace(Utility.REPLACE_JPEG_STRING, Utility.SPACE_STRING), baseThumbnail.toString());
         } catch (Exception e) {
             e.printStackTrace();
         } catch (OutOfMemoryError e) {

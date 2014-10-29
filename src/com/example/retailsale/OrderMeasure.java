@@ -143,7 +143,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 			Log.d(TAG, "customer visit date is " + customerInfo.getCustomerVisitDate());
 			String reservationDate = customerInfo.getReservationDate();
 			Log.d(TAG, "reservation date is " + reservationDate);
-			if (reservationDate == null || "".equals(reservationDate))
+			if (reservationDate == null || Utility.SPACE_STRING.equals(reservationDate))
 			{
 //				setInfo(true);
 			} else {
@@ -230,7 +230,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 		
 		// comment
 //		customerInfo.setReservationComment(commentET.getText().toString());
-		customerInfo.setReservationComment("");
+		customerInfo.setReservationComment(Utility.SPACE_STRING);
 		
 		// request
 		customerInfo.setReservationSpace(spaceSpinner.getSelectedItemPosition());
