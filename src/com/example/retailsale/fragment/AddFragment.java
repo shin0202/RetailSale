@@ -356,7 +356,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 					customerInfo.getReservationDate(), RetialSaleDbAdapter.NOTUPLOAD);
 			Log.d(TAG, "id is " + id);
 			
-			mainActivity.finishActivity();
+//			mainActivity.finishActivity();
+			mainActivity.setManageTab();
 		}
 		else
 		{

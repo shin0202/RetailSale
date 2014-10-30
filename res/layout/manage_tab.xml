@@ -5,6 +5,12 @@
     android:background="@color/common_layout_bg"
     android:gravity="center"
     android:orientation="vertical" >
+    
+    <ImageView 
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:src="@drawable/welcome"
+        />
 
     <TextView
         android:id="@+id/logout_btn"
@@ -12,6 +18,8 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/logout"
         android:text="@string/logout"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
 </LinearLayout>

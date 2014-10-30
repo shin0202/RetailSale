@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.example.retailsale.fragment.AddFragment;
 import com.example.retailsale.fragment.BrowserFragment;
-import com.example.retailsale.fragment.LogoutFragment;
+import com.example.retailsale.fragment.ManageFragment;
 import com.example.retailsale.fragment.SynchronizationFragment;
 import com.example.retailsale.fragment.TabManager;
 
@@ -17,6 +17,14 @@ public class MainActivity extends FragmentActivity
     private TabHost tabHost;
     private TabManager tabManager;
     private int currentTab;
+    
+    public class TabPosition
+    {
+    	public static final int BROWSER = 0;
+    	public static final int ADD = 1;
+    	public static final int SYNC = 2;
+    	public static final int MANAGE = 3;
+    }
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -29,7 +37,7 @@ public class MainActivity extends FragmentActivity
 		String browserString = res.getString(R.string.browser_all_photo);
 		String addString = res.getString(R.string.add_consumer);
 		String synchronizationString = res.getString(R.string.sync_with_server);
-		String logoutString = res.getString(R.string.logout);
+		String manageString = res.getString(R.string.manage);
 		
         tabManager = new TabManager(this, tabHost, R.id.realtabcontent);
         
@@ -43,12 +51,10 @@ public class MainActivity extends FragmentActivity
         		tabHost.newTabSpec(synchronizationString).setIndicator(synchronizationString),
         		SynchronizationFragment.class, null);
         tabManager.addTab(
-        		tabHost.newTabSpec(logoutString).setIndicator(logoutString),
-        		LogoutFragment.class, null);
+        		tabHost.newTabSpec(manageString).setIndicator(manageString),
+        		ManageFragment.class, null);
         
-        getBundle();
-        
-        tabHost.setCurrentTab(currentTab); // set the current tab
+        setManageTab();
         
         setTabColor(tabHost);
 	}
@@ -65,19 +71,6 @@ public class MainActivity extends FragmentActivity
 		}
 		tabhost.getTabWidget().getChildAt(tabhost.getCurrentTab())
 				.setBackgroundColor(getResources().getColor(R.color.common_btn_tab_bg_focus)); // selected
-	}
-	
-	private void getBundle() {
-		Bundle bundle = this.getIntent().getExtras();
-		
-		if (bundle != null)
-		{
-			currentTab = bundle.getInt(WelcomeActivity.TAB_POSITION);
-		}
-		else
-		{
-			currentTab = 0;
-		}
 	}
 
 	public String getBrowserData()
@@ -100,7 +93,15 @@ public class MainActivity extends FragmentActivity
 		return "4";
 	}
 	
-	public void finishActivity() {
+	public void finishActivity()
+	{
 		this.finish();
+	}
+	
+	public void setManageTab()
+	{
+        currentTab = TabPosition.MANAGE;
+        
+        tabHost.setCurrentTab(TabPosition.MANAGE); // set the current tab
 	}
 }

@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
@@ -27,7 +28,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.retailsale.MainActivity;
 import com.example.retailsale.PhotoPlayer;
 import com.example.retailsale.R;
 import com.example.retailsale.manager.fileinfo.LocalFileInfo;
@@ -44,6 +47,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 	private static final int LOAD_FILE_COMPLETE = 1;
 	private static final int ADD_VIEW = 2;
 	private static final int SET_ADAPTER = 3;
+	private static final int SD_NOT_EXIST = 4;
 	private int albumNum = 0;
 	private String currentParentPath;
 	private int currentAlbumPosition;
@@ -52,6 +56,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 	private List<LocalFileInfo> photoList;
 	private ProgressDialog progressDialog;
 	// views
+	private MainActivity mainActivity;
 	private LinearLayout albums;
 	private GridView photoGrid;
 	private Button backBtn;
@@ -114,6 +119,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 		super.onAttach(activity);
 		
 		Log.d(TAG, "onAttach  ");
+		mainActivity = (MainActivity) activity;
 	}
 
 	@Override
@@ -143,23 +149,28 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 				int fileType = localFileInfo.getFileType();
 				if (fileType == LocalFileInfo.SELECTED_FILE) // is file, need to send list(path) for PhotoPlayer
 				{
-					Intent intent = new Intent(getActivity(), PhotoPlayer.class);
-					Bundle bundle = new Bundle();
-					bundle.putParcelableArrayList(FILE_LIST,
-							(ArrayList<? extends Parcelable>) photoList);
-					
-					Log.d(TAG, "position === " + position);
-					
-					bundle.putInt(FILE_POSITION, position);
-					intent.putExtras(bundle);
-					startActivity(intent);
+					if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+					{
+						Intent intent = new Intent(getActivity(), PhotoPlayer.class);
+						Bundle bundle = new Bundle();
+						bundle.putParcelableArrayList(FILE_LIST,
+								(ArrayList<? extends Parcelable>) photoList);
+						Log.d(TAG, "position === " + position);
+						bundle.putInt(FILE_POSITION, position);
+						intent.putExtras(bundle);
+						startActivity(intent);
+					}
+					else
+					{
+						uiHandler.sendEmptyMessage(SD_NOT_EXIST);
+					}
 				}
 				else
 				{ // is directory
 					String currentParent = this.currentParentPath
 							+ albumList.get(currentAlbumPosition).getFileName() + "/";
 					removeAllAlbums();
-//					handlePageRefresh(currentParent);
+
                     LoadFileThread loadFileThread = new LoadFileThread(currentParent);
                     loadFileThread.start();
 				}
@@ -191,7 +202,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 loadFileThread.start();
             } else {
                 Log.d(TAG, "it is in retalesale folder, no need back! ");
-                BrowserFragment.this.getActivity().finish();
+                mainActivity.setManageTab();
             }
         }
     }
@@ -231,7 +242,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 				String name = fileEntry.getName();
 				String path = fileEntry.getAbsolutePath();
 				Log.d(TAG, "folder name: " + name + " path: " + path);
-//				albums.addView(addQuicklySelectedDummy(name, path, LocalFileInfo.SELECTED_DIR));
+
 				Message msg = new Message();
 				msg.what = ADD_VIEW;
 				Bundle bundle = new Bundle();
@@ -352,7 +363,12 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 		public void run()
 		{
 			dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
-			handlePageRefresh(currentParentPath);
+			
+			if( Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+				handlePageRefresh(currentParentPath);
+			else
+				uiHandler.sendEmptyMessage(SD_NOT_EXIST);
+
 			dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
 		}
 	}
@@ -403,6 +419,11 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                     photoGrid.setAdapter(photosAdapterView);
                 }
 			    break;
+			case SD_NOT_EXIST:
+				Toast.makeText(
+						BrowserFragment.this.getActivity(),
+						BrowserFragment.this.getResources().getString(R.string.sd_not_exist), Toast.LENGTH_SHORT).show();
+				break;
 			}
 		}
 	};

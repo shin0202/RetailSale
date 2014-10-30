@@ -42,7 +42,7 @@ public class Login extends Activity implements OnClickListener
     	boolean hadLogin = Utility.hadLogin(Login.this);
     	
     	if (hadLogin)
-    		startWelcomeActivity();
+    		startManageFragment();
     }
     
     @Override
@@ -89,8 +89,8 @@ public class Login extends Activity implements OnClickListener
 		}
 	}
 	
-	private void startWelcomeActivity() {
-		Intent intent = new Intent(Login.this, WelcomeActivity.class);
+	private void startManageFragment() {
+		Intent intent = new Intent(Login.this, MainActivity.class);
 		startActivity(intent);
 //		Login.this.finish();
 	}
@@ -193,7 +193,7 @@ public class Login extends Activity implements OnClickListener
 								retialSaleDbAdapter.create(-1, typeName, optSerial, optName);
 							}
 							retialSaleDbAdapter.close();
-							startWelcomeActivity();
+							startManageFragment();
 						}
 						else
 						{
