@@ -18,10 +18,17 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.example.retailsale.fragment.SynchronizationFragment;
+import com.example.retailsale.manager.fileinfo.GsonFileInfo;
+
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
@@ -516,5 +523,186 @@ public class Utility
             }
         }
         return directory.delete();
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////
+
+    public static void handleFileInfo(GsonFileInfo fileInfo, Handler handler)
+    {
+        if (fileInfo != null)
+        {
+            String fileName = fileInfo.getValue().get(0).getFileName();
+            String filePath = fileInfo.getValue().get(0).getPath();
+            String fileStream = fileInfo.getValue().get(0).getFileStream();
+
+            // 1. get file path
+            String path = filePath.replace(Utility.REPLACE_SERVER_FOLDER, Utility.FILE_PATH_2).replace("\\", "/");
+
+            // 1.1 to generate thumbnail
+//          generateThumbnail(fileName, path, fileStream);
+
+//            // 2. create the folder from file path
+//            Utility.createFolder(path.toString());
+
+            // 3. generate the MD5 string from file name
+            String md5FileName = Utility.generateMD5String(fileName);
+            Log.d(TAG, "md5FileName  is  ~~~~~~~~~~~~~~~~~~~~ " + md5FileName);
+
+            // 4. To mix md5 file name and file data to "newData", then write data to file path(newFileName)
+            StringBuilder newFileName = new StringBuilder().append(path.toString()).append("/").append(fileName)
+                    .append(".txt");
+
+            Log.d(TAG, "newFileName  is  ~~~~~~~~~~~~~~~~~~~~ " + newFileName.toString());
+
+            Log.d(TAG, "*************************************************************** ");
+
+            StringBuilder newData = new StringBuilder().append(md5FileName).append(fileStream);
+
+            Log.d(TAG, "newData  is  ~~~~~~~~~~~~~~~~~~~~ " + newData.toString());
+
+            int status = Utility.writeFile(newFileName.toString(), newData.toString());
+
+            Message msg = new Message();
+            msg.what = SynchronizationFragment.SelectedItem.DOWNLOAD_PICTURE;
+            msg.obj = fileName;
+            msg.arg1 = status;
+
+            handler.sendMessage(msg);
+        }
+    }
+    
+    public static void generateThumbnail(final String fileName, final String filePath, final String fileStream)
+    {
+        Bitmap bm = null;
+        String baseThumbnail;
+        StringBuilder newFileName = new StringBuilder().append(filePath.toString()).append("/").append(fileName);
+
+        try
+        {
+            bm = resizeFromByteArray(Utility.decodeBase64(fileStream));
+            int width = bm.getWidth();
+            int height = bm.getHeight();
+            int newWidth = 120;
+            int newHeight = 120;
+
+            float scaleWidth = ((float) newWidth) / width;
+            float scaleHeight = ((float) newHeight) / height;
+
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleWidth, scaleHeight);
+
+            bm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
+            
+            baseThumbnail = Utility.encodeBase64(bm, 100);
+            
+            Utility.writeFile(newFileName.toString().replace(Utility.REPLACE_JPEG_STRING, Utility.SPACE_STRING),
+                    baseThumbnail.toString());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        catch (OutOfMemoryError e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            if (bm != null)
+            {
+                bm.recycle();
+                bm = null;
+            }
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static BitmapFactory.Options getCustomsizeOptions()
+    {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPurgeable = true;
+        options.inInputShareable = true;
+        ///14400 = 120 * 120
+        options.inSampleSize = computeSampleSize(options, 14400);
+        return options;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static Bitmap resizeFromByteArray(byte[] paramArray)
+    {
+        return BitmapFactory.decodeByteArray(paramArray, 0, paramArray.length,  getCustomsizeOptions());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static Bitmap resizeFromFile(File paramFile)
+    {
+        return BitmapFactory.decodeFile(paramFile.getAbsolutePath(), getCustomsizeOptions());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static Bitmap resizeFromResourceId(Context paramContext, int paramInt)
+    {
+        return BitmapFactory.decodeStream(paramContext.getResources().openRawResource(paramInt), null,
+                getCustomsizeOptions());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    protected static int computeSampleSize(final BitmapFactory.Options options, final int maxNumOfPixels)
+    {
+        return computeSampleSize(options, -1, maxNumOfPixels);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private static int computeSampleSize(final BitmapFactory.Options options, int minSideLength,
+            final int maxNumOfPixels)
+    {
+        int initialSize = computeInitialSampleSize(options, minSideLength, maxNumOfPixels);
+
+        int roundedSize;
+        if (initialSize <= 8)
+        {
+            roundedSize = 1;
+            while (roundedSize < initialSize)
+            {
+                roundedSize <<= 1;
+            }
+        }
+        else
+        {
+            roundedSize = (initialSize + 7) / 8 * 8;
+        }
+
+        return roundedSize;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private static int computeInitialSampleSize(final BitmapFactory.Options options, final int minSideLength,
+            final int maxNumOfPixels)
+    {
+        double w = options.outWidth;
+        double h = options.outHeight;
+
+        int lowerBound = (maxNumOfPixels == -1) ? 1 : (int) Math.ceil(Math.sqrt(w * h / maxNumOfPixels));
+        int upperBound = (minSideLength == -1) ? 128 : (int) Math.min(Math.floor(w / minSideLength),
+                Math.floor(h / minSideLength));
+
+        if (upperBound < lowerBound)
+        {
+            // return the larger one when there is no overlapping zone.
+            return lowerBound;
+        }
+
+        if ((maxNumOfPixels == -1) && (minSideLength == -1))
+        {
+            return 1;
+        }
+        else if (minSideLength == -1)
+        {
+            return lowerBound;
+        }
+        else
+        {
+            return upperBound;
+        }
     }
 }

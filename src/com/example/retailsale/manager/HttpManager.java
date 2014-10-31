@@ -361,7 +361,7 @@ public class HttpManager
             public void onResponse(GsonFileInfo response)
             {
                 Log.e(TAG, "getFileInfo success response: " + response.toString());
-                handleFileInfo(response, handler);
+                Utility.handleFileInfo(response, handler);
                 if (getFileInfoListener != null) getFileInfoListener.onResult(true, response);
             }
         };
@@ -441,100 +441,4 @@ public class HttpManager
 //            }
 //        };
 //    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-
-    private void handleFileInfo(GsonFileInfo fileInfo, Handler handler)
-    {
-        if (fileInfo != null)
-        {
-            String fileName = fileInfo.getValue().get(0).getFileName();
-            String filePath = fileInfo.getValue().get(0).getPath();
-            String fileStream = fileInfo.getValue().get(0).getFileStream();
-
-            // 1. get file path
-            String path = filePath.replace(Utility.REPLACE_SERVER_FOLDER, Utility.FILE_PATH_2).replace("\\", "/");
-
-            // 1.1 to generate thumbnail
-//        	generateThumbnail(fileName, path, fileStream);
-
-//            // 2. create the folder from file path
-//            Utility.createFolder(path.toString());
-
-            // 3. generate the MD5 string from file name
-            String md5FileName = Utility.generateMD5String(fileName);
-            Log.d(TAG, "md5FileName  is  ~~~~~~~~~~~~~~~~~~~~ " + md5FileName);
-
-            // 4. To mix md5 file name and file data to "newData", then write data to file path(newFileName)
-            StringBuilder newFileName = new StringBuilder().append(path.toString()).append("/").append(fileName)
-                    .append(".txt");
-
-            Log.d(TAG, "newFileName  is  ~~~~~~~~~~~~~~~~~~~~ " + newFileName.toString());
-
-            Log.d(TAG, "*************************************************************** ");
-
-            StringBuilder newData = new StringBuilder().append(md5FileName).append(fileStream);
-
-            Log.d(TAG, "newData  is  ~~~~~~~~~~~~~~~~~~~~ " + newData.toString());
-
-            int status = Utility.writeFile(newFileName.toString(), newData.toString());
-
-            Message msg = new Message();
-            msg.what = SynchronizationFragment.SelectedItem.DOWNLOAD_PICTURE;
-            msg.obj = fileName;
-            msg.arg1 = status;
-
-            handler.sendMessage(msg);
-        }
-    }
-
-    private void generateThumbnail(final String fileName, final String filePath, final String fileStream)
-    {
-        Bitmap bm = null;
-        String baseThumbnail;
-        StringBuilder newFileName = new StringBuilder().append(filePath.toString()).append("/").append(fileName);
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        byte[] photo = Utility.decodeBase64(fileStream);
-
-        try
-        {
-            bm = BitmapFactory.decodeByteArray(photo, 0, photo.length, options);
-            int width = bm.getWidth();
-            int height = bm.getHeight();
-            int newWidth = 120;
-            int newHeight = 120;
-
-            float scaleWidth = ((float) newWidth) / width;
-            float scaleHeight = ((float) newHeight) / height;
-
-            Matrix matrix = new Matrix();
-            matrix.postScale(scaleWidth, scaleHeight);
-
-            bm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
-            baseThumbnail = Utility.encodeBase64(bm, 100);
-            Utility.writeFile(newFileName.toString().replace(Utility.REPLACE_JPEG_STRING, Utility.SPACE_STRING),
-                    baseThumbnail.toString());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        catch (OutOfMemoryError e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            if (bm != null)
-            {
-                bm.recycle();
-                bm = null;
-            }
-
-            if (photo != null)
-            {
-                photo = null;
-            }
-        }
-    }
 }
