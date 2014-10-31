@@ -5,12 +5,11 @@
     android:background="@color/common_layout_bg"
     android:gravity="center"
     android:orientation="vertical" >
-    
-    <ImageView 
+
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:src="@drawable/welcome"
-        />
+        android:src="@drawable/welcome" />
 
     <TextView
         android:id="@+id/logout_btn"

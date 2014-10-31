@@ -42,7 +42,7 @@
     <!-- HorizontalScrollView img size -->
     <dimen name="scrollview_layout_size">150dp</dimen>
     <dimen name="scrollview_img_size">100dp</dimen>
-    
+
     <!-- order_measure_comsumer_info_2 -->
     <dimen name="order_measure_comsumer_info_2_edit_width">110dp</dimen>
     <dimen name="order_measure_comsumer_info_2_margin_left">5dp</dimen>

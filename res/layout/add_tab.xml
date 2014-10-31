@@ -13,8 +13,8 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:background="@drawable/common_btn_selector"
-        android:textColor="@color/white"
-        android:text="@string/save" />
+        android:text="@string/save"
+        android:textColor="@color/white" />
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -379,6 +379,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
+
                     <!--
                           <TextView
                         android:id="@+id/add_tab_consumer_visit_date_time_field"
@@ -412,7 +413,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="@drawable/common_btn_selector"
-        android:textColor="@color/white"
-        android:text="@string/new_item" />
+        android:text="@string/new_item"
+        android:textColor="@color/white" />
 
 </RelativeLayout>

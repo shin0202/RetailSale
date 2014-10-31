@@ -10,9 +10,9 @@
         android:id="@+id/browser_tab_files_grid"
         android:layout_width="match_parent"
         android:layout_height="@dimen/browser_tab_grid_height"
+        android:layout_toLeftOf="@+id/browser_back_btn"
         android:cacheColorHint="@android:color/transparent"
         android:listSelector="@android:color/transparent"
-        android:layout_toLeftOf="@+id/browser_back_btn"
         android:numColumns="5"
         android:verticalSpacing="@dimen/browser_tab_vertical_spacing" />
 
@@ -37,11 +37,10 @@
     <Button
         android:id="@+id/browser_back_btn"
         style="@style/btnStyle"
-        android:background="@drawable/common_btn_selector"
-        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/common_btn_selector"
         android:text="@string/back"
-        android:textColor="@color/white"
-        />
+        android:textColor="@color/white" />
 
 </RelativeLayout>

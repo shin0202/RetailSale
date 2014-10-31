@@ -11,24 +11,22 @@ import com.android.volley.toolbox.Volley;
 
 public class VolleySingleton
 {
-	private static VolleySingleton mInstance = null;
+    private static VolleySingleton mInstance = null;
 
-	private RequestQueue mRequestQueue;
+    private RequestQueue mRequestQueue;
 
-	private ImageLoader mImageLoader;
+    private ImageLoader mImageLoader;
 
-	private VolleySingleton(Context context)
-	{
+    private VolleySingleton(Context context)
+    {
 
-		mRequestQueue = Volley.newRequestQueue(context);
-		
-        int memClass = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE))
-                .getMemoryClass();
+        mRequestQueue = Volley.newRequestQueue(context);
+
+        int memClass = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
         // Use 1/8th of the available memory for this memory cache.
         int cacheSize = 1024 * 1024 * memClass / 8;
         mImageLoader = new ImageLoader(mRequestQueue, new BitmapLruCache(cacheSize));
-		
-		
+
 //		mImageLoader = new ImageLoader(this.mRequestQueue, new ImageLoader.ImageCache()
 //		{
 //			private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(10);
@@ -45,28 +43,28 @@ public class VolleySingleton
 //				return mCache.get(url);
 //			}
 //		});
-	}
+    }
 
-	public static VolleySingleton getInstance(Context context)
-	{
+    public static VolleySingleton getInstance(Context context)
+    {
 
-		if (mInstance == null)
-		{
-			mInstance = new VolleySingleton(context);
-		}
-		return mInstance;
-	}
+        if (mInstance == null)
+        {
+            mInstance = new VolleySingleton(context);
+        }
+        return mInstance;
+    }
 
-	public RequestQueue getRequestQueue()
-	{
+    public RequestQueue getRequestQueue()
+    {
 
-		return this.mRequestQueue;
-	}
+        return this.mRequestQueue;
+    }
 
-	public ImageLoader getImageLoader()
-	{
+    public ImageLoader getImageLoader()
+    {
 
-		return this.mImageLoader;
-	}
+        return this.mImageLoader;
+    }
 
 }

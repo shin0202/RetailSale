@@ -7,39 +7,52 @@ import com.example.retailsale.util.Utility;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class LocalFileInfo implements Parcelable {
+public class LocalFileInfo implements Parcelable
+{
     public static final int SELECTED_FILE = 0;
     public static final int SELECTED_DIR = 1;
 
     private String fileName;
     private String filePath;
     private int fileType;
-    
-    public LocalFileInfo (String fileName, String filePath, int fileType) {
+
+    public LocalFileInfo(String fileName, String filePath, int fileType)
+    {
         this.fileName = fileName;
         this.filePath = filePath;
         this.fileType = fileType;
     }
-    
-    public String getFileName() {
+
+    public String getFileName()
+    {
         return fileName;
     }
-    public void setFileName(String fileName) {
+
+    public void setFileName(String fileName)
+    {
         this.fileName = fileName;
     }
-    public String getFilePath() {
+
+    public String getFilePath()
+    {
         return filePath;
     }
-    public void setFilePath(String filePath) {
+
+    public void setFilePath(String filePath)
+    {
         this.filePath = filePath;
     }
-    public int getFileType() {
+
+    public int getFileType()
+    {
         return fileType;
     }
-    public void setFileType(int fileType) {
+
+    public void setFileType(int fileType)
+    {
         this.fileType = fileType;
     }
-    
+
     /////////////////////////////////// Parcel need add
     @Override
     public int describeContents()
@@ -54,7 +67,7 @@ public class LocalFileInfo implements Parcelable {
         dest.writeString(filePath);
         dest.writeInt(fileType);
     }
-    
+
     public static final Parcelable.Creator<LocalFileInfo> CREATOR = new Parcelable.Creator<LocalFileInfo>()
     {
         public LocalFileInfo createFromParcel(Parcel in)
@@ -68,20 +81,22 @@ public class LocalFileInfo implements Parcelable {
             return new LocalFileInfo[size];
         }
     };
-    
-    public LocalFileInfo(Parcel in) {
+
+    public LocalFileInfo(Parcel in)
+    {
         super();
         readFromParcel(in);
     }
-    
+
     public void readFromParcel(Parcel in)
     {
         this.fileName = in.readString();
         this.filePath = in.readString();
         this.fileType = in.readInt();
     }
+
     /////////////////////////////////// Parcel need add
-    
+
     public String toString()
     {
         StringBuilder result = new StringBuilder();

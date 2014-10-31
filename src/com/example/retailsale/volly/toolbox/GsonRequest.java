@@ -36,16 +36,17 @@ import com.google.gson.JsonSyntaxException;
 
 public class GsonRequest<T> extends Request<T>
 {
-	private static final String TAG = "GsonRequest";
-	private Gson gson;
-	private Class<T> clazz;
-	private final Listener<T> listener;
-	private Map<String, String> params;
-	private Map<String, String> header;
-	private Type type;
-	
+    private static final String TAG = "GsonRequest";
+    private Gson gson;
+    private Class<T> clazz;
+    private final Listener<T> listener;
+    private Map<String, String> params;
+    private Map<String, String> header;
+    private Type type;
+
     public GsonRequest(int method, String url, Class<T> clazz, Listener<T> listener, ErrorListener errorListener,
-            String logType, String userNo, String userName, String userHostAddress, String actionName) {
+            String logType, String userNo, String userName, String userHostAddress, String actionName)
+    {
         super(method, url, errorListener);
         this.clazz = clazz;
         this.listener = listener;
@@ -59,15 +60,15 @@ public class GsonRequest<T> extends Request<T>
                 Utility.getFactaInfoHeader(logType, userNo, userName, userHostAddress, actionName));
     }
 
-	public GsonRequest(int method, String url, Class<T> clazz, Listener<T> listener,
-			ErrorListener errorListener, Gson gson)
-	{
-		super(method, url, errorListener);
-		this.clazz = clazz;
-		this.listener = listener;
-		this.gson = gson;
-	}
-	
+    public GsonRequest(int method, String url, Class<T> clazz, Listener<T> listener, ErrorListener errorListener,
+            Gson gson)
+    {
+        super(method, url, errorListener);
+        this.clazz = clazz;
+        this.listener = listener;
+        this.gson = gson;
+    }
+
 //	public GsonRequest(int method, String url, Type type, Map<String, String> params,
 //			Listener<T> listener, ErrorListener errorListener, String logType, String userNo, String userName, String userHostAddress, String actionName)
 //	{
@@ -85,49 +86,50 @@ public class GsonRequest<T> extends Request<T>
 //		this.listener = listener;
 //	}
 
-	@Override
-	protected void deliverResponse(T response)
-	{
-		if (listener != null) listener.onResponse(response);
-	}
-	
-	@Override
-	public Map<String, String> getParams() throws AuthFailureError
-	{
-		return params;
-	}
-	
     @Override
-    public Map<String, String> getHeaders() throws AuthFailureError {
+    protected void deliverResponse(T response)
+    {
+        if (listener != null) listener.onResponse(response);
+    }
+
+    @Override
+    public Map<String, String> getParams() throws AuthFailureError
+    {
+        return params;
+    }
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError
+    {
         return header;
     }
-    
-	@Override
-	public String getBodyContentType()
-	{
-		return Utility.SPACE_STRING;
-	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected Response<T> parseNetworkResponse(NetworkResponse response)
-	{
-		try
-		{	
-			String json = new String(response.data, "utf-8");
-			Log.d(TAG, "json === " + json);
-			
-			return clazz != null ? Response.success(gson.fromJson(json, clazz),
-					HttpHeaderParser.parseCacheHeaders(response)) : (Response<T>) Response.success(
-							gson.fromJson(json, type), HttpHeaderParser.parseCacheHeaders(response));
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			return Response.error(new ParseError(e));
-		}
-		catch (JsonSyntaxException e)
-		{
-			return Response.error(new ParseError(e));
-		}
-	}
+    @Override
+    public String getBodyContentType()
+    {
+        return Utility.SPACE_STRING;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected Response<T> parseNetworkResponse(NetworkResponse response)
+    {
+        try
+        {
+            String json = new String(response.data, "utf-8");
+            Log.d(TAG, "json === " + json);
+
+            return clazz != null ? Response.success(gson.fromJson(json, clazz),
+                    HttpHeaderParser.parseCacheHeaders(response)) : (Response<T>) Response.success(
+                    gson.fromJson(json, type), HttpHeaderParser.parseCacheHeaders(response));
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            return Response.error(new ParseError(e));
+        }
+        catch (JsonSyntaxException e)
+        {
+            return Response.error(new ParseError(e));
+        }
+    }
 }

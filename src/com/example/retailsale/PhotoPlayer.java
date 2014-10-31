@@ -27,7 +27,8 @@ import com.example.retailsale.manager.fileinfo.LocalFileInfo;
 import com.example.retailsale.photoview.PhotoViewAttacher;
 import com.example.retailsale.util.Utility;
 
-public class PhotoPlayer extends Activity implements OnClickListener {
+public class PhotoPlayer extends Activity implements OnClickListener
+{
     private static final String TAG = "PhotoPlayer";
 
     // views
@@ -37,122 +38,137 @@ public class PhotoPlayer extends Activity implements OnClickListener {
     PhotoViewAttacher attacher;
     private ProgressDialog progressDialog;
     private Bitmap bm;
-    
+
     private int showAlbumCount = 0;
     private int currentPosition = 0;
     private List<LocalFileInfo> photoList = new ArrayList<LocalFileInfo>();
     private boolean hideController = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photoplayer);
 
         findViews();
-        
+
         getBundle();
     }
-    
+
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
-        
+
         hideController = false;
-        
-		backBtn.setVisibility(View.VISIBLE);
-		photosLayout.setVisibility(View.VISIBLE);
-        
+
+        backBtn.setVisibility(View.VISIBLE);
+        photosLayout.setVisibility(View.VISIBLE);
+
         setPhotosLayout();
-        
+
         // Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
-        if (attacher == null)
-        	attacher = new PhotoViewAttacher(scalableIV, PhotoPlayer.this);
-        
+        if (attacher == null) attacher = new PhotoViewAttacher(scalableIV, PhotoPlayer.this);
+
         setInitImage();
     }
-    
+
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
-        
+
         hideController = false;
-        
+
         showAlbumCount = 0;
-        
+
         removeAllAlbums();
-        
+
         scalableIV.setImageBitmap(null);
-        
+
         recycleBitmap();
     }
-    
+
     @Override
-    protected void onDestroy() {
+    protected void onDestroy()
+    {
         super.onDestroy();
-        
-        if (attacher != null) {
+
+        if (attacher != null)
+        {
             attacher.cleanup();
         }
     }
-    
-    private void findViews() {
+
+    private void findViews()
+    {
         scalableIV = (ImageView) findViewById(R.id.photo_player_display);
-        
+
 //      scalableIV.setFit(true);
 //      scalableIV.setMaxZoom(10);
 //      scalableIV.setMinZoom(1);
-        
+
         photosLayout = (LinearLayout) findViewById(R.id.photots);
         backBtn = (Button) findViewById(R.id.photo_player_cancel_btn);
         backBtn.setOnClickListener(this);
     }
-    
-    private void getBundle() {
+
+    private void getBundle()
+    {
         Bundle bundle = this.getIntent().getExtras();
         currentPosition = 0;
-        
-        if (bundle != null) {
+
+        if (bundle != null)
+        {
             photoList = bundle.getParcelableArrayList(BrowserFragment.FILE_LIST);
             currentPosition = bundle.getInt(BrowserFragment.FILE_POSITION);
             Log.d(TAG, "currentPosition is " + currentPosition);
-            if (photoList != null) {
-                for (int i = 0; i < photoList.size(); i++) {
-                    Log.d(TAG, "Get data showAlbumCount : " + i + " name: " + photoList.get(i).getFileName() + 
-                            " path: " + photoList.get(i).getFilePath() + " type: " + photoList.get(i).getFileType());
+            if (photoList != null)
+            {
+                for (int i = 0; i < photoList.size(); i++)
+                {
+                    Log.d(TAG, "Get data showAlbumCount : " + i + " name: " + photoList.get(i).getFileName()
+                            + " path: " + photoList.get(i).getFilePath() + " type: " + photoList.get(i).getFileType());
                 }
-            } else {
+            }
+            else
+            {
                 Log.d(TAG, "It is no data from BrowserFragment(list is null)!");
             }
-        } else {
+        }
+        else
+        {
             Log.d(TAG, "It is no data from BrowserFragment(bundle is null)!");
         }
     }
-    
+
     private void setPhotosLayout()
     {
-        for (int i = 0; i < photoList.size(); i++) {
+        for (int i = 0; i < photoList.size(); i++)
+        {
             photosLayout.addView(insertPhoto(photoList.get(i).getFileName(), photoList.get(i).getFilePath()));
         }
     }
-    
+
     private void setInitImage()
     {
-		if (currentPosition < photoList.size())
-		{
-			decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(),
-					photoList.get(currentPosition).getFileName());
-		}
-		else
-		{
-			Log.d(TAG, "showAlbumCount over to photoList size");
-		}
+        if (currentPosition < photoList.size())
+        {
+            decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition)
+                    .getFileName());
+        }
+        else
+        {
+            Log.d(TAG, "showAlbumCount over to photoList size");
+        }
     }
 
-    private View insertPhoto(String name, String path) {
+    private View insertPhoto(String name, String path)
+    {
 //        Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
-    	
-    	int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
-		int imgDp = (int) getResources().getDimension(R.dimen.scrollview_img_size);
+
+        int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
+        int imgDp = (int) getResources().getDimension(R.dimen.scrollview_img_size);
 
         LinearLayout layout = new LinearLayout(PhotoPlayer.this);
         layout.setLayoutParams(new LayoutParams(layoutDp, layoutDp));
@@ -165,52 +181,59 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         imageView.setImageDrawable(PhotoPlayer.this.getResources().getDrawable(R.drawable.img));
         imageView.setTag(showAlbumCount);
         showAlbumCount++;
-        imageView.setOnClickListener(new View.OnClickListener() {
-            
+        imageView.setOnClickListener(new View.OnClickListener()
+        {
+
             @Override
-            public void onClick(View v) {
-            	int position = (Integer)v.getTag();
+            public void onClick(View v)
+            {
+                int position = (Integer) v.getTag();
                 Log.d(TAG, "position : " + position);
 //                scalableIV.initStanScalableImageView(PhotoPlayer.this);
-                
+
                 if (photoList != null && photoList.size() > 0 && position < photoList.size())
                 {
-                	currentPosition = position;
-                	decodeSampledBitmapFromUri(photoList.get(position).getFilePath(), photoList.get(position).getFileName());
-                	// If you later call scalableIV.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
-                	attacher.update();
+                    currentPosition = position;
+                    decodeSampledBitmapFromUri(photoList.get(position).getFilePath(), photoList.get(position)
+                            .getFileName());
+                    // If you later call scalableIV.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
+                    attacher.update();
                 }
             }
         });
-        
-		TextView textView = new TextView(PhotoPlayer.this);
-		textView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.WRAP_CONTENT));
-		textView.setGravity(Gravity.CENTER_HORIZONTAL);
-		textView.setTextSize(16);
-		textView.setTextColor(Color.BLACK);
-		textView.setText(name.replace(Utility.REPLACE_STRING, Utility.SPACE_STRING));
+
+        TextView textView = new TextView(PhotoPlayer.this);
+        textView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        textView.setGravity(Gravity.CENTER_HORIZONTAL);
+        textView.setTextSize(16);
+        textView.setTextColor(Color.BLACK);
+        textView.setText(name.replace(Utility.REPLACE_STRING, Utility.SPACE_STRING));
 
         layout.addView(imageView);
         layout.addView(textView);
-        
+
         return layout;
     }
-    
-    private void removeAllAlbums() {
-        if (photosLayout != null) {
-        	photosLayout.removeAllViews();
-        }
-    }
-    
-    private void recycleBitmap() {
-        if (bm != null) {
-        	bm.recycle();
-        	bm = null;
+
+    private void removeAllAlbums()
+    {
+        if (photosLayout != null)
+        {
+            photosLayout.removeAllViews();
         }
     }
 
-    private Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) 
+    private void recycleBitmap()
+    {
+        if (bm != null)
+        {
+            bm.recycle();
+            bm = null;
+        }
+    }
+
+    private Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight)
     {
         Bitmap bm = null;
 
@@ -228,46 +251,51 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 
         return bm;
     }
-    
-    private void decodeSampledBitmapFromUri(final String path, final String fileName) 
+
+    private void decodeSampledBitmapFromUri(final String path, final String fileName)
     {
-    	dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+        dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
 //        Bitmap bm = null;
         scalableIV.setImageBitmap(null);
-        
+
         recycleBitmap();
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
 
 //        bm = BitmapFactory.decodeFile(path, options);
-        
-		// 5. to read file and remove md5
-		String readContent = Utility.readFile(path);
+
+        // 5. to read file and remove md5
+        String readContent = Utility.readFile(path);
 //		Log.d(TAG, "readContent is " + readContent);
-		Log.d(TAG, "*********************************************************** ");
-		String realFileName = fileName.replace(Utility.REPLACE_TXT_STRING, Utility.SPACE_STRING);
+        Log.d(TAG, "*********************************************************** ");
+        String realFileName = fileName.replace(Utility.REPLACE_TXT_STRING, Utility.SPACE_STRING);
 //		Log.d(TAG, "realFileName is " + realFileName);
-		Log.d(TAG, "*********************************************************** ");
-		String md5String = Utility.generateMD5String(realFileName);
+        Log.d(TAG, "*********************************************************** ");
+        String md5String = Utility.generateMD5String(realFileName);
 //		Log.d(TAG, "md5String is " + md5String);
-		Log.d(TAG, "*********************************************************** ");
-		
-		String realData = readContent.replace(md5String, Utility.SPACE_STRING);
+        Log.d(TAG, "*********************************************************** ");
+
+        String realData = readContent.replace(md5String, Utility.SPACE_STRING);
 //		Log.d(TAG, "realData is " + realData);
-		Log.d(TAG, "*********************************************************** ");
-		// 6. decode Base64 to byte[]
-        
-		byte[] photo = Utility.decodeBase64(realData);
-		
-		try {
-			bm = BitmapFactory.decodeByteArray(photo, 0, photo.length, options);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} catch (OutOfMemoryError e) {
-			e.printStackTrace();
-		}
-		
+        Log.d(TAG, "*********************************************************** ");
+        // 6. decode Base64 to byte[]
+
+        byte[] photo = Utility.decodeBase64(realData);
+
+        try
+        {
+            bm = BitmapFactory.decodeByteArray(photo, 0, photo.length, options);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        catch (OutOfMemoryError e)
+        {
+            e.printStackTrace();
+        }
+
 //		Utility.writeFile("/sdcard/retailSale/123/java2.txt", Utility
 //				.encodeBase64(new BitmapFactory.decodeFile("/sdcard/retailSale/123/test1.jpg")));
 //		Log.d(TAG,
@@ -285,23 +313,27 @@ public class PhotoPlayer extends Activity implements OnClickListener {
 //		{
 //			e.printStackTrace();
 //		}
-		
-		scalableIV.setImageBitmap(bm);
-		
-		dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+
+        scalableIV.setImageBitmap(bm);
+
+        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
     }
 
-    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) 
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight)
     {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
 
-        if (height > reqHeight || width > reqWidth) {
-            if (width > height) {
+        if (height > reqHeight || width > reqWidth)
+        {
+            if (width > height)
+            {
                 inSampleSize = Math.round((float) height / (float) reqHeight);
-            } else {
+            }
+            else
+            {
                 inSampleSize = Math.round((float) width / (float) reqWidth);
             }
         }
@@ -309,77 +341,82 @@ public class PhotoPlayer extends Activity implements OnClickListener {
         return inSampleSize;
     }
 
-	@Override
-	public void onClick(View v)
-	{
-		switch (v.getId()) {
-		case R.id.photo_player_cancel_btn:
-			this.finish();
-			break;
-		}
-	}
-	
-	private Handler dialogHandler = new Handler()
-	{
-		@Override
-		public void handleMessage(Message msg)
-		{
-			switch (msg.what)
-			{
-			case Utility.SHOW_WAITING_DIALOG:
-				Log.d(TAG, "show waiting dialog ");
-				progressDialog = ProgressDialog.show(PhotoPlayer.this, Utility.SPACE_STRING, PhotoPlayer.this.getResources().getString(R.string.loading));
-				break;
-			case Utility.DISMISS_WAITING_DIALOG:
-				Log.d(TAG, "dismiss dialog ");
-				if (progressDialog != null) progressDialog.dismiss();
-				break;
-			}
-		}
-	};
-	
-	public void changeImage(boolean isNext)
-	{
-		if (isNext)	// change to next
-		{
-			if (currentPosition < photoList.size() - 1)
-			{
-				currentPosition += 1;
-				decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition).getFileName());
-				attacher.update();
-			}
-			else
-			{
-				
-			}
-		}
-		else		// change to preview
-		{
-			if (currentPosition > 0)
-			{
-				currentPosition -= 1;
-				decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition).getFileName());
-				attacher.update();
-			}
-			else
-			{
-				
-			}
-		}
-	}
-	
-	public void handleController() 
-	{
-		if (hideController)
-		{
-			backBtn.setVisibility(View.VISIBLE);
-			photosLayout.setVisibility(View.VISIBLE);
-		}
-		else
-		{
-			backBtn.setVisibility(View.INVISIBLE);
-			photosLayout.setVisibility(View.INVISIBLE);
-		}
-		hideController = !hideController;
-	}
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
+        case R.id.photo_player_cancel_btn:
+            this.finish();
+            break;
+        }
+    }
+
+    private Handler dialogHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+            case Utility.SHOW_WAITING_DIALOG:
+                Log.d(TAG, "show waiting dialog ");
+                progressDialog = ProgressDialog.show(PhotoPlayer.this, Utility.SPACE_STRING, PhotoPlayer.this
+                        .getResources().getString(R.string.loading));
+                break;
+            case Utility.DISMISS_WAITING_DIALOG:
+                Log.d(TAG, "dismiss dialog ");
+                if (progressDialog != null) progressDialog.dismiss();
+                break;
+            }
+        }
+    };
+
+    public void changeImage(boolean isNext)
+    {
+        if (isNext) // change to next
+        {
+            if (currentPosition < photoList.size() - 1)
+            {
+                currentPosition += 1;
+                decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition)
+                        .getFileName());
+                attacher.update();
+            }
+            else
+            {
+
+            }
+        }
+        else
+        // change to preview
+        {
+            if (currentPosition > 0)
+            {
+                currentPosition -= 1;
+                decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition)
+                        .getFileName());
+                attacher.update();
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    public void handleController()
+    {
+        if (hideController)
+        {
+            backBtn.setVisibility(View.VISIBLE);
+            photosLayout.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            backBtn.setVisibility(View.INVISIBLE);
+            photosLayout.setVisibility(View.INVISIBLE);
+        }
+        hideController = !hideController;
+    }
 }

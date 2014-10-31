@@ -56,26 +56,20 @@ public class PhotosAdapterView extends BaseAdapter
     {
         if (convertView == null)
         {
-//            convertView = layoutInflater.inflate(R.layout.cell_of_browser_tab, null);
-//            viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.browser_photo),
-//                    (TextView) convertView.findViewById(R.id.photo_name));
-            
-            switch (selectdTab) {
+            switch (selectdTab)
+            {
             case BROWSER_TAB:
-//                viewTag.showPhoto.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-//                		LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
                 convertView = layoutInflater.inflate(R.layout.cell_of_browser_tab, null);
                 viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.browser_photo),
                         (TextView) convertView.findViewById(R.id.photo_name));
                 break;
             case SYNC_TAB:
-//                viewTag.showPhoto.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 100, Gravity.CENTER));
                 convertView = layoutInflater.inflate(R.layout.cell_of_sync_tab_download_browser, null);
                 viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.download_browser_photo),
                         (TextView) convertView.findViewById(R.id.download_browser_name));
                 break;
             }
-            
+
             convertView.setTag(viewTag);
         }
         else
@@ -83,7 +77,8 @@ public class PhotosAdapterView extends BaseAdapter
             viewTag = (ViewTag) convertView.getTag();
         }
         convertView.setId(BASE_INDEX + position);
-        viewTag.showName.setText(photoList.get(position).getFileName().replace(Utility.REPLACE_STRING, Utility.SPACE_STRING));
+        viewTag.showName.setText(photoList.get(position).getFileName()
+                .replace(Utility.REPLACE_STRING, Utility.SPACE_STRING));
         // to show img
         // viewTag.showPhoto.setImageBitmap(bm);
         return convertView;

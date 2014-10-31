@@ -129,7 +129,7 @@
 
     <!-- API return message -->
     <string name="login_successful">成功登入</string>
-    
+
     <!-- Option type name -->
     <string name="option_user_type">使用者類型</string>
     <string name="option_customer_sex">客戶性別</string>
@@ -142,4 +142,5 @@
     <string name="option_customer_status">銷售進度</string>
     <string name="option_customer_budget">客戶預算</string>
     <string name="option_customer_space">客戶格局需求</string>
+
 </resources>

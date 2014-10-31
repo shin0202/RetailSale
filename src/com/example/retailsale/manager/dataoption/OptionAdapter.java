@@ -10,35 +10,41 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.example.retailsale.R;
 
-public class OptionAdapter extends BaseAdapter {
+public class OptionAdapter extends BaseAdapter
+{
     private static final String TAG = "OptionAdapter";
     private static final int BASE_INDEX = 1000;
     private List<GsonDataOptionType> optionList;
     private Context context;
     private ViewTag viewTag;
-    
-    public OptionAdapter(Context context, List<GsonDataOptionType> optionList) {
+
+    public OptionAdapter(Context context, List<GsonDataOptionType> optionList)
+    {
         this.context = context;
         this.optionList = optionList;
     }
 
     @Override
-    public int getCount() {
+    public int getCount()
+    {
         return optionList.size();
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(int position)
+    {
         return optionList.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(int position)
+    {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent)
+    {
         if (convertView == null)
         {
             LayoutInflater layoutInflater = LayoutInflater.from(context);
@@ -50,16 +56,17 @@ public class OptionAdapter extends BaseAdapter {
         {
             viewTag = (ViewTag) convertView.getTag();
         }
-        
+
         convertView.setId(BASE_INDEX + position);
-        
-        if (position < optionList.size()) {
+
+        if (position < optionList.size())
+        {
             viewTag.itemName.setText(optionList.get(position).getTypeName());
         }
- 
+
         return convertView;
     }
-    
+
     class ViewTag
     {
         TextView itemName;

@@ -95,8 +95,8 @@
             android:layout_marginLeft="@dimen/login_edit_layout_margin_right_left"
             android:layout_marginRight="@dimen/login_edit_layout_margin_right_left"
             android:layout_marginTop="@dimen/login_btn_margin_top"
-            android:text="@string/login"
             android:background="@drawable/btn_login_selector"
+            android:text="@string/login"
             android:textColor="@color/black"
             android:textStyle="bold" />
     </LinearLayout>

@@ -9,7 +9,8 @@ import com.android.volley.toolbox.Volley;
 
 import android.app.Application;
 
-public class VolleyController extends Application {
+public class VolleyController extends Application
+{
 
     /**
      * Log or request TAG
@@ -27,7 +28,8 @@ public class VolleyController extends Application {
     private static VolleyController sInstance;
 
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
 
         // initialize the singleton
@@ -37,17 +39,20 @@ public class VolleyController extends Application {
     /**
      * @return VolleyController singleton instance
      */
-    public static synchronized VolleyController getInstance() {
+    public static synchronized VolleyController getInstance()
+    {
         return sInstance;
     }
 
     /**
      * @return The Volley Request queue, the queue will be created if it is null
      */
-    public RequestQueue getRequestQueue() {
+    public RequestQueue getRequestQueue()
+    {
         // lazy initialize the request queue, the queue instance will be
         // created when it is accessed for the first time
-        if (mRequestQueue == null) {
+        if (mRequestQueue == null)
+        {
             mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         }
 
@@ -61,7 +66,8 @@ public class VolleyController extends Application {
      * @param req
      * @param tag
      */
-    public <T> void addToRequestQueue(Request<T> req, String tag) {
+    public <T> void addToRequestQueue(Request<T> req, String tag)
+    {
         // set the default tag if tag is empty
         req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
 
@@ -76,7 +82,8 @@ public class VolleyController extends Application {
      * @param req
      * @param tag
      */
-    public <T> void addToRequestQueue(Request<T> req) {
+    public <T> void addToRequestQueue(Request<T> req)
+    {
         // set the default tag if tag is empty
         req.setTag(TAG);
 
@@ -89,8 +96,10 @@ public class VolleyController extends Application {
      * 
      * @param tag
      */
-    public void cancelPendingRequests(Object tag) {
-        if (mRequestQueue != null) {
+    public void cancelPendingRequests(Object tag)
+    {
+        if (mRequestQueue != null)
+        {
             mRequestQueue.cancelAll(tag);
         }
     }
