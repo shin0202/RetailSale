@@ -18,9 +18,6 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.example.retailsale.fragment.SynchronizationFragment;
-import com.example.retailsale.manager.fileinfo.GsonFileInfo;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -32,6 +29,9 @@ import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
+import com.example.retailsale.fragment.SynchronizationFragment;
+import com.example.retailsale.manager.fileinfo.GsonFileInfo;
+
 public class Utility
 {
     private static final String TAG = "Utility";
@@ -39,9 +39,9 @@ public class Utility
     private static final String FILL_ZERO = "0";
     private static final String FILL_DASH = "-";
     public static final String LINE_FEED = "\n";
-//	public static final String FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/retailSale/";
-    public static final String FILE_PATH = "/sdcard/retailSale/";
-    public static final String FILE_PATH_2 = "/sdcard/retailSale";
+//	public static final String FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/retail/";
+    public static final String FILE_PATH = "/sdcard/retail/";
+    public static final String FILE_PATH_2 = "/sdcard/retail";
     public static final String REPLACE_SERVER_FOLDER = "C:\\Project\\_code\\testFolder";
     public static final String REPLACE_STRING = ".jpg.txt";
     public static final String REPLACE_JPEG_STRING = ".jpg";

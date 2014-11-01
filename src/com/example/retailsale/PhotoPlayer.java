@@ -296,11 +296,11 @@ public class PhotoPlayer extends Activity implements OnClickListener
             e.printStackTrace();
         }
 
-//		Utility.writeFile("/sdcard/retailSale/123/java2.txt", Utility
-//				.encodeBase64(new BitmapFactory.decodeFile("/sdcard/retailSale/123/test1.jpg")));
+//		Utility.writeFile("/sdcard/retail/123/java2.txt", Utility
+//				.encodeBase64(new BitmapFactory.decodeFile("/sdcard/retail/123/test1.jpg")));
 //		Log.d(TAG,
 //				"****************************HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH******************************* ");
-//		byte[] photo = Utility.decodeBase64(Utility.readFile("/sdcard/retailSale/123/java2.txt"));
+//		byte[] photo = Utility.decodeBase64(Utility.readFile("/sdcard/retail/123/java2.txt"));
 //		try
 //		{
 //			bm = BitmapFactory.decodeByteArray(photo, 0, photo.length, options);

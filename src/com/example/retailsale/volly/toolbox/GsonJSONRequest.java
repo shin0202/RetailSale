@@ -67,7 +67,7 @@ public class GsonJSONRequest extends Request<JSONObject>
     public String getBodyContentType()
     {
         return "{" + "\n\"customerAccount\": \"C20141006180054700\"," + "\n\"custometName\": \"Test\","
-                + "\n\"customerMobile\": \"�L���\"," + "\n\"customerHome\": \"2727-8831\","
+                + "\n\"customerMobile\": \"�L���\\"," + "\n\"customerHome\": \"2727-8831\","
                 + "\n\"customerCompany\": \"2727-8831\"," + "\n\"customerSex\": 8," + "\n\"customerTitle\": 10,"
                 + "\n\"customerMail\": \"john@hotmail.com\"," + "\n\"customerVisitDate\": \"2014-10-08T16:00:00\","
                 + "\n\"customerInfo\": 13," + "\n\"customerIntroducer\": \"john\"," + "\n\"customerJob\": 15,"

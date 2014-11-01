@@ -80,6 +80,7 @@ public class Login extends Activity implements OnClickListener
                 password = "1qaz@wsx";
             }
             login(id, password);
+//            startManageFragment();
             break;
         }
     }
