@@ -19,7 +19,7 @@
         android:id="@+id/order_measure_comsumer_info"
         style="@style/orderMeasureLayoutStyle"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="90dp"
+        android:layout_marginLeft="@dimen/order_measure_comsumer_layout_margin_left"
         android:layout_marginTop="@dimen/order_measure_layout_first_margin_top"
         android:layout_toLeftOf="@+id/order_measure_save_btn"
         android:layout_toRightOf="@+id/order_measure_cancel_btn" >
@@ -72,7 +72,7 @@
         style="@style/orderMeasureLayoutStyle"
         android:layout_below="@+id/order_measure_comsumer_info"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="90dp"
+        android:layout_marginLeft="@dimen/order_measure_comsumer_layout_margin_left"
         android:layout_toLeftOf="@+id/order_measure_save_btn"
         android:layout_toRightOf="@+id/order_measure_cancel_btn" >
 
@@ -116,7 +116,7 @@
         style="@style/orderMeasureLayoutStyle"
         android:layout_below="@+id/order_measure_comsumer_info_2"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="90dp"
+        android:layout_marginLeft="@dimen/order_measure_comsumer_layout_margin_left"
         android:layout_toLeftOf="@+id/order_measure_save_btn"
         android:layout_toRightOf="@+id/order_measure_cancel_btn" >
 
@@ -136,7 +136,7 @@
         style="@style/orderMeasureLayoutStyle"
         android:layout_below="@+id/order_measure_consumer_address_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="90dp"
+        android:layout_marginLeft="@dimen/order_measure_comsumer_layout_margin_left"
         android:layout_toLeftOf="@+id/order_measure_save_btn"
         android:layout_toRightOf="@+id/order_measure_cancel_btn" >
 
@@ -183,7 +183,7 @@
         style="@style/orderMeasureLayoutStyle"
         android:layout_below="@+id/order_measure_consumer_contact_address_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="90dp"
+        android:layout_marginLeft="@dimen/order_measure_comsumer_layout_margin_left"
         android:layout_toLeftOf="@+id/order_measure_save_btn"
         android:layout_toRightOf="@+id/order_measure_cancel_btn" >
 

@@ -28,7 +28,7 @@
     </style>
 
     <style name="inputTextStyle">
-        <item name="android:layout_width">210dp</item>
+        <item name="android:layout_width">@dimen/input_layout_style_width</item>
         <item name="android:layout_height">@dimen/add_tab_txt_input_style_height</item>
         <item name="android:textSize">@dimen/add_tab_txt_style_size</item>
         <item name="android:textColor">@color/black</item>
@@ -83,7 +83,7 @@
     </style>
 
     <style name="orderMeasureTextViewStyle">
-        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_width">@dimen/order_measure_comsumer_tv_width</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/add_tab_txt_style_size</item>
         <item name="android:textColor">@color/black</item>

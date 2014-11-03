@@ -1,5 +1,7 @@
 <resources>
 
+    <dimen name="base_zero">0dp</dimen>
+
     <!-- Login -->
     <dimen name="login_layout_height">210dp</dimen>
     <dimen name="login_layout_margin_right_left">100dp</dimen>
@@ -10,6 +12,7 @@
     <dimen name="login_edit_tv_width">150dp</dimen>
     <dimen name="login_edit_et_width">280dp</dimen>
     <dimen name="login_btn_margin_top">16dp</dimen>
+    <dimen name="login_btn_height">30dp</dimen>
 
     <!-- Btn style -->
     <dimen name="btn_style_width">60dp</dimen>
@@ -22,6 +25,7 @@
 
     <!-- Input layout style -->
     <dimen name="input_layout_style_height">37.5dp</dimen>
+    <dimen name="input_layout_style_width">210dp</dimen>
     <dimen name="input_layout_margin_left">2.75dp</dimen>
 
     <!-- Text view style for add tab -->
@@ -38,14 +42,31 @@
     <!-- Browser tab -->
     <dimen name="browser_tab_grid_height">330dp</dimen>
     <dimen name="browser_tab_vertical_spacing">0.75dp</dimen>
+    <dimen name="browser_tab_horizontal_scroll_width">600dp</dimen>
+    <dimen name="browser_tab_cell_img_edge">120dp</dimen>
 
     <!-- HorizontalScrollView img size -->
     <dimen name="scrollview_layout_size">150dp</dimen>
     <dimen name="scrollview_img_size">100dp</dimen>
 
-    <!-- order_measure_comsumer_info_2 -->
+    <!-- order measure comsumer -->
     <dimen name="order_measure_comsumer_info_2_edit_width">110dp</dimen>
     <dimen name="order_measure_comsumer_info_2_margin_left">5dp</dimen>
     <dimen name="order_measure_comsumer_checkbox_margin_left">50dp</dimen>
+    <dimen name="order_measure_comsumer_layout_margin_left">90dp</dimen>
+    <dimen name="order_measure_comsumer_tv_width">80dp</dimen>
+
+    <!-- Add Fragment -->
+    <dimen name="add_fragment_scroll_height">550dp</dimen>
+
+    <!-- Sync Fragment -->
+    <dimen name="sync_fragment_download_browser_cell_img_edge">100dp</dimen>
+    <dimen name="sync_fragment_download_browser_cell_text_size">12sp</dimen>
+    <dimen name="sync_fragment_grid_height">200dp</dimen>
+    <dimen name="sync_fragment_view_height">1dp</dimen>
+
+    <!-- Manage Fragment -->
+    <dimen name="manage_fragment_img_height">300dp</dimen>
+    <dimen name="manage_fragment_tv_text_size">18sp</dimen>
 
 </resources>

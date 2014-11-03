@@ -23,7 +23,7 @@
         android:orientation="horizontal" >
 
         <HorizontalScrollView
-            android:layout_width="600dp"
+            android:layout_width="@dimen/browser_tab_horizontal_scroll_width"
             android:layout_height="wrap_content" >
 
             <LinearLayout

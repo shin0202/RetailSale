@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/browser_photo"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="@dimen/browser_tab_cell_img_edge"
+        android:layout_height="@dimen/browser_tab_cell_img_edge"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:src="@drawable/img" />
@@ -18,7 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
-        android:text="testststtstst"
         android:textColor="@color/black"
         android:textSize="@dimen/add_tab_txt_style_size" />
 

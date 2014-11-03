@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:id="@+id/sync_tab_left_layout"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/base_zero"
         android:layout_height="fill_parent"
         android:layout_weight="2"
         android:orientation="vertical" >
@@ -54,7 +54,7 @@
     <!-- Right Layout -->
 
     <ScrollView
-        android:layout_width="0dp"
+        android:layout_width="@dimen/base_zero"
         android:layout_height="fill_parent"
         android:layout_weight="7" >
 
@@ -70,13 +70,13 @@
 
             <View
                 android:layout_width="fill_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/sync_fragment_view_height"
                 android:background="@color/fuchsia" />
 
             <GridView
                 android:id="@+id/sync_tab_files_grid"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/sync_fragment_grid_height"
                 android:cacheColorHint="@android:color/transparent"
                 android:listSelector="@android:color/transparent"
                 android:numColumns="4"
@@ -86,7 +86,7 @@
             <View
                 android:id="@+id/sync_tab_divider_line"
                 android:layout_width="fill_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/sync_fragment_view_height"
                 android:background="@color/fuchsia"
                 android:visibility="gone" />
 
@@ -102,7 +102,7 @@
 
     <Button
         android:id="@+id/sync_tab_start_btn"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/base_zero"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"

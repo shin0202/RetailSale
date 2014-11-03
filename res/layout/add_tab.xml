@@ -18,7 +18,7 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="550dp"
+        android:layout_height="@dimen/add_fragment_scroll_height"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/add_tab_new_btn"

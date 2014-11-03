@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/download_browser_photo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/sync_fragment_download_browser_cell_img_edge"
+        android:layout_height="@dimen/sync_fragment_download_browser_cell_img_edge"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:src="@drawable/img" />
@@ -20,6 +20,6 @@
         android:gravity="center_horizontal"
         android:text=""
         android:textColor="@color/black"
-        android:textSize="12sp" />
+        android:textSize="@dimen/sync_fragment_download_browser_cell_text_size" />
 
 </LinearLayout>
