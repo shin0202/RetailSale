@@ -39,6 +39,7 @@ public class Utility
     private static final String FILL_ZERO = "0";
     private static final String FILL_DASH = "-";
     public static final String LINE_FEED = "\n";
+    public static final String DATE_STRING = "T";
 //	public static final String FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/retail/";
     public static final String FILE_PATH = "/sdcard/retail/";
     public static final String FILE_PATH_2 = "/sdcard/retail";
@@ -230,7 +231,7 @@ public class Utility
         {
             dateTimeString.append(FILL_ZERO);
         }
-        dateTimeString.append(day).append("T");
+        dateTimeString.append(day).append(DATE_STRING);
 
         return dateTimeString.toString();
     }
@@ -261,9 +262,14 @@ public class Utility
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
-        dateTime = dateFormat.format(date).toString().replace(" ", "T");
+        dateTime = dateFormat.format(date).toString();
 
         return dateTime;
+    }
+    
+    public static String covertDateStringToServer(String date)
+    {
+        return date.replace(" ", DATE_STRING);
     }
 
     public static void createFolder(String path)

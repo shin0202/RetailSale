@@ -851,6 +851,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             }
         }
     };
+    
     private Handler showMessageHandler = new Handler()
     {
         @Override

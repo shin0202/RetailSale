@@ -48,6 +48,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private CustomerInfo customerInfo;
     private RetialSaleDbAdapter retialSaleDbAdapter;
     private boolean isSendMsg = false;
+    private String createDateTime;
     // views
     private MainActivity mainActivity;
     private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner;
@@ -112,6 +113,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         consumerVisitDateDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_visit_datePicker);
         consumerVisitTimeTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_visit_timePicker);
         designerStoreTV = (TextView) view.findViewById(R.id.add_tab_designer_store);
+        createDateTV = (TextView) view.findViewById(R.id.add_tab_create_date);
         // save btn
         saveBtn.setOnClickListener(this);
         newBtn.setOnClickListener(this);
@@ -119,10 +121,14 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         leaveInfoCB.setOnCheckedChangeListener(this);
         // time picker to set 24h
         consumerVisitTimeTP.setIs24HourView(true);
-        // set & check option data
-        // setOptionType(); login will do this, get data from server
+        
+        // create date
+        createDateTime = Utility.getCurrentDateTime();
+        createDateTV.setText(createDateTime.replace("T", ""));
+
         retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
         retialSaleDbAdapter.open();
+        
         // get optionType
         getOptionType();
         return view;
@@ -250,7 +256,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 String noData = AddFragment.this.getResources().getString(R.string.no_data);
                 customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, noData, noData, noData, noData, 0, 0,
                         noData, dateString + timeString, 0, noData, 0, 0, noData, Utility.getCreator(getActivity()),
-                        Utility.getCreatorGroup(getActivity()), dateString + timeString, Utility.SPACE_STRING,
+                        Utility.getCreatorGroup(getActivity()), createDateTime, Utility.SPACE_STRING,
                         Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, 0, 0,
                         Utility.SPACE_STRING, Utility.SPACE_STRING, 0, Utility.SPACE_STRING);
             }
@@ -260,7 +266,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                         phoneNumber, companyPhoneNumber, sexSelectedPosition, titleSelectedPosition, email, dateString
                                 + timeString, msgSelectedPosition, introducer, jobSelectedPosition,
                         ageSelectedPosition, customerBirthday, Utility.getCreator(getActivity()),
-                        Utility.getCreatorGroup(getActivity()), dateString + timeString, Utility.SPACE_STRING,
+                        Utility.getCreatorGroup(getActivity()), createDateTime, Utility.SPACE_STRING,
                         Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, 0, 0,
                         Utility.SPACE_STRING, Utility.SPACE_STRING, 0, Utility.SPACE_STRING);
             }
@@ -319,7 +325,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         if (customerInfo != null)
         {
             int sendNoteValue = isSendMsg ? 1 : 0;
-            String createDateTime = Utility.getCurrentDateTime();
+//            String createDateTime = Utility.getCurrentDateTime();
             Log.d(TAG, "sendNoteValue is " + sendNoteValue + " createDateTime is " + createDateTime);
             SharedPreferences settings = mainActivity.getSharedPreferences(Utility.LoginField.DATA, 0);
             int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
@@ -330,7 +336,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     customerInfo.getCustomerMail(), customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
                     customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(), customerInfo.getCustomerJob(),
                     customerInfo.getCustomerIntroducer(), customerInfo.getCustomerAge(),
-                    customerInfo.getCustomerVisitDate(), userSerial, userGroup, createDateTime, sendNoteValue,
+                    customerInfo.getCustomerVisitDate(), userSerial, userGroup,
+                    Utility.covertDateStringToServer(createDateTime), sendNoteValue,
                     customerInfo.getReservationWorkAlias(), customerInfo.getReservationStatusComment(),
                     customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
                     customerInfo.getReservationContact(), customerInfo.getReservationComment(),
@@ -379,6 +386,23 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         consumerVisitDateDP.setEnabled(enabled);
         // timepicker
         consumerVisitTimeTP.setEnabled(enabled);
+        
+        if (!enabled)
+        {
+            infoSpinner.setSelection(0);
+            jobSpinner.setSelection(0);
+            ageSpinner.setSelection(0);
+            sexSpinner.setSelection(0);
+            titleSpinner.setSelection(0);
+
+            customerNameET.setText(this.getResources().getString(R.string.no_data));
+            cellPhoneNumberET.setText(this.getResources().getString(R.string.no_data));
+            phoneNumberET.setText(this.getResources().getString(R.string.no_data));
+            companyPhoneNumberET.setText(this.getResources().getString(R.string.no_data));
+            emailET.setText(this.getResources().getString(R.string.no_data));
+            customerBirthdayET.setText(this.getResources().getString(R.string.no_data));
+            introducerET.setText(this.getResources().getString(R.string.no_data));
+        }
     }
 
     private void showToast(String showString)

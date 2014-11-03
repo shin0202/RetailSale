@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -83,17 +85,10 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         switch (v.getId())
         {
         case R.id.order_measure_cancel_btn:
-            this.finish();
-            overridePendingTransition(R.anim.activity_conversion_in_from_right, R.anim.activity_conversion_out_to_left);
+            showAlertDialog(false);
             break;
         case R.id.order_measure_save_btn:
-            if (customerInfo != null)
-            {
-                saveData();
-                this.finish();
-                overridePendingTransition(R.anim.activity_conversion_in_from_right,
-                        R.anim.activity_conversion_out_to_left);
-            }
+            showAlertDialog(true);
             break;
         }
     }
@@ -144,6 +139,9 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
             Log.d(TAG, "customer visit date is " + customerInfo.getCustomerVisitDate());
             String reservationDate = customerInfo.getReservationDate();
             Log.d(TAG, "reservation date is " + reservationDate);
+            String createTime = customerInfo.getCreateTime();
+            Log.d(TAG, "create time is " + createTime);
+            saleCreateDateTV.setText(createTime);
             if (reservationDate == null || Utility.SPACE_STRING.equals(reservationDate))
             {
 //				setInfo(true);
@@ -351,5 +349,35 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         {
             contactAddressET.setEnabled(true);
         }
+    }
+    
+    private void finishActivity()
+    {
+        this.finish();
+        overridePendingTransition(R.anim.activity_conversion_in_from_right, R.anim.activity_conversion_out_to_left);
+    }
+    
+    private void showAlertDialog(final boolean isSaved)
+    {
+        new AlertDialog.Builder(this).setTitle(this.getResources().getString(R.string.remind))
+                .setMessage(this.getResources().getString(R.string.order_measure_dialog_msg))
+                .setPositiveButton(this.getResources().getString(R.string.ok), new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        if (isSaved)
+                        {
+                            if (customerInfo != null)
+                            {
+                                saveData();
+                                finishActivity();
+                            }
+                        }
+                        else
+                        {
+                            finishActivity();
+                        }
+                    }
+                }).show();
     }
 }

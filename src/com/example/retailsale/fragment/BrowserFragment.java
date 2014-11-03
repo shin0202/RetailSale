@@ -60,6 +60,12 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     private LinearLayout albums;
     private GridView photoGrid;
     private Button backBtn;
+    
+    // load thread ----> handlePageRefresh -----> listFolder(uiHandler ---> addQuicklySelectedDummy), listFilesInFolder
+    // onItemClick ----> isFile ----->  PhotoPlayer
+    //             ----> isDir  ----->  load thread ----> ...
+    // back btn    ----> is parent ----> mainActivity.setManageTab()
+    //             ----> not parent -----> load thread ----> ...
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -145,6 +151,10 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         if (photoList != null)
         {
             LocalFileInfo localFileInfo = photoList.get(position);
+            
+            Toast.makeText(BrowserFragment.this.getActivity(),
+                    getResources().getString(R.string.select) + localFileInfo.getFileName(), Toast.LENGTH_SHORT).show();
+            
             if (localFileInfo != null && position < photoList.size())
             {
                 int fileType = localFileInfo.getFileType();
@@ -246,20 +256,23 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         {
             for (final File fileEntry : folder.listFiles())
             {
-                String name = fileEntry.getName();
-                String path = fileEntry.getAbsolutePath();
-                Log.d(TAG, "folder name: " + name + " path: " + path);
+                if (fileEntry.isDirectory())    // only add the folder
+                {
+                    String name = fileEntry.getName();
+                    String path = fileEntry.getAbsolutePath();
+                    Log.d(TAG, "folder name: " + name + " path: " + path);
 
-                Message msg = new Message();
-                msg.what = ADD_VIEW;
-                Bundle bundle = new Bundle();
-                bundle.putString(GET_NAME, name);
-                bundle.putString(GET_PATH, path);
-                msg.setData(bundle);
+                    Message msg = new Message();
+                    msg.what = ADD_VIEW;
+                    Bundle bundle = new Bundle();
+                    bundle.putString(GET_NAME, name);
+                    bundle.putString(GET_PATH, path);
+                    msg.setData(bundle);
 
-                albumList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
+                    albumList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
 
-                uiHandler.sendMessage(msg);
+                    uiHandler.sendMessage(msg);
+                }
             }
         }
         else
@@ -274,6 +287,18 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         {
             photoList.clear();
         }
+        
+        if (photosAdapterView != null)
+        {
+            photosAdapterView.notifyDataSetChanged();
+            photosAdapterView = null;
+        }
+        
+        List<LocalFileInfo> folderList = new ArrayList<LocalFileInfo>();
+        List<LocalFileInfo> fileList = new ArrayList<LocalFileInfo>();
+        boolean hadFile = false;
+        boolean hadFolder = false;
+        
         if (folder.listFiles() != null)
         {
             for (final File fileEntry : folder.listFiles())
@@ -283,12 +308,46 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 Log.d(TAG, "file name: " + name + " path: " + path);
                 if (fileEntry.isDirectory())
                 {
-                    photoList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
+//                    photoList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
+                    folderList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
+                    hadFolder = true;
                 }
                 else
                 {
-                    photoList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_FILE));
+//                    photoList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_FILE));
+                    fileList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_FILE));
+                    hadFile = true;
                 }
+            }
+            
+            if (hadFolder && hadFile) // Both folder and file are exist, then clear file
+            {
+                photoList.addAll(folderList);
+            } 
+            else if (!hadFolder && hadFile)
+            {
+                photoList.addAll(fileList);
+            }
+            else if (hadFolder && !hadFile)
+            {
+                photoList.addAll(folderList);
+            }
+            else
+            {
+                Log.d(TAG, "no file ");
+            }
+            
+            // clear content
+            if (folderList != null)
+            {
+                folderList.clear();
+                folderList = null;
+            }
+            
+            if (fileList != null)
+            {
+                fileList.clear();
+                fileList = null;
             }
         }
         else
@@ -303,16 +362,20 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         // Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
         int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
         int imgDp = (int) getResources().getDimension(R.dimen.scrollview_img_size);
+        int txtSize = (int) getResources().getDimension(R.dimen.scrollview_txt_size);
+        
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setLayoutParams(new LayoutParams(layoutDp, layoutDp));
         layout.setGravity(Gravity.CENTER);
         layout.setOrientation(LinearLayout.VERTICAL);
+        
         ImageView imageView = new ImageView(getActivity());
         imageView.setLayoutParams(new LayoutParams(imgDp, imgDp));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         // imageView.setImageBitmap(bm);
         imageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.album));
         imageView.setTag(albumNum);
+        
         albumNum++;
         imageView.setOnClickListener(new View.OnClickListener()
         {
@@ -321,33 +384,30 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             {
                 Log.d(TAG, "albumNum " + v.getTag());
                 currentAlbumPosition = (Integer) v.getTag();
+                LocalFileInfo localFileInfo = albumList.get(currentAlbumPosition);
+                
+                Toast.makeText(BrowserFragment.this.getActivity(),
+                        getResources().getString(R.string.select) + localFileInfo.getFileName(), Toast.LENGTH_SHORT).show();
                 if (photoList != null)
                 {
-                    photoList.clear();
-                    if (photosAdapterView != null)
-                    {
-                        photosAdapterView.notifyDataSetChanged();
-                        photosAdapterView = null;
-                    }
-                    listFilesInFolder(new File(albumList.get((Integer) v.getTag()).getFilePath()));
-                    if (photoList.size() != 0)
-                    {
-                        photosAdapterView = new PhotosAdapterView(getActivity(), photoList,
-                                PhotosAdapterView.BROWSER_TAB);
-                        photoGrid.setAdapter(photosAdapterView);
-                    }
+                    listFilesInFolder(new File(localFileInfo.getFilePath()));
+
+                    uiHandler.sendEmptyMessage(SET_ADAPTER);
                 }
             }
         });
+        
         TextView textView = new TextView(getActivity());
         textView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
-        textView.setTextSize(16);
+        textView.setTextSize(txtSize);
         textView.setTextColor(Color.BLACK);
         textView.setText(name);
+        
         layout.addView(imageView);
         layout.addView(textView);
+        
         Log.d(TAG, "addQuicklySelectedDummy end");
         return layout;
     }

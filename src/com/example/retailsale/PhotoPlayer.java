@@ -169,6 +169,7 @@ public class PhotoPlayer extends Activity implements OnClickListener
 
         int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
         int imgDp = (int) getResources().getDimension(R.dimen.scrollview_img_size);
+        int txtSize = (int) getResources().getDimension(R.dimen.scrollview_txt_size);
 
         LinearLayout layout = new LinearLayout(PhotoPlayer.this);
         layout.setLayoutParams(new LayoutParams(layoutDp, layoutDp));
@@ -206,7 +207,7 @@ public class PhotoPlayer extends Activity implements OnClickListener
         textView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
-        textView.setTextSize(16);
+        textView.setTextSize(txtSize);
         textView.setTextColor(Color.BLACK);
         textView.setText(name.replace(Utility.REPLACE_STRING, Utility.SPACE_STRING));
 

@@ -15,6 +15,7 @@
     <string name="loading">讀取中</string>
     <string name="no_data">無資料</string>
     <string name="ok">確定</string>
+    <string name="remind">提醒</string>
 
     <!-- Login -->
     <string name="login">登入</string>
@@ -85,6 +86,7 @@
     <string name="order_measure_consumer_contact_address_msg">聯絡地址</string>
     <string name="order_measure_consumer_contact_address_hint">請輸入XX市XX區XX路XX巷XX號</string>
     <string name="order_measure_consumer_as_work_address">同施工地址</string>
+    <string name="order_measure_dialog_msg">請在客戶資料進行儲存</string>
 
     <!-- Sync tab -->
     <string name="sync_tab_upload_consumer">上傳客戶資料</string>
