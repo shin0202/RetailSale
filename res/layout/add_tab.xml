@@ -12,23 +12,22 @@
         style="@style/btnStyle"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/common_btn_selector"
-        android:text="@string/save"
+        android:background="@drawable/save"
         android:textColor="@color/white" />
 
-    <ScrollView
+    <!--  <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/add_fragment_scroll_height"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_height="fill_parent"
         android:layout_toLeftOf="@+id/add_tab_new_btn"
         android:layout_toRightOf="@+id/add_tab_save_btn"
-        android:gravity="center_horizontal" >
+        android:layout_centerInParent="true" > -->
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
+            android:layout_height="fill_parent"
+            android:layout_toLeftOf="@+id/add_tab_new_btn"
+        	android:layout_toRightOf="@+id/add_tab_save_btn"
+            android:gravity="center"
             android:orientation="horizontal" >
 
             <!-- left layout -->
@@ -36,6 +35,7 @@
             <LinearLayout
                 android:id="@+id/add_tab_left_layout"
                 style="@style/addTabLayoutStyle"
+                android:layout_height="fill_parent"
                 android:gravity="center_horizontal"
                 android:orientation="vertical" >
 
@@ -290,6 +290,7 @@
                     <TextView
                         android:id="@+id/add_tab_create_date"
                         style="@style/addTabTextViewStyle"
+                        android:layout_width="wrap_content"
                         android:text="@string/no_data" />
                 </LinearLayout>
 
@@ -378,8 +379,7 @@
                     android:id="@+id/add_tab_consumer_visit_date_time_layout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
+                    android:orientation="horizontal">
                     <!--
                           <TextView
                         android:id="@+id/add_tab_consumer_visit_date_time_field"
@@ -404,7 +404,7 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    <!-- </ScrollView> -->
     <!-- new button -->
 
     <Button
@@ -412,8 +412,7 @@
         style="@style/btnStyle"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/common_btn_selector"
-        android:text="@string/new_item"
+        android:background="@drawable/add"
         android:textColor="@color/white" />
 
 </RelativeLayout>

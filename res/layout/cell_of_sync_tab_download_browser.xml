@@ -9,8 +9,7 @@
         android:layout_width="@dimen/sync_fragment_download_browser_cell_img_edge"
         android:layout_height="@dimen/sync_fragment_download_browser_cell_img_edge"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:src="@drawable/img" />
+        android:gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/download_browser_name"

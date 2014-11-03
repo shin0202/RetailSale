@@ -81,6 +81,22 @@ public class PhotosAdapterView extends BaseAdapter
                 .replace(Utility.REPLACE_STRING, Utility.SPACE_STRING));
         // to show img
         // viewTag.showPhoto.setImageBitmap(bm);
+        if (selectdTab == BROWSER_TAB)
+        {
+            if (photoList.get(position).getFileType() == LocalFileInfo.SELECTED_DIR) // is
+                                                                                     // dir
+            {
+                viewTag.showPhoto.setImageResource(R.drawable.file2);
+            }
+            else
+            {
+                viewTag.showPhoto.setImageResource(R.drawable.picture);
+            }
+        }
+        else
+        {
+            viewTag.showPhoto.setImageResource(R.drawable.download);
+        }
         return convertView;
     }
 

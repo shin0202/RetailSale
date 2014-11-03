@@ -141,7 +141,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
             Log.d(TAG, "reservation date is " + reservationDate);
             String createTime = customerInfo.getCreateTime();
             Log.d(TAG, "create time is " + createTime);
-            saleCreateDateTV.setText(createTime);
+            saleCreateDateTV.setText(createTime.replace(Utility.DATE_STRING, " "));
             if (reservationDate == null || Utility.SPACE_STRING.equals(reservationDate))
             {
 //				setInfo(true);

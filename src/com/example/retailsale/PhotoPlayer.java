@@ -179,7 +179,7 @@ public class PhotoPlayer extends Activity implements OnClickListener
         imageView.setLayoutParams(new LayoutParams(imgDp, imgDp));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 //        imageView.setImageBitmap(bm);
-        imageView.setImageDrawable(PhotoPlayer.this.getResources().getDrawable(R.drawable.img));
+        imageView.setImageDrawable(PhotoPlayer.this.getResources().getDrawable(R.drawable.picture));
         imageView.setTag(showAlbumCount);
         showAlbumCount++;
         imageView.setOnClickListener(new View.OnClickListener()

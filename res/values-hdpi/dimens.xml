@@ -36,7 +36,7 @@
 
     <!-- Layout style for order measure -->
     <dimen name="order_measure_layout_margin_right_left">80dp</dimen>
-    <dimen name="order_measure_layout_margin_top">22.5dp</dimen>
+    <dimen name="order_measure_layout_margin_top">20dp</dimen>
     <dimen name="order_measure_layout_first_margin_top">112.5dp</dimen>
 
     <!-- Browser tab -->
@@ -55,7 +55,8 @@
     <dimen name="order_measure_comsumer_info_2_margin_left">5dp</dimen>
     <dimen name="order_measure_comsumer_checkbox_margin_left">50dp</dimen>
     <dimen name="order_measure_comsumer_layout_margin_left">90dp</dimen>
-    <dimen name="order_measure_comsumer_tv_width">80dp</dimen>
+    <dimen name="order_measure_comsumer_tv_width">115dp</dimen>
+    <dimen name="order_measure_comsumer_tv_margin_left">10dp</dimen>
 
     <!-- Add Fragment -->
     <dimen name="add_fragment_scroll_height">550dp</dimen>

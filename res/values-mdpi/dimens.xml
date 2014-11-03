@@ -3,71 +3,72 @@
     <dimen name="base_zero">0dp</dimen>
 
     <!-- Login -->
-    <dimen name="login_layout_height">140dp</dimen>
-    <dimen name="login_layout_margin_right_left">66.7dp</dimen>
+    <dimen name="login_layout_height">180dp</dimen>
+    <dimen name="login_layout_margin_right_left">300dp</dimen>
     <dimen name="login_logo_margin_right_left">50dp</dimen>
-    <dimen name="login_text_size">14.6sp</dimen>
+    <dimen name="login_text_size">18sp</dimen>
     <dimen name="login_edit_layout_height">45dp</dimen>
     <dimen name="login_edit_layout_margin_right_left">15dp</dimen>
     <dimen name="login_edit_tv_width">100dp</dimen>
-    <dimen name="login_edit_et_width">186.7dp</dimen>
+    <dimen name="login_edit_et_width">550dp</dimen>
     <dimen name="login_btn_margin_top">10.7dp</dimen>
-    <dimen name="login_btn_height">20dp</dimen>
+    <dimen name="login_btn_height">40dp</dimen>
 
     <!-- Btn style -->
-    <dimen name="btn_style_width">40dp</dimen>
-    <dimen name="btn_style_height">25dp</dimen>
-    <dimen name="btn_style_txt_size">9sp</dimen>
+    <dimen name="btn_style_width">80dp</dimen>
+    <dimen name="btn_style_height">50dp</dimen>
+    <dimen name="btn_style_txt_size">15sp</dimen>
 
     <!-- Layout style for add tab -->
-    <dimen name="add_tab_layout_style_width">226.7dp</dimen>
+    <dimen name="add_tab_layout_style_width">500dp</dimen>
     <dimen name="add_tab_layout_style_height">175dp</dimen>
 
     <!-- Input layout style -->
-    <dimen name="input_layout_style_height">25dp</dimen>
-    <dimen name="input_layout_style_width">140dp</dimen>
+    <dimen name="input_layout_style_height">64dp</dimen>
+    <dimen name="input_layout_style_width">340dp</dimen>
     <dimen name="input_layout_margin_left">1.83dp</dimen>
 
     <!-- Text view style for add tab -->
-    <dimen name="add_tab_txt_style_width">73.3dp</dimen>
-    <dimen name="add_tab_txt_style_size">8sp</dimen>
-    <dimen name="add_tab_txt_input_style_height">20dp</dimen>
+    <dimen name="add_tab_txt_style_width">150dp</dimen>
+    <dimen name="add_tab_txt_style_size">20sp</dimen>
+    <dimen name="add_tab_txt_input_style_height">40dp</dimen>
     <dimen name="add_tab_txt_input_style_padding_left_right">5dp</dimen>
 
     <!-- Layout style for order measure -->
     <dimen name="order_measure_layout_margin_right_left">53.3dp</dimen>
-    <dimen name="order_measure_layout_margin_top">7.5dp</dimen>
+    <dimen name="order_measure_layout_margin_top">50dp</dimen>
     <dimen name="order_measure_layout_first_margin_top">75dp</dimen>
 
     <!-- Browser tab -->
     <dimen name="browser_tab_grid_height">220dp</dimen>
     <dimen name="browser_tab_vertical_spacing">0.5dp</dimen>
     <dimen name="browser_tab_horizontal_scroll_width">400dp</dimen>
-    <dimen name="browser_tab_cell_img_edge">80dp</dimen>
+    <dimen name="browser_tab_cell_img_edge">180dp</dimen>
 
     <!-- HorizontalScrollView img size -->
-    <dimen name="scrollview_layout_size">100dp</dimen>
-    <dimen name="scrollview_img_size">66.7dp</dimen>
-    <dimen name="scrollview_txt_size">10.7sp</dimen>
+    <dimen name="scrollview_layout_size">280dp</dimen>
+    <dimen name="scrollview_img_size">180dp</dimen>
+    <dimen name="scrollview_txt_size">28sp</dimen>
 
     <!-- order_measure_comsumer_info_2 -->
-    <dimen name="order_measure_comsumer_info_2_edit_width">73.3dp</dimen>
+    <dimen name="order_measure_comsumer_info_2_edit_width">290dp</dimen>
     <dimen name="order_measure_comsumer_info_2_margin_left">3.33dp</dimen>
     <dimen name="order_measure_comsumer_checkbox_margin_left">33.3dp</dimen>
-    <dimen name="order_measure_comsumer_layout_margin_left">60dp</dimen>
-    <dimen name="order_measure_comsumer_tv_width">53.3dp</dimen>
+    <dimen name="order_measure_comsumer_layout_margin_left">100dp</dimen>
+    <dimen name="order_measure_comsumer_tv_width">200dp</dimen>
+    <dimen name="order_measure_comsumer_tv_margin_left">6.7dp</dimen>
 
     <!-- Add Fragment -->
-    <dimen name="add_fragment_scroll_height">366.7dp</dimen>
+    <dimen name="add_fragment_scroll_height">500dp</dimen>
 
     <!-- Sync Fragment -->
-    <dimen name="sync_fragment_download_browser_cell_img_edge">66.7dp</dimen>
-    <dimen name="sync_fragment_download_browser_cell_text_size">8sp</dimen>
-    <dimen name="sync_fragment_grid_height">133.3dp</dimen>
+    <dimen name="sync_fragment_download_browser_cell_img_edge">100dp</dimen>
+    <dimen name="sync_fragment_download_browser_cell_text_size">15sp</dimen>
+    <dimen name="sync_fragment_grid_height">300dp</dimen>
     <dimen name="sync_fragment_view_height">0.7dp</dimen>
 
     <!-- Manage Fragment -->
     <dimen name="manage_fragment_img_height">200dp</dimen>
-    <dimen name="manage_fragment_tv_text_size">12sp</dimen>
+    <dimen name="manage_fragment_tv_text_size">20sp</dimen>
 
 </resources>

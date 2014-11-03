@@ -48,6 +48,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     private static final int ADD_VIEW = 2;
     private static final int SET_ADAPTER = 3;
     private static final int SD_NOT_EXIST = 4;
+    private static final int REFRESH_ADAPTER = 5;
     private int albumNum = 0;
     private String currentParentPath;
     private int currentAlbumPosition;
@@ -288,11 +289,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             photoList.clear();
         }
         
-        if (photosAdapterView != null)
-        {
-            photosAdapterView.notifyDataSetChanged();
-            photosAdapterView = null;
-        }
+        uiHandler.sendEmptyMessage(REFRESH_ADAPTER);
         
         List<LocalFileInfo> folderList = new ArrayList<LocalFileInfo>();
         List<LocalFileInfo> fileList = new ArrayList<LocalFileInfo>();
@@ -373,7 +370,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         imageView.setLayoutParams(new LayoutParams(imgDp, imgDp));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         // imageView.setImageBitmap(bm);
-        imageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.album));
+        imageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.file1));
         imageView.setTag(albumNum);
         
         albumNum++;
@@ -494,6 +491,13 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 Toast.makeText(BrowserFragment.this.getActivity(),
                         BrowserFragment.this.getResources().getString(R.string.sd_not_exist), Toast.LENGTH_SHORT)
                         .show();
+                break;
+            case REFRESH_ADAPTER:
+                if (photosAdapterView != null)
+                {
+                    photosAdapterView.notifyDataSetChanged();
+                    photosAdapterView = null;
+                }
                 break;
             }
         }

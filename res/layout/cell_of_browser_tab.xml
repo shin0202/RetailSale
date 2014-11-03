@@ -9,8 +9,7 @@
         android:layout_width="@dimen/browser_tab_cell_img_edge"
         android:layout_height="@dimen/browser_tab_cell_img_edge"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:src="@drawable/img" />
+        android:gravity="center_horizontal"/>
 
     <TextView
         android:id="@+id/photo_name"
@@ -19,6 +18,6 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:textColor="@color/black"
-        android:textSize="@dimen/add_tab_txt_style_size" />
+        android:textSize="30sp" />
 
 </LinearLayout>
