@@ -46,9 +46,9 @@
     <dimen name="browser_tab_cell_img_edge">180dp</dimen>
 
     <!-- HorizontalScrollView img size -->
-    <dimen name="scrollview_layout_size">280dp</dimen>
-    <dimen name="scrollview_img_size">180dp</dimen>
-    <dimen name="scrollview_txt_size">28sp</dimen>
+    <dimen name="scrollview_layout_size">240dp</dimen>
+    <dimen name="scrollview_img_size">140dp</dimen>
+    <dimen name="scrollview_txt_size">24sp</dimen>
 
     <!-- order_measure_comsumer_info_2 -->
     <dimen name="order_measure_comsumer_info_2_edit_width">290dp</dimen>

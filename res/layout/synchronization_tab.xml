@@ -53,63 +53,68 @@
 
     <!-- Right Layout -->
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/sync_tab_right_layout"
         android:layout_width="@dimen/base_zero"
         android:layout_height="fill_parent"
-        android:layout_weight="7" >
+        android:layout_weight="7.7"
+        android:orientation="vertical" >
 
-        <LinearLayout
-            android:id="@+id/sync_tab_right_layout"
+        <TextView
+            android:id="@+id/sync_tab_item_title"
+            style="@style/syncTabRightTextViewStyle" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/sync_fragment_view_height"
+            android:background="@color/fuchsia" />
+
+        <GridView
+            android:id="@+id/sync_tab_files_grid"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical" >
+            android:layout_height="@dimen/sync_fragment_grid_height"
+            android:cacheColorHint="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="4"
+            android:verticalSpacing="@dimen/browser_tab_vertical_spacing"
+            android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/sync_tab_item_title"
-                style="@style/syncTabRightTextViewStyle" />
+        <ListView
+            android:id="@+id/sync_tab_content_list"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sync_fragment_grid_height"
+            android:cacheColorHint="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:verticalSpacing="@dimen/browser_tab_vertical_spacing"
+            android:visibility="gone" />
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/sync_fragment_view_height"
-                android:background="@color/fuchsia" />
+        <View
+            android:id="@+id/sync_tab_divider_line"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/sync_fragment_view_height"
+            android:background="@color/fuchsia"
+            android:visibility="gone" />
 
-            <GridView
-                android:id="@+id/sync_tab_files_grid"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/sync_fragment_grid_height"
-                android:cacheColorHint="@android:color/transparent"
-                android:listSelector="@android:color/transparent"
-                android:numColumns="4"
-                android:verticalSpacing="@dimen/browser_tab_vertical_spacing"
-                android:visibility="gone" />
+        <TextView
+            android:id="@+id/sync_tab_item_description"
+            style="@style/syncTabRightTextViewStyle" />
 
-            <View
-                android:id="@+id/sync_tab_divider_line"
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/sync_fragment_view_height"
-                android:background="@color/fuchsia"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/sync_tab_item_description"
-                style="@style/syncTabRightTextViewStyle" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
             <TextView
                 android:id="@+id/sync_tab_item_message"
                 style="@style/syncTabRightTextViewStyle" />
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </LinearLayout>
 
     <Button
         android:id="@+id/sync_tab_start_btn"
-        android:layout_width="@dimen/base_zero"
-        android:layout_height="wrap_content"
+        android:layout_width="2dp"
+        android:layout_height="50dp"
         android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:background="@drawable/common_btn_selector"
-        android:text="@string/start_upload"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:layout_weight="0.3"
+        android:background="@drawable/sync" />
 
 </LinearLayout>

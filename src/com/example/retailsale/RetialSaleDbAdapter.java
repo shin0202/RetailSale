@@ -438,6 +438,26 @@ public class RetialSaleDbAdapter
             return null;
         }
     }
+    
+    /** Query user group option */
+    public Cursor getOptionGroupByOptionAlias() throws SQLException
+    {
+        if (db.isOpen())
+        {
+            Cursor cursor = db.query(true, DATA_OPTION_TABLE, new String[]
+            { KEY_DATA_OPTION_ID, KEY_DATA_OPTION_TYPE, KEY_DATA_OPTION_ALIAS, KEY_DATA_OPTION_SERIAL,
+                    KEY_DATA_OPTION_NAME }, null, null, KEY_DATA_OPTION_ALIAS, null, null, null);
+            if (cursor != null)
+            {
+                return cursor;
+            }
+            return null;
+        }
+        else
+        {
+            return null;
+        }
+    }
 
     /** Update the customer table */
     public boolean updateCustomer(String rowID, String customerName, String home, String mobile, String company,

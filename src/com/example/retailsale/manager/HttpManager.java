@@ -13,9 +13,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONStringer;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -45,6 +42,10 @@ public class HttpManager
     public static final String USER_HOST = "127.0.0.1";
 
     public static final String ACTION_NAME = "http://fatcaweb/FATCA/FATCA/";
+    
+    public static final String IP = "192.168.49.128";
+    
+//    public static final String IP = "182.155.124.205"; // for fallen
 
     public class LogType
     {
@@ -69,7 +70,7 @@ public class HttpManager
     public void login(Context context, String userAccount, String userPwd, final GetLoginListener loginListener)
     {
 
-        String loginUri = "http://192.168.49.128/KendoAPI/ODATA/userQuery(userAccount='" + userAccount + "',userPwd='"
+        String loginUri = "http://" + IP + "/KendoAPI/ODATA/userQuery(userAccount='" + userAccount + "',userPwd='"
                 + userPwd + "')";
         Log.e(TAG, "login() loginUri = " + loginUri);
 
@@ -140,7 +141,7 @@ public class HttpManager
             String userName, String userHostAddress, String actionName, JSONStringer json, long rowId,
             RetialSaleDbAdapter retialSaleDbAdapter)
     {
-        String addCustomerInfoUri = "http://192.168.49.128/KendoAPI/ODATA/customerData_Mobile";
+        String addCustomerInfoUri = "http://" + IP + "/KendoAPI/ODATA/customerData_Mobile";
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(addCustomerInfoUri);
         httppost.setHeader(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
@@ -195,7 +196,7 @@ public class HttpManager
     //////////////////////////////////////////////////////////////////////////////// data option
     public void getDataOptions(Context context, GetDataOptionListener getDataOptionListener)
     {
-        String dataOptionsUri = "http://192.168.49.128/KendoAPI/ODATA/dataOptionParm";
+        String dataOptionsUri = "http://" + IP + "/KendoAPI/ODATA/dataOptionParm";
         Log.e(TAG, "getDataOptions() dataOptionsUri = " + dataOptionsUri);
 
 //        GsonRequest<GsonDataOption> getDataOptionsGsonRequset = new GsonRequest<GsonDataOption>(Method.GET, dataOptionsUri,
@@ -228,7 +229,7 @@ public class HttpManager
     public void getFileInfo(Context context, int pathId, int fileId, GetFileInfoListener getFileInfoListener,
             Handler handler)
     {
-        String fileInfoUri = "http://192.168.49.128/KendoAPI/ODATA/fileContent(pathId=" + pathId + ",fileId=" + fileId
+        String fileInfoUri = "http://" + IP + "/KendoAPI/ODATA/fileContent(pathId=" + pathId + ",fileId=" + fileId
                 + ")";
         Log.e(TAG, "getFileInfo() fileInfoUri = " + fileInfoUri);
 
@@ -251,7 +252,7 @@ public class HttpManager
     //////////////////////////////////////////////////////////////////////////////// folder info
     public void getFolderInfo(Context context, GetFolderInfoListener getFolderInfoListener)
     {
-        String fileInfoUri = "http://192.168.49.128/KendoAPI/ODATA/folderInfo";
+        String fileInfoUri = "http://" + IP + "/KendoAPI/ODATA/folderInfo";
         Log.e(TAG, "getFolderInfo() fileInfoUri = " + fileInfoUri);
 
 //        GsonRequest<GsonFolderInfo> getFolderInfoGsonRequset = new GsonRequest<GsonFolderInfo>(Method.GET, fileInfoUri,
