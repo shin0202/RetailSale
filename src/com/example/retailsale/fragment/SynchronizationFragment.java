@@ -68,12 +68,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     private int currentCount = 0;
     private int needCount = 0;
     private RetialSaleDbAdapter retialSaleDbAdapter;
+    private List<String> detailList;
 
     public static final class SelectedItem
     {
         public static final int UPLOAD_CUSTOMER = 0;
         public static final int DOWNLOAD_PICTURE = 1;
         public static final int SYNC_DATA = 2;
+        public static final int SHOW_SYNC_LIST = 6;
     }
 
     @Override
@@ -86,13 +88,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     public void onResume()
     {
         super.onResume();
+        openDb();
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
-        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
         if (localFolderInfoList != null)
         {
             localFolderInfoList.clear();
@@ -107,6 +110,13 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         {
             photosAdapterView = null;
         }
+        if (detailList != null)
+        {
+            detailList.clear();
+            detailList = null;
+        }
+        closeDb();
+        retialSaleDbAdapter = null;
     }
 
     @Override
@@ -185,6 +195,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         filesGrid.setVisibility(View.GONE);
         dividerView.setVisibility(View.GONE);
         startBtn.setText(SynchronizationFragment.this.getResources().getString(R.string.start_sync));
+        
+        SyncThread syncThread = new SyncThread();
+        syncThread.start();
     }
 
     @Override
@@ -288,13 +301,29 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 Utility.LINE_FEED);
         showMessage.setText(messageStringBuilder.toString());
     }
+    
+    private void openDb()
+    {
+        if (retialSaleDbAdapter == null)
+            retialSaleDbAdapter = new RetialSaleDbAdapter(SynchronizationFragment.this.getActivity());
+        
+        retialSaleDbAdapter.open();
+    }
+    
+    private void closeDb()
+    {
+        if (retialSaleDbAdapter.isDbOpen())
+        {
+            retialSaleDbAdapter.close();
+        }
+    }
 
     /*
      *  *************************************************Login Related*******************************************************
      */
     private void login(final int resId)
     {
-        dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+        handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
         SharedPreferences settings = getActivity().getSharedPreferences(Utility.LoginField.DATA,
                 Utility.DEFAULT_ZERO_VALUE);
         final String id = settings.getString(Utility.LoginField.ID, "");
@@ -324,7 +353,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                 Log.d(TAG, "Message is successfully");
                                 Utility.saveData(SynchronizationFragment.this.getActivity(), id, password, userSerial,
                                         userGroup, loginKey);
-                                dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                                 if (resId == R.id.sync_tab_download_layout) // get folder from server, not get file
                                 {
                                     getFolderListFromServer();
@@ -338,28 +367,28 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                             else
                             {
                                 Log.d(TAG, "Message is failed");
-                                dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                                 handleLoginError();
                             }
                         }
                         else
                         {
                             Log.d(TAG, "value is null or size less/equal than 0");
-                            dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                             handleLoginError();
                         }
                     }
                     else
                     {
                         Log.d(TAG, "userInfo is null");
-                        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                         handleLoginError();
                     }
                 }
                 else
                 {
                     Log.d(TAG, "Login failed");
-                    dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                    handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                     handleLoginError();
                 }
             }
@@ -375,7 +404,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
      */
     private void getFolderListFromServer()
     {
-        dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+        handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
         HttpManager httpManager = new HttpManager();
         httpManager.getFolderInfo(SynchronizationFragment.this.getActivity(), new GetFolderInfoListener()
         {
@@ -396,28 +425,28 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                             }
                             else
                             {
-                                dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                                 showMessage(Utility.SPACE_STRING, R.string.sd_not_exist);
                             }
                         }
                         else
                         {
                             Log.d(TAG, "value is null");
-                            dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                             showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_get_server_directory_failed);
                         }
                     }
                     else
                     {
                         Log.d(TAG, "folderInfo is null");
-                        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                         showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_get_server_directory_failed);
                     }
                 }
                 else
                 {
                     Log.d(TAG, "Get folder info failed");
-                    dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                    handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                     showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_get_server_directory_failed);
                 }
             }
@@ -426,7 +455,10 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
     private void handleFolder(String json)
     {
-        localFolderInfoList = new ArrayList<LocalFolderInfo>();
+        if (localFolderInfoList == null)
+            localFolderInfoList = new ArrayList<LocalFolderInfo>();
+        else
+            localFolderInfoList.clear();
         try
         {
             JSONArray jsonArray = new JSONArray(json);
@@ -461,17 +493,17 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         catch (JSONException e)
         {
             e.printStackTrace();
-            dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
         }
     }
 
     private void listFilesInFolder(final File folder)
     {
-        if (localFileInfoList != null)
-        {
+        if (localFileInfoList == null)
+            localFileInfoList = new ArrayList<LocalFileInfo>();
+        else
             localFileInfoList.clear();
-        }
-        localFileInfoList = new ArrayList<LocalFileInfo>();
+        
         if (folder.listFiles() != null)
         {
             for (final File fileEntry : folder.listFiles())
@@ -493,7 +525,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         photosAdapterView = new PhotosAdapterView(SynchronizationFragment.this.getActivity(), localFileInfoList,
                 PhotosAdapterView.SYNC_TAB);
         filesGrid.setAdapter(photosAdapterView);
-        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
         showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_get_server_directory_success);
     }
 
@@ -506,7 +538,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                     Toast.LENGTH_SHORT).show();
             return true;
         }
-        dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+        handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
         boolean hadFile = false;
         needCount = 0;
         currentCount = 0;
@@ -585,10 +617,10 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                         }
                         if (currentCount == needCount)
                         {
-                            dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                         }
                     }
-                }, showMessageHandler);
+                }, handler);
     }
 
     /*
@@ -600,14 +632,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
      */
     private void addCustomer()
     {
-        retialSaleDbAdapter = new RetialSaleDbAdapter(SynchronizationFragment.this.getActivity());
-        retialSaleDbAdapter.open();
+        openDb();
+
         int creator = Utility.getCreator(SynchronizationFragment.this.getActivity());
         int creatorGroup = Utility.getCreatorGroup(SynchronizationFragment.this.getActivity());
         Log.d(TAG, "creator is " + creator);
         needCount = 0;
         currentCount = 0;
-        dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+        handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
         Cursor cursor = retialSaleDbAdapter.getCustomerByCreatorNotUpload(creator);
         if (cursor != null)
         {
@@ -681,7 +713,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                     catch (JSONException e)
                     {
                         e.printStackTrace();
-                        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                         showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_db_error);
                         break;
                     }
@@ -707,14 +739,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                 .key(Utility.AddCustomerJsonTag.CUSTOMER_RESERVATION).value(customerReservationJson)
                                 .endObject();
                         // Log.d(TAG, "json === " + json.toString());
-                        POSTThread postThread = new POSTThread(json, custometName, showMessageHandler, rowId,
+                        POSTThread postThread = new POSTThread(json, custometName, handler, rowId,
                                 retialSaleDbAdapter);
                         postThread.start();
                     }
                     catch (JSONException e)
                     {
                         e.printStackTrace();
-                        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                         showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_db_error);
                         break;
                     }
@@ -722,17 +754,16 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             }
             else
             {
-                dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                 showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_no_customer);
             }
             cursor.close();
         }
         else
         {
-            dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
             showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_no_customer);
         }
-        // retialSaleDbAdapter.close();
     }
 
     private void addCustomerInfo(JSONStringer json, String custometName, Handler handler, long rowId,
@@ -764,8 +795,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             showMessage(Utility.FILE_PATH, R.string.sync_tab_sync_clear_folder_failed);
         }
         // 2. clear data option in DB
-        RetialSaleDbAdapter retialSaleDbAdapter = new RetialSaleDbAdapter(SynchronizationFragment.this.getActivity());
-        retialSaleDbAdapter.open();
+        openDb();
         isSuccess = retialSaleDbAdapter.deleteAllOption();
         if (isSuccess)
         {
@@ -776,10 +806,10 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_clear_data_option_failed);
         }
         // 3. download data option from server
-        getDataOption(retialSaleDbAdapter);
+        getDataOption();
     }
 
-    private void getDataOption(final RetialSaleDbAdapter retialSaleDbAdapter)
+    private void getDataOption()
     {
         HttpManager httpManager = new HttpManager();
         httpManager.getDataOptions(SynchronizationFragment.this.getActivity(), new GetDataOptionListener()
@@ -804,7 +834,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                         + typeName + " optLock : " + optLock);
                                 retialSaleDbAdapter.create(-1, typeName, optSerial, optName);
                             }
-                            retialSaleDbAdapter.close();
+                            closeDb();
                             showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_download_data_option_success);
                         }
                         else
@@ -827,32 +857,53 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             }
         });
     }
+    
+    private List<String> getAllFolderNameFromParent()
+    {
+        List<String> folderList = new ArrayList<String>();
+        
+        File folder = new File(Utility.FILE_PATH);
+        if (folder.listFiles() != null)
+        {
+            for (final File fileEntry : folder.listFiles())
+            {
+                if (fileEntry.isDirectory())    // only add the folder
+                {
+                    folderList.add(SynchronizationFragment.this.getResources().getString(R.string.folder)
+                            + fileEntry.getName());
+                }
+            }
+        }
+        
+        return folderList;
+    }
+    
+    private List<String> getAllOptionNameFromDB()
+    {
+        List<String> optionList = new ArrayList<String>();
+        
+        openDb();
+        
+        Cursor cursor = retialSaleDbAdapter.getAllOption();
+        if (cursor != null)
+        {
+            while (cursor.moveToNext())
+            {
+                String optionAlias = cursor.getString(cursor
+                        .getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_ALIAS));
+                
+                optionList.add(SynchronizationFragment.this.getResources().getString(R.string.db_item) + optionAlias);
+            }
+        }
+        
+        return optionList;
+    }
 
     /*
      *  *************************************************Sync Related*******************************************************
      */
-
-    private Handler dialogHandler = new Handler()
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            switch (msg.what)
-            {
-            case Utility.SHOW_WAITING_DIALOG:
-                Log.d(TAG, "show waiting dialog ");
-                progressDialog = ProgressDialog.show(SynchronizationFragment.this.getActivity(), Utility.SPACE_STRING,
-                        SynchronizationFragment.this.getResources().getString(R.string.loading));
-                break;
-            case Utility.DISMISS_WAITING_DIALOG:
-                Log.d(TAG, "dismiss dialog ");
-                if (progressDialog != null) progressDialog.dismiss();
-                break;
-            }
-        }
-    };
     
-    private Handler showMessageHandler = new Handler()
+    private Handler handler = new Handler()
     {
         @Override
         public void handleMessage(Message msg)
@@ -863,11 +914,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 currentCount++;
                 if (currentCount == needCount)
                 {
-                    dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-                    if (retialSaleDbAdapter.isDbOpen())
-                    {
-                        retialSaleDbAdapter.close();
-                    }
+                    handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                    closeDb();
                 }
                 String customerName = (String) msg.obj;
                 int statusCode = msg.arg1;
@@ -893,6 +941,24 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 }
                 break;
             case SelectedItem.SYNC_DATA:
+                break;
+            case Utility.SHOW_WAITING_DIALOG:
+                Log.d(TAG, "show waiting dialog ");
+                progressDialog = ProgressDialog.show(SynchronizationFragment.this.getActivity(), Utility.SPACE_STRING,
+                        SynchronizationFragment.this.getResources().getString(R.string.loading));
+                break;
+            case Utility.DISMISS_WAITING_DIALOG:
+                Log.d(TAG, "dismiss dialog ");
+                if (progressDialog != null) progressDialog.dismiss();
+                break;
+            case SelectedItem.SHOW_SYNC_LIST:
+                if (detailList != null)
+                {
+                    for (int i =  0; i < detailList.size(); i++)
+                    {
+                        Log.d(TAG, "detailList item is " + detailList.get(i));
+                    }
+                }
                 break;
             }
         }
@@ -920,6 +986,29 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         public void run()
         {
             addCustomerInfo(json, custometName, handler, rowId, retialSaleDbAdapter);
+        }
+    }
+    
+    private class SyncThread extends Thread
+    {
+        @Override
+        public void run()
+        {
+            handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+            if (detailList == null)
+                detailList = new ArrayList<String>();
+            else
+                detailList.clear();
+            
+            // 1. list all folder from parent
+            detailList.addAll(getAllFolderNameFromParent());
+            
+            // 2. list all option alias
+            detailList.addAll(getAllOptionNameFromDB());
+            
+            handler.sendEmptyMessage(SelectedItem.SHOW_SYNC_LIST);
+            
+            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
         }
     }
 }

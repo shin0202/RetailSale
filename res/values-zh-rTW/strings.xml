@@ -16,6 +16,8 @@
     <string name="no_data">無資料</string>
     <string name="ok">確定</string>
     <string name="remind">提醒</string>
+    <string name="folder">資料夾</string>
+    <string name="db_item">資料庫項目</string>
 
     <!-- Login -->
     <string name="login">登入</string>
