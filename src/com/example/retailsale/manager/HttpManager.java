@@ -12,6 +12,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONStringer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -81,7 +82,7 @@ public class HttpManager
         GsonRequest<GsonLoginInfo> getDataOptionsGsonRequset = new GsonRequest<GsonLoginInfo>(Method.GET, loginUri,
                 GsonLoginInfo.class, getLoginReqSuccessListener(loginListener),
                 getLoginReqErrorListener(loginListener), LogType.Login, "095050", Utility.SPACE_STRING, USER_HOST,
-                ACTION_NAME);
+                ACTION_NAME, Utility.SPACE_STRING);
         getDataOptionsGsonRequset.setTag("login");
 
         VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionsGsonRequset);
@@ -137,8 +138,8 @@ public class HttpManager
 //		VolleySingleton.getInstance(context).getRequestQueue().add(addCustomerInfoRequset);
     }
 
-    public void addCustomerInfo(Context context, String custometName, Handler handler, String logType, String userNo,
-            String userName, String userHostAddress, String actionName, JSONStringer json, long rowId,
+    public void addCustomerInfo(Activity activity, String custometName, Handler handler, String logType, String userNo,
+            String userName, String userHostAddress, String actionName, String loginKey, JSONStringer json, long rowId,
             RetialSaleDbAdapter retialSaleDbAdapter)
     {
         String addCustomerInfoUri = "http://" + IP + "/KendoAPI/ODATA/customerData_Mobile";
@@ -146,7 +147,7 @@ public class HttpManager
         HttpPost httppost = new HttpPost(addCustomerInfoUri);
         httppost.setHeader(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
         httppost.setHeader(Utility.JSONTag.FATCA_INFO,
-                Utility.getFactaInfoHeader(logType, userNo, userName, userHostAddress, actionName));
+                Utility.getFactaInfoHeader(logType, userNo, userName, userHostAddress, actionName, loginKey));
 
         Message msg = new Message();
         msg.what = SynchronizationFragment.SelectedItem.UPLOAD_CUSTOMER;
@@ -194,7 +195,7 @@ public class HttpManager
     ////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////// data option
-    public void getDataOptions(Context context, GetDataOptionListener getDataOptionListener)
+    public void getDataOptions(Activity activity, GetDataOptionListener getDataOptionListener)
     {
         String dataOptionsUri = "http://" + IP + "/KendoAPI/ODATA/dataOptionParm";
         Log.e(TAG, "getDataOptions() dataOptionsUri = " + dataOptionsUri);
@@ -205,12 +206,13 @@ public class HttpManager
 
         GsonRequest<GsonDataOption> getDataOptionsGsonRequset = new GsonRequest<GsonDataOption>(Method.GET,
                 dataOptionsUri, GsonDataOption.class, getDataOptionReqSuccessListener(getDataOptionListener),
-                getDataOptionReqErrorListener(getDataOptionListener), LogType.Operation, "095050",
-                Utility.SPACE_STRING, USER_HOST, ACTION_NAME);
+                getDataOptionReqErrorListener(getDataOptionListener), LogType.Operation, String.valueOf(Utility
+                        .getCreator(activity)), Utility.SPACE_STRING, USER_HOST, ACTION_NAME,
+                Utility.getLoginKey(activity));
 
         getDataOptionsGsonRequset.setTag("getDataOptions");
 
-        VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionsGsonRequset);
+        VolleySingleton.getInstance(activity).getRequestQueue().add(getDataOptionsGsonRequset);
     }
 
 //    public void getDataOptionType(Context context, GetDataOptionTypeListener getDataOptionTypeListener) {
@@ -226,7 +228,7 @@ public class HttpManager
     ////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////// file info
-    public void getFileInfo(Context context, int pathId, int fileId, GetFileInfoListener getFileInfoListener,
+    public void getFileInfo(Activity activity, int pathId, int fileId, GetFileInfoListener getFileInfoListener,
             Handler handler)
     {
         String fileInfoUri = "http://" + IP + "/KendoAPI/ODATA/fileContent(pathId=" + pathId + ",fileId=" + fileId
@@ -239,18 +241,19 @@ public class HttpManager
 
         GsonRequest<GsonFileInfo> getFileInfoGsonRequset = new GsonRequest<GsonFileInfo>(Method.GET, fileInfoUri,
                 GsonFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener, handler),
-                getFileInfoReqErrorListener(getFileInfoListener), LogType.Operation, "095050", Utility.SPACE_STRING,
-                USER_HOST, ACTION_NAME);
+                getFileInfoReqErrorListener(getFileInfoListener), LogType.Operation, String.valueOf(Utility
+                        .getCreator(activity)), Utility.SPACE_STRING, USER_HOST, ACTION_NAME,
+                Utility.getLoginKey(activity));
 
         getFileInfoGsonRequset.setTag("getFileInfo");
 
-        VolleySingleton.getInstance(context).getRequestQueue().add(getFileInfoGsonRequset);
+        VolleySingleton.getInstance(activity).getRequestQueue().add(getFileInfoGsonRequset);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////// folder info
-    public void getFolderInfo(Context context, GetFolderInfoListener getFolderInfoListener)
+    public void getFolderInfo(Activity activity, GetFolderInfoListener getFolderInfoListener)
     {
         String fileInfoUri = "http://" + IP + "/KendoAPI/ODATA/folderInfo";
         Log.e(TAG, "getFolderInfo() fileInfoUri = " + fileInfoUri);
@@ -260,11 +263,12 @@ public class HttpManager
 
         GsonRequest<GsonFolderInfo> getFolderInfoGsonRequset = new GsonRequest<GsonFolderInfo>(Method.GET, fileInfoUri,
                 GsonFolderInfo.class, getFolderInfoReqSuccessListener(getFolderInfoListener),
-                getFolderInfoReqErrorListener(getFolderInfoListener), LogType.Operation, "095050",
-                Utility.SPACE_STRING, USER_HOST, ACTION_NAME);
+                getFolderInfoReqErrorListener(getFolderInfoListener), LogType.Operation, String.valueOf(Utility
+                        .getCreator(activity)), Utility.SPACE_STRING, USER_HOST, ACTION_NAME,
+                Utility.getLoginKey(activity));
         getFolderInfoGsonRequset.setTag("getFolderInfo");
 
-        VolleySingleton.getInstance(context).getRequestQueue().add(getFolderInfoGsonRequset);
+        VolleySingleton.getInstance(activity).getRequestQueue().add(getFolderInfoGsonRequset);
     }
 
     ////////////////////////////////////////////////////////////////////////////////

@@ -914,14 +914,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         }
     }
 
-    private void addCustomerInfo(JSONStringer json, String custometName, Handler handler,
-            long rowId, RetialSaleDbAdapter retialSaleDbAdapter)
+    private void addCustomerInfo(JSONStringer json, String custometName, Handler handler, long rowId,
+            RetialSaleDbAdapter retialSaleDbAdapter)
     {
 
         HttpManager httpManager = new HttpManager();
-        httpManager.addCustomerInfo(SynchronizationFragment.this.getActivity(), custometName,
-                handler, HttpManager.LogType.Login, "095050", Utility.SPACE_STRING,
-                HttpManager.USER_HOST, HttpManager.ACTION_NAME, json, rowId, retialSaleDbAdapter);
+        httpManager.addCustomerInfo(getActivity(), custometName, handler, HttpManager.LogType.Operation,
+                String.valueOf(Utility.getCreator(getActivity())), Utility.SPACE_STRING, HttpManager.USER_HOST,
+                HttpManager.ACTION_NAME, Utility.getLoginKey(getActivity()), json, rowId, retialSaleDbAdapter);
     }
 
     private void getAllCustomerByCreator()

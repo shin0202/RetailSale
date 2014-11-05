@@ -460,6 +460,19 @@ public class Utility
 
         return header.toString();
     }
+    
+    public static String getFactaInfoHeader(String logType, String userNo, String userName, String userHostAddress,
+            String actionName, String loginKey)
+    {
+        // "{\"LogType\":\"Operation\",\"UserNo\":\"095050\",\"UserName\":\"\",\"UserHostAddress\":\"127.0.0.1\",
+        // \"ActionName\":\"http://fatcaweb/FATCA/FATCA/\",\"LoginKey\":\"\"}"
+        StringBuilder header = new StringBuilder().append("{\"LogType\":\"").append(logType).append("\",\"UserNo\":\"")
+                .append(userNo).append("\",\"UserName\":\"").append(userName).append("\",\"UserHostAddress\":\"")
+                .append(userHostAddress).append("\",\"ActionName\":\"").append(actionName).append("\",\"LoginKey\":\"")
+                .append(loginKey).append("\"}");
+
+        return header.toString();
+    }
 
     public static void saveData(Activity activity, String id, String password, int userSerial, int userGroup,
             String loginKey)
@@ -485,9 +498,9 @@ public class Utility
         }
     }
 
-    public static int getCreator(Activity actiivty)
+    public static int getCreator(Activity activity)
     {
-        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
+        SharedPreferences settings = activity.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
         int creator = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
 
         Log.d(TAG, "creator is " + creator);
@@ -503,6 +516,16 @@ public class Utility
         Log.d(TAG, "creator group is " + creatorGroup);
 
         return creatorGroup;
+    }
+    
+    public static String getLoginKey(Activity actiivty)
+    {
+        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
+        String loginKey = settings.getString(Utility.LoginField.LOGIN_KEY, "");
+
+        Log.d(TAG, "loginKey is " + loginKey);
+
+        return loginKey;
     }
 
     public static boolean removeDirectory(File directory)

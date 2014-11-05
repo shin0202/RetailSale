@@ -237,7 +237,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             return false;
         }
         // check email
-        if (!isChecked && !Utility.isEmailValid(email))
+        if (!isChecked && !email.equals(Utility.SPACE_STRING) && !Utility.isEmailValid(email))
         {
             showToast(this.getActivity().getResources().getString(R.string.email_field_error));
             return false;
