@@ -40,7 +40,7 @@
     <dimen name="order_measure_layout_first_margin_top">75dp</dimen>
 
     <!-- Browser tab -->
-    <dimen name="browser_tab_grid_height">220dp</dimen>
+    <dimen name="browser_tab_grid_height">470dp</dimen>
     <dimen name="browser_tab_vertical_spacing">0.5dp</dimen>
     <dimen name="browser_tab_horizontal_scroll_width">400dp</dimen>
     <dimen name="browser_tab_cell_img_edge">180dp</dimen>

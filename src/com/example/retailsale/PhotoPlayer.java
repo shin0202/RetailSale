@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -99,6 +100,24 @@ public class PhotoPlayer extends Activity implements OnClickListener
             attacher.cleanup();
         }
     }
+    
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
+        case R.id.photo_player_cancel_btn:
+            this.finish();
+            break;
+        }
+    }
+    
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        return super.onKeyDown(keyCode, event);
+    }
+    
 
     private void findViews()
     {
@@ -340,17 +359,6 @@ public class PhotoPlayer extends Activity implements OnClickListener
         }
 
         return inSampleSize;
-    }
-
-    @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-        case R.id.photo_player_cancel_btn:
-            this.finish();
-            break;
-        }
     }
 
     private Handler dialogHandler = new Handler()

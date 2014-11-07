@@ -167,6 +167,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList(FILE_LIST, (ArrayList<? extends Parcelable>) photoList);
                         Log.d(TAG, "position === " + position);
+                        Log.d(TAG, "currentAlbumPosition === " + currentAlbumPosition);
                         bundle.putInt(FILE_POSITION, position);
                         intent.putExtras(bundle);
                         startActivity(intent);
@@ -203,7 +204,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         if (v.getId() == R.id.browser_back_btn)
         {
             // to do back action
-            Log.d(TAG, "currentParentPath is " + currentParentPath);
+            Log.d(TAG, "back action currentParentPath is " + currentParentPath);
 
             if (!currentParentPath.equals(Utility.FILE_PATH))
             {
@@ -226,6 +227,9 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     private void handlePageRefresh(String currentParent)
     {
         // get albums from download path
+        Log.d(TAG, "handlePageRefresh albumNum : " + albumNum + " currentAlbumPosition : "
+                + currentAlbumPosition + " currentParent : " + currentParent
+                + " currentParentPath : " + currentParentPath);
         albumNum = 0;
         currentAlbumPosition = 0;
         this.currentParentPath = currentParent;
@@ -235,7 +239,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 
         if (albumList.size() > 0)
         {
-            String path = albumList.get(0).getFilePath();
+            String path = albumList.get(currentAlbumPosition).getFilePath();
             Log.d(TAG, "XXXXXXXXXXXXXXXXXXXXXXX " + path);
             listFilesInFolder(new File(path));
         }
