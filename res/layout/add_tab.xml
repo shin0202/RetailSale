@@ -62,6 +62,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/add_tab_leave_info"
+                    android:textColor="@color/darkorange"
                     android:textSize="@dimen/add_tab_txt_style_size" />
 
                 <!-- Show customer id layout -->

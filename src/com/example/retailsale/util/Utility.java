@@ -161,8 +161,8 @@ public class Utility
     {
         boolean isValid = false;
 
-//		String expression = "[0-9]{4}-[0-9]{6}";
-        String expression = "[0-9]{10}";
+		String expression = "[0-9]{4}-[0-9]{6}";
+//        String expression = "[0-9]{10}";
         CharSequence inputStr = number;
 
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
