@@ -3,8 +3,11 @@ package com.example.retailsale;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +28,7 @@ public class Login extends Activity implements OnClickListener
 
     private EditText inputUserId;
     private EditText inputUserPassword;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -79,6 +83,7 @@ public class Login extends Activity implements OnClickListener
                 id = "A123456";
                 password = "1qaz@wsx";
             }
+            handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
             login(id, password);
 //            startManageFragment();
             break;
@@ -121,21 +126,25 @@ public class Login extends Activity implements OnClickListener
                             else
                             {
                                 Log.d(TAG, "Message is failed");
+                                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                             }
                         }
                         else
                         {
                             Log.d(TAG, "value is null or size less/equal than 0");
+                            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                         }
                     }
                     else
                     {
                         Log.d(TAG, "userInfo is null");
+                        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                     }
                 }
                 else
                 {
                     Log.d(TAG, "Login failed");
+                    handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                 }
             }
         });
@@ -187,7 +196,29 @@ public class Login extends Activity implements OnClickListener
                 {
                     Log.d(TAG, "Get data option failed");
                 }
+                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
             }
         });
     }
+    
+    private Handler handler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+
+            switch (msg.what)
+            {
+            case Utility.SHOW_WAITING_DIALOG:
+                Log.d(TAG, "show waiting dialog ");
+                progressDialog = ProgressDialog.show(Login.this, Utility.SPACE_STRING,
+                        getResources().getString(R.string.loading));
+                break;
+            case Utility.DISMISS_WAITING_DIALOG:
+                Log.d(TAG, "dismiss dialog ");
+                if (progressDialog != null) progressDialog.dismiss();
+                break;
+            }
+        }
+    };
 }
