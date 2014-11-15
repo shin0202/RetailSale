@@ -14,7 +14,9 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -265,6 +267,31 @@ public class Utility
         dateTime = dateFormat.format(date).toString();
 
         return dateTime;
+    }
+    
+    public static int getCurrentYear()
+    {
+        Calendar now = Calendar.getInstance();   // Gets the current date and time
+        int year = now.get(Calendar.YEAR);      // The current year as an int
+        return year;
+    }
+    
+    public static int getDays(String strDate)
+    {
+//        String strDate = "2012-02";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM"); 
+        Calendar calendar = new GregorianCalendar(); 
+        Date date1 = null;
+        try
+        {
+            date1 = sdf.parse(strDate);
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        } 
+        calendar.setTime(date1);
+        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
     
     public static String covertDateStringToServer(String date)

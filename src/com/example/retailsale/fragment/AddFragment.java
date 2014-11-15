@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -36,14 +40,13 @@ import com.example.retailsale.manager.dataoption.GsonDataOptionType;
 import com.example.retailsale.manager.dataoption.OptionAdapter;
 import com.example.retailsale.util.Utility;
 
-public class AddFragment extends Fragment implements OnClickListener, OnCheckedChangeListener
+public class AddFragment extends Fragment implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener
 {
     private static final String TAG = "AddFragment";
     private static final int REQUEST_ORDER_MEASURE = 999;
     public static final String SEND_CUSTOMER_INFO = "send_customer_info";
     public static final String SEND_NOTE_MSG = "send_note_msg";
     private OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter;
-    private List<GsonDataOptionType> infoList, jobList, ageList, sexList, titleList;
     private boolean isChecked = false;
     private CustomerInfo customerInfo;
     private RetialSaleDbAdapter retialSaleDbAdapter;
@@ -52,8 +55,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     // views
     private MainActivity mainActivity;
     private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner;
+    private Spinner yearSpinner, monthSpinner, daySpinner;
     private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
-            customerBirthdayET, introducerET;
+            introducerET;
     private CheckBox leaveInfoCB;
     private TextView companyNameTV, customerIDTV, designerStoreTV, designerNameTV, createDateTV;
     private DatePicker consumerVisitDateDP;
@@ -106,7 +110,6 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         phoneNumberET = (EditText) view.findViewById(R.id.add_tab_edit_phone_number);
         cellPhoneNumberET = (EditText) view.findViewById(R.id.add_tab_edit_cellphone_number);
         companyPhoneNumberET = (EditText) view.findViewById(R.id.add_tab_edit_phone_number_company);
-        customerBirthdayET = (EditText) view.findViewById(R.id.add_tab_edit_customer_birthday);
         introducerET = (EditText) view.findViewById(R.id.add_tab_edit_introducer);
         emailET = (EditText) view.findViewById(R.id.add_tab_edit_email);
         leaveInfoCB = (CheckBox) view.findViewById(R.id.add_tab_leave_info_checkbox);
@@ -114,6 +117,13 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         consumerVisitTimeTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_visit_timePicker);
         designerStoreTV = (TextView) view.findViewById(R.id.add_tab_designer_store);
         createDateTV = (TextView) view.findViewById(R.id.add_tab_create_date);
+        
+        yearSpinner = (Spinner) view.findViewById(R.id.add_tab_customer_birthday_year);
+        yearSpinner.setOnItemSelectedListener(this);
+        monthSpinner = (Spinner) view.findViewById(R.id.add_tab_customer_birthday_month);
+        monthSpinner.setOnItemSelectedListener(this);
+        daySpinner = (Spinner) view.findViewById(R.id.add_tab_customer_birthday_day);
+        daySpinner.setOnItemSelectedListener(this);
         // save btn
         saveBtn.setOnClickListener(this);
         newBtn.setOnClickListener(this);
@@ -131,6 +141,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         // get optionType
         getOptionType();
+        
+        // set customer birthday spinner(year, month, day)
+        setCustomerBirthdayYearSpinner();
+//        setCustomerBirthdayMonthSpinner();
+//        setCustomerBirthdayDaySpinner();
         return view;
     }
 
@@ -197,7 +212,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         String cellPhoneNumber = cellPhoneNumberET.getText().toString();
         String companyPhoneNumber = companyPhoneNumberET.getText().toString();
         String email = emailET.getText().toString();
-        String customerBirthday = customerBirthdayET.getText().toString();
+        StringBuilder customerBirthday = new StringBuilder();
         String dateString = Utility.covertDateToString(consumerVisitDateDP.getYear(),
                 consumerVisitDateDP.getMonth() + 1, consumerVisitDateDP.getDayOfMonth());
         String timeString = Utility.covertTimeToString(consumerVisitTimeTP.getCurrentHour(),
@@ -210,10 +225,26 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         int ageSelectedPosition = ageSpinner.getSelectedItemPosition();
         int sexSelectedPosition = sexSpinner.getSelectedItemPosition();
         int titleSelectedPosition = titleSpinner.getSelectedItemPosition();
+        int yearSelectedPosition = yearSpinner.getSelectedItemPosition();
+        
+        if (yearSelectedPosition == 0)
+        {
+            customerBirthday.append(getResources().getString(R.string.no_data));
+        }
+        else
+        {
+            customerBirthday.append(yearSpinner.getSelectedItem()).append("-")
+                    .append(monthSpinner.getSelectedItem()).append("-")
+                    .append(daySpinner.getSelectedItem());
+        }
+        
         Log.d(TAG, "msgSelectedPosition: " + msgSelectedPosition + " jobSelectedPosition: " + jobSelectedPosition
                 + " ageSelectedPosition: " + ageSelectedPosition + " sexSelectedPosition: " + sexSelectedPosition
                 + " titleSelectedPosition: " + titleSelectedPosition);
         Log.d(TAG, "date: " + dateString + "time : " + timeString);
+        
+        
+        
         Log.d(TAG, "customerName : " + customerName + " phoneNumber: " + phoneNumber + " cellPhoneNumber: "
                 + cellPhoneNumber + " companyPhoneNumber: " + companyPhoneNumber + " email: " + email + " birthday: "
                 + customerBirthday + " introducer: " + introducer);
@@ -265,7 +296,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber,
                         phoneNumber, companyPhoneNumber, sexSelectedPosition, titleSelectedPosition, email, dateString
                                 + timeString, msgSelectedPosition, introducer, jobSelectedPosition,
-                        ageSelectedPosition, customerBirthday, Utility.getCreator(getActivity()),
+                        ageSelectedPosition, customerBirthday.toString(), Utility.getCreator(getActivity()),
                         Utility.getCreatorGroup(getActivity()), createDateTime, Utility.SPACE_STRING,
                         Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, 0, 0,
                         Utility.SPACE_STRING, Utility.SPACE_STRING, 0, Utility.SPACE_STRING);
@@ -275,7 +306,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         {
             customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber, phoneNumber,
                     companyPhoneNumber, sexSelectedPosition, titleSelectedPosition, email, dateString + timeString,
-                    msgSelectedPosition, introducer, jobSelectedPosition, ageSelectedPosition, customerBirthday,
+                    msgSelectedPosition, introducer, jobSelectedPosition, ageSelectedPosition, customerBirthday.toString(),
                     Utility.getCreator(getActivity()), Utility.getCreatorGroup(getActivity()), dateString + timeString);
         }
 
@@ -380,7 +411,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         phoneNumberET.setEnabled(enabled);
         companyPhoneNumberET.setEnabled(enabled);
         emailET.setEnabled(enabled);
-        customerBirthdayET.setEnabled(enabled);
+
+        yearSpinner.setEnabled(enabled);
+        monthSpinner.setEnabled(enabled);
+        daySpinner.setEnabled(enabled);
+        
         introducerET.setEnabled(enabled);
         // datepicker
         consumerVisitDateDP.setEnabled(enabled);
@@ -400,7 +435,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             phoneNumberET.setText(this.getResources().getString(R.string.no_data));
             companyPhoneNumberET.setText(this.getResources().getString(R.string.no_data));
             emailET.setText(this.getResources().getString(R.string.no_data));
-            customerBirthdayET.setText(this.getResources().getString(R.string.no_data));
+            
+            yearSpinner.setSelection(0);
+            monthSpinner.setAdapter(null);
+            daySpinner.setAdapter(null);
+            
             introducerET.setText(this.getResources().getString(R.string.no_data));
         }
     }
@@ -424,6 +463,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 
     private void getOptionType()
     {
+        List<GsonDataOptionType> infoList, jobList, ageList, sexList, titleList;
         infoList = new ArrayList<GsonDataOptionType>();
         jobList = new ArrayList<GsonDataOptionType>();
         ageList = new ArrayList<GsonDataOptionType>();
@@ -523,5 +563,170 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         {
             designerStoreTV.setText(AddFragment.this.getActivity().getResources().getString(R.string.no_data));
         }
+    }
+    
+    private void setCustomerBirthdayYearSpinner()
+    {
+        int currentYear = Utility.getCurrentYear();
+        int startYear = currentYear - 150;
+        Log.d(TAG, "current year : " + currentYear + " start year : " + startYear);
+        
+        List<String> yearList = new ArrayList<String>();
+        
+        yearList.add(getResources().getString(R.string.no_data));
+        
+        for (int i = startYear; i < currentYear; i++)
+        {
+            yearList.add(String.valueOf(i));
+        }
+        
+        BirthdayAdapter yearAdapter = new BirthdayAdapter(this.getActivity(), yearList);
+        
+        yearSpinner.setAdapter(yearAdapter);
+    }
+    
+    private void setCustomerBirthdayMonthSpinner()
+    {
+        List<String> monthList = new ArrayList<String>();
+        
+        for (int i = 1; i < 13; i++)
+        {
+            if (i < 10)
+            {
+                monthList.add("0" + i);
+            }
+            else
+            {
+                monthList.add(String.valueOf(i));
+            }
+        }
+        
+        BirthdayAdapter monthAdapter = new BirthdayAdapter(this.getActivity(), monthList);
+        
+        monthSpinner.setAdapter(monthAdapter);
+    }
+    
+    private void setCustomerBirthdayDaySpinner(int days)
+    {
+        List<String> dayList = new ArrayList<String>();
+        
+        for (int i = 1; i < days + 1; i++)
+        {
+            if (i < 10)
+            {
+                dayList.add("0" + i);
+            }
+            else
+            {
+                dayList.add(String.valueOf(i));
+            }
+        }
+        
+        BirthdayAdapter dayAdapter = new BirthdayAdapter(this.getActivity(), dayList);
+        
+        daySpinner.setAdapter(dayAdapter);
+    }
+    
+    private class BirthdayAdapter extends BaseAdapter
+    {
+        private static final String TAG = "DateAdapter";
+        private static final int BASE_INDEX = 1000;
+        private List<String> birthList;
+        private Context context;
+        private ViewTag viewTag;
+
+        public BirthdayAdapter(Context context, List<String> birthList)
+        {
+            this.context = context;
+            this.birthList = birthList;
+        }
+
+        @Override
+        public int getCount()
+        {
+            return birthList.size();
+        }
+
+        @Override
+        public Object getItem(int position)
+        {
+            return birthList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position)
+        {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent)
+        {
+            if (convertView == null)
+            {
+                LayoutInflater layoutInflater = LayoutInflater.from(context);
+                convertView = layoutInflater.inflate(R.layout.option_layout, null);
+                viewTag = new ViewTag((TextView) convertView.findViewById(R.id.option_text));
+                convertView.setTag(viewTag);
+            }
+            else
+            {
+                viewTag = (ViewTag) convertView.getTag();
+            }
+
+            convertView.setId(BASE_INDEX + position);
+
+            if (position < birthList.size())
+            {
+                viewTag.itemName.setText(birthList.get(position));
+            }
+
+            return convertView;
+        }
+
+        class ViewTag
+        {
+            TextView itemName;
+
+            public ViewTag(TextView itemName)
+            {
+                this.itemName = itemName;
+            }
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    {
+        switch (parent.getId())
+        {
+        case R.id.add_tab_customer_birthday_year:
+            Log.d(TAG, "To select year, the position is " + position);
+            if (position == 0)
+            {
+                monthSpinner.setAdapter(null);
+                daySpinner.setAdapter(null);
+            }
+            else
+            {
+                setCustomerBirthdayMonthSpinner();
+            }
+            break;
+        case R.id.add_tab_customer_birthday_month:
+            Log.d(TAG, "To select month, the position is " + position);
+            if (yearSpinner.getSelectedItemPosition() != 0)
+            {
+                int days = Utility.getDays((String)yearSpinner.getSelectedItem() + "-" + (String)monthSpinner.getSelectedItem());
+                Log.d(TAG, "days : " + days);
+                setCustomerBirthdayDaySpinner(days);
+            }
+            break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent)
+    {
+
     }
 }

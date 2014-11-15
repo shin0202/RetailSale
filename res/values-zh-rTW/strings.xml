@@ -19,6 +19,8 @@
     <string name="folder">資料夾 : </string>
     <string name="db_item">資料庫項目 : </string>
     <string name="customer_name">客戶姓名 : </string>
+    <string name="decode_success">解密成功</string>
+    <string name="decode_failed">解密失敗</string>
 
     <!-- Login -->
     <string name="login">登入</string>

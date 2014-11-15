@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.retailsale.fragment.BrowserFragment;
 import com.example.retailsale.manager.fileinfo.LocalFileInfo;
@@ -214,10 +215,10 @@ public class PhotoPlayer extends Activity implements OnClickListener
                 if (photoList != null && photoList.size() > 0 && position < photoList.size())
                 {
                     currentPosition = position;
-                    decodeSampledBitmapFromUri(photoList.get(position).getFilePath(), photoList.get(position)
-                            .getFileName());
-                    // If you later call scalableIV.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
-                    attacher.update();
+                    if (decodeSampledBitmapFromUri(photoList.get(position).getFilePath(), photoList.get(position)
+                            .getFileName()))
+                        // If you later call scalableIV.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
+                        attacher.update();
                 }
             }
         });
@@ -272,48 +273,52 @@ public class PhotoPlayer extends Activity implements OnClickListener
         return bm;
     }
 
-    private void decodeSampledBitmapFromUri(final String path, final String fileName)
+    private boolean decodeSampledBitmapFromUri(final String path, final String fileName)
     {
-        dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
-//        Bitmap bm = null;
-        scalableIV.setImageBitmap(null);
-
-        recycleBitmap();
-
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-
-//        bm = BitmapFactory.decodeFile(path, options);
-
-        // 5. to read file and remove md5
-        String readContent = Utility.readFile(path);
-//		Log.d(TAG, "readContent is " + readContent);
-        Log.d(TAG, "*********************************************************** ");
-        String realFileName = fileName.replace(Utility.REPLACE_TXT_STRING, Utility.SPACE_STRING);
-//		Log.d(TAG, "realFileName is " + realFileName);
-        Log.d(TAG, "*********************************************************** ");
-        String md5String = Utility.generateMD5String(realFileName);
-//		Log.d(TAG, "md5String is " + md5String);
-        Log.d(TAG, "*********************************************************** ");
-
-        String realData = readContent.replace(md5String, Utility.SPACE_STRING);
-//		Log.d(TAG, "realData is " + realData);
-        Log.d(TAG, "*********************************************************** ");
-        // 6. decode Base64 to byte[]
-
-        byte[] photo = Utility.decodeBase64(realData);
 
         try
         {
+            dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+            // Bitmap bm = null;
+            scalableIV.setImageBitmap(null);
+
+            recycleBitmap();
+
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+
+            // bm = BitmapFactory.decodeFile(path, options);
+
+            // 5. to read file and remove md5
+            String readContent = Utility.readFile(path);
+            // Log.d(TAG, "readContent is " + readContent);
+            Log.d(TAG, "*********************************************************** ");
+            String realFileName = fileName
+                    .replace(Utility.REPLACE_TXT_STRING, Utility.SPACE_STRING);
+            // Log.d(TAG, "realFileName is " + realFileName);
+            Log.d(TAG, "*********************************************************** ");
+            String md5String = Utility.generateMD5String(realFileName);
+            // Log.d(TAG, "md5String is " + md5String);
+            Log.d(TAG, "*********************************************************** ");
+
+            String realData = readContent.replace(md5String, Utility.SPACE_STRING);
+            // Log.d(TAG, "realData is " + realData);
+            Log.d(TAG, "*********************************************************** ");
+            // 6. decode Base64 to byte[]
+
+            byte[] photo = Utility.decodeBase64(realData);
+
             bm = BitmapFactory.decodeByteArray(photo, 0, photo.length, options);
         }
         catch (Exception e)
         {
             e.printStackTrace();
+            bm = null;
         }
         catch (OutOfMemoryError e)
         {
             e.printStackTrace();
+            bm = null;
         }
 
 //		Utility.writeFile("/sdcard/retail/123/java2.txt", Utility
@@ -337,6 +342,17 @@ public class PhotoPlayer extends Activity implements OnClickListener
         scalableIV.setImageBitmap(bm);
 
         dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+        
+        if (bm == null)
+        {
+            dialogHandler.sendEmptyMessage(Utility.FAILED);
+            return false;
+        }
+        else
+        {
+            dialogHandler.sendEmptyMessage(Utility.SUCCESS);
+            return true;
+        }
     }
 
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight)
@@ -377,6 +393,12 @@ public class PhotoPlayer extends Activity implements OnClickListener
                 Log.d(TAG, "dismiss dialog ");
                 if (progressDialog != null) progressDialog.dismiss();
                 break;
+            case Utility.SUCCESS:
+                showToast(getResources().getString(R.string.decode_success));
+                break;
+            case Utility.FAILED:
+                showToast(getResources().getString(R.string.decode_failed));
+                break;
             }
         }
     };
@@ -388,9 +410,9 @@ public class PhotoPlayer extends Activity implements OnClickListener
             if (currentPosition < photoList.size() - 1)
             {
                 currentPosition += 1;
-                decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition)
-                        .getFileName());
-                attacher.update();
+                if(decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition)
+                        .getFileName()))
+                    attacher.update();
             }
             else
             {
@@ -403,9 +425,9 @@ public class PhotoPlayer extends Activity implements OnClickListener
             if (currentPosition > 0)
             {
                 currentPosition -= 1;
-                decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition)
-                        .getFileName());
-                attacher.update();
+                if (decodeSampledBitmapFromUri(photoList.get(currentPosition).getFilePath(), photoList.get(currentPosition)
+                        .getFileName()))
+                    attacher.update();
             }
             else
             {
@@ -427,5 +449,10 @@ public class PhotoPlayer extends Activity implements OnClickListener
             photosLayout.setVisibility(View.INVISIBLE);
         }
         hideController = !hideController;
+    }
+    
+    private void showToast(String showString)
+    {
+        Toast.makeText(this, showString, Toast.LENGTH_SHORT).show();
     }
 }
