@@ -24,6 +24,7 @@ public class RetialSaleDbAdapter
     private static final int DATABASE_VERSION = 1;
     private static final String ADD_CUSTOMER_TABLE = "add_customer";
     private static final String DATA_OPTION_TABLE = "data_option";
+    private static final String USER_TABLE = "user";
     private static final String CREATE_TABLE_STRING = "create table ";
     public static final String ORDER_DESC = " desc";
     /************************************************************************** for add customer (16) */
@@ -77,6 +78,15 @@ public class RetialSaleDbAdapter
     public static final int OPTION_RESERVATION_BUDGET_IDNEX = 9;
     public static final int OPTION_RESERVATION_SPACE_IDNEX = 10;
     /************************************************************************** for data option */
+    /************************************************************************** for group */
+    public static final String KEY_USER_ID = "_id";
+    public static final String KEY_USER_SERIAL = "user_serial";
+    public static final String KEY_USER_NAME = "user_name";
+    public static final String KEY_USER_GROUP = "user_group";
+    public static final String KEY_USER_TYPE = "user_type";
+    public static final String KEY_USER_GROUP_NAMING = "user_group_naming";
+    public static final String KEY_USER_TYPE_NAMING = "user_type_naming";
+    /************************************************************************** for group */
     public static final int NOTUPLOAD = 0;
     public static final int UPLOAD = 1;
     private static final String ADD_CUSTOMER_CREATE = CREATE_TABLE_STRING + ADD_CUSTOMER_TABLE + "("
@@ -92,6 +102,12 @@ public class RetialSaleDbAdapter
     private static final String DATA_OPTION_CREATE = CREATE_TABLE_STRING + DATA_OPTION_TABLE + "(" + KEY_DATA_OPTION_ID
             + " INTEGER PRIMARY KEY," + KEY_DATA_OPTION_TYPE + " INTEGER," + KEY_DATA_OPTION_ALIAS + " TEXT,"
             + KEY_DATA_OPTION_SERIAL + " INTEGER," + KEY_DATA_OPTION_NAME + " TEXT" + ");";
+
+    private static final String USER_CREATE = CREATE_TABLE_STRING + USER_TABLE + "("
+            + KEY_USER_ID + " INTEGER PRIMARY KEY," + KEY_USER_SERIAL + " INTEGER," + KEY_USER_NAME
+            + " TEXT," + KEY_USER_GROUP + " INTEGER," + KEY_USER_TYPE + " INTEGER,"
+            + KEY_USER_GROUP_NAMING + " TEXT," + KEY_USER_TYPE_NAMING + " TEXT" + ");";
+    
     private Context context = null;
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
@@ -185,6 +201,7 @@ public class RetialSaleDbAdapter
         {
             db.execSQL(ADD_CUSTOMER_CREATE);
             db.execSQL(DATA_OPTION_CREATE);
+            db.execSQL(USER_CREATE);
         }
 
         @Override
@@ -192,6 +209,7 @@ public class RetialSaleDbAdapter
         {
             db.execSQL("DROP TABLE IF EXISTS " + ADD_CUSTOMER_TABLE);
             db.execSQL("DROP TABLE IF EXISTS " + DATA_OPTION_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
             onCreate(db);
         }
     }
@@ -246,6 +264,15 @@ public class RetialSaleDbAdapter
                 { KEY_DATA_OPTION_ID, KEY_DATA_OPTION_TYPE, KEY_DATA_OPTION_ALIAS, KEY_DATA_OPTION_SERIAL,
                         KEY_DATA_OPTION_NAME }, null, null, null, null, null);
     }
+    
+    /** Get all user from user table */
+    public Cursor getAllUser()
+    {
+
+        return db.query(USER_TABLE, new String[] { KEY_USER_ID, KEY_USER_SERIAL, KEY_USER_NAME,
+                KEY_USER_GROUP, KEY_USER_TYPE, KEY_USER_GROUP_NAMING, KEY_USER_TYPE_NAMING }, null,
+                null, null, null, null);
+    }
 
     /** Insert customer to customer table */
     public long create(String customerName, String home, String mobile, String company, String email, int sex,
@@ -294,6 +321,19 @@ public class RetialSaleDbAdapter
         args.put(KEY_DATA_OPTION_NAME, optionName);
         return db.insert(DATA_OPTION_TABLE, null, args);
     }
+    
+    /** Insert user to user table */
+    public long create(int userSerial, String userName, int userGroup, int userType, String userGroupNm, String userTypeNm)
+    {
+        ContentValues args = new ContentValues();
+        args.put(KEY_USER_SERIAL, userSerial);
+        args.put(KEY_USER_NAME, userName);
+        args.put(KEY_USER_GROUP, userGroup);
+        args.put(KEY_USER_TYPE, userType);
+        args.put(KEY_USER_GROUP_NAMING, userGroupNm);
+        args.put(KEY_USER_TYPE_NAMING, userTypeNm);
+        return db.insert(USER_TABLE, null, args);
+    }
 
     /** Delete one customer from customer table */
     public boolean deleteCustomer(String rowId)
@@ -310,6 +350,14 @@ public class RetialSaleDbAdapter
         else
             return false;
     }
+    
+    /** Delete one user from user table */
+    public boolean deleteUser(String rowId)
+    {
+        if (db != null && db.isOpen()) return db.delete(USER_TABLE, KEY_USER_ID + "=" + rowId, null) > 0;
+        else
+            return false;
+    }
 
     /** Delete all customer from customer table */
     public boolean deleteAllCustomer()
@@ -323,6 +371,14 @@ public class RetialSaleDbAdapter
     public boolean deleteAllOption()
     {
         if (db != null && db.isOpen()) return db.delete(DATA_OPTION_TABLE, null, null) > 0;
+        else
+            return false;
+    }
+    
+    /** Delete all user from user table */
+    public boolean deleteAllUser()
+    {
+        if (db != null && db.isOpen()) return db.delete(USER_TABLE, null, null) > 0;
         else
             return false;
     }
@@ -530,6 +586,26 @@ public class RetialSaleDbAdapter
             args.put(KEY_DATA_OPTION_SERIAL, optionSerial);
             args.put(KEY_DATA_OPTION_NAME, optionName);
             return db.update(DATA_OPTION_TABLE, args, KEY_DATA_OPTION_ID + "=" + rowID, null) > 0;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    /** Update the user table */
+    public boolean updateUser(int rowID, int userSerial, String userName, int userGroup, int userType, String userGroupNm, String userTypeNm)
+    {
+        if (db.isOpen())
+        {
+            ContentValues args = new ContentValues();
+            args.put(KEY_USER_SERIAL, userSerial);
+            args.put(KEY_USER_NAME, userName);
+            args.put(KEY_USER_GROUP, userGroup);
+            args.put(KEY_USER_TYPE, userType);
+            args.put(KEY_USER_GROUP_NAMING, userGroupNm);
+            args.put(KEY_USER_TYPE_NAMING, userTypeNm);
+            return db.update(USER_TABLE, args, KEY_USER_ID + "=" + rowID, null) > 0;
         }
         else
         {

@@ -20,6 +20,8 @@ import com.example.retailsale.manager.dataoption.GsonDataOption;
 import com.example.retailsale.manager.dataoption.GsonDataOption.DataOption;
 import com.example.retailsale.manager.login.GetLoginListener;
 import com.example.retailsale.manager.login.GsonLoginInfo;
+import com.example.retailsale.manager.userlist.GetUsetListByGroupListener;
+import com.example.retailsale.manager.userlist.GsonUserByGroup;
 import com.example.retailsale.util.Utility;
 
 public class Login extends Activity implements OnClickListener
@@ -180,25 +182,87 @@ public class Login extends Activity implements OnClickListener
                                 retialSaleDbAdapter.create(-1, typeName, optSerial, optName);
                             }
                             retialSaleDbAdapter.close();
-                            startManageFragment();
+//                            startManageFragment();
                         }
                         else
                         {
                             Log.d(TAG, "value is null");
                         }
+                        getUserList();
                     }
                     else
                     {
                         Log.d(TAG, "dataOption is null");
+                        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                     }
                 }
                 else
                 {
                     Log.d(TAG, "Get data option failed");
+                    handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                }
+//                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+            }
+        });
+    }
+    
+    private void getUserList()
+    {
+        HttpManager httpManager = new HttpManager();
+        httpManager.getUserListByGroup(Login.this, new GetUsetListByGroupListener()
+        {
+            @Override
+            public void onResult(Boolean isSuccess, GsonUserByGroup user)
+            {
+                if (isSuccess)
+                {
+                    if (user != null)
+                    {
+                        if (user.getValue() != null)
+                        {
+                            int size = user.getValue().size();
+                            Log.d(TAG, "user list size : " + size);
+                            
+                            int userSerial, userGroup, userType;
+                            String userName, userGroupNm, userTypeNm;
+                            
+                            RetialSaleDbAdapter retialSaleDbAdapter = new RetialSaleDbAdapter(Login.this);
+                            retialSaleDbAdapter.open();
+                            retialSaleDbAdapter.deleteAllUser();
+                            
+                            for (int i = 0; i < size; i++)
+                            {
+                                userSerial = user.getValue().get(i).getUserSerial();
+                                userName = user.getValue().get(i).getUserName();
+                                userGroup = user.getValue().get(i).getUserGroup();
+                                userType = user.getValue().get(i).getUserType();
+                                userGroupNm = user.getValue().get(i).getUserGroupNm();
+                                userTypeNm = user.getValue().get(i).getUserTypeNm();
+                                Log.d(TAG, "userSerial : " + userSerial + " userName : " + userName
+                                        + " userGroup : " + userGroup + " userType : " + userType
+                                        + " userGroupNm : " + userGroupNm + " userTypeNm : " + userTypeNm);
+                                retialSaleDbAdapter.create(userSerial, userName, userGroup, userType, userGroupNm, userTypeNm);
+                            }
+                            retialSaleDbAdapter.close();
+                            startManageFragment();
+                        }
+                        else
+                        {
+                            Log.d(TAG, "value is null or size less/equal than 0");
+                        }
+                    }
+                    else
+                    {
+                        Log.d(TAG, "user list is null");
+                    }
+                }
+                else
+                {
+                    Log.d(TAG, "Get user list failed");
                 }
                 handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
             }
-        });
+        }, Utility.getCreatorGroup(this));
     }
     
     private Handler handler = new Handler()

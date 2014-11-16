@@ -32,6 +32,8 @@ import com.example.retailsale.manager.folderinfo.GetFolderInfoListener;
 import com.example.retailsale.manager.folderinfo.GsonFolderInfo;
 import com.example.retailsale.manager.login.GetLoginListener;
 import com.example.retailsale.manager.login.GsonLoginInfo;
+import com.example.retailsale.manager.userlist.GetUsetListByGroupListener;
+import com.example.retailsale.manager.userlist.GsonUserByGroup;
 import com.example.retailsale.util.Utility;
 import com.example.retailsale.volly.toolbox.GsonRequest;
 import com.example.retailsale.volly.toolbox.VolleySingleton;
@@ -71,21 +73,17 @@ public class HttpManager
     public void login(Context context, String userAccount, String userPwd, final GetLoginListener loginListener)
     {
 
-        String loginUri = "http://" + IP + "/KendoAPI/ODATA/userQuery(userAccount='" + userAccount + "',userPwd='"
+        String loginUri = "http://" + IP + "/KendoAPI/odata/userQuery(userAccount='" + userAccount + "',userPwd='"
                 + userPwd + "')";
         Log.e(TAG, "login() loginUri = " + loginUri);
 
-//        GsonRequest<GsonLoginInfo> getDataOptionsGsonRequset = new GsonRequest<GsonLoginInfo>(Method.GET, loginUri,
-//                GsonLoginInfo.class, getLoginReqSuccessListener(loginListener),
-//                getLoginReqErrorListener(loginListener));
-
-        GsonRequest<GsonLoginInfo> getDataOptionsGsonRequset = new GsonRequest<GsonLoginInfo>(Method.GET, loginUri,
+        GsonRequest<GsonLoginInfo> getLoginGsonRequset = new GsonRequest<GsonLoginInfo>(Method.GET, loginUri,
                 GsonLoginInfo.class, getLoginReqSuccessListener(loginListener),
                 getLoginReqErrorListener(loginListener), LogType.Login, "095050", Utility.SPACE_STRING, USER_HOST,
                 ACTION_NAME, Utility.SPACE_STRING);
-        getDataOptionsGsonRequset.setTag("login");
+        getLoginGsonRequset.setTag("login");
 
-        VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionsGsonRequset);
+        VolleySingleton.getInstance(context).getRequestQueue().add(getLoginGsonRequset);
     }
 
     public void cancelLogin(Context context)
@@ -99,7 +97,7 @@ public class HttpManager
     public void addCustomerInfo(Context context, AddCustomerListener addCustomerListener,
             Map<String, String> paramsAddComsumerPost)
     {
-//        String addCustomerInfoUri = "http://192.168.49.128/KendoAPI/ODATA/customerData";
+//        String addCustomerInfoUri = "http://192.168.49.128/KendoAPI/odata/customerData";
 
 //		Map<String, String> param = new HashMap<String, String>();
 //		
@@ -142,7 +140,7 @@ public class HttpManager
             String userName, String userHostAddress, String actionName, String loginKey, JSONStringer json, long rowId,
             RetialSaleDbAdapter retialSaleDbAdapter)
     {
-        String addCustomerInfoUri = "http://" + IP + "/KendoAPI/ODATA/customerData_Mobile";
+        String addCustomerInfoUri = "http://" + IP + "/KendoAPI/odata/customerData_Mobile";
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(addCustomerInfoUri);
         httppost.setHeader(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
@@ -197,12 +195,8 @@ public class HttpManager
     //////////////////////////////////////////////////////////////////////////////// data option
     public void getDataOptions(Activity activity, GetDataOptionListener getDataOptionListener)
     {
-        String dataOptionsUri = "http://" + IP + "/KendoAPI/ODATA/dataOptionParm";
+        String dataOptionsUri = "http://" + IP + "/KendoAPI/odata/dataOptionParm";
         Log.e(TAG, "getDataOptions() dataOptionsUri = " + dataOptionsUri);
-
-//        GsonRequest<GsonDataOption> getDataOptionsGsonRequset = new GsonRequest<GsonDataOption>(Method.GET, dataOptionsUri,
-//        		GsonDataOption.class, getDataOptionReqSuccessListener(getDataOptionListener),
-//        		getDataOptionReqErrorListener(getDataOptionListener));
 
         GsonRequest<GsonDataOption> getDataOptionsGsonRequset = new GsonRequest<GsonDataOption>(Method.GET,
                 dataOptionsUri, GsonDataOption.class, getDataOptionReqSuccessListener(getDataOptionListener),
@@ -226,18 +220,32 @@ public class HttpManager
 //        VolleySingleton.getInstance(context).getRequestQueue().add(getDataOptionTypeGsonRequset);
 //    }
     ////////////////////////////////////////////////////////////////////////////////
+    
+    ////////////////////////////////////////////////////////////////////////////////get user list by group
+    public void getUserListByGroup(Activity activity, GetUsetListByGroupListener getUsetListByGroupListener, int group)
+    {
+//        String getUserListUri = "http://" + IP + "/KendoAPI/odata/usp_Qry_UserbyGroup?$filter=userGroup eq " + group;
+        String getUserListUri = "http://" + IP + "/KendoAPI/odata/usp_Qry_UserbyGroup?userGroup=" + group;
+        Log.e(TAG, "getUserListByGroup() getUserListUri = " + getUserListUri);
+
+        GsonRequest<GsonUserByGroup> getUserListByGroupGsonRequset = new GsonRequest<GsonUserByGroup>(Method.GET, getUserListUri,
+                GsonUserByGroup.class, getUsetListByGroupReqSuccessListener(getUsetListByGroupListener),
+                getUsetListByGroupReqErrorListener(getUsetListByGroupListener), LogType.Operation, String.valueOf(Utility
+                        .getCreator(activity)), Utility.SPACE_STRING, USER_HOST, ACTION_NAME,
+                Utility.getLoginKey(activity));
+        getUserListByGroupGsonRequset.setTag("getUserListByGroup");
+
+        VolleySingleton.getInstance(activity).getRequestQueue().add(getUserListByGroupGsonRequset);
+    }
+    ////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////// file info
     public void getFileInfo(Activity activity, int pathId, int fileId, GetFileInfoListener getFileInfoListener,
             Handler handler)
     {
-        String fileInfoUri = "http://" + IP + "/KendoAPI/ODATA/fileContent(pathId=" + pathId + ",fileId=" + fileId
+        String fileInfoUri = "http://" + IP + "/KendoAPI/odata/fileContent(pathId=" + pathId + ",fileId=" + fileId
                 + ")";
         Log.e(TAG, "getFileInfo() fileInfoUri = " + fileInfoUri);
-
-//        GsonRequest<GsonFileInfo> getFileInfoGsonRequset = new GsonRequest<GsonFileInfo>(Method.GET, fileInfoUri,
-//                GsonFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener),
-//                getFileInfoReqErrorListener(getFileInfoListener));
 
         GsonRequest<GsonFileInfo> getFileInfoGsonRequset = new GsonRequest<GsonFileInfo>(Method.GET, fileInfoUri,
                 GsonFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener, handler),
@@ -255,11 +263,8 @@ public class HttpManager
     //////////////////////////////////////////////////////////////////////////////// folder info
     public void getFolderInfo(Activity activity, GetFolderInfoListener getFolderInfoListener)
     {
-        String fileInfoUri = "http://" + IP + "/KendoAPI/ODATA/folderInfo";
+        String fileInfoUri = "http://" + IP + "/KendoAPI/odata/folderInfo";
         Log.e(TAG, "getFolderInfo() fileInfoUri = " + fileInfoUri);
-
-//        GsonRequest<GsonFolderInfo> getFolderInfoGsonRequset = new GsonRequest<GsonFolderInfo>(Method.GET, fileInfoUri,
-//        		GsonFolderInfo.class, getFolderInfoReqSuccessListener(getFolderInfoListener), getFolderInfoReqErrorListener(getFolderInfoListener));
 
         GsonRequest<GsonFolderInfo> getFolderInfoGsonRequset = new GsonRequest<GsonFolderInfo>(Method.GET, fileInfoUri,
                 GsonFolderInfo.class, getFolderInfoReqSuccessListener(getFolderInfoListener),
@@ -298,6 +303,35 @@ public class HttpManager
                 Log.e(TAG, "getDataOption error: " + error.toString());
 
                 if (getDataOptionListener != null) getDataOptionListener.onResult(false, null);
+            }
+        };
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    
+    ////////////////////////////////////////////////////////////////////////////////listener of get user list
+    private Response.Listener<GsonUserByGroup> getUsetListByGroupReqSuccessListener(final GetUsetListByGroupListener getUsetListByGroupListener)
+    {
+        return new Response.Listener<GsonUserByGroup>()
+        {
+            @Override
+            public void onResponse(GsonUserByGroup response)
+            {
+                Log.e(TAG, "getLogin response: " + response.toString());
+                if (getUsetListByGroupListener != null) getUsetListByGroupListener.onResult(true, response);
+            }
+        };
+    }
+
+    private Response.ErrorListener getUsetListByGroupReqErrorListener(final GetUsetListByGroupListener getUsetListByGroupListener)
+    {
+        return new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                Log.e(TAG, "getLogin error: " + error.toString());
+                if (getUsetListByGroupListener != null) getUsetListByGroupListener.onResult(false, null);
             }
         };
     }

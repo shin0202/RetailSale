@@ -38,6 +38,7 @@ import com.example.retailsale.RetialSaleDbAdapter;
 import com.example.retailsale.manager.addcustomer.CustomerInfo;
 import com.example.retailsale.manager.dataoption.GsonDataOptionType;
 import com.example.retailsale.manager.dataoption.OptionAdapter;
+import com.example.retailsale.manager.userlist.UserDataForList;
 import com.example.retailsale.util.Utility;
 
 public class AddFragment extends Fragment implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener
@@ -47,6 +48,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     public static final String SEND_CUSTOMER_INFO = "send_customer_info";
     public static final String SEND_NOTE_MSG = "send_note_msg";
     private OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter;
+    private UserAdapter userAdapter;
     private boolean isChecked = false;
     private CustomerInfo customerInfo;
     private RetialSaleDbAdapter retialSaleDbAdapter;
@@ -54,12 +56,12 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private String createDateTime;
     // views
     private MainActivity mainActivity;
-    private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner;
+    private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
     private Spinner yearSpinner, monthSpinner, daySpinner;
     private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
             introducerET;
     private CheckBox leaveInfoCB;
-    private TextView companyNameTV, customerIDTV, designerStoreTV, designerNameTV, createDateTV;
+    private TextView companyNameTV, customerIDTV, designerStoreTV, createDateTV;
     private DatePicker consumerVisitDateDP;
     private TimePicker consumerVisitTimeTP;
 
@@ -116,6 +118,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         consumerVisitDateDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_visit_datePicker);
         consumerVisitTimeTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_visit_timePicker);
         designerStoreTV = (TextView) view.findViewById(R.id.add_tab_designer_store);
+        designerSpinner = (Spinner) view.findViewById(R.id.add_tab_user);
         createDateTV = (TextView) view.findViewById(R.id.add_tab_create_date);
         
         yearSpinner = (Spinner) view.findViewById(R.id.add_tab_customer_birthday_year);
@@ -141,6 +144,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         // get optionType
         getOptionType();
+        
+        // get designer list
+        getUserList();
         
         // set customer birthday spinner(year, month, day)
         setCustomerBirthdayYearSpinner();
@@ -565,6 +571,49 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         }
     }
     
+    private void getUserList()
+    {
+        List<UserDataForList> userDataList = new ArrayList<UserDataForList>();
+        
+        int userSerial, userGroup, userType;
+        String userName, userGroupNm, userTypeNm;
+
+        // to get user content
+        Cursor userCursor = retialSaleDbAdapter.getAllUser();
+
+        if (userCursor != null)
+        {
+            int count = userCursor.getCount();
+            if (count > 0)
+            {
+                while (userCursor.moveToNext())
+                {
+                    userSerial = userCursor.getInt(userCursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_USER_SERIAL));
+                    userName = userCursor.getString(userCursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_USER_NAME));
+                    userGroup = userCursor.getInt(userCursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_USER_GROUP));
+                    userType = userCursor.getInt(userCursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_USER_TYPE));
+                    userGroupNm = userCursor.getString(userCursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_USER_GROUP_NAMING));
+                    userTypeNm = userCursor.getString(userCursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_USER_TYPE_NAMING));
+                    userDataList.add(new UserDataForList(userSerial, userName, userGroup, userType, userGroupNm, userTypeNm));
+                }
+            }
+            userCursor.close();
+        }
+        else
+        {
+            Log.d(TAG, "user cursor is null ");
+        }
+        // user spinner
+        userAdapter = new UserAdapter(this.getActivity(), userDataList);
+        designerSpinner.setAdapter(userAdapter);
+    }
+    
     private void setCustomerBirthdayYearSpinner()
     {
         int currentYear = Utility.getCurrentYear();
@@ -679,6 +728,74 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             if (position < birthList.size())
             {
                 viewTag.itemName.setText(birthList.get(position));
+            }
+
+            return convertView;
+        }
+
+        class ViewTag
+        {
+            TextView itemName;
+
+            public ViewTag(TextView itemName)
+            {
+                this.itemName = itemName;
+            }
+        }
+    }
+    
+    private class UserAdapter extends BaseAdapter
+    {
+        private static final String TAG = "UserAdapter";
+        private static final int BASE_INDEX = 1000;
+        private List<UserDataForList> userList;
+        private Context context;
+        private ViewTag viewTag;
+
+        public UserAdapter(Context context, List<UserDataForList> userList)
+        {
+            this.context = context;
+            this.userList = userList;
+        }
+
+        @Override
+        public int getCount()
+        {
+            return userList.size();
+        }
+
+        @Override
+        public Object getItem(int position)
+        {
+            return userList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position)
+        {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent)
+        {
+            if (convertView == null)
+            {
+                LayoutInflater layoutInflater = LayoutInflater.from(context);
+                convertView = layoutInflater.inflate(R.layout.option_layout, null);
+                viewTag = new ViewTag((TextView) convertView.findViewById(R.id.option_text));
+                convertView.setTag(viewTag);
+            }
+            else
+            {
+                viewTag = (ViewTag) convertView.getTag();
+            }
+
+            convertView.setId(BASE_INDEX + position);
+
+            if (position < userList.size())
+            {
+                viewTag.itemName.setText(userList.get(position).getUserName());
             }
 
             return convertView;
