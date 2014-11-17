@@ -39,9 +39,9 @@ import com.example.retailsale.MainActivity;
 import com.example.retailsale.R;
 import com.example.retailsale.RetialSaleDbAdapter;
 import com.example.retailsale.manager.HttpManager;
+import com.example.retailsale.manager.dataoption.DataOption;
 import com.example.retailsale.manager.dataoption.GetDataOptionListener;
 import com.example.retailsale.manager.dataoption.GsonDataOption;
-import com.example.retailsale.manager.dataoption.DataOption;
 import com.example.retailsale.manager.fileinfo.GetFileInfoListener;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo.FileInfo;
@@ -748,13 +748,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
         openDb();
 
-        int creator = Utility.getCreator(SynchronizationFragment.this.getActivity());
-        int creatorGroup = Utility.getCreatorGroup(SynchronizationFragment.this.getActivity());
-        Log.d(TAG, "creator is " + creator);
+//        int creator = Utility.getCreator(SynchronizationFragment.this.getActivity());
+//        int creatorGroup = Utility.getCreatorGroup(SynchronizationFragment.this.getActivity());
+//        Log.d(TAG, "creator is " + creator);
         needCount = 0;
         currentCount = 0;
         handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
-        Cursor cursor = retialSaleDbAdapter.getCustomerByCreatorNotUpload(creator);
+//        Cursor cursor = retialSaleDbAdapter.getCustomerByCreatorNotUpload(creator);
+        Cursor cursor = retialSaleDbAdapter.getCustomerNotUpload();
         if (cursor != null)
         {
             needCount = cursor.getCount();
@@ -762,6 +763,13 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             {
                 while (cursor.moveToNext())
                 {
+                    int creator = cursor.getInt(cursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CREATOR));
+                    int creatorGroup = cursor.getInt(cursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CREATOR_GROUP));
+                    
+                    Log.d(TAG, "creator is " + creator);
+                    
                     long rowId = cursor.getLong(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_ID));
                     String customerAccount = Utility.DEFAULT_VALUE_STRING;
@@ -927,9 +935,10 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     private void getAllCustomerByCreator()
     {
 
-        int creator = Utility.getCreator(SynchronizationFragment.this.getActivity());
+//        int creator = Utility.getCreator(SynchronizationFragment.this.getActivity());
         openDb();
-        Cursor cursor = retialSaleDbAdapter.getCustomerByCreatorNotUpload(creator);
+//        Cursor cursor = retialSaleDbAdapter.getCustomerByCreatorNotUpload(creator);
+        Cursor cursor = retialSaleDbAdapter.getCustomerNotUpload();
         if (cursor != null)
         {
             if (cursor.getCount() > 0)

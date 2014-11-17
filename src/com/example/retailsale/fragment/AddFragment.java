@@ -47,14 +47,14 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private static final int REQUEST_ORDER_MEASURE = 999;
     public static final String SEND_CUSTOMER_INFO = "send_customer_info";
     public static final String SEND_NOTE_MSG = "send_note_msg";
-    private OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter;
-    private UserAdapter userAdapter;
     private boolean isChecked = false;
     private CustomerInfo customerInfo;
     private RetialSaleDbAdapter retialSaleDbAdapter;
     private boolean isSendMsg = false;
     private String createDateTime;
+    private List<DataOption> infoList, jobList, ageList, sexList, titleList;
     private List<DataOption> statusList, spaceList, budgetList;
+    private List<UserDataForList> userDataList;
     // views
     private MainActivity mainActivity;
     private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
@@ -151,8 +151,6 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         // set customer birthday spinner(year, month, day)
         setCustomerBirthdayYearSpinner();
-//        setCustomerBirthdayMonthSpinner();
-//        setCustomerBirthdayDaySpinner();
         return view;
     }
 
@@ -228,42 +226,15 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         String customerName = customerNameET.getText().toString();
         String introducer = introducerET.getText().toString();
         
-        int msgSelectedSerial = 0, jobSelectedSerial = 0, ageSelectedSerial = 0, sexSelectedSerial = 0, titleSelectedSerial = 0;
-        
-        DataOption infoData = (DataOption)infoAdapter.getItem(infoSpinner.getSelectedItemPosition());
-        DataOption jobData = (DataOption)jobAdapter.getItem(jobSpinner.getSelectedItemPosition());
-        DataOption ageData = (DataOption)ageAdapter.getItem(ageSpinner.getSelectedItemPosition());
-        DataOption sexData = (DataOption)sexAdapter.getItem(sexSpinner.getSelectedItemPosition());
-        DataOption titleData = (DataOption)titleAdapter.getItem(titleSpinner.getSelectedItemPosition());
-
-        if (infoData != null)
-        {
-            msgSelectedSerial = infoData.getOptSerial();
-        }
-        
-        if (jobData != null)
-        {
-            jobSelectedSerial = jobData.getOptSerial();
-        }
-        
-        if (ageData != null)
-        {
-            ageSelectedSerial = ageData.getOptSerial();
-        }
-        
-        if (sexData != null)
-        {
-            sexSelectedSerial = sexData.getOptSerial();
-        }
-        
-        if (titleData != null)
-        {
-            titleSelectedSerial = titleData.getOptSerial();
-        }
+        int msgSelectedSerial = infoList.get(infoSpinner.getSelectedItemPosition()).getOptSerial();
+        int jobSelectedSerial = jobList.get(jobSpinner.getSelectedItemPosition()).getOptSerial();
+        int ageSelectedSerial = ageList.get(ageSpinner.getSelectedItemPosition()).getOptSerial();
+        int sexSelectedSerial = sexList.get(sexSpinner.getSelectedItemPosition()).getOptSerial();
+        int titleSelectedSerial = titleList.get(titleSpinner.getSelectedItemPosition()).getOptSerial();
         
         int yearSelectedPosition = yearSpinner.getSelectedItemPosition();
         
-        if (yearSelectedPosition == 0)
+        if (yearSelectedPosition == Utility.DEFAULT_ZERO_VALUE)
         {
             customerBirthday.append(getResources().getString(R.string.no_data));
         }
@@ -314,6 +285,12 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 //			showToast(this.getActivity().getResources().getString(R.string.birthday_field_error));
 //			return false;
 //		}
+        
+        // the creator is not from share preference but from creator list
+        int creator = userDataList.get(designerSpinner.getSelectedItemPosition()).getUserSerial();
+        int group = userDataList.get(designerSpinner.getSelectedItemPosition()).getUserGroup();
+        
+        Log.d(TAG, "creator: " + creator + " group: " + group);
 
         try
         {
@@ -322,33 +299,43 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 if (isChecked)
                 {
                     String noData = AddFragment.this.getResources().getString(R.string.no_data);
-                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, noData, noData, noData, noData,
-                            sexSelectedSerial, titleSelectedSerial, noData, dateString + timeString, msgSelectedSerial,
-                            noData, jobSelectedSerial, ageSelectedSerial, noData, Utility.getCreator(getActivity()),
-                            Utility.getCreatorGroup(getActivity()), createDateTime, Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
-                            spaceList.get(0).getOptSerial(), statusList.get(0).getOptSerial(), Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, budgetList.get(0).getOptSerial(), Utility.SPACE_STRING);
+                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, noData, noData,
+                            noData, noData, sexSelectedSerial, titleSelectedSerial, noData,
+                            dateString + timeString, msgSelectedSerial, noData, jobSelectedSerial,
+                            ageSelectedSerial, noData, creator, group, createDateTime,
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, spaceList.get(
+                                    Utility.DEFAULT_ZERO_VALUE).getOptSerial(), statusList.get(
+                                    Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, budgetList.get(
+                                    Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
+                            Utility.SPACE_STRING);
                 }
                 else
                 {
-                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber,
-                            phoneNumber, companyPhoneNumber, sexSelectedSerial, titleSelectedSerial, email, dateString
-                                    + timeString, msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial,
-                            customerBirthday.toString(), Utility.getCreator(getActivity()),
-                            Utility.getCreatorGroup(getActivity()), createDateTime, Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
-                            spaceList.get(0).getOptSerial(), statusList.get(0).getOptSerial(), Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, budgetList.get(0).getOptSerial(), Utility.SPACE_STRING);
+                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName,
+                            cellPhoneNumber, phoneNumber, companyPhoneNumber, sexSelectedSerial,
+                            titleSelectedSerial, email, dateString + timeString, msgSelectedSerial,
+                            introducer, jobSelectedSerial, ageSelectedSerial,
+                            customerBirthday.toString(), creator, group, createDateTime,
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, spaceList.get(
+                                    Utility.DEFAULT_ZERO_VALUE).getOptSerial(), statusList.get(
+                                    Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, budgetList.get(
+                                    Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
+                            Utility.SPACE_STRING);
                 }
             }
             else
             {
-                customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber,
-                        phoneNumber, companyPhoneNumber, sexSelectedSerial, titleSelectedSerial, email, dateString
-                                + timeString, msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial,
-                        customerBirthday.toString(), Utility.getCreator(getActivity()),
-                        Utility.getCreatorGroup(getActivity()), dateString + timeString);
+                customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName,
+                        cellPhoneNumber, phoneNumber, companyPhoneNumber, sexSelectedSerial,
+                        titleSelectedSerial, email, dateString + timeString, msgSelectedSerial,
+                        introducer, jobSelectedSerial, ageSelectedSerial,
+                        customerBirthday.toString(), creator, group, dateString + timeString);
+                
+                Log.d(TAG, "ReservationBudgetPosition() === " + customerInfo.getReservationBudgetPosition());
             }
         }
         catch (Exception e)
@@ -406,15 +393,15 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 //            String createDateTime = Utility.getCurrentDateTime();
             Log.d(TAG, "sendNoteValue is " + sendNoteValue + " createDateTime is " + createDateTime);
             SharedPreferences settings = mainActivity.getSharedPreferences(Utility.LoginField.DATA, 0);
-            int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
-            int userGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
-            Log.d(TAG, "userSerial === " + userSerial + "userGroup === " + userGroup);
+//            int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
+//            int userGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
+            Log.d(TAG, "userSerial === " + customerInfo.getCreator() + "userGroup === " + customerInfo.getCreatorGroup());
             long id = retialSaleDbAdapter.create(customerInfo.getCustometName(), customerInfo.getCustomerHome(),
                     customerInfo.getCustomerMobile(), customerInfo.getCustomerCompany(),
                     customerInfo.getCustomerMail(), customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
                     customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(), customerInfo.getCustomerJob(),
                     customerInfo.getCustomerIntroducer(), customerInfo.getCustomerAge(),
-                    customerInfo.getCustomerVisitDate(), userSerial, userGroup,
+                    customerInfo.getCustomerVisitDate(), customerInfo.getCreator(), customerInfo.getCreatorGroup(),
                     Utility.covertDateStringToServer(createDateTime), sendNoteValue,
                     customerInfo.getReservationWorkAlias(), customerInfo.getReservationStatusComment(),
                     customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
@@ -471,11 +458,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         if (!enabled)
         {
-            infoSpinner.setSelection(0);
-            jobSpinner.setSelection(0);
-            ageSpinner.setSelection(0);
-            sexSpinner.setSelection(0);
-            titleSpinner.setSelection(0);
+            infoSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
+            jobSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
+            ageSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
+            sexSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
+            titleSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
 
             customerNameET.setText(this.getResources().getString(R.string.no_data));
             cellPhoneNumberET.setText(this.getResources().getString(R.string.no_data));
@@ -483,7 +470,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             companyPhoneNumberET.setText(this.getResources().getString(R.string.no_data));
             emailET.setText(this.getResources().getString(R.string.no_data));
             
-            yearSpinner.setSelection(0);
+            yearSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
             monthSpinner.setAdapter(null);
             daySpinner.setAdapter(null);
             
@@ -510,7 +497,6 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 
     private void getOptionType()
     {
-        List<DataOption> infoList, jobList, ageList, sexList, titleList;
         infoList = new ArrayList<DataOption>();
         jobList = new ArrayList<DataOption>();
         ageList = new ArrayList<DataOption>();
@@ -586,6 +572,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         {
             Log.d(TAG, "option cursor is null ");
         }
+        
+        OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter;
         // msg spinner
         infoAdapter = new OptionAdapter(this.getActivity(), infoList);
         infoSpinner.setAdapter(infoAdapter);
@@ -632,7 +620,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     
     private void getUserList()
     {
-        List<UserDataForList> userDataList = new ArrayList<UserDataForList>();
+        userDataList = new ArrayList<UserDataForList>();
         
         int userSerial, userGroup, userType;
         String userName, userGroupNm, userTypeNm;
@@ -669,7 +657,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             Log.d(TAG, "user cursor is null ");
         }
         // user spinner
-        userAdapter = new UserAdapter(this.getActivity(), userDataList);
+        UserAdapter userAdapter = new UserAdapter(this.getActivity(), userDataList);
         designerSpinner.setAdapter(userAdapter);
     }
     
@@ -878,7 +866,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         {
         case R.id.add_tab_customer_birthday_year:
             Log.d(TAG, "To select year, the position is " + position);
-            if (position == 0)
+            if (position == Utility.DEFAULT_ZERO_VALUE)
             {
                 monthSpinner.setAdapter(null);
                 daySpinner.setAdapter(null);
@@ -890,7 +878,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             break;
         case R.id.add_tab_customer_birthday_month:
             Log.d(TAG, "To select month, the position is " + position);
-            if (yearSpinner.getSelectedItemPosition() != 0)
+            if (yearSpinner.getSelectedItemPosition() != Utility.DEFAULT_ZERO_VALUE)
             {
                 int days = Utility.getDays((String)yearSpinner.getSelectedItem() + "-" + (String)monthSpinner.getSelectedItem());
                 Log.d(TAG, "days : " + days);

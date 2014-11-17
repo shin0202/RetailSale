@@ -25,7 +25,6 @@ import android.widget.TimePicker;
 import com.example.retailsale.fragment.AddFragment;
 import com.example.retailsale.manager.addcustomer.CustomerInfo;
 import com.example.retailsale.manager.dataoption.DataOption;
-import com.example.retailsale.manager.dataoption.GsonDataOptionType;
 import com.example.retailsale.manager.dataoption.OptionAdapter;
 import com.example.retailsale.util.Utility;
 
@@ -55,10 +54,11 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         setContentView(R.layout.activity_oder_measure);
 
         findViews();
-        getBundle();
 
         // get optionType
         getOptionType();
+        
+        getBundle();
     }
 
     @Override
@@ -142,6 +142,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
             Log.d(TAG, "reservation date is " + reservationDate);
             String createTime = customerInfo.getCreateTime();
             Log.d(TAG, "create time is " + createTime);
+            
             saleCreateDateTV.setText(createTime.replace(Utility.DATE_STRING, " "));
             if (reservationDate == null || Utility.SPACE_STRING.equals(reservationDate))
             {
@@ -182,7 +183,9 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
             measureTime.setCurrentHour(reservationHour);
             measureTime.setCurrentMinute(reservationMinute);
             cantDescriptionET.setText(cantDescription);
+            Log.d(TAG, "statusPosition is " + statusPosition);
             statusSpinner.setSelection(statusPosition);
+            
 //			commentET.setText(comment);
             spaceSpinner.setSelection(requestPosition);
             budgetSpinner.setSelection(costPosition);
@@ -229,26 +232,10 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         customerInfo.setReservationDate(dateString + timeString);
         customerInfo.setReservationTime(timeString);
         
-        int statusSelectedSerial = 0, spaceSelectedSerial = 0, budgetSelectedSerial = 0;
+        int statusSelectedSerial = statusList.get(statusSpinner.getSelectedItemPosition()).getOptSerial();
+        int spaceSelectedSerial = spaceList.get(spaceSpinner.getSelectedItemPosition()).getOptSerial(); 
+        int budgetSelectedSerial = budgetList.get(budgetSpinner.getSelectedItemPosition()).getOptSerial(); 
         
-        DataOption statusData = (DataOption)statusAdapter.getItem(statusSpinner.getSelectedItemPosition());
-        DataOption spaceData = (DataOption)spaceAdapter.getItem(spaceSpinner.getSelectedItemPosition());
-        DataOption budgetData = (DataOption)budgetAdapter.getItem(budgetSpinner.getSelectedItemPosition());
-        
-        if (statusData != null)
-        {
-            statusSelectedSerial =  statusData.getOptSerial();
-        }
-        
-        if (spaceData != null)
-        {
-            spaceSelectedSerial = spaceData.getOptSerial();
-        }
-        
-        if (budgetData != null)
-        {
-            budgetSelectedSerial = budgetData.getOptSerial();
-        }
 
         // can't sale description
         customerInfo.setReservationStatusComment(cantDescriptionET.getText().toString());

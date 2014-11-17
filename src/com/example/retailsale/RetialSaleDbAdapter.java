@@ -407,7 +407,7 @@ public class RetialSaleDbAdapter
         }
     }
 
-    /** Query single customer by creator */
+    /** Query customer by creator */
     public Cursor getCustomerByCreator(int creator) throws SQLException
     {
         if (db.isOpen())
@@ -431,7 +431,7 @@ public class RetialSaleDbAdapter
         }
     }
 
-    /** Query single customer by creator and not upload */
+    /** Query customer by creator and not upload */
     public Cursor getCustomerByCreatorNotUpload(int creator) throws SQLException
     {
         if (db.isOpen())
@@ -447,6 +447,29 @@ public class RetialSaleDbAdapter
             {
                 return cursor;
             }
+            return null;
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
+    /** Query all customer are not upload */
+    public Cursor getCustomerNotUpload() throws SQLException
+    {
+
+        if (db.isOpen())
+        {
+            Cursor cursor = db.query(true, ADD_CUSTOMER_TABLE, new String[] { KEY_ADD_CUSTOMER_ID,
+                    KEY_ADD_CUSTOMER_NAME, KEY_ADD_HOME, KEY_ADD_MOBILE, KEY_ADD_COMPANY,
+                    KEY_ADD_EMAIL, KEY_ADD_SEX, KEY_ADD_BIRTHDAY, KEY_ADD_INFO, KEY_ADD_TITLE,
+                    KEY_ADD_JOB, KEY_ADD_INTRODUCER, KEY_ADD_AGE, KEY_ADD_VISIT_DATE,
+                    KEY_ADD_CREATOR, KEY_ADD_CREATOR_GROUP, KEY_ADD_CREATE_DATE, KEY_ADD_SEND_MSG,
+                    KEY_WORK_ALIAS, KEY_STATUS_COMMENT, KEY_STATUS, KEY_WORK, KEY_CONTACT,
+                    KEY_COMMENT, KEY_SPACE, KEY_BUDGET, KEY_RESERVATION_DATE, KEY_IS_UPLOAD },
+                    KEY_IS_UPLOAD + "=" + NOTUPLOAD, null, null, null, null, null);
+            if (cursor != null) { return cursor; }
             return null;
         }
         else

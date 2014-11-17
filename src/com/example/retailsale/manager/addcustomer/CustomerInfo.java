@@ -598,6 +598,9 @@ public class CustomerInfo implements Parcelable
 		dest.writeInt(reservationDay);
 		dest.writeInt(reservationHour);
 		dest.writeInt(reservationMinute);
+		dest.writeInt(reservationStatusPosition);
+		dest.writeInt(reservationSpacePosition);
+		dest.writeInt(reservationBudgetPosition);
 	}
 
 	public CustomerInfo(Parcel in)
@@ -656,6 +659,9 @@ public class CustomerInfo implements Parcelable
 		this.reservationDay = in.readInt();
 		this.reservationHour = in.readInt();
 		this.reservationMinute = in.readInt();
+		this.reservationStatusPosition = in.readInt();
+		this.reservationSpacePosition = in.readInt();
+		this.reservationBudgetPosition = in.readInt();
 	}
 
 	// ///////////////////////////////// Parcel need add

@@ -146,6 +146,8 @@ public class HttpManager
         httppost.setHeader(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
         httppost.setHeader(Utility.JSONTag.FATCA_INFO,
                 Utility.getFactaInfoHeader(logType, userNo, userName, userHostAddress, actionName, loginKey));
+        
+        Log.d(TAG, "json == " + json.toString());
 
         Message msg = new Message();
         msg.what = SynchronizationFragment.SelectedItem.UPLOAD_CUSTOMER;

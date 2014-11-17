@@ -15,9 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.retailsale.manager.HttpManager;
+import com.example.retailsale.manager.dataoption.DataOption;
 import com.example.retailsale.manager.dataoption.GetDataOptionListener;
 import com.example.retailsale.manager.dataoption.GsonDataOption;
-import com.example.retailsale.manager.dataoption.GsonDataOption.DataOption;
 import com.example.retailsale.manager.login.GetLoginListener;
 import com.example.retailsale.manager.login.GsonLoginInfo;
 import com.example.retailsale.manager.userlist.GetUsetListByGroupListener;
