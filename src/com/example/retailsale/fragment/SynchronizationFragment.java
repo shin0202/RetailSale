@@ -41,7 +41,7 @@ import com.example.retailsale.RetialSaleDbAdapter;
 import com.example.retailsale.manager.HttpManager;
 import com.example.retailsale.manager.dataoption.GetDataOptionListener;
 import com.example.retailsale.manager.dataoption.GsonDataOption;
-import com.example.retailsale.manager.dataoption.GsonDataOption.DataOption;
+import com.example.retailsale.manager.dataoption.DataOption;
 import com.example.retailsale.manager.fileinfo.GetFileInfoListener;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo.FileInfo;

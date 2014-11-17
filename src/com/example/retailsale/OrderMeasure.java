@@ -24,6 +24,7 @@ import android.widget.TimePicker;
 
 import com.example.retailsale.fragment.AddFragment;
 import com.example.retailsale.manager.addcustomer.CustomerInfo;
+import com.example.retailsale.manager.dataoption.DataOption;
 import com.example.retailsale.manager.dataoption.GsonDataOptionType;
 import com.example.retailsale.manager.dataoption.OptionAdapter;
 import com.example.retailsale.util.Utility;
@@ -32,7 +33,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 {
     private static final String TAG = "OrderMeasure";
     private OptionAdapter spaceAdapter, budgetAdapter, statusAdapter;
-    private List<GsonDataOptionType> spaceList, budgetList, statusList;
+    private List<DataOption> spaceList, budgetList, statusList;
 
     private boolean isSendNoteMsgChecked = false, isAsAboveChecked = false;
     private CustomerInfo customerInfo;
@@ -152,9 +153,9 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
                         customerInfo.getReservationContact(), customerInfo.getReservationYear(),
                         customerInfo.getReservationMonth(), customerInfo.getReservationDay(),
                         customerInfo.getReservationHour(), customerInfo.getReservationMinute(),
-                        customerInfo.getReservationStatusComment(), customerInfo.getReservationStatus(),
-                        customerInfo.getReservationComment(), customerInfo.getReservationSpace(),
-                        customerInfo.getReservationBudget());
+                        customerInfo.getReservationStatusComment(), customerInfo.getReservationStatusPosition(),
+                        customerInfo.getReservationComment(), customerInfo.getReservationSpacePosition(),
+                        customerInfo.getReservationBudgetPosition());
             }
 
             if (customerInfo != null)
@@ -227,22 +228,46 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 
         customerInfo.setReservationDate(dateString + timeString);
         customerInfo.setReservationTime(timeString);
+        
+        int statusSelectedSerial = 0, spaceSelectedSerial = 0, budgetSelectedSerial = 0;
+        
+        DataOption statusData = (DataOption)statusAdapter.getItem(statusSpinner.getSelectedItemPosition());
+        DataOption spaceData = (DataOption)spaceAdapter.getItem(spaceSpinner.getSelectedItemPosition());
+        DataOption budgetData = (DataOption)budgetAdapter.getItem(budgetSpinner.getSelectedItemPosition());
+        
+        if (statusData != null)
+        {
+            statusSelectedSerial =  statusData.getOptSerial();
+        }
+        
+        if (spaceData != null)
+        {
+            spaceSelectedSerial = spaceData.getOptSerial();
+        }
+        
+        if (budgetData != null)
+        {
+            budgetSelectedSerial = budgetData.getOptSerial();
+        }
 
         // can't sale description
         customerInfo.setReservationStatusComment(cantDescriptionET.getText().toString());
 
         // status
-        customerInfo.setReservationStatus(statusSpinner.getSelectedItemPosition());
+        customerInfo.setReservationStatus(statusSelectedSerial);
+        customerInfo.setReservationStatusPosition(statusSpinner.getSelectedItemPosition());
 
         // comment
 //		customerInfo.setReservationComment(commentET.getText().toString());
         customerInfo.setReservationComment(Utility.SPACE_STRING);
 
         // request
-        customerInfo.setReservationSpace(spaceSpinner.getSelectedItemPosition());
+        customerInfo.setReservationSpace(spaceSelectedSerial);
+        customerInfo.setReservationSpacePosition(spaceSpinner.getSelectedItemPosition());
 
         // cost
-        customerInfo.setReservationBudget(budgetSpinner.getSelectedItemPosition());
+        customerInfo.setReservationBudget(budgetSelectedSerial);
+        customerInfo.setReservationBudgetPosition(budgetSpinner.getSelectedItemPosition());
 
         // send result
         Intent resultIntent = new Intent();
@@ -270,9 +295,9 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 
     private void getOptionType()
     {
-        spaceList = new ArrayList<GsonDataOptionType>();
-        budgetList = new ArrayList<GsonDataOptionType>();
-        statusList = new ArrayList<GsonDataOptionType>();
+        spaceList = new ArrayList<DataOption>();
+        budgetList = new ArrayList<DataOption>();
+        statusList = new ArrayList<DataOption>();
 
         retialSaleDbAdapter = new RetialSaleDbAdapter(OrderMeasure.this);
         retialSaleDbAdapter.open();
@@ -306,15 +331,15 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 
                     if (optionAlias.equals(statusType))
                     {
-                        statusList.add(new GsonDataOptionType(optionSerial, optionName));
+                        statusList.add(new DataOption("", optionSerial, optionName, false));
                     }
                     else if (optionAlias.equals(budgetType))
                     {
-                        budgetList.add(new GsonDataOptionType(optionSerial, optionName));
+                        budgetList.add(new DataOption("", optionSerial, optionName, false));
                     }
                     else if (optionAlias.equals(spaceType))
                     {
-                        spaceList.add(new GsonDataOptionType(optionSerial, optionName));
+                        spaceList.add(new DataOption("", optionSerial, optionName, false));
                     }
                 }
             }

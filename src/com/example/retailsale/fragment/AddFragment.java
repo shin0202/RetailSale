@@ -36,7 +36,7 @@ import com.example.retailsale.OrderMeasure;
 import com.example.retailsale.R;
 import com.example.retailsale.RetialSaleDbAdapter;
 import com.example.retailsale.manager.addcustomer.CustomerInfo;
-import com.example.retailsale.manager.dataoption.GsonDataOptionType;
+import com.example.retailsale.manager.dataoption.DataOption;
 import com.example.retailsale.manager.dataoption.OptionAdapter;
 import com.example.retailsale.manager.userlist.UserDataForList;
 import com.example.retailsale.util.Utility;
@@ -54,6 +54,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private RetialSaleDbAdapter retialSaleDbAdapter;
     private boolean isSendMsg = false;
     private String createDateTime;
+    private List<DataOption> statusList, spaceList, budgetList;
     // views
     private MainActivity mainActivity;
     private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
@@ -226,11 +227,40 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 + ":00";
         String customerName = customerNameET.getText().toString();
         String introducer = introducerET.getText().toString();
-        int msgSelectedPosition = infoSpinner.getSelectedItemPosition();
-        int jobSelectedPosition = jobSpinner.getSelectedItemPosition();
-        int ageSelectedPosition = ageSpinner.getSelectedItemPosition();
-        int sexSelectedPosition = sexSpinner.getSelectedItemPosition();
-        int titleSelectedPosition = titleSpinner.getSelectedItemPosition();
+        
+        int msgSelectedSerial = 0, jobSelectedSerial = 0, ageSelectedSerial = 0, sexSelectedSerial = 0, titleSelectedSerial = 0;
+        
+        DataOption infoData = (DataOption)infoAdapter.getItem(infoSpinner.getSelectedItemPosition());
+        DataOption jobData = (DataOption)jobAdapter.getItem(jobSpinner.getSelectedItemPosition());
+        DataOption ageData = (DataOption)ageAdapter.getItem(ageSpinner.getSelectedItemPosition());
+        DataOption sexData = (DataOption)sexAdapter.getItem(sexSpinner.getSelectedItemPosition());
+        DataOption titleData = (DataOption)titleAdapter.getItem(titleSpinner.getSelectedItemPosition());
+
+        if (infoData != null)
+        {
+            msgSelectedSerial = infoData.getOptSerial();
+        }
+        
+        if (jobData != null)
+        {
+            jobSelectedSerial = jobData.getOptSerial();
+        }
+        
+        if (ageData != null)
+        {
+            ageSelectedSerial = ageData.getOptSerial();
+        }
+        
+        if (sexData != null)
+        {
+            sexSelectedSerial = sexData.getOptSerial();
+        }
+        
+        if (titleData != null)
+        {
+            titleSelectedSerial = titleData.getOptSerial();
+        }
+        
         int yearSelectedPosition = yearSpinner.getSelectedItemPosition();
         
         if (yearSelectedPosition == 0)
@@ -244,12 +274,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     .append(daySpinner.getSelectedItem());
         }
         
-        Log.d(TAG, "msgSelectedPosition: " + msgSelectedPosition + " jobSelectedPosition: " + jobSelectedPosition
-                + " ageSelectedPosition: " + ageSelectedPosition + " sexSelectedPosition: " + sexSelectedPosition
-                + " titleSelectedPosition: " + titleSelectedPosition);
+        Log.d(TAG, "msgSelectedSerial: " + msgSelectedSerial + " jobSelectedSerial: " + jobSelectedSerial
+                + " ageSelectedSerial: " + ageSelectedSerial + " sexSelectedSerial: " + sexSelectedSerial
+                + " titleSelectedSerial: " + titleSelectedSerial);
+        
         Log.d(TAG, "date: " + dateString + "time : " + timeString);
-        
-        
         
         Log.d(TAG, "customerName : " + customerName + " phoneNumber: " + phoneNumber + " cellPhoneNumber: "
                 + cellPhoneNumber + " companyPhoneNumber: " + companyPhoneNumber + " email: " + email + " birthday: "
@@ -286,34 +315,46 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 //			return false;
 //		}
 
-        if (customerInfo == null)
+        try
         {
-            if (isChecked)
+            if (customerInfo == null)
             {
-                String noData = AddFragment.this.getResources().getString(R.string.no_data);
-                customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, noData, noData, noData, noData, 0, 0,
-                        noData, dateString + timeString, 0, noData, 0, 0, noData, Utility.getCreator(getActivity()),
-                        Utility.getCreatorGroup(getActivity()), createDateTime, Utility.SPACE_STRING,
-                        Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, 0, 0,
-                        Utility.SPACE_STRING, Utility.SPACE_STRING, 0, Utility.SPACE_STRING);
+                if (isChecked)
+                {
+                    String noData = AddFragment.this.getResources().getString(R.string.no_data);
+                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, noData, noData, noData, noData,
+                            sexSelectedSerial, titleSelectedSerial, noData, dateString + timeString, msgSelectedSerial,
+                            noData, jobSelectedSerial, ageSelectedSerial, noData, Utility.getCreator(getActivity()),
+                            Utility.getCreatorGroup(getActivity()), createDateTime, Utility.SPACE_STRING,
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
+                            spaceList.get(0).getOptSerial(), statusList.get(0).getOptSerial(), Utility.SPACE_STRING,
+                            Utility.SPACE_STRING, budgetList.get(0).getOptSerial(), Utility.SPACE_STRING);
+                }
+                else
+                {
+                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber,
+                            phoneNumber, companyPhoneNumber, sexSelectedSerial, titleSelectedSerial, email, dateString
+                                    + timeString, msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial,
+                            customerBirthday.toString(), Utility.getCreator(getActivity()),
+                            Utility.getCreatorGroup(getActivity()), createDateTime, Utility.SPACE_STRING,
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
+                            spaceList.get(0).getOptSerial(), statusList.get(0).getOptSerial(), Utility.SPACE_STRING,
+                            Utility.SPACE_STRING, budgetList.get(0).getOptSerial(), Utility.SPACE_STRING);
+                }
             }
             else
             {
-                customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber,
-                        phoneNumber, companyPhoneNumber, sexSelectedPosition, titleSelectedPosition, email, dateString
-                                + timeString, msgSelectedPosition, introducer, jobSelectedPosition,
-                        ageSelectedPosition, customerBirthday.toString(), Utility.getCreator(getActivity()),
-                        Utility.getCreatorGroup(getActivity()), createDateTime, Utility.SPACE_STRING,
-                        Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, 0, 0,
-                        Utility.SPACE_STRING, Utility.SPACE_STRING, 0, Utility.SPACE_STRING);
+                customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber,
+                        phoneNumber, companyPhoneNumber, sexSelectedSerial, titleSelectedSerial, email, dateString
+                                + timeString, msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial,
+                        customerBirthday.toString(), Utility.getCreator(getActivity()),
+                        Utility.getCreatorGroup(getActivity()), dateString + timeString);
             }
         }
-        else
+        catch (Exception e)
         {
-            customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber, phoneNumber,
-                    companyPhoneNumber, sexSelectedPosition, titleSelectedPosition, email, dateString + timeString,
-                    msgSelectedPosition, introducer, jobSelectedPosition, ageSelectedPosition, customerBirthday.toString(),
-                    Utility.getCreator(getActivity()), Utility.getCreatorGroup(getActivity()), dateString + timeString);
+            e.printStackTrace();
+            return false;
         }
 
         return true;
@@ -469,12 +510,15 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 
     private void getOptionType()
     {
-        List<GsonDataOptionType> infoList, jobList, ageList, sexList, titleList;
-        infoList = new ArrayList<GsonDataOptionType>();
-        jobList = new ArrayList<GsonDataOptionType>();
-        ageList = new ArrayList<GsonDataOptionType>();
-        sexList = new ArrayList<GsonDataOptionType>();
-        titleList = new ArrayList<GsonDataOptionType>();
+        List<DataOption> infoList, jobList, ageList, sexList, titleList;
+        infoList = new ArrayList<DataOption>();
+        jobList = new ArrayList<DataOption>();
+        ageList = new ArrayList<DataOption>();
+        sexList = new ArrayList<DataOption>();
+        titleList = new ArrayList<DataOption>();
+        statusList = new ArrayList<DataOption>();
+        spaceList = new ArrayList<DataOption>();
+        budgetList = new ArrayList<DataOption>();
         // to get option type content
         Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
         int optionType, optionSerial;
@@ -484,6 +528,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         String infoType = mainActivity.getResources().getString(R.string.option_customer_info);
         String jobType = mainActivity.getResources().getString(R.string.option_customer_job);
         String ageType = mainActivity.getResources().getString(R.string.option_customer_age);
+        String statusType = mainActivity.getResources().getString(R.string.option_customer_status);
+        String spaceType = mainActivity.getResources().getString(R.string.option_customer_space);
+        String budgetType = mainActivity.getResources().getString(R.string.option_customer_budget);
         if (optionTypeCursor != null)
         {
             int count = optionTypeCursor.getCount();
@@ -501,23 +548,35 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                             .getColumnIndex(RetialSaleDbAdapter.KEY_DATA_OPTION_NAME));
                     if (optionAlias.equals(sexType))
                     {
-                        sexList.add(new GsonDataOptionType(optionSerial, optionName));
+                        sexList.add(new DataOption("", optionSerial, optionName, false));
                     }
                     else if (optionAlias.equals(titleType))
                     {
-                        titleList.add(new GsonDataOptionType(optionSerial, optionName));
+                        titleList.add(new DataOption("", optionSerial, optionName, false));
                     }
                     else if (optionAlias.equals(infoType))
                     {
-                        infoList.add(new GsonDataOptionType(optionSerial, optionName));
+                        infoList.add(new DataOption("", optionSerial, optionName, false));
                     }
                     else if (optionAlias.equals(jobType))
                     {
-                        jobList.add(new GsonDataOptionType(optionSerial, optionName));
+                        jobList.add(new DataOption("", optionSerial, optionName, false));
                     }
                     else if (optionAlias.equals(ageType))
                     {
-                        ageList.add(new GsonDataOptionType(optionSerial, optionName));
+                        ageList.add(new DataOption("", optionSerial, optionName, false));
+                    }
+                    else if (optionAlias.equals(statusType))
+                    {
+                        statusList.add(new DataOption("", optionSerial, optionName, false));
+                    }
+                    else if (optionAlias.equals(spaceType))
+                    {
+                        spaceList.add(new DataOption("", optionSerial, optionName, false));
+                    }
+                    else if (optionAlias.equals(budgetType))
+                    {
+                        budgetList.add(new DataOption("", optionSerial, optionName, false));
                     }
                 }
             }

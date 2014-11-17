@@ -163,8 +163,42 @@ public class CustomerInfo implements Parcelable
 	private int reservationDay;
 	private int reservationHour;
 	private int reservationMinute;
+	
+	private int reservationSpacePosition = 0;
+	private int reservationStatusPosition = 0;
+	private int reservationBudgetPosition = 0;
 
-	public int getReservationYear()
+	public int getReservationSpacePosition()
+    {
+        return reservationSpacePosition;
+    }
+
+    public void setReservationSpacePosition(int reservationSpacePosition)
+    {
+        this.reservationSpacePosition = reservationSpacePosition;
+    }
+
+    public int getReservationStatusPosition()
+    {
+        return reservationStatusPosition;
+    }
+
+    public void setReservationStatusPosition(int reservationStatusPosition)
+    {
+        this.reservationStatusPosition = reservationStatusPosition;
+    }
+
+    public int getReservationBudgetPosition()
+    {
+        return reservationBudgetPosition;
+    }
+
+    public void setReservationBudgetPosition(int reservationBudgetPosition)
+    {
+        this.reservationBudgetPosition = reservationBudgetPosition;
+    }
+
+    public int getReservationYear()
 	{
 		return reservationYear;
 	}

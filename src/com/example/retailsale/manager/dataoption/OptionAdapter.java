@@ -14,11 +14,11 @@ public class OptionAdapter extends BaseAdapter
 {
     private static final String TAG = "OptionAdapter";
     private static final int BASE_INDEX = 1000;
-    private List<GsonDataOptionType> optionList;
+    private List<DataOption> optionList;
     private Context context;
     private ViewTag viewTag;
 
-    public OptionAdapter(Context context, List<GsonDataOptionType> optionList)
+    public OptionAdapter(Context context, List<DataOption> optionList)
     {
         this.context = context;
         this.optionList = optionList;
@@ -33,7 +33,10 @@ public class OptionAdapter extends BaseAdapter
     @Override
     public Object getItem(int position)
     {
-        return optionList.get(position);
+        if (position > optionList.size())
+            return optionList.get(position);
+        else
+            return null;
     }
 
     @Override
@@ -61,7 +64,7 @@ public class OptionAdapter extends BaseAdapter
 
         if (position < optionList.size())
         {
-            viewTag.itemName.setText(optionList.get(position).getTypeName());
+            viewTag.itemName.setText(optionList.get(position).getOptName());
         }
 
         return convertView;
