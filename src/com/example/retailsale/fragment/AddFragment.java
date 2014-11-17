@@ -1,6 +1,7 @@
 package com.example.retailsale.fragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -55,10 +56,12 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private List<DataOption> infoList, jobList, ageList, sexList, titleList;
     private List<DataOption> statusList, spaceList, budgetList;
     private List<UserDataForList> userDataList;
+    private List<String> phoneCodeList;
     // views
     private MainActivity mainActivity;
     private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
     private Spinner yearSpinner, monthSpinner, daySpinner;
+    private Spinner phoneNumberSpinner, companyPhoneNumberSpinner;
     private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
             introducerET;
     private CheckBox leaveInfoCB;
@@ -128,6 +131,18 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         monthSpinner.setOnItemSelectedListener(this);
         daySpinner = (Spinner) view.findViewById(R.id.add_tab_customer_birthday_day);
         daySpinner.setOnItemSelectedListener(this);
+        
+        phoneNumberSpinner = (Spinner) view.findViewById(R.id.add_tab_phone_number_spinner);
+        companyPhoneNumberSpinner = (Spinner) view.findViewById(R.id.add_tab_company_phone_number_spinner);
+        
+        String[] phoneCodeArray = getResources().getStringArray(R.array.phone_code);
+        phoneCodeList = Arrays.asList(phoneCodeArray);
+        
+        CommonAdapter phoneCodeAdapter = new CommonAdapter(this.getActivity(), phoneCodeList);
+        
+        phoneNumberSpinner.setAdapter(phoneCodeAdapter);
+        companyPhoneNumberSpinner.setAdapter(phoneCodeAdapter);
+        
         // save btn
         saveBtn.setOnClickListener(this);
         newBtn.setOnClickListener(this);
@@ -213,9 +228,13 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 
     private boolean setCustomerData()
     {
-        String phoneNumber = phoneNumberET.getText().toString();
+        String phoneCode = phoneCodeList.get(phoneNumberSpinner.getSelectedItemPosition());
+        String companyPhoneCode = phoneCodeList.get(companyPhoneNumberSpinner.getSelectedItemPosition());
+        Log.d(TAG, "phone number : " + phoneCode + " company : " + companyPhoneCode);
+        
+        String phoneNumber = phoneCode + Utility.FILL_DASH + phoneNumberET.getText().toString();
         String cellPhoneNumber = cellPhoneNumberET.getText().toString();
-        String companyPhoneNumber = companyPhoneNumberET.getText().toString();
+        String companyPhoneNumber = companyPhoneCode + Utility.FILL_DASH + companyPhoneNumberET.getText().toString();
         String email = emailET.getText().toString();
         StringBuilder customerBirthday = new StringBuilder();
         String dateString = Utility.covertDateToString(consumerVisitDateDP.getYear(),
@@ -676,7 +695,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             yearList.add(String.valueOf(i));
         }
         
-        BirthdayAdapter yearAdapter = new BirthdayAdapter(this.getActivity(), yearList);
+        CommonAdapter yearAdapter = new CommonAdapter(this.getActivity(), yearList);
         
         yearSpinner.setAdapter(yearAdapter);
     }
@@ -697,7 +716,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             }
         }
         
-        BirthdayAdapter monthAdapter = new BirthdayAdapter(this.getActivity(), monthList);
+        CommonAdapter monthAdapter = new CommonAdapter(this.getActivity(), monthList);
         
         monthSpinner.setAdapter(monthAdapter);
     }
@@ -718,20 +737,20 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             }
         }
         
-        BirthdayAdapter dayAdapter = new BirthdayAdapter(this.getActivity(), dayList);
+        CommonAdapter dayAdapter = new CommonAdapter(this.getActivity(), dayList);
         
         daySpinner.setAdapter(dayAdapter);
     }
     
-    private class BirthdayAdapter extends BaseAdapter
+    private class CommonAdapter extends BaseAdapter
     {
-        private static final String TAG = "DateAdapter";
+        private static final String TAG = "CommonAdapter";
         private static final int BASE_INDEX = 1000;
         private List<String> birthList;
         private Context context;
         private ViewTag viewTag;
 
-        public BirthdayAdapter(Context context, List<String> birthList)
+        public CommonAdapter(Context context, List<String> birthList)
         {
             this.context = context;
             this.birthList = birthList;

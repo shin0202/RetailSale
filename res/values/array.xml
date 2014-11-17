@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="phone_code">
+        <item>02</item>
+        <item>03</item>
+        <item>037</item>
+        <item>04</item>
+        <item>049</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>082</item>
+        <item>089</item>
+        <item>0836</item>
+    </string-array>
+
+</resources>

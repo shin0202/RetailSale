@@ -41,11 +41,11 @@
     <string name="add_tab_customer_name">客戶姓名</string>
     <string name="add_tab_customer_name_hint">請輸入客戶姓名</string>
     <string name="add_tab_phone_number">住家電話</string>
-    <string name="add_tab_phone_number_hint">請輸入住家電話(02-12345678)</string>
+    <string name="add_tab_phone_number_hint">例:12345678</string>
     <string name="add_tab_phone_number_company">公司電話</string>
-    <string name="add_tab_phone_number_company_hint">請輸入公司電話(02-12345678#0000)</string>
+    <string name="add_tab_phone_number_company_hint">例:12345678#0000</string>
     <string name="add_tab_cellphone_number">手機電話</string>
-    <string name="add_tab_cellphone_number_hint">請輸入手機電話(0912345678)</string>
+    <string name="add_tab_cellphone_number_hint">請輸入手機電話(0912-345678)</string>
     <string name="add_tab_select_info">訊息來源</string>
     <string name="add_tab_select_job">職業</string>
     <string name="add_tab_leave_info">客戶不留基本資料</string>

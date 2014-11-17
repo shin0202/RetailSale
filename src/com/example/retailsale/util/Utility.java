@@ -39,7 +39,7 @@ public class Utility
     private static final String TAG = "Utility";
     private static final int BOUNDS = 10;
     private static final String FILL_ZERO = "0";
-    private static final String FILL_DASH = "-";
+    public static final String FILL_DASH = "-";
     public static final String LINE_FEED = "\n";
     public static final String DATE_STRING = "T";
 //	public static final String FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/retail/";
@@ -121,7 +121,7 @@ public class Utility
     {
         boolean isValid = false;
 
-        String expression = "[0-9]{2,3}-[0-9]{6,8}";
+        String expression = "[0-9]{2,4}-[0-9]{5,8}";
         CharSequence inputStr = number;
 
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
@@ -140,11 +140,11 @@ public class Utility
         String expression;
         if (number.contains("#"))
         {
-            expression = "[0-9]{2,3}-[0-9]{6,8}#[0-9]{1,4}";
+            expression = "[0-9]{2,4}-[0-9]{5,8}#[0-9]{1,4}";
         }
         else
         {
-            expression = "[0-9]{2,3}-[0-9]{6,8}";
+            expression = "[0-9]{2,4}-[0-9]{5,8}";
         }
 
         CharSequence inputStr = number;

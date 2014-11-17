@@ -52,6 +52,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     private int albumNum = 0;
     private String currentParentPath;
     private int currentAlbumPosition;
+    private int lastAlbumPosition;
     private PhotosAdapterView photosAdapterView;
     private List<LocalFileInfo> albumList;
     private List<LocalFileInfo> photoList;
@@ -229,7 +230,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         // get albums from download path
         Log.d(TAG, "handlePageRefresh albumNum : " + albumNum + " currentAlbumPosition : "
                 + currentAlbumPosition + " currentParent : " + currentParent
-                + " currentParentPath : " + currentParentPath);
+                + " currentParentPath : " + currentParentPath + " lastAlbumPosition : " + lastAlbumPosition);
         albumNum = 0;
         currentAlbumPosition = 0;
         this.currentParentPath = currentParent;
@@ -384,6 +385,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             public void onClick(View v)
             {
                 Log.d(TAG, "albumNum " + v.getTag());
+                Log.d(TAG, "lastAlbumPosition : " + lastAlbumPosition + " currentAlbumPosition : " + currentAlbumPosition);
                 currentAlbumPosition = (Integer) v.getTag();
                 LocalFileInfo localFileInfo = albumList.get(currentAlbumPosition);
                 

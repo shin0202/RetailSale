@@ -117,9 +117,15 @@
                     style="@style/addTabTextViewStyle"
                     android:text="@string/add_tab_phone_number" />
 
+                <Spinner
+                    android:id="@+id/add_tab_phone_number_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
                 <EditText
                     android:id="@+id/add_tab_edit_phone_number"
                     style="@style/inputTextStyle"
+                    android:layout_width="226dp"
                     android:hint="@string/add_tab_phone_number_hint" />
             </LinearLayout>
 
@@ -153,9 +159,15 @@
                     style="@style/addTabTextViewStyle"
                     android:text="@string/add_tab_phone_number_company" />
 
+                <Spinner
+                    android:id="@+id/add_tab_company_phone_number_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
                 <EditText
                     android:id="@+id/add_tab_edit_phone_number_company"
                     style="@style/inputTextStyle"
+                    android:layout_width="226dp"
                     android:hint="@string/add_tab_phone_number_company_hint" />
             </LinearLayout>
 
