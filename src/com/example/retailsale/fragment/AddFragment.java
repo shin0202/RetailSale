@@ -652,7 +652,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         String userName, userGroupNm, userTypeNm;
 
         // to get user content
-        Cursor userCursor = retialSaleDbAdapter.getAllUser();
+//        Cursor userCursor = retialSaleDbAdapter.getAllUser();
+        Cursor userCursor = retialSaleDbAdapter.getUserByCreator(Utility.getCreatorGroup(mainActivity));
 
         if (userCursor != null)
         {
