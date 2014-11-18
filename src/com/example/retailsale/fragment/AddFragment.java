@@ -9,7 +9,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -54,7 +53,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private boolean isSendMsg = false;
     private String createDateTime;
     private List<DataOption> infoList, jobList, ageList, sexList, titleList;
-    private List<DataOption> statusList, spaceList, budgetList;
+    private List<DataOption> statusList, spaceList, budgetList, repairItemList, areaList;
     private List<UserDataForList> userDataList;
     private List<String> phoneCodeList;
     // views
@@ -62,6 +61,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
     private Spinner yearSpinner, monthSpinner, daySpinner;
     private Spinner phoneNumberSpinner, companyPhoneNumberSpinner;
+    private Spinner repairItemSpinner, areaSpinner;
     private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
             introducerET;
     private CheckBox leaveInfoCB;
@@ -244,6 +244,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 + ":00";
         String customerName = customerNameET.getText().toString();
         String introducer = introducerET.getText().toString();
+        String memo = "";
         
         int msgSelectedSerial = infoList.get(infoSpinner.getSelectedItemPosition()).getOptSerial();
         int jobSelectedSerial = jobList.get(jobSpinner.getSelectedItemPosition()).getOptSerial();
@@ -318,41 +319,33 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 if (isChecked)
                 {
                     String noData = AddFragment.this.getResources().getString(R.string.no_data);
-                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, noData, noData,
-                            noData, noData, sexSelectedSerial, titleSelectedSerial, noData,
-                            dateString + timeString, msgSelectedSerial, noData, jobSelectedSerial,
-                            ageSelectedSerial, noData, creator, group, createDateTime,
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, spaceList.get(
-                                    Utility.DEFAULT_ZERO_VALUE).getOptSerial(), statusList.get(
-                                    Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, budgetList.get(
-                                    Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
-                            Utility.SPACE_STRING);
+                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, noData, noData, noData, noData,
+                            sexSelectedSerial, titleSelectedSerial, noData, dateString + timeString, msgSelectedSerial,
+                            noData, jobSelectedSerial, ageSelectedSerial, memo, noData, creator, group, createDateTime,
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, spaceList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), statusList
+                                    .get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), Utility.SPACE_STRING,
+                            Utility.SPACE_STRING, budgetList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), 0, 0);
                 }
                 else
                 {
-                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName,
-                            cellPhoneNumber, phoneNumber, companyPhoneNumber, sexSelectedSerial,
-                            titleSelectedSerial, email, dateString + timeString, msgSelectedSerial,
-                            introducer, jobSelectedSerial, ageSelectedSerial,
-                            customerBirthday.toString(), creator, group, createDateTime,
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, spaceList.get(
-                                    Utility.DEFAULT_ZERO_VALUE).getOptSerial(), statusList.get(
-                                    Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, budgetList.get(
-                                    Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
-                            Utility.SPACE_STRING);
+                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber,
+                            phoneNumber, companyPhoneNumber, sexSelectedSerial, titleSelectedSerial, email, dateString
+                                    + timeString, msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial,
+                            memo, customerBirthday.toString(), creator, group, createDateTime, Utility.SPACE_STRING,
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, spaceList.get(Utility.DEFAULT_ZERO_VALUE)
+                                    .getOptSerial(), statusList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, budgetList.get(Utility.DEFAULT_ZERO_VALUE)
+                                    .getOptSerial(), 0, 0);
                 }
             }
             else
             {
-                customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName,
-                        cellPhoneNumber, phoneNumber, companyPhoneNumber, sexSelectedSerial,
-                        titleSelectedSerial, email, dateString + timeString, msgSelectedSerial,
-                        introducer, jobSelectedSerial, ageSelectedSerial,
-                        customerBirthday.toString(), creator, group, dateString + timeString);
+                customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber,
+                        phoneNumber, companyPhoneNumber, sexSelectedSerial, titleSelectedSerial, email, dateString
+                                + timeString, msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial,
+                        memo, customerBirthday.toString(), creator, group, dateString + timeString, 0, 0);
                 
                 Log.d(TAG, "ReservationBudgetPosition() === " + customerInfo.getReservationBudgetPosition());
             }
@@ -411,7 +404,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             int sendNoteValue = isSendMsg ? 1 : 0;
 //            String createDateTime = Utility.getCurrentDateTime();
             Log.d(TAG, "sendNoteValue is " + sendNoteValue + " createDateTime is " + createDateTime);
-            SharedPreferences settings = mainActivity.getSharedPreferences(Utility.LoginField.DATA, 0);
+//            SharedPreferences settings = mainActivity.getSharedPreferences(Utility.LoginField.DATA, 0);
 //            int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
 //            int userGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
             Log.d(TAG, "userSerial === " + customerInfo.getCreator() + "userGroup === " + customerInfo.getCreatorGroup());
@@ -420,13 +413,15 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     customerInfo.getCustomerMail(), customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
                     customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(), customerInfo.getCustomerJob(),
                     customerInfo.getCustomerIntroducer(), customerInfo.getCustomerAge(),
-                    customerInfo.getCustomerVisitDate(), customerInfo.getCreator(), customerInfo.getCreatorGroup(),
-                    Utility.covertDateStringToServer(createDateTime), sendNoteValue,
+                    customerInfo.getCustomerMemo(), customerInfo.getCustomerVisitDate(), customerInfo.getCreator(),
+                    customerInfo.getCreatorGroup(), Utility.covertDateStringToServer(createDateTime), sendNoteValue,
                     customerInfo.getReservationWorkAlias(), customerInfo.getReservationStatusComment(),
                     customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
-                    customerInfo.getReservationContact(), customerInfo.getReservationComment(),
-                    customerInfo.getReservationSpace(), customerInfo.getReservationBudget(),
-                    customerInfo.getReservationDate(), RetialSaleDbAdapter.NOTUPLOAD);
+                    customerInfo.getWorkPostcode(), customerInfo.getReservationContact(),
+                    customerInfo.getContactPostcode(), customerInfo.getReservationSpace(),
+                    customerInfo.getReservationBudget(), customerInfo.getReservationDate(),
+                    customerInfo.getReservationRepairItem(), customerInfo.getReservationArea(),
+                    RetialSaleDbAdapter.NOTUPLOAD);
             Log.d(TAG, "id is " + id);
 
             mainActivity.setManageTab();
@@ -524,6 +519,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         statusList = new ArrayList<DataOption>();
         spaceList = new ArrayList<DataOption>();
         budgetList = new ArrayList<DataOption>();
+        repairItemList = new ArrayList<DataOption>();
+        areaList = new ArrayList<DataOption>();
         // to get option type content
         Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
         int optionType, optionSerial;
@@ -536,6 +533,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         String statusType = mainActivity.getResources().getString(R.string.option_customer_status);
         String spaceType = mainActivity.getResources().getString(R.string.option_customer_space);
         String budgetType = mainActivity.getResources().getString(R.string.option_customer_budget);
+        String repairItemType = mainActivity.getResources().getString(R.string.option_customer_repair_item);
+        String areaType = mainActivity.getResources().getString(R.string.option_customer_area);
         if (optionTypeCursor != null)
         {
             int count = optionTypeCursor.getCount();
@@ -582,6 +581,14 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     else if (optionAlias.equals(budgetType))
                     {
                         budgetList.add(new DataOption("", optionSerial, optionName, false));
+                    }
+                    else if (optionAlias.equals(repairItemType))
+                    {
+                        repairItemList.add(new DataOption("", optionSerial, optionName, false));
+                    }
+                    else if (optionAlias.equals(areaType))
+                    {
+                        areaList.add(new DataOption("", optionSerial, optionName, false));
                     }
                 }
             }

@@ -45,7 +45,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
     private TimePicker measureTime;
     private Spinner spaceSpinner, budgetSpinner, statusSpinner;
     private TextView saleCreateDateTV, consumerNameTV, phoneNumberTV;
-    private EditText caseNameET, cantDescriptionET, consumerAddressET, contactAddressET;//, commentET;
+    private EditText caseNameET, cantDescriptionET, consumerAddressET, contactAddressET;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -109,7 +109,6 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         cantDescriptionET = (EditText) findViewById(R.id.order_measure_cant_description);
         consumerAddressET = (EditText) findViewById(R.id.order_measure_consumer_address);
         contactAddressET = (EditText) findViewById(R.id.order_measure_consumer_contact_address);
-//		commentET = (EditText) findViewById(R.id.order_measure_consumer_comment);
 
         statusSpinner = (Spinner) findViewById(R.id.order_measure_sale_status_request);
         spaceSpinner = (Spinner) findViewById(R.id.order_measure_consumer_request);
@@ -155,8 +154,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
                         customerInfo.getReservationMonth(), customerInfo.getReservationDay(),
                         customerInfo.getReservationHour(), customerInfo.getReservationMinute(),
                         customerInfo.getReservationStatusComment(), customerInfo.getReservationStatusPosition(),
-                        customerInfo.getReservationComment(), customerInfo.getReservationSpacePosition(),
-                        customerInfo.getReservationBudgetPosition());
+                        customerInfo.getReservationSpacePosition(), customerInfo.getReservationBudgetPosition());
             }
 
             if (customerInfo != null)
@@ -169,7 +167,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 
     private void setInfo(boolean isDefault, String caseName, String workAddress, String contactAddress,
             int reservationYear, int reservationMonth, int reservationDay, int reservationHour, int reservationMinute,
-            String cantDescription, int statusPosition, String comment, int requestPosition, int costPosition)
+            String cantDescription, int statusPosition, int requestPosition, int costPosition)
     {
         if (isDefault)
         {
@@ -185,8 +183,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
             cantDescriptionET.setText(cantDescription);
             Log.d(TAG, "statusPosition is " + statusPosition);
             statusSpinner.setSelection(statusPosition);
-            
-//			commentET.setText(comment);
+
             spaceSpinner.setSelection(requestPosition);
             budgetSpinner.setSelection(costPosition);
         }
@@ -243,10 +240,6 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         // status
         customerInfo.setReservationStatus(statusSelectedSerial);
         customerInfo.setReservationStatusPosition(statusSpinner.getSelectedItemPosition());
-
-        // comment
-//		customerInfo.setReservationComment(commentET.getText().toString());
-        customerInfo.setReservationComment(Utility.SPACE_STRING);
 
         // request
         customerInfo.setReservationSpace(spaceSelectedSerial);
