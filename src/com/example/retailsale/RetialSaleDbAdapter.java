@@ -561,7 +561,7 @@ public class RetialSaleDbAdapter
     {
         if (db.isOpen())
         {
-            Cursor cursor = db.query(true, ADD_CUSTOMER_TABLE, new String[]
+            Cursor cursor = db.query(true, USER_TABLE, new String[]
             { KEY_USER_ID, KEY_USER_SERIAL, KEY_USER_NAME, KEY_USER_GROUP, KEY_USER_TYPE, KEY_USER_GROUP_NAMING,
                     KEY_USER_TYPE_NAMING }, KEY_USER_GROUP + "=" + creator, null, null, null, null, null);
             if (cursor != null)

@@ -16,408 +16,441 @@
         android:text="@string/save"
         android:textColor="@color/white" />
 
-    <!--
-          <ScrollView
+    <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_centerInParent="true"
         android:layout_toLeftOf="@+id/add_tab_new_btn"
         android:layout_toRightOf="@+id/add_tab_save_btn"
-        android:layout_centerInParent="true" >
-    -->
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_toLeftOf="@+id/add_tab_new_btn"
-        android:layout_toRightOf="@+id/add_tab_save_btn"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <!-- left layout -->
+        android:gravity="center" >
 
         <LinearLayout
-            android:id="@+id/add_tab_left_layout"
-            style="@style/addTabLayoutStyle"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:gravity="center"
+            android:orientation="horizontal" >
 
-            <!-- Show company name layout -->
-
-            <LinearLayout
-                android:id="@+id/add_tab_company_name_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/add_tab_company_name_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_company_name" />
-
-                <TextView
-                    android:id="@+id/add_tab_company_name"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_company_name" />
-            </LinearLayout>
-
-            <CheckBox
-                android:id="@+id/add_tab_leave_info_checkbox"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/add_tab_leave_info"
-                android:textColor="@color/darkorange"
-                android:textSize="@dimen/add_tab_txt_style_size" />
-
-            <!-- Show customer id layout -->
+            <!-- left layout -->
 
             <LinearLayout
-                android:id="@+id/add_tab_customer_id_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
+                android:id="@+id/add_tab_left_layout"
+                style="@style/addTabLayoutStyle"
+                android:layout_height="fill_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" >
 
-                <TextView
-                    android:id="@+id/add_tab_customer_id_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_customer_id" />
+                <!-- Show company name layout -->
 
-                <TextView
-                    android:id="@+id/add_tab_customer_id"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_customer_id" />
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/add_tab_company_name_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
 
-            <!-- Input customer name layout -->
+                    <TextView
+                        android:id="@+id/add_tab_company_name_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_company_name" />
 
-            <LinearLayout
-                android:id="@+id/add_tab_input_name_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
+                    <TextView
+                        android:id="@+id/add_tab_company_name"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_company_name" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/add_tab_input_name_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_customer_name" />
+                <CheckBox
+                    android:id="@+id/add_tab_leave_info_checkbox"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_tab_leave_info"
+                    android:textColor="@color/darkorange"
+                    android:textSize="@dimen/add_tab_txt_style_size" />
 
-                <EditText
-                    android:id="@+id/add_tab_edit_customer_name"
-                    style="@style/inputTextStyle"
-                    android:layout_gravity="center"
-                    android:hint="@string/add_tab_customer_name_hint" />
-            </LinearLayout>
+                <!-- Show customer id layout -->
 
-            <!-- Input phone number -->
+                <LinearLayout
+                    android:id="@+id/add_tab_customer_id_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
 
-            <LinearLayout
-                android:id="@+id/add_tab_input_phone_number_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
+                    <TextView
+                        android:id="@+id/add_tab_customer_id_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_customer_id" />
 
-                <TextView
-                    android:id="@+id/add_tab_input_phone_number_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_phone_number" />
+                    <TextView
+                        android:id="@+id/add_tab_customer_id"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_customer_id" />
+                </LinearLayout>
 
-                <Spinner
-                    android:id="@+id/add_tab_phone_number_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <!-- Input customer name layout -->
 
-                <EditText
-                    android:id="@+id/add_tab_edit_phone_number"
-                    style="@style/inputTextStyle"
-                    android:layout_width="226dp"
-                    android:hint="@string/add_tab_phone_number_hint" />
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/add_tab_input_name_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
 
-            <!-- Input cellphone number -->
+                    <TextView
+                        android:id="@+id/add_tab_input_name_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_customer_name" />
 
-            <LinearLayout
-                android:id="@+id/add_tab_input_cellphone_number_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
+                    <EditText
+                        android:id="@+id/add_tab_edit_customer_name"
+                        style="@style/inputTextStyle"
+                        android:layout_gravity="center"
+                        android:hint="@string/add_tab_customer_name_hint" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/add_tab_input_cellphone_number_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_cellphone_number" />
+                <!-- Input phone number -->
 
-                <EditText
-                    android:id="@+id/add_tab_edit_cellphone_number"
-                    style="@style/inputTextStyle"
-                    android:hint="@string/add_tab_cellphone_number_hint" />
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/add_tab_input_phone_number_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
 
-            <!-- Input phone number company -->
+                    <TextView
+                        android:id="@+id/add_tab_input_phone_number_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_phone_number" />
 
-            <LinearLayout
-                android:id="@+id/add_tab_input_phone_number_company_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
+                    <Spinner
+                        android:id="@+id/add_tab_phone_number_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/add_tab_input_phone_number_company_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_phone_number_company" />
+                    <EditText
+                        android:id="@+id/add_tab_edit_phone_number"
+                        style="@style/inputTextStyle"
+                        android:layout_width="226dp"
+                        android:hint="@string/add_tab_phone_number_hint" />
+                </LinearLayout>
 
-                <Spinner
-                    android:id="@+id/add_tab_company_phone_number_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <!-- Input cellphone number -->
 
-                <EditText
-                    android:id="@+id/add_tab_edit_phone_number_company"
-                    style="@style/inputTextStyle"
-                    android:layout_width="226dp"
-                    android:hint="@string/add_tab_phone_number_company_hint" />
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/add_tab_input_cellphone_number_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
 
-            <!-- info -->
+                    <TextView
+                        android:id="@+id/add_tab_input_cellphone_number_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_cellphone_number" />
 
-            <LinearLayout
-                android:id="@+id/add_tab_select_info_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
+                    <EditText
+                        android:id="@+id/add_tab_edit_cellphone_number"
+                        style="@style/inputTextStyle"
+                        android:hint="@string/add_tab_cellphone_number_hint" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/add_tab_select_info_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_select_info" />
+                <!-- Input phone number company -->
 
-                <Spinner
-                    android:id="@+id/add_tab_info_from"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/add_tab_input_phone_number_company_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
 
-            <!-- Job -->
+                    <TextView
+                        android:id="@+id/add_tab_input_phone_number_company_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_phone_number_company" />
 
-            <LinearLayout
-                android:id="@+id/add_tab_select_job_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
+                    <Spinner
+                        android:id="@+id/add_tab_company_phone_number_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/add_tab_select_job_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_select_job" />
+                    <EditText
+                        android:id="@+id/add_tab_edit_phone_number_company"
+                        style="@style/inputTextStyle"
+                        android:layout_width="226dp"
+                        android:hint="@string/add_tab_phone_number_company_hint" />
+                </LinearLayout>
 
-                <Spinner
-                    android:id="@+id/add_tab_job"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                <!-- info -->
 
-            <!-- Input customer birthday -->
+                <LinearLayout
+                    android:id="@+id/add_tab_select_info_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
 
-            <LinearLayout
-                android:id="@+id/add_tab_input_customer_birthday_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
+                    <TextView
+                        android:id="@+id/add_tab_select_info_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_select_info" />
 
-                <TextView
-                    android:id="@+id/add_tab_input_customer_birthday_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_customer_birthday" />
+                    <Spinner
+                        android:id="@+id/add_tab_info_from"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
-                <!--
+                <!-- Job -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_select_job_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/add_tab_select_job_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_select_job" />
+
+                    <Spinner
+                        android:id="@+id/add_tab_job"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Input customer birthday -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_input_customer_birthday_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/add_tab_input_customer_birthday_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_customer_birthday" />
+
+                    <!--
                           <EditText
                         android:id="@+id/add_tab_edit_customer_birthday"
                         style="@style/inputTextStyle"
                         android:hint="@string/add_tab_customer_birthday_hint" />
-                -->
+                    -->
 
-                <Spinner
-                    android:id="@+id/add_tab_customer_birthday_year"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    <Spinner
+                        android:id="@+id/add_tab_customer_birthday_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
-                <Spinner
-                    android:id="@+id/add_tab_customer_birthday_month"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content" />
+                    <Spinner
+                        android:id="@+id/add_tab_customer_birthday_month"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content" />
 
-                <Spinner
-                    android:id="@+id/add_tab_customer_birthday_day"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content" />
+                    <Spinner
+                        android:id="@+id/add_tab_customer_birthday_day"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Input introducer -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_input_introducer_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/add_tab_input_introducer_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_customer_introducer" />
+
+                    <EditText
+                        android:id="@+id/add_tab_edit_introducer"
+                        style="@style/inputTextStyle"
+                        android:hint="@string/add_tab_customer_introducer_hint" />
+                </LinearLayout>
+
+                <!-- repair item -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_select_repair_item_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/add_tab_select_repair_item_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_select_repair_item" />
+
+                    <Spinner
+                        android:id="@+id/add_tab_repair_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
             </LinearLayout>
 
-            <!-- Input introducer -->
+            <!-- right layout -->
 
             <LinearLayout
-                android:id="@+id/add_tab_input_introducer_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
+                android:id="@+id/add_tab_right_layout"
+                style="@style/addTabLayoutStyle"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" >
 
-                <TextView
-                    android:id="@+id/add_tab_input_introducer_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_customer_introducer" />
+                <!-- Show designer store layout -->
 
-                <EditText
-                    android:id="@+id/add_tab_edit_introducer"
-                    style="@style/inputTextStyle"
-                    android:hint="@string/add_tab_customer_introducer_hint" />
-            </LinearLayout>
-        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/add_tab_designer_store_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
 
-        <!-- right layout -->
+                    <TextView
+                        android:id="@+id/add_tab_designer_store_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_designer_store" />
 
-        <LinearLayout
-            android:id="@+id/add_tab_right_layout"
-            style="@style/addTabLayoutStyle"
-            android:gravity="center_horizontal"
-            android:orientation="vertical" >
+                    <TextView
+                        android:id="@+id/add_tab_designer_store"
+                        style="@style/addTabTextViewStyle" />
+                </LinearLayout>
 
-            <!-- Show designer store layout -->
+                <!-- Show designer name layout -->
 
-            <LinearLayout
-                android:id="@+id/add_tab_designer_store_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
+                <LinearLayout
+                    android:id="@+id/add_tab_designer_name_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@+id/add_tab_designer_store_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_designer_store" />
+                    <TextView
+                        android:id="@+id/add_tab_designer_name_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_designer_name" />
 
-                <TextView
-                    android:id="@+id/add_tab_designer_store"
-                    style="@style/addTabTextViewStyle" />
-            </LinearLayout>
-
-            <!-- Show designer name layout -->
-
-            <LinearLayout
-                android:id="@+id/add_tab_designer_name_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/add_tab_designer_name_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_designer_name" />
-
-                <!--
+                    <!--
                       <TextView
                     android:id="@+id/add_tab_designer_name"
                     style="@style/addTabTextViewStyle"
                     android:text="@string/add_tab_designer_name" />
-                -->
+                    -->
 
-                <Spinner
-                    android:id="@+id/add_tab_user"
+                    <Spinner
+                        android:id="@+id/add_tab_user"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Show create date layout -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_create_date_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/add_tab_create_date_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_create_date" />
+
+                    <TextView
+                        android:id="@+id/add_tab_create_date"
+                        style="@style/addTabTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:text="@string/no_data" />
+                </LinearLayout>
+
+                <!-- title -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_select_title_layout"
+                    style="@style/inputLayoutStyleInclueMargin"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/add_tab_select_title_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_title" />
+
+                    <Spinner
+                        android:id="@+id/add_tab_title_selection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Input email -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_input_email_layout"
+                    style="@style/inputLayoutStyleInclueMargin"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/add_tab_input_email_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_email" />
+
+                    <EditText
+                        android:id="@+id/add_tab_edit_email"
+                        style="@style/inputTextStyle"
+                        android:hint="@string/add_tab_email_hint" />
+                </LinearLayout>
+
+                <!-- age -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_select_age_layout"
+                    style="@style/inputLayoutStyleInclueMargin"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/add_tab_select_age_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_age" />
+
+                    <Spinner
+                        android:id="@+id/add_tab_age_selection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- sex -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_select_sex_layout"
+                    style="@style/inputLayoutStyleInclueMargin"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/add_tab_select_sex_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_sex" />
+
+                    <Spinner
+                        android:id="@+id/add_tab_sex_selection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- area -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_select_area_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/add_tab_select_area_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_select_area" />
+
+                    <Spinner
+                        android:id="@+id/add_tab_area"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/add_tab_consumer_visit_date_time_field"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/add_tab_customer_visit_time"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/add_tab_txt_style_size" />
 
-            <!-- Show create date layout -->
+                <LinearLayout
+                    android:id="@+id/add_tab_consumer_visit_date_time_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
 
-            <LinearLayout
-                android:id="@+id/add_tab_create_date_layout"
-                style="@style/inputLayoutStyle"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/add_tab_create_date_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_create_date" />
-
-                <TextView
-                    android:id="@+id/add_tab_create_date"
-                    style="@style/addTabTextViewStyle"
-                    android:layout_width="wrap_content"
-                    android:text="@string/no_data" />
-            </LinearLayout>
-
-            <!-- title -->
-
-            <LinearLayout
-                android:id="@+id/add_tab_select_title_layout"
-                style="@style/inputLayoutStyleInclueMargin"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/add_tab_select_title_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_title" />
-
-                <Spinner
-                    android:id="@+id/add_tab_title_selection"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <!-- Input email -->
-
-            <LinearLayout
-                android:id="@+id/add_tab_input_email_layout"
-                style="@style/inputLayoutStyleInclueMargin"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/add_tab_input_email_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_email" />
-
-                <EditText
-                    android:id="@+id/add_tab_edit_email"
-                    style="@style/inputTextStyle"
-                    android:hint="@string/add_tab_email_hint" />
-            </LinearLayout>
-
-            <!-- age -->
-
-            <LinearLayout
-                android:id="@+id/add_tab_select_age_layout"
-                style="@style/inputLayoutStyleInclueMargin"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/add_tab_select_age_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_age" />
-
-                <Spinner
-                    android:id="@+id/add_tab_age_selection"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <!-- sex -->
-
-            <LinearLayout
-                android:id="@+id/add_tab_select_sex_layout"
-                style="@style/inputLayoutStyleInclueMargin"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/add_tab_select_sex_field"
-                    style="@style/addTabTextViewStyle"
-                    android:text="@string/add_tab_sex" />
-
-                <Spinner
-                    android:id="@+id/add_tab_sex_selection"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/add_tab_consumer_visit_date_time_field"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/add_tab_customer_visit_time"
-                android:textColor="@color/black"
-                android:textSize="@dimen/add_tab_txt_style_size" />
-
-            <LinearLayout
-                android:id="@+id/add_tab_consumer_visit_date_time_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <!--
+                    <!--
                           <TextView
                         android:id="@+id/add_tab_consumer_visit_date_time_field"
                         android:layout_width="wrap_content"
@@ -426,22 +459,41 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/add_tab_txt_style_size"
                         android:text="@string/add_tab_customer_visit_time" />
-                -->
+                    -->
 
-                <DatePicker
-                    android:id="@+id/add_tab_consumer_visit_datePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:calendarViewShown="false" />
+                    <DatePicker
+                        android:id="@+id/add_tab_consumer_visit_datePicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:calendarViewShown="false" />
 
-                <TimePicker
-                    android:id="@+id/add_tab_consumer_visit_timePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    <TimePicker
+                        android:id="@+id/add_tab_consumer_visit_timePicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                
+                                <!-- Input memo layout -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_input_memo_layout"
+                    style="@style/inputLayoutStyleInclueMargin"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/add_tab_input_memo_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_customer_memo" />
+
+                    <EditText
+                        android:id="@+id/add_tab_edit_customer_memo"
+                        style="@style/inputTextStyle"
+                        android:hint="@string/add_tab_customer_memo_hint" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-    <!-- </ScrollView> -->
+    </ScrollView>
     <!-- new button -->
 
     <Button

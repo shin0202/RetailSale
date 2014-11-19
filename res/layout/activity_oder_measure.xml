@@ -207,7 +207,7 @@
 
         <Spinner
             android:id="@+id/order_measure_consumer_request"
-            android:layout_width="@dimen/add_tab_txt_style_width"
+            android:layout_width="180dp"
             android:layout_height="wrap_content" />
 
         <TextView

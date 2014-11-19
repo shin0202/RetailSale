@@ -53,6 +53,10 @@
     <string name="add_tab_email_hint">請輸入電子郵件(john@xxx.xxx)</string>
     <string name="add_tab_age">年齡</string>
     <string name="add_tab_sex">性別</string>
+    <string name="add_tab_select_repair_item">營修項目</string>
+    <string name="add_tab_select_area">區域</string>
+    <string name="add_tab_customer_memo">備註</string>
+    <string name="add_tab_customer_memo_hint">請輸入備註</string>
 
     <!-- Add tab new -->
     <string name="add_tab_company_name">公司名稱</string>
@@ -150,6 +154,6 @@
     <string name="option_customer_budget">客戶預算</string>
     <string name="option_customer_space">客戶格局需求</string>
     <string name="option_customer_repair_item">營修項目</string>
-    <string name="option_customer_area">區域</string>
+    <string name="option_customer_area">區域項目</string>
 
 </resources>

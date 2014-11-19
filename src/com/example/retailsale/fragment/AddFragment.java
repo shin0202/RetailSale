@@ -63,7 +63,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private Spinner phoneNumberSpinner, companyPhoneNumberSpinner;
     private Spinner repairItemSpinner, areaSpinner;
     private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
-            introducerET;
+            introducerET, memoET;
     private CheckBox leaveInfoCB;
     private TextView companyNameTV, customerIDTV, designerStoreTV, createDateTV;
     private DatePicker consumerVisitDateDP;
@@ -118,6 +118,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         companyPhoneNumberET = (EditText) view.findViewById(R.id.add_tab_edit_phone_number_company);
         introducerET = (EditText) view.findViewById(R.id.add_tab_edit_introducer);
         emailET = (EditText) view.findViewById(R.id.add_tab_edit_email);
+        memoET = (EditText) view.findViewById(R.id.add_tab_edit_customer_memo);
         leaveInfoCB = (CheckBox) view.findViewById(R.id.add_tab_leave_info_checkbox);
         consumerVisitDateDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_visit_datePicker);
         consumerVisitTimeTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_visit_timePicker);
@@ -134,6 +135,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         phoneNumberSpinner = (Spinner) view.findViewById(R.id.add_tab_phone_number_spinner);
         companyPhoneNumberSpinner = (Spinner) view.findViewById(R.id.add_tab_company_phone_number_spinner);
+        
+        repairItemSpinner = (Spinner) view.findViewById(R.id.add_tab_repair_item);
+        areaSpinner = (Spinner) view.findViewById(R.id.add_tab_area);
         
         String[] phoneCodeArray = getResources().getStringArray(R.array.phone_code);
         phoneCodeList = Arrays.asList(phoneCodeArray);
@@ -244,13 +248,15 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 + ":00";
         String customerName = customerNameET.getText().toString();
         String introducer = introducerET.getText().toString();
-        String memo = "";
+        String memo = memoET.getText().toString();
         
         int msgSelectedSerial = infoList.get(infoSpinner.getSelectedItemPosition()).getOptSerial();
         int jobSelectedSerial = jobList.get(jobSpinner.getSelectedItemPosition()).getOptSerial();
         int ageSelectedSerial = ageList.get(ageSpinner.getSelectedItemPosition()).getOptSerial();
         int sexSelectedSerial = sexList.get(sexSpinner.getSelectedItemPosition()).getOptSerial();
         int titleSelectedSerial = titleList.get(titleSpinner.getSelectedItemPosition()).getOptSerial();
+        int repairSelectedSerial = repairItemList.get(repairItemSpinner.getSelectedItemPosition()).getOptSerial();
+        int areaSelectedSerial = areaList.get(areaSpinner.getSelectedItemPosition()).getOptSerial();
         
         int yearSelectedPosition = yearSpinner.getSelectedItemPosition();
         
@@ -265,9 +271,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     .append(daySpinner.getSelectedItem());
         }
         
-        Log.d(TAG, "msgSelectedSerial: " + msgSelectedSerial + " jobSelectedSerial: " + jobSelectedSerial
-                + " ageSelectedSerial: " + ageSelectedSerial + " sexSelectedSerial: " + sexSelectedSerial
-                + " titleSelectedSerial: " + titleSelectedSerial);
+        Log.d(TAG, "msgSelectedSerial: " + msgSelectedSerial + " jobSelectedSerial: "
+                + jobSelectedSerial + " ageSelectedSerial: " + ageSelectedSerial
+                + " sexSelectedSerial: " + sexSelectedSerial + " titleSelectedSerial: "
+                + titleSelectedSerial + " repairSelectedSerial: " + repairSelectedSerial
+                + " areaSelectedSerial : " + areaSelectedSerial);
         
         Log.d(TAG, "date: " + dateString + "time : " + timeString);
         
@@ -325,7 +333,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                             Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
                             Utility.SPACE_STRING, Utility.SPACE_STRING, spaceList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), statusList
                                     .get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, budgetList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), 0, 0);
+                            Utility.SPACE_STRING, budgetList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), repairSelectedSerial, areaSelectedSerial);
                 }
                 else
                 {
@@ -337,7 +345,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                             Utility.SPACE_STRING, Utility.SPACE_STRING, spaceList.get(Utility.DEFAULT_ZERO_VALUE)
                                     .getOptSerial(), statusList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
                             Utility.SPACE_STRING, Utility.SPACE_STRING, budgetList.get(Utility.DEFAULT_ZERO_VALUE)
-                                    .getOptSerial(), 0, 0);
+                                    .getOptSerial(), repairSelectedSerial, areaSelectedSerial);
                 }
             }
             else
@@ -345,7 +353,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber,
                         phoneNumber, companyPhoneNumber, sexSelectedSerial, titleSelectedSerial, email, dateString
                                 + timeString, msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial,
-                        memo, customerBirthday.toString(), creator, group, dateString + timeString, 0, 0);
+                        memo, customerBirthday.toString(), creator, group, dateString + timeString, repairSelectedSerial, areaSelectedSerial);
                 
                 Log.d(TAG, "ReservationBudgetPosition() === " + customerInfo.getReservationBudgetPosition());
             }
@@ -464,6 +472,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         monthSpinner.setEnabled(enabled);
         daySpinner.setEnabled(enabled);
         
+        repairItemSpinner.setEnabled(enabled);
+        areaSpinner.setEnabled(enabled);
+        
         introducerET.setEnabled(enabled);
         // datepicker
         consumerVisitDateDP.setEnabled(enabled);
@@ -477,6 +488,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             ageSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
             sexSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
             titleSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
+            repairItemSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
+            areaSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
 
             customerNameET.setText(this.getResources().getString(R.string.no_data));
             cellPhoneNumberET.setText(this.getResources().getString(R.string.no_data));
@@ -599,7 +612,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             Log.d(TAG, "option cursor is null ");
         }
         
-        OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter;
+        OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter, repairItemAdapter, areaAdapter;
         // msg spinner
         infoAdapter = new OptionAdapter(this.getActivity(), infoList);
         infoSpinner.setAdapter(infoAdapter);
@@ -615,6 +628,13 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         // title spinner
         titleAdapter = new OptionAdapter(this.getActivity(), titleList);
         titleSpinner.setAdapter(titleAdapter);
+        // repair spinner
+        repairItemAdapter = new OptionAdapter(this.getActivity(), repairItemList);
+        repairItemSpinner.setAdapter(repairItemAdapter);
+        // area spinner
+        areaAdapter = new OptionAdapter(this.getActivity(), areaList);
+        areaSpinner.setAdapter(areaAdapter);
+        
         Cursor userStoreCursor = retialSaleDbAdapter.getOptionByOptionSerial(Utility.getCreatorGroup(AddFragment.this
                 .getActivity()));
 

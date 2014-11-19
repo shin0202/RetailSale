@@ -748,13 +748,16 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
         openDb();
 
-//        int creator = Utility.getCreator(SynchronizationFragment.this.getActivity());
-//        int creatorGroup = Utility.getCreatorGroup(SynchronizationFragment.this.getActivity());
-//        Log.d(TAG, "creator is " + creator);
+        // int creator =
+        // Utility.getCreator(SynchronizationFragment.this.getActivity());
+        // int creatorGroup =
+        // Utility.getCreatorGroup(SynchronizationFragment.this.getActivity());
+        // Log.d(TAG, "creator is " + creator);
         needCount = 0;
         currentCount = 0;
         handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
-//        Cursor cursor = retialSaleDbAdapter.getCustomerByCreatorNotUpload(creator);
+        // Cursor cursor =
+        // retialSaleDbAdapter.getCustomerByCreatorNotUpload(creator);
         Cursor cursor = retialSaleDbAdapter.getCustomerNotUpload();
         if (cursor != null)
         {
@@ -767,9 +770,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                             .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CREATOR));
                     int creatorGroup = cursor.getInt(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CREATOR_GROUP));
-                    
+
                     Log.d(TAG, "creator is " + creator);
-                    
+
                     long rowId = cursor.getLong(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_ID));
                     String customerAccount = Utility.DEFAULT_VALUE_STRING;
@@ -797,6 +800,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                             .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_JOB));
                     int customerAge = cursor.getInt(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_AGE));
+                    String customerMemo = cursor.getString(cursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_MEMO));
                     String customerBirth = cursor.getString(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_BIRTHDAY));
                     String createDate = cursor.getString(cursor
@@ -808,10 +813,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                             .getColumnIndex(RetialSaleDbAdapter.KEY_RESERVATION_DATE));
                     String reservationWork = cursor.getString(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_WORK));
+                    String workCode = cursor.getString(cursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_WROK_POSTCODE));
                     String reservationWorkAlias = cursor.getString(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_WORK_ALIAS));
                     String reservationContact = cursor.getString(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_CONTACT));
+                    String contactCode = cursor.getString(cursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_CONTACT_POSTCODE));
                     int reservationSpace = cursor.getInt(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_SPACE));
                     int reservationStatus = cursor.getInt(cursor
@@ -821,6 +830,10 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                             .getColumnIndex(RetialSaleDbAdapter.KEY_STATUS_COMMENT));
                     int reservationBudget = cursor.getInt(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_BUDGET));
+                    int reservationRepairItem = cursor.getInt(cursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_REPAIR_ITEM));
+                    int reservationArea = cursor.getInt(cursor
+                            .getColumnIndex(RetialSaleDbAdapter.KEY_AREA));
                     String reservationDataSerial = Utility.DEFAULT_VALUE_STRING;
                     // didn't have the field "comment", "send note"
                     JSONStringer json = null, customerReservationJson = null;
@@ -835,10 +848,17 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                 .value(reservationDate)
                                 .key(Utility.AddCustomerJsonTag.RESERVATION_WORK)
                                 .value(reservationWork)
+                                .key(Utility.AddCustomerJsonTag.WORK_POSTCODE).value(workCode)
                                 .key(Utility.AddCustomerJsonTag.RESERVATION_WORK_ALIAS)
                                 .value(reservationWorkAlias)
                                 .key(Utility.AddCustomerJsonTag.RESERVATION_CONTACT)
                                 .value(reservationContact)
+                                .key(Utility.AddCustomerJsonTag.CONTACT_POSTCODE)
+                                .value(contactCode)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_REPAIR_ITEM)
+                                .value(reservationRepairItem)
+                                .key(Utility.AddCustomerJsonTag.RESERVATION_AREA)
+                                .value(reservationArea)
                                 .key(Utility.AddCustomerJsonTag.RESERVATION_SPACE)
                                 .value(reservationSpace)
                                 .key(Utility.AddCustomerJsonTag.RESERVATION_STATUS)
@@ -887,6 +907,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                 .value(customerIntroducer)
                                 .key(Utility.AddCustomerJsonTag.CUSTOMER_JOB).value(customerJob)
                                 .key(Utility.AddCustomerJsonTag.CUSTOMER_AGE).value(customerAge)
+                                .key(Utility.AddCustomerJsonTag.CUSTOMER_MEMO).value(customerMemo)
                                 .key(Utility.AddCustomerJsonTag.CUSTOMER_BIRTH)
                                 .value(customerBirth).key(Utility.AddCustomerJsonTag.CREATOR)
                                 .value(creator).key(Utility.AddCustomerJsonTag.CREATOR_GROUP)

@@ -1,7 +1,5 @@
 package com.example.retailsale;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,13 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.retailsale.manager.HttpManager;
-import com.example.retailsale.manager.dataoption.DataOption;
-import com.example.retailsale.manager.dataoption.GetDataOptionListener;
-import com.example.retailsale.manager.dataoption.GsonDataOption;
 import com.example.retailsale.manager.login.GetLoginListener;
 import com.example.retailsale.manager.login.GsonLoginInfo;
-import com.example.retailsale.manager.userlist.GetUsetListByGroupListener;
-import com.example.retailsale.manager.userlist.GsonUserByGroup;
 import com.example.retailsale.util.Utility;
 
 public class Login extends Activity implements OnClickListener
@@ -128,6 +121,8 @@ public class Login extends Activity implements OnClickListener
                                 Utility.saveData(Login.this, id, password, userSerial, userGroup, loginKey);
                                 retialSaleDbAdapter.open();
                                 getDataOption();
+                                getUser();
+                                startManageFragment();
                                 handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                             }
                             else
@@ -267,6 +262,8 @@ public class Login extends Activity implements OnClickListener
         retialSaleDbAdapter.create(11, "客戶格局需求", 91, "和室或休憩區");
         retialSaleDbAdapter.create(11, "客戶格局需求", 92, "現成傢俱");
         retialSaleDbAdapter.create(11, "客戶格局需求", 93, "其他");
+        retialSaleDbAdapter.create(12, "營修項目", 33, "無資料");
+        retialSaleDbAdapter.create(13, "區域項目", 100, "無資料");
     }
     
     private void getUser()

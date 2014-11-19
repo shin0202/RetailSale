@@ -46,9 +46,9 @@ public class HttpManager
 
     public static final String ACTION_NAME = "http://fatcaweb/FATCA/FATCA/";
     
-    public static final String IP = "192.168.49.128";
+//    public static final String IP = "192.168.49.128";
     
-//    public static final String IP = "182.155.124.205"; // for fallen
+    public static final String IP = "182.155.124.205"; // server
 
     public class LogType
     {
