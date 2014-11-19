@@ -3,6 +3,7 @@ package com.example.retailsale.fragment;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -52,11 +53,11 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     private int albumNum = 0;
     private String currentParentPath;
     private int currentAlbumPosition;
-    private int lastAlbumPosition;
     private PhotosAdapterView photosAdapterView;
     private List<LocalFileInfo> albumList;
     private List<LocalFileInfo> photoList;
     private ProgressDialog progressDialog;
+    private Stack<Integer> positionStack;
     // views
     private MainActivity mainActivity;
     private LinearLayout albums;
@@ -74,6 +75,11 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate  ");
+        
+        currentAlbumPosition = 0;
+
+        positionStack = new Stack<Integer>();
+        currentParentPath = Utility.FILE_PATH;
     }
 
     @Override
@@ -83,7 +89,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         Log.d(TAG, "onResume  ");
         albumList = new ArrayList<LocalFileInfo>();
         photoList = new ArrayList<LocalFileInfo>();
-        LoadFileThread loadFileThread = new LoadFileThread(Utility.FILE_PATH);
+        LoadFileThread loadFileThread = new LoadFileThread(currentParentPath);
         loadFileThread.start();
     }
 
@@ -180,11 +186,14 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 }
                 else
                 { // is directory
-                    String currentParent = this.currentParentPath + albumList.get(currentAlbumPosition).getFileName()
-                            + "/";
+                    currentParentPath = currentParentPath + albumList.get(currentAlbumPosition).getFileName() + "/";
                     removeAllAlbums();
-
-                    LoadFileThread loadFileThread = new LoadFileThread(currentParent);
+                    
+                    positionStack.push(currentAlbumPosition); // push current position to stack
+                    
+                    currentAlbumPosition = position;
+                    
+                    LoadFileThread loadFileThread = new LoadFileThread(currentParentPath);
                     loadFileThread.start();
                 }
             }
@@ -210,11 +219,16 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             if (!currentParentPath.equals(Utility.FILE_PATH))
             {
                 File file = new File(currentParentPath);
-                Log.d(TAG, "parent is " + file.getParent() + "/");
+                
+                currentParentPath = file.getParent() + "/";
+                
+                Log.d(TAG, "parent is " + currentParentPath);
 
                 removeAllAlbums();
+                
+                currentAlbumPosition = positionStack.pop(); // pop last position from stack
 
-                LoadFileThread loadFileThread = new LoadFileThread(file.getParent() + "/");
+                LoadFileThread loadFileThread = new LoadFileThread(currentParentPath);
                 loadFileThread.start();
             }
             else
@@ -230,12 +244,12 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         // get albums from download path
         Log.d(TAG, "handlePageRefresh albumNum : " + albumNum + " currentAlbumPosition : "
                 + currentAlbumPosition + " currentParent : " + currentParent
-                + " currentParentPath : " + currentParentPath + " lastAlbumPosition : " + lastAlbumPosition);
+                + " currentParentPath : " + currentParentPath);
         albumNum = 0;
-        currentAlbumPosition = 0;
-        this.currentParentPath = currentParent;
-        Log.d(TAG, "current parent is " + this.currentParentPath);
-        listFolder(new File(this.currentParentPath));
+
+        Log.d(TAG, "current parent is " + currentParent);
+
+        listFolder(new File(currentParent));
         // get content from first album path
 
         if (albumList.size() > 0)
@@ -310,13 +324,11 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 Log.d(TAG, "file name: " + name + " path: " + path);
                 if (fileEntry.isDirectory())
                 {
-//                    photoList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
                     folderList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
                     hadFolder = true;
                 }
                 else
                 {
-//                    photoList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_FILE));
                     fileList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_FILE));
                     hadFile = true;
                 }
@@ -360,7 +372,6 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 
     private View addQuicklySelectedDummy(String name, String path, int type)
     {
-        Log.d(TAG, "addQuicklySelectedDummy ");
         // Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
         int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
         int imgDp = (int) getResources().getDimension(R.dimen.scrollview_img_size);
@@ -384,13 +395,14 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             @Override
             public void onClick(View v)
             {
-                Log.d(TAG, "albumNum " + v.getTag());
-                Log.d(TAG, "lastAlbumPosition : " + lastAlbumPosition + " currentAlbumPosition : " + currentAlbumPosition);
                 currentAlbumPosition = (Integer) v.getTag();
                 LocalFileInfo localFileInfo = albumList.get(currentAlbumPosition);
                 
+                Log.d(TAG, " currentAlbumPosition : " + currentAlbumPosition + " file path : " + localFileInfo.getFilePath());
+                
                 Toast.makeText(BrowserFragment.this.getActivity(),
                         getResources().getString(R.string.select) + localFileInfo.getFileName(), Toast.LENGTH_SHORT).show();
+                
                 if (photoList != null)
                 {
                     listFilesInFolder(new File(localFileInfo.getFilePath()));
@@ -411,7 +423,6 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         layout.addView(imageView);
         layout.addView(textView);
         
-        Log.d(TAG, "addQuicklySelectedDummy end");
         return layout;
     }
 
