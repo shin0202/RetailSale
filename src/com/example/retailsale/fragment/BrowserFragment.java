@@ -322,15 +322,18 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 String name = fileEntry.getName();
                 String path = fileEntry.getAbsolutePath();
                 Log.d(TAG, "file name: " + name + " path: " + path);
-                if (fileEntry.isDirectory())
+                if (!name.equals(Utility.THUMB_PATH_FOR_SHOW))
                 {
-                    folderList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
-                    hadFolder = true;
-                }
-                else
-                {
-                    fileList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_FILE));
-                    hadFile = true;
+                    if (fileEntry.isDirectory())
+                    {
+                        folderList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
+                        hadFolder = true;
+                    }
+                    else
+                    {
+                        fileList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_FILE));
+                        hadFile = true;
+                    }
                 }
             }
             

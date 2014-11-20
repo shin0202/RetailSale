@@ -42,6 +42,8 @@ public class Utility
     public static final String FILL_DASH = "-";
     public static final String LINE_FEED = "\n";
     public static final String DATE_STRING = "T";
+    public static final String THUMB_PATH = ".thumb/";
+    public static final String THUMB_PATH_FOR_SHOW = ".thumb";
 //	public static final String FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/retail/";
     public static final String FILE_PATH = "/sdcard/retail/";
     public static final String FILE_PATH_2 = "/sdcard/retail";
@@ -595,12 +597,13 @@ public class Utility
             String fileName = fileInfo.getValue().get(0).getFileName();
             String filePath = fileInfo.getValue().get(0).getPath();
             String fileStream = fileInfo.getValue().get(0).getFileStream();
+            
+            Log.d(TAG, "fileName : " + fileName + " filePath : " + filePath);
 
             // 1. get file path
             String path = filePath.replace(Utility.REPLACE_SERVER_FOLDER, Utility.FILE_PATH_2).replace("\\", "/");
-
-            // 1.1 to generate thumbnail
-//          generateThumbnail(fileName, path, fileStream);
+            
+            Log.d(TAG, "path  is  ~~~~~~~~~~~~~~~~~~~~ " + path);
 
 //            // 2. create the folder from file path
 //            Utility.createFolder(path.toString());
@@ -611,7 +614,7 @@ public class Utility
 
             // 4. To mix md5 file name and file data to "newData", then write data to file path(newFileName)
             StringBuilder newFileName = new StringBuilder().append(path.toString()).append("/").append(fileName)
-                    .append(".txt");
+                    .append(REPLACE_TXT_STRING);
 
             Log.d(TAG, "newFileName  is  ~~~~~~~~~~~~~~~~~~~~ " + newFileName.toString());
 
@@ -622,6 +625,9 @@ public class Utility
             Log.d(TAG, "newData  is  ~~~~~~~~~~~~~~~~~~~~ " + newData.toString());
 
             int status = Utility.writeFile(newFileName.toString(), newData.toString());
+            
+            // 5. to generate thumbnail
+            generateThumbnail(fileName, path + "/" + Utility.THUMB_PATH, fileStream);
 
             Message msg = new Message();
             msg.what = SynchronizationFragment.SelectedItem.DOWNLOAD_PICTURE;
@@ -636,7 +642,7 @@ public class Utility
     {
         Bitmap bm = null;
         String baseThumbnail;
-        StringBuilder newFileName = new StringBuilder().append(filePath.toString()).append("/").append(fileName);
+        StringBuilder newFileName = new StringBuilder().append(filePath.toString()).append(fileName);
 
         try
         {
@@ -656,8 +662,9 @@ public class Utility
             
             baseThumbnail = Utility.encodeBase64(bm, 100);
             
-            Utility.writeFile(newFileName.toString().replace(Utility.REPLACE_JPEG_STRING, Utility.SPACE_STRING),
-                    baseThumbnail.toString());
+            Log.d(TAG, "newFileName : " + newFileName.toString());
+            
+            Utility.writeFile(newFileName.toString(), baseThumbnail.toString());
         }
         catch (Exception e)
         {

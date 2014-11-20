@@ -185,7 +185,15 @@ public class PhotoPlayer extends Activity implements OnClickListener
 
     private View insertPhoto(String name, String path)
     {
-//        Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
+        Log.d(TAG, "name : " + name + " path : " + path);
+        StringBuilder thumbFilePath = new StringBuilder().append(path.replace(name, Utility.THUMB_PATH)).append(name.replace(Utility.REPLACE_TXT_STRING, ""));
+
+        Log.d(TAG, "thumbFilePath is " + thumbFilePath.toString());
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        
+        byte[] img = readThumbnail(thumbFilePath.toString());
+        Bitmap bm = BitmapFactory.decodeByteArray(img, 0, img.length, options);
 
         int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
         int imgDp = (int) getResources().getDimension(R.dimen.scrollview_img_size);
@@ -195,12 +203,14 @@ public class PhotoPlayer extends Activity implements OnClickListener
         layout.setLayoutParams(new LayoutParams(layoutDp, layoutDp));
         layout.setGravity(Gravity.CENTER);
         layout.setOrientation(LinearLayout.VERTICAL);
+        
         ImageView imageView = new ImageView(PhotoPlayer.this);
         imageView.setLayoutParams(new LayoutParams(imgDp, imgDp));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//        imageView.setImageBitmap(bm);
-        imageView.setImageDrawable(PhotoPlayer.this.getResources().getDrawable(R.drawable.picture));
+        imageView.setImageBitmap(bm);
+//        imageView.setImageDrawable(PhotoPlayer.this.getResources().getDrawable(R.drawable.picture));
         imageView.setTag(showAlbumCount);
+        
         showAlbumCount++;
         imageView.setOnClickListener(new View.OnClickListener()
         {
@@ -321,24 +331,6 @@ public class PhotoPlayer extends Activity implements OnClickListener
             bm = null;
         }
 
-//		Utility.writeFile("/sdcard/retail/123/java2.txt", Utility
-//				.encodeBase64(new BitmapFactory.decodeFile("/sdcard/retail/123/test1.jpg")));
-//		Log.d(TAG,
-//				"****************************HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH******************************* ");
-//		byte[] photo = Utility.decodeBase64(Utility.readFile("/sdcard/retail/123/java2.txt"));
-//		try
-//		{
-//			bm = BitmapFactory.decodeByteArray(photo, 0, photo.length, options);
-//		}
-//		catch (Exception e)
-//		{
-//			e.printStackTrace();
-//		}
-//		catch (OutOfMemoryError e)
-//		{
-//			e.printStackTrace();
-//		}
-
         scalableIV.setImageBitmap(bm);
 
         dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
@@ -353,6 +345,19 @@ public class PhotoPlayer extends Activity implements OnClickListener
             dialogHandler.sendEmptyMessage(Utility.SUCCESS);
             return true;
         }
+    }
+    
+    private byte[] readThumbnail(String path)
+    {
+        byte[] thumbnail = null;
+        
+        // 1. to read file
+        String readContent = Utility.readFile(path);
+        
+        // 2. to decode
+        thumbnail = Utility.decodeBase64(readContent);
+        
+        return thumbnail;
     }
 
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight)

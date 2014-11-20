@@ -574,6 +574,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 Log.d(TAG, "folderId : " + folderId + " folderPath : " + folderPath);
                 // create the folder
                 Utility.createFolder(folderPath);
+                
+                Utility.createFolder(folderPath + Utility.THUMB_PATH); // to create thumbnail
+                
                 LocalFolderInfo localFolderInfo = new LocalFolderInfo(folderId, folderPath);
                 JSONArray fileJsonArray = jsonObject.getJSONArray("file");
                 for (int j = 0; j < fileJsonArray.length(); j++)
