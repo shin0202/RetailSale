@@ -34,15 +34,14 @@
         <activity
             android:name="com.example.retailsale.PhotoPlayer"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:screenOrientation="landscape">
+            <!-- android:theme="@android:style/Theme.NoTitleBar.Fullscreen" -->
         </activity>
         <activity
             android:name="com.example.retailsale.Login"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,14 +51,12 @@
         <activity
             android:name="com.example.retailsale.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:screenOrientation="landscape">
         </activity>
         <activity
             android:name="com.example.retailsale.OrderMeasure"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:screenOrientation="landscape">
         </activity>
     </application>
 

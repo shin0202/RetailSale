@@ -3,6 +3,7 @@ package com.example.retailsale;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -30,7 +31,9 @@ public class MainActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
         tabHost = (TabHost) findViewById(android.R.id.tabhost);
         tabHost.setup();
         Resources res = getResources();
