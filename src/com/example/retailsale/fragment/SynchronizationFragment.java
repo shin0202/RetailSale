@@ -58,6 +58,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         OnItemClickListener
 {
     private static final String TAG = "SynchronizationFragment";
+    private static final int SHOW_NO_NETWORK_TOAST = -1000;
 
     private LinearLayout uploadConsumer, downloadPicture, syncData;
 
@@ -259,17 +260,29 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             break;
         case R.id.sync_tab_download_layout:
             focusDownloadPicture();
-            // getFolderListFromServer();
             // To avoid loginkey is expired, so need login before call any APIs.
-            login(R.id.sync_tab_download_layout);
+            if (Utility.isInternetAvailable(getActivity()))
+            {
+                login(R.id.sync_tab_download_layout);
+            }
+            else
+            {
+                showToast(getResources().getString(R.string.api_no_network));
+            }
             break;
         case R.id.sync_tab_sync_layout:
             focusSyncData();
             break;
         case R.id.sync_tab_start_btn:
-            // handleEvent();
             // To avoid loginkey is expired, so need login before call any APIs.
-            login(R.id.sync_tab_start_btn);
+            if (Utility.isInternetAvailable(getActivity()))
+            {
+                login(R.id.sync_tab_start_btn);
+            }
+            else
+            {
+                showToast(getResources().getString(R.string.api_no_network));
+            }
             break;
         }
     }
@@ -447,7 +460,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                         // get folder from server, not get file
                                         if (resId == R.id.sync_tab_download_layout)
                                         {
-                                            getFolderListFromServer();
+                                            if (Utility.isInternetAvailable(getActivity()))
+                                            {
+                                                getFolderListFromServer();
+                                            }
+                                            else
+                                            {
+                                                showToast(getResources().getString(R.string.api_no_network));
+                                            }
                                         }
                                         else
                                         // get options, upload customer,
@@ -641,13 +661,16 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
         if (folderName == null)
         {
-            Toast.makeText(
-                    SynchronizationFragment.this.getActivity(),
-                    SynchronizationFragment.this.getResources().getString(
-                            R.string.sync_tab_sync_no_select_any_folder), Toast.LENGTH_SHORT)
-                    .show();
+            showToast(getResources().getString(R.string.sync_tab_sync_no_select_any_folder));
             return true;
         }
+        
+        if (!Utility.isInternetAvailable(getActivity()))
+        {
+            showToast(getResources().getString(R.string.api_no_network));
+            return true;
+        }
+        
         handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
         boolean hadFile = false;
         needCount = 0;
@@ -1035,7 +1058,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         // 3. download data option from server
         if (isDeleteOptionSuccess && isDeleteUserSuccess)
         {
-            getDataOption();
+            if (Utility.isInternetAvailable(getActivity()))
+            {
+                getDataOption();
+            }
+            else
+            {
+                showToast(getResources().getString(R.string.api_no_network));
+            }
         }
         else
         {
@@ -1076,7 +1106,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
                                     showMessage(Utility.SPACE_STRING,
                                             R.string.sync_tab_sync_download_data_option_success);
-                                    getUserList();
+                                    if (Utility.isInternetAvailable(getActivity()))
+                                    {
+                                        getUserList();
+                                    }
+                                    else
+                                    {
+                                        showToast(getResources().getString(R.string.api_no_network));
+                                    }
                                 }
                                 else
                                 {
@@ -1130,22 +1167,31 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                             int userSerial, userGroup, userType;
                             String userName, userGroupNm, userTypeNm;
 
-                            for (int i = 0; i < size; i++)
+                            try
                             {
-                                userSerial = user.getValue().get(i).getUserSerial();
-                                userName = user.getValue().get(i).getUserName();
-                                userGroup = user.getValue().get(i).getUserGroup();
-                                userType = user.getValue().get(i).getUserType();
-                                userGroupNm = user.getValue().get(i).getUserGroupNm();
-                                userTypeNm = user.getValue().get(i).getUserTypeNm();
-                                Log.d(TAG, "userSerial : " + userSerial + " userName : " + userName
-                                        + " userGroup : " + userGroup + " userType : " + userType
-                                        + " userGroupNm : " + userGroupNm + " userTypeNm : "
-                                        + userTypeNm);
-                                retialSaleDbAdapter.create(userSerial, userName, userGroup,
-                                        userType, userGroupNm, userTypeNm);
+                                for (int i = 0; i < size; i++)
+                                {
+                                    userSerial = user.getValue().get(i).getUserSerial();
+                                    userName = user.getValue().get(i).getUserName();
+                                    userGroup = user.getValue().get(i).getUserGroup();
+                                    userType = user.getValue().get(i).getUserType();
+                                    userGroupNm = user.getValue().get(i).getUserGroupNm();
+                                    userTypeNm = user.getValue().get(i).getUserTypeNm();
+                                    Log.d(TAG, "userSerial : " + userSerial + " userName : "
+                                            + userName + " userGroup : " + userGroup
+                                            + " userType : " + userType + " userGroupNm : "
+                                            + userGroupNm + " userTypeNm : " + userTypeNm);
+                                    retialSaleDbAdapter.create(userSerial, userName, userGroup,
+                                            userType, userGroupNm, userTypeNm);
+                                    showMessage(Utility.SPACE_STRING,
+                                            R.string.sync_tab_sync_download_user_list_success);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                e.printStackTrace();
                                 showMessage(Utility.SPACE_STRING,
-                                        R.string.sync_tab_sync_download_user_list_success);
+                                        R.string.sync_tab_sync_download_user_list_failed);
                             }
                         }
                         else
@@ -1247,6 +1293,11 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     /*
      * *************************************************Sync Related*******************************************************
      */
+    
+    private void showToast(String showString)
+    {
+        Toast.makeText(getActivity(), showString, Toast.LENGTH_SHORT).show();
+    }
 
     private Handler handler = new Handler()
     {
@@ -1314,6 +1365,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 contentListView.setAdapter(contentListAdapter);
 
                 break;
+            case SHOW_NO_NETWORK_TOAST:
+                showToast(getResources().getString(R.string.api_no_network));
+                break;
             }
         }
     };
@@ -1344,8 +1398,14 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         @Override
         public void run()
         {
-
-            addCustomerInfo(json, custometName, handler, rowId, retialSaleDbAdapter);
+            if (Utility.isInternetAvailable(getActivity()))
+            {
+                addCustomerInfo(json, custometName, handler, rowId, retialSaleDbAdapter);
+            }
+            else
+            {
+                handler.sendEmptyMessage(SHOW_NO_NETWORK_TOAST);
+            }
         }
     }
 
