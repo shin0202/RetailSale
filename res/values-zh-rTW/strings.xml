@@ -122,8 +122,12 @@
     <string name="sync_tab_sync_clear_folder_failed">清除資料夾失敗</string>
     <string name="sync_tab_sync_clear_data_option_success">清除資料選項成功</string>
     <string name="sync_tab_sync_clear_data_option_failed">清除資料選項失敗</string>
+    <string name="sync_tab_sync_clear_user_list_success">清除使用者選項成功</string>
+    <string name="sync_tab_sync_clear_user_list_failed">清除使用者選項失敗</string>
     <string name="sync_tab_sync_download_data_option_success">下載資料選項成功</string>
     <string name="sync_tab_sync_download_data_option_failed">下載資料選項失敗</string>
+    <string name="sync_tab_sync_download_user_list_success">下載使用者選項成功</string>
+    <string name="sync_tab_sync_download_user_list_failed">下載使用者選項失敗</string>
     <string name="sync_tab_sync_no_select_any_folder">沒有選取任一資料夾, 無法下載</string>
     <string name="sync_tab_upload_error">上傳客戶資料錯誤</string>
     <string name="sync_tab_download">下載像片資料錯誤</string>

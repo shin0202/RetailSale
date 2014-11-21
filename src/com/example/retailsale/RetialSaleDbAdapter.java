@@ -248,7 +248,10 @@ public class RetialSaleDbAdapter
 
     public boolean isDbOpen()
     {
-        return db.isOpen();
+        if (db != null)
+            return db.isOpen();
+        else
+            return false;
     }
 
     /** Get all customer from customer table */

@@ -51,6 +51,8 @@ import com.example.retailsale.manager.folderinfo.GsonFolderInfo;
 import com.example.retailsale.manager.folderinfo.LocalFolderInfo;
 import com.example.retailsale.manager.login.GetLoginListener;
 import com.example.retailsale.manager.login.GsonLoginInfo;
+import com.example.retailsale.manager.userlist.GetUsetListByGroupListener;
+import com.example.retailsale.manager.userlist.GsonUserByGroup;
 import com.example.retailsale.util.Utility;
 
 public class SynchronizationFragment extends Fragment implements OnClickListener,
@@ -362,7 +364,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             retialSaleDbAdapter = new RetialSaleDbAdapter(
                     SynchronizationFragment.this.getActivity());
 
-        retialSaleDbAdapter.open();
+        if (!retialSaleDbAdapter.isDbOpen())
+            retialSaleDbAdapter.open();
     }
 
     private void closeDb()
@@ -1001,19 +1004,20 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     {
 
         // 1. clear all folder
-        boolean isSuccess = Utility.removeDirectory(new File(Utility.FILE_PATH));
-        if (isSuccess)
-        {
-            showMessage(Utility.FILE_PATH, R.string.sync_tab_sync_clear_folder_success);
-        }
-        else
-        {
-            showMessage(Utility.FILE_PATH, R.string.sync_tab_sync_clear_folder_failed);
-        }
+//        boolean isSuccess = Utility.removeDirectory(new File(Utility.FILE_PATH));
+//        if (isSuccess)
+//        {
+//            showMessage(Utility.FILE_PATH, R.string.sync_tab_sync_clear_folder_success);
+//        }
+//        else
+//        {
+//            showMessage(Utility.FILE_PATH, R.string.sync_tab_sync_clear_folder_failed);
+//        }
         // 2. clear data option in DB
+        handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
         openDb();
-        isSuccess = retialSaleDbAdapter.deleteAllOption();
-        if (isSuccess)
+        boolean isDeleteOptionSuccess = retialSaleDbAdapter.deleteAllOption();
+        if (isDeleteOptionSuccess)
         {
             showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_clear_data_option_success);
         }
@@ -1021,8 +1025,28 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         {
             showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_clear_data_option_failed);
         }
+        
+        // 2.1 clear user list in DB
+        boolean isDeleteUserSuccess = retialSaleDbAdapter.deleteAllUser();
+        
+        if (isDeleteUserSuccess)
+        {
+            showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_clear_user_list_success);
+        }
+        else
+        {
+            showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_clear_user_list_failed);
+        }
+        
         // 3. download data option from server
-        getDataOption();
+        if (isDeleteOptionSuccess && isDeleteUserSuccess)
+        {
+            getDataOption();
+        }
+        else
+        {
+            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+        }
     }
 
     private void getDataOption()
@@ -1055,15 +1079,18 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                         retialSaleDbAdapter
                                                 .create(-1, typeName, optSerial, optName);
                                     }
-                                    closeDb();
+
                                     showMessage(Utility.SPACE_STRING,
                                             R.string.sync_tab_sync_download_data_option_success);
+                                    getUserList();
                                 }
                                 else
                                 {
                                     Log.d(TAG, "value is null");
                                     showMessage(Utility.SPACE_STRING,
                                             R.string.sync_tab_sync_download_data_option_failed);
+                                    handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                                    closeDb();
                                 }
                             }
                             else
@@ -1071,6 +1098,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                 Log.d(TAG, "dataOption is null");
                                 showMessage(Utility.SPACE_STRING,
                                         R.string.sync_tab_sync_download_data_option_failed);
+                                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                                closeDb();
                             }
                         }
                         else
@@ -1078,9 +1107,77 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                             Log.d(TAG, "Get data option failed");
                             showMessage(Utility.SPACE_STRING,
                                     R.string.sync_tab_sync_download_data_option_failed);
+                            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                            closeDb();
                         }
                     }
                 });
+    }
+    
+    private void getUserList()
+    {
+
+        HttpManager httpManager = new HttpManager();
+        httpManager.getUserListByGroup(getActivity(), new GetUsetListByGroupListener()
+        {
+            @Override
+            public void onResult(Boolean isSuccess, GsonUserByGroup user)
+            {
+
+                if (isSuccess)
+                {
+                    if (user != null)
+                    {
+                        if (user.getValue() != null)
+                        {
+                            int size = user.getValue().size();
+                            Log.d(TAG, "user list size : " + size);
+
+                            int userSerial, userGroup, userType;
+                            String userName, userGroupNm, userTypeNm;
+
+                            for (int i = 0; i < size; i++)
+                            {
+                                userSerial = user.getValue().get(i).getUserSerial();
+                                userName = user.getValue().get(i).getUserName();
+                                userGroup = user.getValue().get(i).getUserGroup();
+                                userType = user.getValue().get(i).getUserType();
+                                userGroupNm = user.getValue().get(i).getUserGroupNm();
+                                userTypeNm = user.getValue().get(i).getUserTypeNm();
+                                Log.d(TAG, "userSerial : " + userSerial + " userName : " + userName
+                                        + " userGroup : " + userGroup + " userType : " + userType
+                                        + " userGroupNm : " + userGroupNm + " userTypeNm : "
+                                        + userTypeNm);
+                                retialSaleDbAdapter.create(userSerial, userName, userGroup,
+                                        userType, userGroupNm, userTypeNm);
+                                showMessage(Utility.SPACE_STRING,
+                                        R.string.sync_tab_sync_download_user_list_success);
+                            }
+                        }
+                        else
+                        {
+                            Log.d(TAG, "value is null or size less/equal than 0");
+                            showMessage(Utility.SPACE_STRING,
+                                    R.string.sync_tab_sync_download_user_list_failed);
+                        }
+                    }
+                    else
+                    {
+                        Log.d(TAG, "user list is null");
+                        showMessage(Utility.SPACE_STRING,
+                                R.string.sync_tab_sync_download_user_list_failed);
+                    }
+                }
+                else
+                {
+                    Log.d(TAG, "Get user list failed");
+                    showMessage(Utility.SPACE_STRING,
+                            R.string.sync_tab_sync_download_user_list_failed);
+                }
+                closeDb();
+                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+            }
+        }, Utility.getCreatorGroup(this.getActivity()));
     }
 
     private List<String> getAllFolderNameFromParent()
@@ -1123,6 +1220,30 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 optionList.add(SynchronizationFragment.this.getResources().getString(
                         R.string.db_item)
                         + optionAlias);
+            }
+        }
+
+        return optionList;
+    }
+    
+    private List<String> getAllUserFromDB()
+    {
+
+        List<String> optionList = new ArrayList<String>();
+
+        openDb();
+
+        Cursor cursor = retialSaleDbAdapter.getUserByCreator(Utility.getCreatorGroup(this.getActivity()));
+        if (cursor != null)
+        {
+            while (cursor.moveToNext())
+            {
+                String userName = cursor.getString(cursor
+                        .getColumnIndex(RetialSaleDbAdapter.KEY_USER_NAME));
+
+                optionList.add(SynchronizationFragment.this.getResources().getString(
+                        R.string.db_item)
+                        + userName);
             }
         }
 
@@ -1246,10 +1367,13 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             else detailList.clear();
 
             // 1. list all folder from parent
-            detailList.addAll(getAllFolderNameFromParent());
+//            detailList.addAll(getAllFolderNameFromParent());
 
             // 2. list all option alias
             detailList.addAll(getAllOptionNameFromDB());
+            
+            // 3. list all user
+            detailList.addAll(getAllUserFromDB());
 
             handler.sendEmptyMessage(SelectedItem.SHOW_SYNC_LIST);
 
