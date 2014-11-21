@@ -35,7 +35,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.retailsale.MainActivity;
 import com.example.retailsale.R;
 import com.example.retailsale.RetialSaleDbAdapter;
 import com.example.retailsale.manager.HttpManager;
@@ -140,9 +139,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     @Override
     public void onAttach(Activity activity)
     {
-
         super.onAttach(activity);
-        MainActivity mainActivity = (MainActivity) activity;
     }
 
     @Override
@@ -706,10 +703,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                         String path = value.get(i).getPath();
                                         String fileName = value.get(i).getFileName();
                                         String fileStream = value.get(i).getFileStream();
-                                        // Log.d(TAG, "path : " + path +
-                                        // " fileName : " + fileName +
-                                        // " fileStream : "
-                                        // + fileStream);
+
                                         showMessage(fileName,
                                                 R.string.sync_tab_sync_download_success);
                                     }

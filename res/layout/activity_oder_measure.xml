@@ -86,12 +86,15 @@
         <TextView
             android:id="@+id/order_measure_case_name_field"
             style="@style/orderMeasureTextViewStyle"
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:text="@string/order_measure_case_name" />
 
         <EditText
             android:id="@+id/order_measure_case_name"
             style="@style/inputTextStyle"
+            android:layout_gravity="center"
+            android:layout_height="46dp"
             android:layout_width="@dimen/order_measure_comsumer_info_2_edit_width"
             android:hint="@string/order_measure_case_name_hint" 
             android:layout_marginLeft="@dimen/order_measure_comsumer_tv_margin_left"/>
@@ -99,6 +102,7 @@
         <TextView
             android:id="@+id/order_measure_cant_description_field"
             style="@style/orderMeasureTextViewStyle"
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_marginLeft="@dimen/order_measure_comsumer_info_2_margin_left"
             android:text="@string/order_measure_cant_description" />
@@ -106,6 +110,8 @@
         <EditText
             android:id="@+id/order_measure_cant_description"
             style="@style/inputTextStyle"
+            android:layout_gravity="center"
+            android:layout_height="46dp"
             android:layout_width="@dimen/order_measure_comsumer_info_2_edit_width"
             android:hint="@string/order_measure_cant_description_hint" 
             android:layout_marginLeft="@dimen/order_measure_comsumer_tv_margin_left"/>
@@ -113,6 +119,7 @@
         <TextView
             android:id="@+id/order_measure_sale_status_field"
             style="@style/orderMeasureTextViewStyle"
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_marginLeft="@dimen/order_measure_comsumer_info_2_margin_left"
             android:text="@string/order_measure_cant_sale_status" />
@@ -121,6 +128,7 @@
             android:id="@+id/order_measure_sale_status_request"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
+            android:layout_gravity="center"
             android:layout_marginLeft="@dimen/order_measure_comsumer_tv_margin_left"/>
     </LinearLayout>
 
@@ -136,11 +144,13 @@
         <TextView
             android:id="@+id/order_measure_consumer_address_field"
             style="@style/orderMeasureTextViewStyle"
+            android:layout_gravity="center"
             android:text="@string/order_measure_consumer_address_msg" />
 
         <EditText
             android:id="@+id/order_measure_consumer_address"
             style="@style/inputTextStyle"
+            android:layout_gravity="center"
             android:hint="@string/order_measure_consumer_address_hint" />
     </LinearLayout>
 
@@ -159,17 +169,20 @@
             android:layout_height="wrap_content"
             android:text="@string/order_measure_consumer_as_work_address"
             android:textColor="@color/black"
+            android:layout_gravity="center"
             android:textSize="@dimen/add_tab_txt_style_size" />
 
         <TextView
             android:id="@+id/order_measure_consumer_contact_address_field"
             style="@style/orderMeasureTextViewStyle"
             android:layout_marginLeft="@dimen/order_measure_comsumer_checkbox_margin_left"
+            android:layout_gravity="center"
             android:text="@string/order_measure_consumer_contact_address_msg" />
 
         <EditText
             android:id="@+id/order_measure_consumer_contact_address"
             style="@style/inputTextStyle"
+            android:layout_gravity="center"
             android:hint="@string/order_measure_consumer_contact_address_hint" />
     </LinearLayout>
 
@@ -203,21 +216,25 @@
         <TextView
             android:id="@+id/order_measure_consumer_request_field"
             style="@style/orderMeasureTextViewStyle"
+            android:layout_gravity="center"
             android:text="@string/order_measure_consumer_request_msg" />
 
         <Spinner
             android:id="@+id/order_measure_consumer_request"
             android:layout_width="180dp"
+            android:layout_gravity="center"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/order_measure_consumer_cost_field"
             style="@style/orderMeasureTextViewStyle"
+            android:layout_gravity="center"
             android:text="@string/order_measure_consumer_cost_msg" />
 
         <Spinner
             android:id="@+id/order_measure_consumer_cost"
             android:layout_width="@dimen/add_tab_txt_style_width"
+            android:layout_gravity="center"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
@@ -233,19 +250,21 @@
         <TextView
             android:id="@+id/order_measure_consumer_date_time_field"
             style="@style/orderMeasureTextViewStyle"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
             android:text="@string/order_measure_consumer_date_time_msg" />
 
         <DatePicker
             android:id="@+id/order_measure_datePicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:calendarViewShown="false" />
 
         <TimePicker
             android:id="@+id/order_measure_timePicker"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" 
+            android:layout_gravity="center"/>
     </LinearLayout>
 
     <!-- new button -->

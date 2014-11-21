@@ -65,7 +65,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
             introducerET, memoET;
     private CheckBox leaveInfoCB;
-    private TextView companyNameTV, customerIDTV, designerStoreTV, createDateTV;
+    private TextView companyNameTV, designerStoreTV, createDateTV;
     private DatePicker consumerVisitDateDP;
     private TimePicker consumerVisitTimeTP;
 

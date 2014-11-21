@@ -23,9 +23,15 @@ import java.util.regex.Pattern;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
@@ -123,6 +129,7 @@ public class Utility
         public static final String LOGIN_KEY = "login_key";
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // for home
     public static boolean isPhoneValid(String number)
     {
@@ -140,6 +147,7 @@ public class Utility
         return isValid;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // for company
     public static boolean isCompanyPhoneValid(String number)
     {
@@ -165,6 +173,7 @@ public class Utility
         return isValid;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // for cellphone
     public static boolean isCellphoneValid(String number)
     {
@@ -183,6 +192,7 @@ public class Utility
         return isValid;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static boolean isBirthdayValid(String inDate)
     {
 
@@ -207,6 +217,7 @@ public class Utility
         return true;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static boolean isEmailValid(String email)
     {
         boolean isValid = false;
@@ -223,6 +234,7 @@ public class Utility
         return isValid;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String covertDateToString(int year, int month, int day)
     {
         Log.d(TAG, "year: " + year + " month: " + month + " day: " + day);
@@ -245,6 +257,7 @@ public class Utility
         return dateTimeString.toString();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String covertTimeToString(int hour, int minute)
     {
         Log.d(TAG, " hour: " + hour + " minute: " + minute);
@@ -265,6 +278,7 @@ public class Utility
         return timeString.toString();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String getCurrentDateTime()
     {
         String dateTime = Utility.SPACE_STRING;
@@ -276,6 +290,7 @@ public class Utility
         return dateTime;
     }
     
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static int getCurrentYear()
     {
         Calendar now = Calendar.getInstance();   // Gets the current date and time
@@ -283,6 +298,7 @@ public class Utility
         return year;
     }
     
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static int getDays(String strDate)
     {
 //        String strDate = "2012-02";
@@ -301,11 +317,13 @@ public class Utility
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
     
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String covertDateStringToServer(String date)
     {
         return date.replace(" ", DATE_STRING);
     }
-
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static void createFolder(String path)
     {
         if (path != null)
@@ -317,6 +335,7 @@ public class Utility
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String readFile(String path)
     {
         BufferedReader reader;
@@ -352,6 +371,7 @@ public class Utility
         return readContent.toString();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static int writeFile(String path, String data)
     {
         try
@@ -378,6 +398,7 @@ public class Utility
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static byte[] decodeBase64(String content)
     {
         byte[] data = Base64.decode(content, Base64.DEFAULT);
@@ -393,6 +414,7 @@ public class Utility
         return data;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String encodeBase64(String content)
     {
         byte[] data = null;
@@ -410,6 +432,7 @@ public class Utility
         return base64;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String encodeBase64(Bitmap bm, int quality)
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -422,6 +445,7 @@ public class Utility
         return imageEncoded;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String encodeBase64FromPath(String path)
     {
         Bitmap bm = BitmapFactory.decodeFile(path);
@@ -440,6 +464,7 @@ public class Utility
         return base64;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String generateMD5String(String source)
     {
         // test string
@@ -476,6 +501,7 @@ public class Utility
         return Utility.SPACE_STRING;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static Bitmap covertByteArrayToBitmap(byte[] data)
     {
         Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
@@ -483,6 +509,7 @@ public class Utility
         return bm;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String getFactaInfoHeader(String logType, String userNo, String userName, String userHostAddress,
             String actionName)
     {
@@ -495,6 +522,7 @@ public class Utility
         return header.toString();
     }
     
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String getFactaInfoHeader(String logType, String userNo, String userName, String userHostAddress,
             String actionName, String loginKey)
     {
@@ -508,6 +536,7 @@ public class Utility
         return header.toString();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static void saveData(Activity activity, String id, String password, int userSerial, int userGroup,
             String loginKey)
     {
@@ -517,6 +546,7 @@ public class Utility
                 .putString(Utility.LoginField.LOGIN_KEY, loginKey).commit();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static boolean hadLogin(Activity actiivty)
     {
         SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
@@ -532,6 +562,7 @@ public class Utility
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static int getCreator(Activity activity)
     {
         SharedPreferences settings = activity.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
@@ -542,6 +573,7 @@ public class Utility
         return creator;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static int getCreatorGroup(Activity actiivty)
     {
         SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
@@ -552,6 +584,7 @@ public class Utility
         return creatorGroup;
     }
     
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String getLoginKey(Activity actiivty)
     {
         SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
@@ -562,6 +595,7 @@ public class Utility
         return loginKey;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static boolean removeDirectory(File directory)
     {
         if (directory == null) return false;
@@ -588,8 +622,7 @@ public class Utility
         return directory.delete();
     }
     
-    ////////////////////////////////////////////////////////////////////////////////
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static void handleFileInfo(GsonFileInfo fileInfo, Handler handler)
     {
         if (fileInfo != null)
@@ -638,6 +671,7 @@ public class Utility
         }
     }
     
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static void generateThumbnail(final String fileName, final String filePath, final String fileStream)
     {
         Bitmap bm = null;
@@ -771,6 +805,69 @@ public class Utility
         else
         {
             return upperBound;
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static int getAppVersion(Context context)
+    {
+        try
+        {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        }
+        catch (NameNotFoundException e)
+        {
+            // should never happen
+            throw new RuntimeException("Coult not get package name: " + e);
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static void checkAndroidVersion(Context context)
+    {
+        int version = Build.VERSION.SDK_INT;
+        if (version < 8)
+        {
+            throw new UnsupportedOperationException("Device must be at least " + "API Level 8 (instead of " + version
+                    + ")");
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean isAndroidVersion(Context context)
+    {
+        int version = Build.VERSION.SDK_INT;
+        if (version < 16)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static Boolean isInternetAvailable(Context context)
+    {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        // return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean isWifiAvailable(WifiManager wifiManager)
+    {
+        if (wifiManager != null)
+        {
+            return wifiManager.isWifiEnabled();
+        }
+        else
+        {
+            return false;
         }
     }
 }
