@@ -11,7 +11,8 @@
         style="@style/btnStyle"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/cancel"
+        android:background="@drawable/common_btn_selector"
+        android:text="@string/cancel"
         android:textColor="@color/white" />
 
     <LinearLayout
@@ -44,8 +45,7 @@
         <TextView
             android:id="@+id/order_measure_consumer_name"
             style="@style/orderMeasureTextViewStyle"
-            android:layout_marginLeft="@dimen/order_measure_comsumer_tv_margin_left"
-            />
+            android:layout_marginLeft="@dimen/order_measure_comsumer_tv_margin_left" />
 
         <TextView
             android:id="@+id/order_measure_consumer_phone_number_field"
@@ -86,56 +86,75 @@
         <TextView
             android:id="@+id/order_measure_case_name_field"
             style="@style/orderMeasureTextViewStyle"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
+            android:layout_gravity="center"
             android:text="@string/order_measure_case_name" />
 
         <EditText
             android:id="@+id/order_measure_case_name"
             style="@style/inputTextStyle"
-            android:layout_gravity="center"
-            android:layout_height="46dp"
             android:layout_width="@dimen/order_measure_comsumer_info_2_edit_width"
-            android:hint="@string/order_measure_case_name_hint" 
-            android:layout_marginLeft="@dimen/order_measure_comsumer_tv_margin_left"/>
+            android:layout_height="46dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/order_measure_comsumer_tv_margin_left"
+            android:hint="@string/order_measure_case_name_hint" />
 
         <TextView
             android:id="@+id/order_measure_cant_description_field"
             style="@style/orderMeasureTextViewStyle"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="@dimen/order_measure_comsumer_info_2_margin_left"
             android:text="@string/order_measure_cant_description" />
 
         <EditText
             android:id="@+id/order_measure_cant_description"
             style="@style/inputTextStyle"
-            android:layout_gravity="center"
-            android:layout_height="46dp"
             android:layout_width="@dimen/order_measure_comsumer_info_2_edit_width"
-            android:hint="@string/order_measure_cant_description_hint" 
-            android:layout_marginLeft="@dimen/order_measure_comsumer_tv_margin_left"/>
+            android:layout_height="46dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/order_measure_comsumer_tv_margin_left"
+            android:hint="@string/order_measure_cant_description_hint" />
 
         <TextView
             android:id="@+id/order_measure_sale_status_field"
             style="@style/orderMeasureTextViewStyle"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="@dimen/order_measure_comsumer_info_2_margin_left"
             android:text="@string/order_measure_cant_sale_status" />
 
         <Spinner
             android:id="@+id/order_measure_sale_status_request"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/order_measure_comsumer_tv_margin_left"/>
+            android:layout_marginLeft="@dimen/order_measure_comsumer_tv_margin_left" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/order_measure_consumer_contact_address_layout"
+        style="@style/orderMeasureLayoutStyle"
+        android:layout_below="@+id/order_measure_comsumer_info_2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/order_measure_comsumer_layout_margin_left"
+        android:layout_toLeftOf="@+id/order_measure_save_btn"
+        android:layout_toRightOf="@+id/order_measure_cancel_btn" >
+
+        <CheckBox
+            android:id="@+id/order_measure_as_above_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/order_measure_consumer_as_work_address"
+            android:textColor="@color/black"
+            android:textSize="@dimen/add_tab_txt_style_size" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/order_measure_consumer_address_layout"
         style="@style/orderMeasureLayoutStyle"
-        android:layout_below="@+id/order_measure_comsumer_info_2"
+        android:layout_below="@+id/order_measure_consumer_contact_address_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/order_measure_comsumer_layout_margin_left"
         android:layout_toLeftOf="@+id/order_measure_save_btn"
@@ -147,67 +166,32 @@
             android:layout_gravity="center"
             android:text="@string/order_measure_consumer_address_msg" />
 
+        <Spinner
+            android:id="@+id/order_measure_consumer_address_county"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp" />
+
+        <Spinner
+            android:id="@+id/order_measure_consumer_address_city"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp" />
+
         <EditText
             android:id="@+id/order_measure_consumer_address"
             style="@style/inputTextStyle"
+            android:layout_width="400dp"
             android:layout_gravity="center"
             android:hint="@string/order_measure_consumer_address_hint" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/order_measure_consumer_contact_address_layout"
-        style="@style/orderMeasureLayoutStyle"
-        android:layout_below="@+id/order_measure_consumer_address_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="@dimen/order_measure_comsumer_layout_margin_left"
-        android:layout_toLeftOf="@+id/order_measure_save_btn"
-        android:layout_toRightOf="@+id/order_measure_cancel_btn" >
-
-        <CheckBox
-            android:id="@+id/order_measure_as_above_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/order_measure_consumer_as_work_address"
-            android:textColor="@color/black"
-            android:layout_gravity="center"
-            android:textSize="@dimen/add_tab_txt_style_size" />
-
-        <TextView
-            android:id="@+id/order_measure_consumer_contact_address_field"
-            style="@style/orderMeasureTextViewStyle"
-            android:layout_marginLeft="@dimen/order_measure_comsumer_checkbox_margin_left"
-            android:layout_gravity="center"
-            android:text="@string/order_measure_consumer_contact_address_msg" />
-
-        <EditText
-            android:id="@+id/order_measure_consumer_contact_address"
-            style="@style/inputTextStyle"
-            android:layout_gravity="center"
-            android:hint="@string/order_measure_consumer_contact_address_hint" />
-    </LinearLayout>
-
-    <!--
-    <LinearLayout
-        android:id="@+id/order_measure_consumer_comment_layout"
-        style="@style/orderMeasureLayoutStyle"
-        android:layout_below="@+id/order_measure_consumer_contact_address_layout" >
-
-        <TextView
-            android:id="@+id/order_measure_consumer_comment_field"
-            style="@style/orderMeasureTextViewStyle"
-            android:text="@string/order_measure_consumer_comment_msg" />
-
-        <EditText
-            android:id="@+id/order_measure_consumer_comment"
-            style="@style/inputTextStyle"
-            android:hint="@string/order_measure_consumer_comment_hint" />
-    </LinearLayout>
-    -->
-
-    <LinearLayout
         android:id="@+id/order_measure_consumer_selection_layout"
         style="@style/orderMeasureLayoutStyle"
-        android:layout_below="@+id/order_measure_consumer_contact_address_layout"
+        android:layout_below="@+id/order_measure_consumer_address_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/order_measure_comsumer_layout_margin_left"
         android:layout_toLeftOf="@+id/order_measure_save_btn"
@@ -222,20 +206,8 @@
         <Spinner
             android:id="@+id/order_measure_consumer_request"
             android:layout_width="180dp"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/order_measure_consumer_cost_field"
-            style="@style/orderMeasureTextViewStyle"
-            android:layout_gravity="center"
-            android:text="@string/order_measure_consumer_cost_msg" />
-
-        <Spinner
-            android:id="@+id/order_measure_consumer_cost"
-            android:layout_width="@dimen/add_tab_txt_style_width"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
     </LinearLayout>
 
     <LinearLayout
@@ -263,8 +235,8 @@
         <TimePicker
             android:id="@+id/order_measure_timePicker"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:layout_gravity="center"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
     </LinearLayout>
 
     <!-- new button -->
@@ -274,7 +246,8 @@
         style="@style/btnStyle"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/save"
+        android:background="@drawable/common_btn_selector"
+        android:text="@string/save"
         android:textColor="@color/white" />
 
 </RelativeLayout>

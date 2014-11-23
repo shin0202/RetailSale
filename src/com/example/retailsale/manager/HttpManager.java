@@ -52,8 +52,8 @@ public class HttpManager
 
     public class LogType
     {
-        public static final String Login = "Login";
-        public static final String Operation = "Operation";
+        public static final String LOGIN = "Login";
+        public static final String OPERATION = "Operation";
     }
 
     public HttpManager()
@@ -79,7 +79,7 @@ public class HttpManager
 
         GsonRequest<GsonLoginInfo> getLoginGsonRequset = new GsonRequest<GsonLoginInfo>(Method.GET, loginUri,
                 GsonLoginInfo.class, getLoginReqSuccessListener(loginListener),
-                getLoginReqErrorListener(loginListener), LogType.Login, "095050", Utility.SPACE_STRING, USER_HOST,
+                getLoginReqErrorListener(loginListener), LogType.LOGIN, "095050", Utility.SPACE_STRING, USER_HOST,
                 ACTION_NAME, Utility.SPACE_STRING);
         getLoginGsonRequset.setTag("login");
 
@@ -202,7 +202,7 @@ public class HttpManager
 
         GsonRequest<GsonDataOption> getDataOptionsGsonRequset = new GsonRequest<GsonDataOption>(Method.GET,
                 dataOptionsUri, GsonDataOption.class, getDataOptionReqSuccessListener(getDataOptionListener),
-                getDataOptionReqErrorListener(getDataOptionListener), LogType.Operation, String.valueOf(Utility
+                getDataOptionReqErrorListener(getDataOptionListener), LogType.OPERATION, String.valueOf(Utility
                         .getCreator(activity)), Utility.SPACE_STRING, USER_HOST, ACTION_NAME,
                 Utility.getLoginKey(activity));
 
@@ -232,7 +232,7 @@ public class HttpManager
 
         GsonRequest<GsonUserByGroup> getUserListByGroupGsonRequset = new GsonRequest<GsonUserByGroup>(Method.GET, getUserListUri,
                 GsonUserByGroup.class, getUsetListByGroupReqSuccessListener(getUsetListByGroupListener),
-                getUsetListByGroupReqErrorListener(getUsetListByGroupListener), LogType.Operation, String.valueOf(Utility
+                getUsetListByGroupReqErrorListener(getUsetListByGroupListener), LogType.OPERATION, String.valueOf(Utility
                         .getCreator(activity)), Utility.SPACE_STRING, USER_HOST, ACTION_NAME,
                 Utility.getLoginKey(activity));
         getUserListByGroupGsonRequset.setTag("getUserListByGroup");
@@ -251,7 +251,7 @@ public class HttpManager
 
         GsonRequest<GsonFileInfo> getFileInfoGsonRequset = new GsonRequest<GsonFileInfo>(Method.GET, fileInfoUri,
                 GsonFileInfo.class, getFileInfoReqSuccessListener(getFileInfoListener, handler),
-                getFileInfoReqErrorListener(getFileInfoListener), LogType.Operation, String.valueOf(Utility
+                getFileInfoReqErrorListener(getFileInfoListener), LogType.OPERATION, String.valueOf(Utility
                         .getCreator(activity)), Utility.SPACE_STRING, USER_HOST, ACTION_NAME,
                 Utility.getLoginKey(activity));
 
@@ -270,7 +270,7 @@ public class HttpManager
 
         GsonRequest<GsonFolderInfo> getFolderInfoGsonRequset = new GsonRequest<GsonFolderInfo>(Method.GET, fileInfoUri,
                 GsonFolderInfo.class, getFolderInfoReqSuccessListener(getFolderInfoListener),
-                getFolderInfoReqErrorListener(getFolderInfoListener), LogType.Operation, String.valueOf(Utility
+                getFolderInfoReqErrorListener(getFolderInfoListener), LogType.OPERATION, String.valueOf(Utility
                         .getCreator(activity)), Utility.SPACE_STRING, USER_HOST, ACTION_NAME,
                 Utility.getLoginKey(activity));
         getFolderInfoGsonRequset.setTag("getFolderInfo");

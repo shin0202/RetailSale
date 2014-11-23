@@ -32,8 +32,8 @@ import com.example.retailsale.util.Utility;
 public class OrderMeasure extends Activity implements OnClickListener, OnCheckedChangeListener
 {
     private static final String TAG = "OrderMeasure";
-    private OptionAdapter spaceAdapter, budgetAdapter, statusAdapter;
-    private List<DataOption> spaceList, budgetList, statusList;
+    private OptionAdapter spaceAdapter, statusAdapter;
+    private List<DataOption> spaceList, statusList;
 
     private boolean isSendNoteMsgChecked = false, isAsAboveChecked = false;
     private CustomerInfo customerInfo;
@@ -44,9 +44,9 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
     private CheckBox asAboveCheckBox;
     private DatePicker measureDate;
     private TimePicker measureTime;
-    private Spinner spaceSpinner, budgetSpinner, statusSpinner;
+    private Spinner spaceSpinner, statusSpinner;
     private TextView saleCreateDateTV, consumerNameTV, phoneNumberTV;
-    private EditText caseNameET, cantDescriptionET, consumerAddressET, contactAddressET;
+    private EditText caseNameET, cantDescriptionET, consumerAddressET;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -110,12 +110,10 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         caseNameET = (EditText) findViewById(R.id.order_measure_case_name);
         cantDescriptionET = (EditText) findViewById(R.id.order_measure_cant_description);
         consumerAddressET = (EditText) findViewById(R.id.order_measure_consumer_address);
-        contactAddressET = (EditText) findViewById(R.id.order_measure_consumer_contact_address);
 
         statusSpinner = (Spinner) findViewById(R.id.order_measure_sale_status_request);
         spaceSpinner = (Spinner) findViewById(R.id.order_measure_consumer_request);
-        budgetSpinner = (Spinner) findViewById(R.id.order_measure_consumer_cost);
-
+        
         cancelBtn.setOnClickListener(this);
         saveBtn.setOnClickListener(this);
 
@@ -126,7 +124,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 //		sendNoteMsgTB.setOnCheckedChangeListener(this);
 
         // as above check box
-        asAboveCheckBox.setOnCheckedChangeListener(this);
+        asAboveCheckBox.setOnCheckedChangeListener(this);        
     }
 
     private void getBundle()
@@ -151,12 +149,14 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
             }
             else
             {
-                setInfo(false, customerInfo.getReservationWorkAlias(), customerInfo.getReservationWork(),
-                        customerInfo.getReservationContact(), customerInfo.getReservationYear(),
+                setInfo(false, customerInfo.getReservationWorkAlias(),
+                        customerInfo.getReservationWork(), customerInfo.getReservationYear(),
                         customerInfo.getReservationMonth(), customerInfo.getReservationDay(),
                         customerInfo.getReservationHour(), customerInfo.getReservationMinute(),
-                        customerInfo.getReservationStatusComment(), customerInfo.getReservationStatusPosition(),
-                        customerInfo.getReservationSpacePosition(), customerInfo.getReservationBudgetPosition());
+                        customerInfo.getReservationStatusComment(),
+                        customerInfo.getReservationStatusPosition(),
+                        customerInfo.getReservationSpacePosition(),
+                        customerInfo.getReservationBudgetPosition());
             }
 
             if (customerInfo != null)
@@ -167,7 +167,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         }
     }
 
-    private void setInfo(boolean isDefault, String caseName, String workAddress, String contactAddress,
+    private void setInfo(boolean isDefault, String caseName, String workAddress,
             int reservationYear, int reservationMonth, int reservationDay, int reservationHour, int reservationMinute,
             String cantDescription, int statusPosition, int requestPosition, int costPosition)
     {
@@ -178,7 +178,6 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         {
             caseNameET.setText(caseName);
             consumerAddressET.setText(workAddress);
-            contactAddressET.setText(contactAddress);
             measureDate.updateDate(reservationYear, reservationMonth - 1, reservationDay);
             measureTime.setCurrentHour(reservationHour);
             measureTime.setCurrentMinute(reservationMinute);
@@ -187,7 +186,6 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
             statusSpinner.setSelection(statusPosition);
 
             spaceSpinner.setSelection(requestPosition);
-            budgetSpinner.setSelection(costPosition);
         }
     }
 
@@ -204,11 +202,11 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         // contact address
         if (asAboveCheckBox.isChecked())
         {
-            customerInfo.setReservationContact(consumerAddressET.getText().toString());
+            customerInfo.setReservationWork(customerInfo.getReservationContact());
         }
         else
         {
-            customerInfo.setReservationContact(contactAddressET.getText().toString());
+            customerInfo.setReservationWork(consumerAddressET.getText().toString());
         }
 
         // measure date & time
@@ -233,7 +231,6 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         
         int statusSelectedSerial = statusList.get(statusSpinner.getSelectedItemPosition()).getOptSerial();
         int spaceSelectedSerial = spaceList.get(spaceSpinner.getSelectedItemPosition()).getOptSerial(); 
-        int budgetSelectedSerial = budgetList.get(budgetSpinner.getSelectedItemPosition()).getOptSerial(); 
         
 
         // can't sale description
@@ -246,10 +243,6 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         // request
         customerInfo.setReservationSpace(spaceSelectedSerial);
         customerInfo.setReservationSpacePosition(spaceSpinner.getSelectedItemPosition());
-
-        // cost
-        customerInfo.setReservationBudget(budgetSelectedSerial);
-        customerInfo.setReservationBudgetPosition(budgetSpinner.getSelectedItemPosition());
 
         // send result
         Intent resultIntent = new Intent();
@@ -278,7 +271,6 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
     private void getOptionType()
     {
         spaceList = new ArrayList<DataOption>();
-        budgetList = new ArrayList<DataOption>();
         statusList = new ArrayList<DataOption>();
 
         retialSaleDbAdapter = new RetialSaleDbAdapter(OrderMeasure.this);
@@ -289,7 +281,6 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         int optionType, optionSerial;
         String optionAlias, optionName;
         String statusType = this.getResources().getString(R.string.option_customer_status);
-        String budgetType = this.getResources().getString(R.string.option_customer_budget);
         String spaceType = this.getResources().getString(R.string.option_customer_space);
 
         if (optionTypeCursor != null)
@@ -315,10 +306,6 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
                     {
                         statusList.add(new DataOption("", optionSerial, optionName, false));
                     }
-                    else if (optionAlias.equals(budgetType))
-                    {
-                        budgetList.add(new DataOption("", optionSerial, optionName, false));
-                    }
                     else if (optionAlias.equals(spaceType))
                     {
                         spaceList.add(new DataOption("", optionSerial, optionName, false));
@@ -336,10 +323,6 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         statusAdapter = new OptionAdapter(OrderMeasure.this, statusList);
         statusSpinner.setAdapter(statusAdapter);
 
-        // budget spinner
-        budgetAdapter = new OptionAdapter(OrderMeasure.this, budgetList);
-        budgetSpinner.setAdapter(budgetAdapter);
-
         // space spinner
         spaceAdapter = new OptionAdapter(OrderMeasure.this, spaceList);
         spaceSpinner.setAdapter(spaceAdapter);
@@ -349,12 +332,19 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
     {
         if (isEnable)
         {
-            contactAddressET.setText(consumerAddressET.getText().toString());
-            contactAddressET.setEnabled(false);
+            if (customerInfo != null)
+            {
+                consumerAddressET.setText(customerInfo.getReservationContact());
+            }
+            else
+            {
+                consumerAddressET.setText("");
+            }
+            consumerAddressET.setEnabled(false);
         }
         else
         {
-            contactAddressET.setEnabled(true);
+            consumerAddressET.setEnabled(true);
         }
     }
     

@@ -31,10 +31,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.retailsale.CommonAdapter;
 import com.example.retailsale.MainActivity;
 import com.example.retailsale.OrderMeasure;
 import com.example.retailsale.R;
 import com.example.retailsale.RetialSaleDbAdapter;
+import com.example.retailsale.TWZipCode;
 import com.example.retailsale.manager.addcustomer.CustomerInfo;
 import com.example.retailsale.manager.dataoption.DataOption;
 import com.example.retailsale.manager.dataoption.OptionAdapter;
@@ -55,15 +57,17 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private List<DataOption> infoList, jobList, ageList, sexList, titleList;
     private List<DataOption> statusList, spaceList, budgetList, repairItemList, areaList;
     private List<UserDataForList> userDataList;
-    private List<String> phoneCodeList;
+    private List<String> phoneCodeList, countyList, cityList;
     // views
     private MainActivity mainActivity;
     private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
     private Spinner yearSpinner, monthSpinner, daySpinner;
     private Spinner phoneNumberSpinner, companyPhoneNumberSpinner;
     private Spinner repairItemSpinner, areaSpinner;
+    private Spinner countySpinner, citySpinner;
+    private Spinner budgetSpinner;
     private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
-            introducerET, memoET;
+            introducerET, memoET, contactET;
     private CheckBox leaveInfoCB;
     private TextView companyNameTV, designerStoreTV, createDateTV;
     private DatePicker consumerVisitDateDP;
@@ -110,6 +114,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         ageSpinner = (Spinner) view.findViewById(R.id.add_tab_age_selection);
         sexSpinner = (Spinner) view.findViewById(R.id.add_tab_sex_selection);
         titleSpinner = (Spinner) view.findViewById(R.id.add_tab_title_selection);
+        budgetSpinner = (Spinner) view.findViewById(R.id.add_tab_budget);
         Button saveBtn = (Button) view.findViewById(R.id.add_tab_save_btn);
         Button newBtn = (Button) view.findViewById(R.id.add_tab_new_btn);
         customerNameET = (EditText) view.findViewById(R.id.add_tab_edit_customer_name);
@@ -119,6 +124,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         introducerET = (EditText) view.findViewById(R.id.add_tab_edit_introducer);
         emailET = (EditText) view.findViewById(R.id.add_tab_edit_email);
         memoET = (EditText) view.findViewById(R.id.add_tab_edit_customer_memo);
+        contactET = (EditText) view.findViewById(R.id.add_tab_edit_contact_address);
         leaveInfoCB = (CheckBox) view.findViewById(R.id.add_tab_leave_info_checkbox);
         consumerVisitDateDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_visit_datePicker);
         consumerVisitTimeTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_visit_timePicker);
@@ -138,6 +144,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         repairItemSpinner = (Spinner) view.findViewById(R.id.add_tab_repair_item);
         areaSpinner = (Spinner) view.findViewById(R.id.add_tab_area);
+        
+        countySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_county);
+        countySpinner.setOnItemSelectedListener(this);
+        citySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_city);
+        citySpinner.setEnabled(false);
         
         String[] phoneCodeArray = getResources().getStringArray(R.array.phone_code);
         phoneCodeList = Arrays.asList(phoneCodeArray);
@@ -167,6 +178,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         // get designer list
         getUserList();
+        
+        // set county list
+        setCountyList();
         
         // set customer birthday spinner(year, month, day)
         setCustomerBirthdayYearSpinner();
@@ -257,6 +271,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         int titleSelectedSerial = titleList.get(titleSpinner.getSelectedItemPosition()).getOptSerial();
         int repairSelectedSerial = repairItemList.get(repairItemSpinner.getSelectedItemPosition()).getOptSerial();
         int areaSelectedSerial = areaList.get(areaSpinner.getSelectedItemPosition()).getOptSerial();
+        int budgetSelectedSerial = budgetList.get(budgetSpinner.getSelectedItemPosition()).getOptSerial();
         
         int yearSelectedPosition = yearSpinner.getSelectedItemPosition();
         
@@ -275,38 +290,64 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 + jobSelectedSerial + " ageSelectedSerial: " + ageSelectedSerial
                 + " sexSelectedSerial: " + sexSelectedSerial + " titleSelectedSerial: "
                 + titleSelectedSerial + " repairSelectedSerial: " + repairSelectedSerial
-                + " areaSelectedSerial : " + areaSelectedSerial);
+                + " areaSelectedSerial : " + areaSelectedSerial + " budgetSelectedSerial : " + budgetSelectedSerial);
         
         Log.d(TAG, "date: " + dateString + "time : " + timeString);
         
         Log.d(TAG, "customerName : " + customerName + " phoneNumber: " + phoneNumber + " cellPhoneNumber: "
                 + cellPhoneNumber + " companyPhoneNumber: " + companyPhoneNumber + " email: " + email + " birthday: "
                 + customerBirthday + " introducer: " + introducer);
-
+        
+        // handle contact address
+        int countyPosition = countySpinner.getSelectedItemPosition();
+        String contactAddress = "";
+        String zipCode = "";
+        String countyCity = "";
+        TWZipCode tZip = new TWZipCode();
+        
+        if (countyPosition == 0) // default, no data
+        {
+            contactAddress = countyList.get(countyPosition);
+        }
+        else
+        {
+            tZip.setCountry(countyList.get(countyPosition));
+            tZip.setTown(cityList.get(citySpinner.getSelectedItemPosition()));
+            
+            countyCity = countyList.get(countyPosition)
+                    + cityList.get(citySpinner.getSelectedItemPosition());
+            contactAddress = countyCity + contactET.getText();
+        }
+        
+        zipCode = tZip.getZipCode();
+        
+        Log.d(TAG, "contact address county : " + countyPosition + " countyCity : " + countyCity
+                + " contactAddress : " + contactAddress + " zip code : " + zipCode);
+        
         // check phone number
-        if (!isChecked && !Utility.isPhoneValid(phoneNumber))
-        {
-            showToast(this.getActivity().getResources().getString(R.string.home_phone_field_error));
-            return false;
-        }
-        // check cellphone number
-        if (!isChecked && !Utility.isCellphoneValid(cellPhoneNumber))
-        {
-            showToast(this.getActivity().getResources().getString(R.string.cell_phone_field_error));
-            return false;
-        }
-        // check company phone number
-        if (!isChecked && !companyPhoneNumber.equals(Utility.SPACE_STRING) && !Utility.isCompanyPhoneValid(phoneNumber))
-        {
-            showToast(this.getActivity().getResources().getString(R.string.company_phone_field_error));
-            return false;
-        }
-        // check email
-        if (!isChecked && !email.equals(Utility.SPACE_STRING) && !Utility.isEmailValid(email))
-        {
-            showToast(this.getActivity().getResources().getString(R.string.email_field_error));
-            return false;
-        }
+//        if (!isChecked && !Utility.isPhoneValid(phoneNumber))
+//        {
+//            showToast(this.getActivity().getResources().getString(R.string.home_phone_field_error));
+//            return false;
+//        }
+//        // check cellphone number
+//        if (!isChecked && !Utility.isCellphoneValid(cellPhoneNumber))
+//        {
+//            showToast(this.getActivity().getResources().getString(R.string.cell_phone_field_error));
+//            return false;
+//        }
+//        // check company phone number
+//        if (!isChecked && !companyPhoneNumber.equals(Utility.SPACE_STRING) && !Utility.isCompanyPhoneValid(phoneNumber))
+//        {
+//            showToast(this.getActivity().getResources().getString(R.string.company_phone_field_error));
+//            return false;
+//        }
+//        // check email
+//        if (!isChecked && !email.equals(Utility.SPACE_STRING) && !Utility.isEmailValid(email))
+//        {
+//            showToast(this.getActivity().getResources().getString(R.string.email_field_error));
+//            return false;
+//        }
         // check birthday
 //		if (!isChecked && !Utility.isBirthdayValid(customerBirthday))
 //		{
@@ -331,9 +372,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                             sexSelectedSerial, titleSelectedSerial, noData, dateString + timeString, msgSelectedSerial,
                             noData, jobSelectedSerial, ageSelectedSerial, memo, noData, creator, group, createDateTime,
                             Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, spaceList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), statusList
+                            contactAddress, zipCode, spaceList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), statusList
                                     .get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, budgetList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), repairSelectedSerial, areaSelectedSerial);
+                            Utility.SPACE_STRING, budgetSelectedSerial, repairSelectedSerial, areaSelectedSerial);
                 }
                 else
                 {
@@ -342,20 +383,21 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                                     + timeString, msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial,
                             memo, customerBirthday.toString(), creator, group, createDateTime, Utility.SPACE_STRING,
                             Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, spaceList.get(Utility.DEFAULT_ZERO_VALUE)
+                            contactAddress, zipCode, spaceList.get(Utility.DEFAULT_ZERO_VALUE)
                                     .getOptSerial(), statusList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, budgetList.get(Utility.DEFAULT_ZERO_VALUE)
-                                    .getOptSerial(), repairSelectedSerial, areaSelectedSerial);
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, budgetSelectedSerial, repairSelectedSerial, areaSelectedSerial);
                 }
             }
             else
             {
-                customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber,
-                        phoneNumber, companyPhoneNumber, sexSelectedSerial, titleSelectedSerial, email, dateString
-                                + timeString, msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial,
-                        memo, customerBirthday.toString(), creator, group, dateString + timeString, repairSelectedSerial, areaSelectedSerial);
+                customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName,
+                        cellPhoneNumber, phoneNumber, companyPhoneNumber, sexSelectedSerial,
+                        titleSelectedSerial, email, dateString + timeString, msgSelectedSerial,
+                        introducer, jobSelectedSerial, ageSelectedSerial, memo,
+                        customerBirthday.toString(), creator, group, dateString + timeString,
+                        repairSelectedSerial, areaSelectedSerial, budgetSelectedSerial, contactAddress, zipCode);
                 
-                Log.d(TAG, "ReservationBudgetPosition() === " + customerInfo.getReservationBudgetPosition());
+                Log.d(TAG, "ReservationContact === " + customerInfo.getReservationContact());
             }
         }
         catch (Exception e)
@@ -612,7 +654,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             Log.d(TAG, "option cursor is null ");
         }
         
-        OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter, repairItemAdapter, areaAdapter;
+        OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter, repairItemAdapter, areaAdapter, budgetAdapter;
         // msg spinner
         infoAdapter = new OptionAdapter(this.getActivity(), infoList);
         infoSpinner.setAdapter(infoAdapter);
@@ -634,6 +676,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         // area spinner
         areaAdapter = new OptionAdapter(this.getActivity(), areaList);
         areaSpinner.setAdapter(areaAdapter);
+        // budget spinner
+        budgetAdapter = new OptionAdapter(this.getActivity(), budgetList);
+        budgetSpinner.setAdapter(budgetAdapter);
         
         Cursor userStoreCursor = retialSaleDbAdapter.getOptionByOptionSerial(Utility.getCreatorGroup(AddFragment.this
                 .getActivity()));
@@ -708,6 +753,106 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         designerSpinner.setAdapter(userAdapter);
     }
     
+    private void setCountyList()
+    {
+        String[] countyArray = getResources().getStringArray(R.array.county_city);
+        countyList = Arrays.asList(countyArray);
+        
+        CommonAdapter countyAdapter = new CommonAdapter(this.getActivity(), countyList);
+        
+        countySpinner.setAdapter(countyAdapter);
+    }
+    
+    private void setCityList(String[] cityArray)
+    {
+        cityList = Arrays.asList(cityArray);
+        
+        CommonAdapter cityAdapter = new CommonAdapter(this.getActivity(), cityList);
+        
+        citySpinner.setAdapter(cityAdapter);
+    }
+    
+    private void handeCountyEvent(int position)
+    {
+        citySpinner.setEnabled(true);
+        switch (position)
+        {
+        case Utility.County.NONE:
+            citySpinner.setEnabled(false);
+            citySpinner.setAdapter(null);
+            break;
+        case Utility.County.KEELUNG_CITY:
+            setCityList(getResources().getStringArray(R.array.Keelung));
+            break;
+        case Utility.County.TAIPEI_CITY:
+            setCityList(getResources().getStringArray(R.array.taipei));
+            break;
+        case Utility.County.NEW_TAIPEI_CITY:
+            setCityList(getResources().getStringArray(R.array.new_taipei));
+            break;
+        case Utility.County.YILAN_COUNTY:
+            setCityList(getResources().getStringArray(R.array.yilan));
+            break;
+        case Utility.County.HSINCHU_CITY:
+            setCityList(getResources().getStringArray(R.array.hsinchu_city));
+            break;
+        case Utility.County.HSINCHU_COUNTY:
+            setCityList(getResources().getStringArray(R.array.hsinchu_county));
+            break;
+        case Utility.County.TAOYUAN_COUNTY:
+            setCityList(getResources().getStringArray(R.array.taoyuan_city));
+            break;
+        case Utility.County.MIAOLI_COUNTY:
+            setCityList(getResources().getStringArray(R.array.miaoli_city));
+            break;
+        case Utility.County.TAICHUNG_CITY:
+            setCityList(getResources().getStringArray(R.array.taichung_city));
+            break;
+        case Utility.County.CHANGHUA_COUNTY:
+            setCityList(getResources().getStringArray(R.array.changhua_city));
+            break;
+        case Utility.County.NANTOU_COUNTY:
+            setCityList(getResources().getStringArray(R.array.nantou_city));
+            break;
+        case Utility.County.CHIAYI_CITY:
+            setCityList(getResources().getStringArray(R.array.chiayi_city));
+            break;
+        case Utility.County.CHIAYI_COUNTY:
+            setCityList(getResources().getStringArray(R.array.chiayi_county));
+            break;
+        case Utility.County.YUNLIN_COUNTY:
+            setCityList(getResources().getStringArray(R.array.yunlin_county));
+            break;
+        case Utility.County.TAINAN_CITY:
+            setCityList(getResources().getStringArray(R.array.tainan_city));
+            break;
+        case Utility.County.KAOHSIUNG_CITY:
+            setCityList(getResources().getStringArray(R.array.kaohsiung_city));
+            break;
+        case Utility.County.PINGDONG_COUNTY:
+            setCityList(getResources().getStringArray(R.array.pingtung_county));
+            break;
+        case Utility.County.TAIDONG_COUNTY:
+            setCityList(getResources().getStringArray(R.array.taitung_county));
+            break;
+        case Utility.County.HUALIAN_COUNTY:
+            setCityList(getResources().getStringArray(R.array.hualien_county));
+            break;
+        case Utility.County.KINMEN_COUNTY:
+            setCityList(getResources().getStringArray(R.array.kinmen_county));
+            break;
+        case Utility.County.LIANJIANG_COUNTY:
+            setCityList(getResources().getStringArray(R.array.lianjiang_county));
+            break;
+        case Utility.County.PENGHU_COUNTY:
+            setCityList(getResources().getStringArray(R.array.penghu_county));
+            break;
+        case Utility.County.SOUTH_SEA_ISLANDS:
+            setCityList(getResources().getStringArray(R.array.south_sea_islands));
+            break;
+        }
+    }
+    
     private void setCustomerBirthdayYearSpinner()
     {
         int currentYear = Utility.getCurrentYear();
@@ -768,74 +913,6 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         CommonAdapter dayAdapter = new CommonAdapter(this.getActivity(), dayList);
         
         daySpinner.setAdapter(dayAdapter);
-    }
-    
-    private class CommonAdapter extends BaseAdapter
-    {
-        private static final String TAG = "CommonAdapter";
-        private static final int BASE_INDEX = 1000;
-        private List<String> birthList;
-        private Context context;
-        private ViewTag viewTag;
-
-        public CommonAdapter(Context context, List<String> birthList)
-        {
-            this.context = context;
-            this.birthList = birthList;
-        }
-
-        @Override
-        public int getCount()
-        {
-            return birthList.size();
-        }
-
-        @Override
-        public Object getItem(int position)
-        {
-            return birthList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position)
-        {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent)
-        {
-            if (convertView == null)
-            {
-                LayoutInflater layoutInflater = LayoutInflater.from(context);
-                convertView = layoutInflater.inflate(R.layout.option_layout, null);
-                viewTag = new ViewTag((TextView) convertView.findViewById(R.id.option_text));
-                convertView.setTag(viewTag);
-            }
-            else
-            {
-                viewTag = (ViewTag) convertView.getTag();
-            }
-
-            convertView.setId(BASE_INDEX + position);
-
-            if (position < birthList.size())
-            {
-                viewTag.itemName.setText(birthList.get(position));
-            }
-
-            return convertView;
-        }
-
-        class ViewTag
-        {
-            TextView itemName;
-
-            public ViewTag(TextView itemName)
-            {
-                this.itemName = itemName;
-            }
-        }
     }
     
     private class UserAdapter extends BaseAdapter
@@ -931,6 +1008,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 Log.d(TAG, "days : " + days);
                 setCustomerBirthdayDaySpinner(days);
             }
+            break;
+        case R.id.add_tab_contact_address_county:
+            Log.d(TAG, "To select county, the position is " + position);
+            
+            handeCountyEvent(position);
             break;
         }
     }

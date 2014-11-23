@@ -128,6 +128,36 @@ public class Utility
         public static final String USER_GROUP = "user_group";
         public static final String LOGIN_KEY = "login_key";
     }
+    
+    public class County
+    {
+        public static final int NONE = 0;
+        public static final int KEELUNG_CITY = 1;
+        public static final int TAIPEI_CITY = 2;
+        public static final int NEW_TAIPEI_CITY = 3;
+        public static final int YILAN_COUNTY = 4;
+        public static final int HSINCHU_CITY = 5;
+        public static final int HSINCHU_COUNTY = 6;
+        public static final int TAOYUAN_COUNTY = 7;
+        public static final int MIAOLI_COUNTY = 8;
+        public static final int TAICHUNG_CITY = 9;
+        public static final int CHANGHUA_COUNTY = 10;
+        
+        public static final int NANTOU_COUNTY = 11;
+        public static final int CHIAYI_CITY = 12;
+        public static final int CHIAYI_COUNTY = 13;
+        public static final int YUNLIN_COUNTY = 14;
+        public static final int TAINAN_CITY = 15;
+        public static final int KAOHSIUNG_CITY = 16;
+        public static final int PINGDONG_COUNTY = 17;
+        public static final int TAIDONG_COUNTY = 18;
+        public static final int HUALIAN_COUNTY = 19;
+        public static final int KINMEN_COUNTY = 20;
+        
+        public static final int LIANJIANG_COUNTY = 21;
+        public static final int PENGHU_COUNTY = 22;
+        public static final int SOUTH_SEA_ISLANDS = 23;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // for home

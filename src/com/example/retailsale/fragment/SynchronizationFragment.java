@@ -971,7 +971,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     {
 
         HttpManager httpManager = new HttpManager();
-        httpManager.addCustomerInfo(getActivity(), custometName, handler, HttpManager.LogType.Operation,
+        httpManager.addCustomerInfo(getActivity(), custometName, handler, HttpManager.LogType.OPERATION,
                 String.valueOf(Utility.getCreator(getActivity())), Utility.SPACE_STRING, HttpManager.USER_HOST,
                 HttpManager.ACTION_NAME, Utility.getLoginKey(getActivity()), json, rowId, retialSaleDbAdapter);
     }

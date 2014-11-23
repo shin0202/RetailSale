@@ -53,8 +53,8 @@
     <string name="add_tab_email_hint">請輸入電子郵件(john@xxx.xxx)</string>
     <string name="add_tab_age">年齡</string>
     <string name="add_tab_sex">性別</string>
-    <string name="add_tab_select_repair_item">營修項目</string>
-    <string name="add_tab_select_area">區域</string>
+    <string name="add_tab_select_repair_item">裝修項目</string>
+    <string name="add_tab_select_area">裝修區域</string>
     <string name="add_tab_customer_memo">備註</string>
     <string name="add_tab_customer_memo_hint">請輸入備註</string>
 
@@ -77,7 +77,7 @@
     <!-- Order measure -->
     <string name="order_measure_send_note_msg">傳送備忘簡訊</string>
     <string name="order_measure_consumer_address_msg">施工地址</string>
-    <string name="order_measure_consumer_address_hint">請輸入XX市XX區XX路XX巷XX號</string>
+    <string name="order_measure_consumer_address_hint">請輸入XX路XX巷XX號</string>
     <string name="order_measure_consumer_comment_msg">備註</string>
     <string name="order_measure_consumer_comment_hint">請輸入備註</string>
     <string name="order_measure_consumer_request_msg">格局需求</string>
@@ -93,8 +93,8 @@
     <string name="order_measure_cant_description_hint">輸入說明</string>
     <string name="order_measure_cant_sale_status">銷售進度</string>
     <string name="order_measure_consumer_contact_address_msg">聯絡地址</string>
-    <string name="order_measure_consumer_contact_address_hint">請輸入XX市XX區XX路XX巷XX號</string>
-    <string name="order_measure_consumer_as_work_address">同施工地址</string>
+    <string name="order_measure_consumer_contact_address_hint">請輸入XX路XX巷XX號</string>
+    <string name="order_measure_consumer_as_work_address">同聯絡地址</string>
     <string name="order_measure_dialog_msg">請在客戶資料進行儲存</string>
 
     <!-- Sync tab -->
@@ -130,7 +130,7 @@
     <string name="sync_tab_sync_download_user_list_failed">下載使用者選項失敗</string>
     <string name="sync_tab_sync_no_select_any_folder">沒有選取任一資料夾, 無法下載</string>
     <string name="sync_tab_upload_error">上傳客戶資料錯誤</string>
-    <string name="sync_tab_download">下載像片資料錯誤</string>
+    <string name="sync_tab_download">下載相片資料錯誤</string>
     <string name="sync_tab_sync_error">同步伺服器資料錯誤</string>
 
     <!-- Error String -->

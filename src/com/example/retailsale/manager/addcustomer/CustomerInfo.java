@@ -170,6 +170,59 @@ public class CustomerInfo implements Parcelable
     private int reservationRepairItem;
     @SerializedName("reservationArea")
     private int reservationArea;
+    
+    private int contactCountySelectedPosition;
+    private int contactCitySelectedPosition;
+    private int workCountySelectedPosition;
+    private int workCitySelectedPosition;
+    public int getContactCountySelectedPosition()
+    {
+    
+        return contactCountySelectedPosition;
+    }
+
+    public void setContactCountySelectedPosition(int contactCountySelectedPosition)
+    {
+    
+        this.contactCountySelectedPosition = contactCountySelectedPosition;
+    }
+
+    public int getContactCitySelectedPosition()
+    {
+    
+        return contactCitySelectedPosition;
+    }
+
+    public void setContactCitySelectedPosition(int contactCitySelectedPosition)
+    {
+    
+        this.contactCitySelectedPosition = contactCitySelectedPosition;
+    }
+
+    public int getWorkCountySelectedPosition()
+    {
+    
+        return workCountySelectedPosition;
+    }
+
+    public void setWorkCountySelectedPosition(int workCountySelectedPosition)
+    {
+    
+        this.workCountySelectedPosition = workCountySelectedPosition;
+    }
+
+    public int getWorkCitySelectedPosition()
+    {
+    
+        return workCitySelectedPosition;
+    }
+
+    public void setWorkCitySelectedPosition(int workCitySelectedPosition)
+    {
+    
+        this.workCitySelectedPosition = workCitySelectedPosition;
+    }
+    
     public String getWorkPostcode()
     {
         return workPostcode;
@@ -584,7 +637,7 @@ public class CustomerInfo implements Parcelable
             String customerHome, String customerCompany, int customerSex, int customerTitle, String customerMail,
             String customerVisitDate, int customerInfo, String customerIntroducer, int customerJob, int customerAge,
             String customerMemo, String customerBirth, int creator, int creatorGroup, String createTime,
-            int reservationRepairItem, int reservationArea)
+            int reservationRepairItem, int reservationArea, int reservationBudget, String reservationContact, String contactPostcode)
     {
         this.customerAccount = customerAccount;
         this.custometName = custometName;
@@ -606,6 +659,9 @@ public class CustomerInfo implements Parcelable
         this.createTime = createTime;
         this.reservationRepairItem = reservationRepairItem;
         this.reservationArea = reservationArea;
+        this.reservationBudget = reservationBudget;
+        this.reservationContact = reservationContact;
+        this.contactPostcode = contactPostcode;
     }
 
     // ///////////////////////////////// Parcel need add
@@ -660,6 +716,10 @@ public class CustomerInfo implements Parcelable
         dest.writeInt(reservationStatusPosition);
         dest.writeInt(reservationSpacePosition);
         dest.writeInt(reservationBudgetPosition);
+        dest.writeInt(contactCountySelectedPosition);
+        dest.writeInt(contactCitySelectedPosition);
+        dest.writeInt(workCountySelectedPosition);
+        dest.writeInt(workCitySelectedPosition);
     }
 
     public CustomerInfo(Parcel in)
@@ -725,6 +785,11 @@ public class CustomerInfo implements Parcelable
         this.reservationStatusPosition = in.readInt();
         this.reservationSpacePosition = in.readInt();
         this.reservationBudgetPosition = in.readInt();
+        
+        this.contactCountySelectedPosition = in.readInt();
+        this.contactCitySelectedPosition = in.readInt();
+        this.workCountySelectedPosition = in.readInt();
+        this.workCitySelectedPosition = in.readInt();
     }
 
     // ///////////////////////////////// Parcel need add

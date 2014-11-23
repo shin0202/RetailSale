@@ -5,23 +5,10 @@
     android:background="@color/common_layout_bg"
     android:gravity="center" >
 
-    <!-- save button -->
-
-    <Button
-        android:id="@+id/add_tab_save_btn"
-        style="@style/btnStyle"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/common_btn_selector"
-        android:text="@string/save"
-        android:textColor="@color/white" />
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_centerInParent="true"
-        android:layout_toLeftOf="@+id/add_tab_new_btn"
-        android:layout_toRightOf="@+id/add_tab_save_btn"
         android:gravity="center" >
 
         <LinearLayout
@@ -238,7 +225,7 @@
 
                     <Spinner
                         android:id="@+id/add_tab_customer_birthday_year"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center" />
 
@@ -274,43 +261,57 @@
                         android:hint="@string/add_tab_customer_introducer_hint" />
                 </LinearLayout>
 
-                <!-- repair item -->
+                <!-- Input contact address -->
 
                 <LinearLayout
-                    android:id="@+id/add_tab_select_repair_item_layout"
+                    android:id="@+id/add_tab_input_contact_address_layout"
                     style="@style/inputLayoutStyle"
                     android:orientation="horizontal" >
 
                     <TextView
-                        android:id="@+id/add_tab_select_repair_item_field"
+                        android:id="@+id/add_tab_input_contact_address_field"
                         style="@style/addTabTextViewStyle"
-                        android:text="@string/add_tab_select_repair_item" />
+                        android:text="@string/order_measure_consumer_contact_address_msg" />
 
                     <Spinner
-                        android:id="@+id/add_tab_repair_item"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/add_tab_contact_address_county"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center" />
+
+                    <Spinner
+                        android:id="@+id/add_tab_contact_address_city"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="30dp" />
                 </LinearLayout>
 
-                <!-- Input memo layout -->
-
                 <LinearLayout
-                    android:id="@+id/add_tab_input_memo_layout"
-                    style="@style/inputLayoutStyleInclueMargin"
-                    android:layout_marginTop="20dp"
+                    android:id="@+id/add_tab_consumer_visit_date_time_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
                     <TextView
-                        android:id="@+id/add_tab_input_memo_field"
-                        style="@style/addTabTextViewStyle"
-                        android:text="@string/add_tab_customer_memo" />
+                        android:id="@+id/add_tab_consumer_visit_date_time_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/add_tab_customer_visit_time"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/add_tab_txt_style_size" />
 
-                    <EditText
-                        android:id="@+id/add_tab_edit_customer_memo"
-                        style="@style/inputTextStyle"
-                        android:layout_gravity="center"
-                        android:hint="@string/add_tab_customer_memo_hint" />
+                    <DatePicker
+                        android:id="@+id/add_tab_consumer_visit_datePicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:calendarViewShown="false" />
+
+                    <TimePicker
+                        android:id="@+id/add_tab_consumer_visit_timePicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -460,13 +461,14 @@
                         android:layout_gravity="center" />
                 </LinearLayout>
 
-                <!-- area -->
+                <!-- area & repair -->
 
                 <LinearLayout
                     android:id="@+id/add_tab_select_area_layout"
                     style="@style/inputLayoutStyle"
                     android:orientation="horizontal" >
 
+                    <!-- area -->
                     <TextView
                         android:id="@+id/add_tab_select_area_field"
                         style="@style/addTabTextViewStyle"
@@ -474,6 +476,37 @@
 
                     <Spinner
                         android:id="@+id/add_tab_area"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+                    
+                    <!-- repair item -->
+                    <TextView
+                        android:id="@+id/add_tab_select_repair_item_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_select_repair_item" />
+
+                    <Spinner
+                        android:id="@+id/add_tab_repair_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+                </LinearLayout>
+
+                <!-- budget -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_select_budget_layout"
+                    style="@style/inputLayoutStyle"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/add_tab_select_budget_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/order_measure_consumer_cost_msg" />
+
+                    <Spinner
+                        android:id="@+id/add_tab_budget"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center" />
@@ -490,44 +523,64 @@
                     android:textSize="@dimen/add_tab_txt_style_size" />
                 -->
 
+
+                <!-- Input contact address -->
+
                 <LinearLayout
-                    android:id="@+id/add_tab_consumer_visit_date_time_layout"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/add_tab_input_contact_address_edit_layout"
+                    style="@style/inputLayoutStyle"
+                    android:layout_marginTop="30dp"
+                    android:orientation="horizontal" >
+
+                    <EditText
+                        android:id="@+id/add_tab_edit_contact_address"
+                        style="@style/inputTextStyle"
+                        android:layout_width="fill_parent"
+                        android:layout_gravity="center"
+                        android:hint="@string/order_measure_consumer_contact_address_hint" />
+                </LinearLayout>
+
+                <!-- Input memo layout -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_input_memo_layout"
+                    style="@style/inputLayoutStyleInclueMargin"
+                    android:layout_marginTop="20dp"
                     android:orientation="horizontal" >
 
                     <TextView
-                        android:id="@+id/add_tab_consumer_visit_date_time_field"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="@string/add_tab_customer_visit_time"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/add_tab_txt_style_size" />
+                        android:id="@+id/add_tab_input_memo_field"
+                        style="@style/addTabTextViewStyle"
+                        android:text="@string/add_tab_customer_memo" />
 
-                    <DatePicker
-                        android:id="@+id/add_tab_consumer_visit_datePicker"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:calendarViewShown="false" />
-
-                    <TimePicker
-                        android:id="@+id/add_tab_consumer_visit_timePicker"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                    <EditText
+                        android:id="@+id/add_tab_edit_customer_memo"
+                        style="@style/inputTextStyle"
+                        android:layout_gravity="center"
+                        android:hint="@string/add_tab_customer_memo_hint" />
                 </LinearLayout>
+
+                <!-- add button -->
+
+                <Button
+                    android:id="@+id/add_tab_new_btn"
+                    style="@style/btnStyle"
+                    android:layout_width="fill_parent"
+                    android:background="@drawable/common_btn_selector"
+                    android:text="@string/new_item"
+                    android:textColor="@color/white" />
+
+                <!-- save button -->
+
+                <Button
+                    android:id="@+id/add_tab_save_btn"
+                    style="@style/btnStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/common_btn_selector"
+                    android:text="@string/save"
+                    android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-    <!-- new button -->
-
-    <Button
-        android:id="@+id/add_tab_new_btn"
-        style="@style/btnStyle"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/common_btn_selector"
-        android:text="@string/new_item"
-        android:textColor="@color/white" />
-
 </RelativeLayout>
