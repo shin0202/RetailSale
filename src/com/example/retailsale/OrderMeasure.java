@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
@@ -35,13 +34,13 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
     private OptionAdapter spaceAdapter, statusAdapter;
     private List<DataOption> spaceList, statusList;
 
-    private boolean isSendNoteMsgChecked = false, isAsAboveChecked = false;
+    private boolean isSendNoteMsgChecked = false;//, isAsAboveChecked = false;
     private CustomerInfo customerInfo;
     private RetialSaleDbAdapter retialSaleDbAdapter;
 
     // views
 //	private ToggleButton sendNoteMsgTB;
-    private CheckBox asAboveCheckBox;
+//    private CheckBox asAboveCheckBox;
     private DatePicker measureDate;
     private TimePicker measureTime;
     private Spinner spaceSpinner, statusSpinner;
@@ -101,7 +100,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         Button cancelBtn = (Button) findViewById(R.id.order_measure_cancel_btn);
         Button saveBtn = (Button) findViewById(R.id.order_measure_save_btn);
 //		sendNoteMsgTB = (ToggleButton) findViewById(R.id.order_measure_send_note_msg_btn);
-        asAboveCheckBox = (CheckBox) findViewById(R.id.order_measure_as_above_checkbox);
+//        asAboveCheckBox = (CheckBox) findViewById(R.id.order_measure_as_above_checkbox);
         measureDate = (DatePicker) findViewById(R.id.order_measure_datePicker);
         measureTime = (TimePicker) findViewById(R.id.order_measure_timePicker);
         saleCreateDateTV = (TextView) findViewById(R.id.order_measure_sale_create_date);
@@ -124,7 +123,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 //		sendNoteMsgTB.setOnCheckedChangeListener(this);
 
         // as above check box
-        asAboveCheckBox.setOnCheckedChangeListener(this);        
+//        asAboveCheckBox.setOnCheckedChangeListener(this);        
     }
 
     private void getBundle()
@@ -260,11 +259,11 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 //			Log.d(TAG, "To change note msg, the isChecked" + isChecked);
 //			isSendNoteMsgChecked = isChecked;
 //			break;
-        case R.id.order_measure_as_above_checkbox:
-            Log.d(TAG, "To change as above checkbox, the isChecked" + isChecked);
-            isAsAboveChecked = isChecked;
-            handleContactAddress(isAsAboveChecked);
-            break;
+//        case R.id.order_measure_as_above_checkbox:
+//            Log.d(TAG, "To change as above checkbox, the isChecked" + isChecked);
+//            isAsAboveChecked = isChecked;
+//            handleContactAddress(isAsAboveChecked);
+//            break;
         }
     }
 

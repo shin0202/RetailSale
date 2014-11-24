@@ -49,7 +49,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private static final int REQUEST_ORDER_MEASURE = 999;
     public static final String SEND_CUSTOMER_INFO = "send_customer_info";
     public static final String SEND_NOTE_MSG = "send_note_msg";
-    private boolean isChecked = false;
+    private boolean isNotLeaveChecked = false;
     private CustomerInfo customerInfo;
     private RetialSaleDbAdapter retialSaleDbAdapter;
     private boolean isSendMsg = false;
@@ -58,6 +58,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private List<DataOption> statusList, spaceList, budgetList, repairItemList, areaList;
     private List<UserDataForList> userDataList;
     private List<String> phoneCodeList, contactCountyList, contactCityList, workCountyList, workCityList;
+    private int contactCountyPosition = 0, contactCityPosition = 0;
     // views
     private MainActivity mainActivity;
     private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
@@ -68,7 +69,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private Spinner budgetSpinner;
     private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
             introducerET, memoET, contactET, workET;
-    private CheckBox leaveInfoCB;
+    private CheckBox leaveInfoCB, asAboveCB;
     private TextView companyNameTV, designerStoreTV, createDateTV;
     private DatePicker consumerVisitDateDP;
     private TimePicker consumerVisitTimeTP;
@@ -127,6 +128,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         contactET = (EditText) view.findViewById(R.id.add_tab_edit_contact_address);
         workET = (EditText) view.findViewById(R.id.add_tab_edit_work_address);
         leaveInfoCB = (CheckBox) view.findViewById(R.id.add_tab_leave_info_checkbox);
+        asAboveCB = (CheckBox) view.findViewById(R.id.add_tab_as_above_checkbox);
         consumerVisitDateDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_visit_datePicker);
         consumerVisitTimeTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_visit_timePicker);
         designerStoreTV = (TextView) view.findViewById(R.id.add_tab_designer_store);
@@ -171,6 +173,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         leaveInfoCB.setOnCheckedChangeListener(this);
         // time picker to set 24h
         consumerVisitTimeTP.setIs24HourView(true);
+        
+        // as above
+        asAboveCB.setOnCheckedChangeListener(this);
         
         // create date
         createDateTime = Utility.getCurrentDateTime();
@@ -219,15 +224,41 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
     {
-        if (isChecked)
-        { // user select, didn't leave info
-            enableField(false);
-        }
-        else
+        switch (buttonView.getId())
         {
-            enableField(true);
+        case R.id.add_tab_leave_info_checkbox:
+            if (isChecked)
+            { // user select, didn't leave info
+                enableField(false);
+            }
+            else
+            {
+                enableField(true);
+            }
+            this.isNotLeaveChecked = isChecked;
+            break;
+        case R.id.add_tab_as_above_checkbox:
+            
+            Log.d(TAG, "contactCountyPosition === " + contactCountyPosition);
+            Log.d(TAG, "contactCityPosition === " + contactCityPosition);
+            
+            if (isChecked)
+            { // work address same as contact address
+                workCountySpinner.setSelection(contactCountyPosition);
+                handeContactCountyEvent(contactCityPosition, false);
+                workCitySpinner.setSelection(contactCityPosition);
+                workCountySpinner.setEnabled(false);
+                workCitySpinner.setEnabled(false);
+            }
+            else
+            {
+                workCountySpinner.setEnabled(true);
+                workCountySpinner.setSelection(0);
+                workCitySpinner.setAdapter(null);
+                workCitySpinner.setEnabled(false);
+            }
+            break;
         }
-        this.isChecked = isChecked;
     }
 
     @Override
@@ -353,25 +384,25 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 + " workAddress : " + workAddress + " zip code : " + workZipCode);
         
         // check phone number
-        if (!isChecked && !Utility.isPhoneValid(phoneNumber))
+        if (!isNotLeaveChecked && !Utility.isPhoneValid(phoneNumber))
         {
             showToast(this.getActivity().getResources().getString(R.string.home_phone_field_error));
             return false;
         }
         // check cellphone number
-        if (!isChecked && !Utility.isCellphoneValid(cellPhoneNumber))
+        if (!isNotLeaveChecked && !Utility.isCellphoneValid(cellPhoneNumber))
         {
             showToast(this.getActivity().getResources().getString(R.string.cell_phone_field_error));
             return false;
         }
         // check company phone number
-        if (!isChecked && !companyPhoneNumber.equals(Utility.SPACE_STRING) && !Utility.isCompanyPhoneValid(phoneNumber))
+        if (!isNotLeaveChecked && !companyPhoneNumber.equals(Utility.SPACE_STRING) && !Utility.isCompanyPhoneValid(phoneNumber))
         {
             showToast(this.getActivity().getResources().getString(R.string.company_phone_field_error));
             return false;
         }
         // check email
-        if (!isChecked && !email.equals(Utility.SPACE_STRING) && !Utility.isEmailValid(email))
+        if (!isNotLeaveChecked && !email.equals(Utility.SPACE_STRING) && !Utility.isEmailValid(email))
         {
             showToast(this.getActivity().getResources().getString(R.string.email_field_error));
             return false;
@@ -393,7 +424,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         {
             if (customerInfo == null)
             {
-                if (isChecked)
+                if (isNotLeaveChecked)
                 {
                     String noData = AddFragment.this.getResources().getString(R.string.no_data);
                     customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, noData, noData, noData, noData,
@@ -1134,14 +1165,17 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             break;
         case R.id.add_tab_contact_address_county:
             Log.d(TAG, "To select contact county, the position is " + position);
-            
+            contactCountyPosition = position;
             handeContactCountyEvent(position, true);
             break;
         case R.id.add_tab_work_address_county:
             Log.d(TAG, "To select work county, the position is " + position);
             handeContactCountyEvent(position, false);
-            
-            
+         
+            break;
+        case R.id.add_tab_contact_address_city:
+            Log.d(TAG, "To select contact city, the position is " + position);
+            contactCityPosition = position;
             break;
         }
     }

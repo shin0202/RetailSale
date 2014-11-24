@@ -287,6 +287,14 @@
                         android:layout_marginLeft="30dp" />
                 </LinearLayout>
 
+                <CheckBox
+                    android:id="@+id/add_tab_as_above_checkbox"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/order_measure_consumer_as_work_address"
+                    android:textColor="@color/darkorange"
+                    android:textSize="@dimen/add_tab_txt_style_size" />
+
                 <!-- Input work address -->
 
                 <LinearLayout
@@ -557,7 +565,7 @@
                 <LinearLayout
                     android:id="@+id/add_tab_input_contact_address_edit_layout"
                     style="@style/inputLayoutStyle"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="40dp"
                     android:orientation="horizontal" >
 
                     <EditText
@@ -567,12 +575,13 @@
                         android:layout_gravity="center"
                         android:hint="@string/order_measure_consumer_contact_address_hint" />
                 </LinearLayout>
-                
+
                 <!-- Input work address -->
 
                 <LinearLayout
                     android:id="@+id/add_tab_input_work_address_edit_layout"
                     style="@style/inputLayoutStyle"
+                    android:layout_marginTop="30dp"
                     android:orientation="horizontal" >
 
                     <EditText

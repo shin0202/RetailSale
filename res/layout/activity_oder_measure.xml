@@ -132,7 +132,7 @@
             android:layout_marginLeft="@dimen/order_measure_comsumer_tv_margin_left" />
     </LinearLayout>
 
-    <LinearLayout
+    <!--  <LinearLayout
         android:id="@+id/order_measure_consumer_contact_address_layout"
         style="@style/orderMeasureLayoutStyle"
         android:layout_below="@+id/order_measure_comsumer_info_2"
@@ -149,7 +149,7 @@
             android:text="@string/order_measure_consumer_as_work_address"
             android:textColor="@color/black"
             android:textSize="@dimen/add_tab_txt_style_size" />
-    </LinearLayout>
+    </LinearLayout>-->
 
     <!-- <LinearLayout
         android:id="@+id/order_measure_consumer_address_layout"
@@ -191,7 +191,7 @@
     <LinearLayout
         android:id="@+id/order_measure_consumer_selection_layout"
         style="@style/orderMeasureLayoutStyle"
-        android:layout_below="@+id/order_measure_consumer_contact_address_layout"
+        android:layout_below="@+id/order_measure_comsumer_info_2"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/order_measure_comsumer_layout_margin_left"
         android:layout_toLeftOf="@+id/order_measure_save_btn"
