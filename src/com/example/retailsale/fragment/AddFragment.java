@@ -245,10 +245,12 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             if (isChecked)
             { // work address same as contact address
                 workCountySpinner.setSelection(contactCountyPosition);
-                handeContactCountyEvent(contactCityPosition, false);
+                handeContactCountyEvent(contactCountyPosition, false);
                 workCitySpinner.setSelection(contactCityPosition);
                 workCountySpinner.setEnabled(false);
                 workCitySpinner.setEnabled(false);
+                workET.setText(contactET.getText().toString());
+                workET.setEnabled(false);
             }
             else
             {
@@ -256,6 +258,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 workCountySpinner.setSelection(0);
                 workCitySpinner.setAdapter(null);
                 workCitySpinner.setEnabled(false);
+                workET.setEnabled(true);
             }
             break;
         }
