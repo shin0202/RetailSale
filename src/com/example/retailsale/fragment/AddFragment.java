@@ -151,6 +151,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         contactCountySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_county);
         contactCountySpinner.setOnItemSelectedListener(this);
         contactCitySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_city);
+        contactCitySpinner.setOnItemSelectedListener(this);
         contactCitySpinner.setEnabled(false);
         
         workCountySpinner = (Spinner) view.findViewById(R.id.add_tab_work_address_county);
@@ -240,15 +241,14 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         case R.id.add_tab_as_above_checkbox:
             
             Log.d(TAG, "contactCountyPosition === " + contactCountyPosition);
-            Log.d(TAG, "contactCityPosition === " + contactCityPosition);
             
             if (isChecked)
             { // work address same as contact address
                 workCountySpinner.setSelection(contactCountyPosition);
-                handeContactCountyEvent(contactCountyPosition, false);
-                workCitySpinner.setSelection(contactCityPosition);
+                handeContactCountyEvent(contactCountyPosition, false, true); // to set work city position in this
+
                 workCountySpinner.setEnabled(false);
-                workCitySpinner.setEnabled(false);
+
                 workET.setText(contactET.getText().toString());
                 workET.setEnabled(false);
             }
@@ -840,16 +840,23 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         contactCitySpinner.setAdapter(cityAdapter);
     }
     
-    private void setWorkCityList(String[] cityArray)
+    private void setWorkCityList(String[] cityArray, boolean isAbove)
     {
         workCityList = Arrays.asList(cityArray);
         
         CommonAdapter cityAdapter = new CommonAdapter(this.getActivity(), workCityList);
         
         workCitySpinner.setAdapter(cityAdapter);
+        
+        if (isAbove)
+        {
+            Log.d(TAG, "contactCityPosition === " + contactCityPosition);
+            workCitySpinner.setEnabled(false);
+            workCitySpinner.setSelection(contactCityPosition);
+        }
     }
     
-    private void handeContactCountyEvent(int position, boolean isContact)
+    private void handeContactCountyEvent(int position, boolean isContact, boolean isAbove)
     {
         if (isContact)
             contactCitySpinner.setEnabled(true);
@@ -865,147 +872,147 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             }
             else
             {
-                workCitySpinner.setEnabled(false);
                 workCitySpinner.setAdapter(null);
+                workCitySpinner.setEnabled(false);
             }
             break;
         case Utility.County.KEELUNG_CITY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.Keelung));
             else
-                setWorkCityList(getResources().getStringArray(R.array.Keelung));
+                setWorkCityList(getResources().getStringArray(R.array.Keelung), isAbove);
             break;
         case Utility.County.TAIPEI_CITY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.taipei));
             else
-                setWorkCityList(getResources().getStringArray(R.array.taipei));
+                setWorkCityList(getResources().getStringArray(R.array.taipei), isAbove);
             break;
         case Utility.County.NEW_TAIPEI_CITY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.new_taipei));
             else
-                setWorkCityList(getResources().getStringArray(R.array.new_taipei));
+                setWorkCityList(getResources().getStringArray(R.array.new_taipei), isAbove);
             break;
         case Utility.County.YILAN_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.yilan));
             else
-                setWorkCityList(getResources().getStringArray(R.array.yilan));
+                setWorkCityList(getResources().getStringArray(R.array.yilan), isAbove);
             break;
         case Utility.County.HSINCHU_CITY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.hsinchu_city));
             else
-                setWorkCityList(getResources().getStringArray(R.array.hsinchu_city));
+                setWorkCityList(getResources().getStringArray(R.array.hsinchu_city), isAbove);
             break;
         case Utility.County.HSINCHU_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.hsinchu_county));
             else
-                setWorkCityList(getResources().getStringArray(R.array.hsinchu_county));
+                setWorkCityList(getResources().getStringArray(R.array.hsinchu_county), isAbove);
             break;
         case Utility.County.TAOYUAN_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.taoyuan_city));
             else
-                setWorkCityList(getResources().getStringArray(R.array.taoyuan_city));
+                setWorkCityList(getResources().getStringArray(R.array.taoyuan_city), isAbove);
             break;
         case Utility.County.MIAOLI_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.miaoli_city));
             else
-                setWorkCityList(getResources().getStringArray(R.array.miaoli_city));
+                setWorkCityList(getResources().getStringArray(R.array.miaoli_city), isAbove);
             break;
         case Utility.County.TAICHUNG_CITY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.taichung_city));
             else
-                setWorkCityList(getResources().getStringArray(R.array.taichung_city));
+                setWorkCityList(getResources().getStringArray(R.array.taichung_city), isAbove);
             break;
         case Utility.County.CHANGHUA_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.changhua_city));
             else
-                setWorkCityList(getResources().getStringArray(R.array.changhua_city));
+                setWorkCityList(getResources().getStringArray(R.array.changhua_city), isAbove);
             break;
         case Utility.County.NANTOU_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.nantou_city));
             else
-                setWorkCityList(getResources().getStringArray(R.array.nantou_city));
+                setWorkCityList(getResources().getStringArray(R.array.nantou_city), isAbove);
             break;
         case Utility.County.CHIAYI_CITY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.chiayi_city));
             else
-                setWorkCityList(getResources().getStringArray(R.array.chiayi_city));
+                setWorkCityList(getResources().getStringArray(R.array.chiayi_city), isAbove);
             break;
         case Utility.County.CHIAYI_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.chiayi_county));
             else
-                setWorkCityList(getResources().getStringArray(R.array.chiayi_county));
+                setWorkCityList(getResources().getStringArray(R.array.chiayi_county), isAbove);
             break;
         case Utility.County.YUNLIN_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.yunlin_county));
             else
-                setWorkCityList(getResources().getStringArray(R.array.yunlin_county));
+                setWorkCityList(getResources().getStringArray(R.array.yunlin_county), isAbove);
             break;
         case Utility.County.TAINAN_CITY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.tainan_city));
             else
-                setWorkCityList(getResources().getStringArray(R.array.tainan_city));
+                setWorkCityList(getResources().getStringArray(R.array.tainan_city), isAbove);
             break;
         case Utility.County.KAOHSIUNG_CITY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.kaohsiung_city));
             else
-                setWorkCityList(getResources().getStringArray(R.array.kaohsiung_city));
+                setWorkCityList(getResources().getStringArray(R.array.kaohsiung_city), isAbove);
             break;
         case Utility.County.PINGDONG_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.pingtung_county));
             else
-                setWorkCityList(getResources().getStringArray(R.array.pingtung_county));
+                setWorkCityList(getResources().getStringArray(R.array.pingtung_county), isAbove);
             break;
         case Utility.County.TAIDONG_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.taitung_county));
             else
-                setWorkCityList(getResources().getStringArray(R.array.taitung_county));
+                setWorkCityList(getResources().getStringArray(R.array.taitung_county), isAbove);
             break;
         case Utility.County.HUALIAN_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.hualien_county));
             else
-                setWorkCityList(getResources().getStringArray(R.array.hualien_county));
+                setWorkCityList(getResources().getStringArray(R.array.hualien_county), isAbove);
             break;
         case Utility.County.KINMEN_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.kinmen_county));
             else
-                setWorkCityList(getResources().getStringArray(R.array.kinmen_county));
+                setWorkCityList(getResources().getStringArray(R.array.kinmen_county), isAbove);
             break;
         case Utility.County.LIANJIANG_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.lianjiang_county));
             else
-                setWorkCityList(getResources().getStringArray(R.array.lianjiang_county));
+                setWorkCityList(getResources().getStringArray(R.array.lianjiang_county), isAbove);
             break;
         case Utility.County.PENGHU_COUNTY:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.penghu_county));
             else
-                setWorkCityList(getResources().getStringArray(R.array.penghu_county));
+                setWorkCityList(getResources().getStringArray(R.array.penghu_county), isAbove);
             break;
         case Utility.County.SOUTH_SEA_ISLANDS:
             if (isContact)
                 setContactCityList(getResources().getStringArray(R.array.south_sea_islands));
             else
-                setWorkCityList(getResources().getStringArray(R.array.south_sea_islands));
+                setWorkCityList(getResources().getStringArray(R.array.south_sea_islands), isAbove);
             break;
         }
     }
@@ -1169,11 +1176,13 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         case R.id.add_tab_contact_address_county:
             Log.d(TAG, "To select contact county, the position is " + position);
             contactCountyPosition = position;
-            handeContactCountyEvent(position, true);
+            handeContactCountyEvent(position, true, false);
             break;
         case R.id.add_tab_work_address_county:
+            if (asAboveCB.isChecked())
+                return;
             Log.d(TAG, "To select work county, the position is " + position);
-            handeContactCountyEvent(position, false);
+            handeContactCountyEvent(position, false, false);
          
             break;
         case R.id.add_tab_contact_address_city:
