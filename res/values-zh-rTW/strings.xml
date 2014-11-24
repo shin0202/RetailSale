@@ -141,6 +141,7 @@
     <string name="email_field_error">郵件信箱欄位欄位錯誤</string>
     <string name="birthday_field_error">客戶生日欄位錯誤</string>
     <string name="sd_not_exist">SD卡不存在, 請檢查</string>
+    <string name="ui_error">介面錯誤, 請重新嘗試動作</string>
 
     <!-- API return message -->
     <string name="login_successful">成功登入</string>

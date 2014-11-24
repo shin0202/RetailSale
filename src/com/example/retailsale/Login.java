@@ -3,6 +3,7 @@ package com.example.retailsale;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,9 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.retailsale.manager.HttpManager;
-import com.example.retailsale.manager.login.GetLoginListener;
-import com.example.retailsale.manager.login.GsonLoginInfo;
 import com.example.retailsale.util.Utility;
 
 public class Login extends Activity implements OnClickListener
@@ -44,9 +42,22 @@ public class Login extends Activity implements OnClickListener
     protected void onResume()
     {
         super.onResume();
-        boolean hadLogin = Utility.hadLogin(Login.this);
-
-        if (hadLogin) startManageFragment();
+//        boolean hadLogin = Utility.hadLogin(Login.this);
+//
+//        if (hadLogin) startManageFragment();
+        
+        if (hadLogin()) 
+        {
+            startManageFragment();
+            return;
+        }
+        
+        handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+        retialSaleDbAdapter.open();
+        getDataOption();
+        getUser();
+        getAppUser();
+        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
     }
 
     @Override
@@ -78,23 +89,52 @@ public class Login extends Activity implements OnClickListener
         case R.id.login_btn:
             String id = inputUserId.getText().toString();
             String password = inputUserPassword.getText().toString();
-
-            if (id.equals(""))
-            {
-                id = "A123456";
-                password = "1qaz@wsx";
-            }
             
-            if (Utility.isInternetAvailable(Login.this))
+            Cursor appUserCursor = retialSaleDbAdapter.getUserByAccountAndPassword(id, password);
+            if (appUserCursor != null)
             {
-                handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
-                login(id, password);
-                // startManageFragment();
+                int count = appUserCursor.getCount();
+                if (count > 0)
+                {
+                    while (appUserCursor.moveToNext())
+                    {
+                        String getAccount = appUserCursor.getString(appUserCursor
+                                .getColumnIndex(RetialSaleDbAdapter.KEY_APP_USER_ACCOUNT));
+                        String getPassword = appUserCursor.getString(appUserCursor
+                                .getColumnIndex(RetialSaleDbAdapter.KEY_APP_USER_PASSWORD));
+                        
+                        int getGroup = appUserCursor.getInt(appUserCursor
+                                .getColumnIndex(RetialSaleDbAdapter.KEY_APP_USER_GROUP));
+                        
+                        saveData(getAccount, getPassword, getGroup);
+                        
+                        showToast(getResources().getString(R.string.login_successfully));
+                        startManageFragment();
+                        retialSaleDbAdapter.close();
+                    }
+                }
+                else
+                {
+                    showToast(getResources().getString(R.string.login_failed));
+                }
+                
+                appUserCursor.close();
             }
             else
             {
-                showToast(getResources().getString(R.string.api_no_network));
+                showToast(getResources().getString(R.string.login_failed));
             }
+            
+//            if (Utility.isInternetAvailable(Login.this))
+//            {
+//                handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+//                login(id, password);
+//                // startManageFragment();
+//            }
+//            else
+//            {
+//                showToast(getResources().getString(R.string.api_no_network));
+//            }
             break;
         }
     }
@@ -106,76 +146,76 @@ public class Login extends Activity implements OnClickListener
 //		Login.this.finish();
     }
 
-    private void login(final String id, final String password)
-    {
-        HttpManager httpManager = new HttpManager();
-        httpManager.login(Login.this, id, password, new GetLoginListener()
-        {
-            @Override
-            public void onResult(Boolean isSuccess, GsonLoginInfo userInfo)
-            {
-                if (isSuccess)
-                {
-                    if (userInfo != null)
-                    {
-                        if (userInfo.getValue() != null && userInfo.getValue().size() > 0)
-                        {
-                            int userSerial = userInfo.getValue().get(0).getUserSerial();
-                            int userGroup = userInfo.getValue().get(0).getUserGroup();
-                            String loginKey = userInfo.getValue().get(0).getLoginKey();
-                            String message = userInfo.getValue().get(0).getMessage();
-                            Log.d(TAG, " userSerial : " + userSerial + " userGroup : " + userGroup + " loginKey : "
-                                    + loginKey + " message : " + message);
-                            if (message.equals(Login.this.getResources().getString(R.string.login_successful)))
-                            {
-                                Log.d(TAG, "Message is successfully");
-                                Utility.saveData(Login.this, id, password, userSerial, userGroup, loginKey);
-                                retialSaleDbAdapter.open();
-                                boolean isGetDataOption = getDataOption();
-                                boolean isGetUser = getUser();
-                                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-                                
-                                if (isGetDataOption && isGetUser)
-                                {
-                                    startManageFragment();
-                                    showToast(getResources().getString(R.string.login_successfully));
-                                }
-                                else
-                                {
-                                    Log.d(TAG, "The data is incorrect");
-                                    showToast(getResources().getString(R.string.login_failed));
-                                }
-                            }
-                            else
-                            {
-                                Log.d(TAG, "Message is failed");
-                                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-                                showToast(getResources().getString(R.string.login_failed));
-                            }
-                        }
-                        else
-                        {
-                            Log.d(TAG, "value is null or size less/equal than 0");
-                            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-                            showToast(getResources().getString(R.string.login_failed));
-                        }
-                    }
-                    else
-                    {
-                        Log.d(TAG, "userInfo is null");
-                        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-                        showToast(getResources().getString(R.string.login_failed));
-                    }
-                }
-                else
-                {
-                    Log.d(TAG, "Login failed");
-                    handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-                    showToast(getResources().getString(R.string.login_failed));
-                }
-            }
-        });
-    }
+//    private void login(final String id, final String password)
+//    {
+//        HttpManager httpManager = new HttpManager();
+//        httpManager.login(Login.this, id, password, new GetLoginListener()
+//        {
+//            @Override
+//            public void onResult(Boolean isSuccess, GsonLoginInfo userInfo)
+//            {
+//                if (isSuccess)
+//                {
+//                    if (userInfo != null)
+//                    {
+//                        if (userInfo.getValue() != null && userInfo.getValue().size() > 0)
+//                        {
+//                            int userSerial = userInfo.getValue().get(0).getUserSerial();
+//                            int userGroup = userInfo.getValue().get(0).getUserGroup();
+//                            String loginKey = userInfo.getValue().get(0).getLoginKey();
+//                            String message = userInfo.getValue().get(0).getMessage();
+//                            Log.d(TAG, " userSerial : " + userSerial + " userGroup : " + userGroup + " loginKey : "
+//                                    + loginKey + " message : " + message);
+//                            if (message.equals(Login.this.getResources().getString(R.string.login_successful)))
+//                            {
+//                                Log.d(TAG, "Message is successfully");
+//                                Utility.saveData(Login.this, id, password, userSerial, userGroup, loginKey);
+//                                retialSaleDbAdapter.open();
+//                                boolean isGetDataOption = getDataOption();
+//                                boolean isGetUser = getUser();
+//                                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+//                                
+//                                if (isGetDataOption && isGetUser)
+//                                {
+//                                    startManageFragment();
+//                                    showToast(getResources().getString(R.string.login_successfully));
+//                                }
+//                                else
+//                                {
+//                                    Log.d(TAG, "The data is incorrect");
+//                                    showToast(getResources().getString(R.string.login_failed));
+//                                }
+//                            }
+//                            else
+//                            {
+//                                Log.d(TAG, "Message is failed");
+//                                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+//                                showToast(getResources().getString(R.string.login_failed));
+//                            }
+//                        }
+//                        else
+//                        {
+//                            Log.d(TAG, "value is null or size less/equal than 0");
+//                            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+//                            showToast(getResources().getString(R.string.login_failed));
+//                        }
+//                    }
+//                    else
+//                    {
+//                        Log.d(TAG, "userInfo is null");
+//                        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+//                        showToast(getResources().getString(R.string.login_failed));
+//                    }
+//                }
+//                else
+//                {
+//                    Log.d(TAG, "Login failed ");
+//                    handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+//                    showToast(getResources().getString(R.string.login_failed));
+//                }
+//            }
+//        });
+//    }
     
     private boolean getDataOption()
     {  
@@ -347,120 +387,50 @@ public class Login extends Activity implements OnClickListener
             return false;
         }
     }
-
-
-//    private void getDataOption()
-//    {
-//        HttpManager httpManager = new HttpManager();
-//        httpManager.getDataOptions(Login.this, new GetDataOptionListener()
-//        {
-//            @Override
-//            public void onResult(Boolean isSuccess, GsonDataOption dataOption)
-//            {
-//                if (isSuccess)
-//                {
-//                    if (dataOption != null)
-//                    {
-//                        List<DataOption> value = dataOption.getValue();
-//                        if (value != null)
-//                        {
-//                            RetialSaleDbAdapter retialSaleDbAdapter = new RetialSaleDbAdapter(Login.this);
-//                            retialSaleDbAdapter.open();
-//                            retialSaleDbAdapter.deleteAllOption();
-//                            for (int i = 0; i < value.size(); i++)
-//                            {
-//                                int optSerial = value.get(i).getOptSerial();
-//                                String optName = value.get(i).getOptName();
-//                                String typeName = value.get(i).getTypeName();
-//                                boolean optLock = value.get(i).getOptLock();
-//
-//                                Log.d(TAG, "optSerial : " + optSerial + " optName : " + optName + " typeName : "
-//                                        + typeName + " optLock : " + optLock);
-//                                retialSaleDbAdapter.create(-1, typeName, optSerial, optName);
-//                            }
-//                            retialSaleDbAdapter.close();
-////                            startManageFragment();
-//                        }
-//                        else
-//                        {
-//                            Log.d(TAG, "value is null");
-//                        }
-//                        getUserList();
-//                    }
-//                    else
-//                    {
-//                        Log.d(TAG, "dataOption is null");
-//                        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-//                    }
-//                }
-//                else
-//                {
-//                    Log.d(TAG, "Get data option failed");
-//                    handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-//                }
-////                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-//            }
-//        });
-//    }
     
-//    private void getUserList()
-//    {
-//        HttpManager httpManager = new HttpManager();
-//        httpManager.getUserListByGroup(Login.this, new GetUsetListByGroupListener()
-//        {
-//            @Override
-//            public void onResult(Boolean isSuccess, GsonUserByGroup user)
-//            {
-//                if (isSuccess)
-//                {
-//                    if (user != null)
-//                    {
-//                        if (user.getValue() != null)
-//                        {
-//                            int size = user.getValue().size();
-//                            Log.d(TAG, "user list size : " + size);
-//                            
-//                            int userSerial, userGroup, userType;
-//                            String userName, userGroupNm, userTypeNm;
-//                            
-//                            RetialSaleDbAdapter retialSaleDbAdapter = new RetialSaleDbAdapter(Login.this);
-//                            retialSaleDbAdapter.open();
-//                            retialSaleDbAdapter.deleteAllUser();
-//                            
-//                            for (int i = 0; i < size; i++)
-//                            {
-//                                userSerial = user.getValue().get(i).getUserSerial();
-//                                userName = user.getValue().get(i).getUserName();
-//                                userGroup = user.getValue().get(i).getUserGroup();
-//                                userType = user.getValue().get(i).getUserType();
-//                                userGroupNm = user.getValue().get(i).getUserGroupNm();
-//                                userTypeNm = user.getValue().get(i).getUserTypeNm();
-//                                Log.d(TAG, "userSerial : " + userSerial + " userName : " + userName
-//                                        + " userGroup : " + userGroup + " userType : " + userType
-//                                        + " userGroupNm : " + userGroupNm + " userTypeNm : " + userTypeNm);
-//                                retialSaleDbAdapter.create(userSerial, userName, userGroup, userType, userGroupNm, userTypeNm);
-//                            }
-//                            retialSaleDbAdapter.close();
-//                            startManageFragment();
-//                        }
-//                        else
-//                        {
-//                            Log.d(TAG, "value is null or size less/equal than 0");
-//                        }
-//                    }
-//                    else
-//                    {
-//                        Log.d(TAG, "user list is null");
-//                    }
-//                }
-//                else
-//                {
-//                    Log.d(TAG, "Get user list failed");
-//                }
-//                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
-//            }
-//        }, Utility.getCreatorGroup(this));
-//    }
+    private boolean getAppUser()
+    {
+        Cursor appUserCursor = retialSaleDbAdapter.getAllAppUser();
+        if (appUserCursor != null)
+        {
+            int count = appUserCursor.getCount();
+            appUserCursor.close();
+            if (count <= 0)
+            {
+                return setAppUser();
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            Log.d(TAG, "app user cursor is null ");
+            return setAppUser();
+        }
+    }
+    
+    private boolean setAppUser()
+    {
+
+        try
+        {
+            retialSaleDbAdapter.create("A000001", "A000001", 0, 22);
+            retialSaleDbAdapter.create("A000002", "A000002", 0, 23);
+            retialSaleDbAdapter.create("A000003", "A000003", 0, 41);
+            retialSaleDbAdapter.create("A000004", "A000004", 0, 42);
+            retialSaleDbAdapter.create("A000005", "A000005", 0, 64);
+            retialSaleDbAdapter.create("A000006", "A000006", 0, 65);
+            retialSaleDbAdapter.create("A000007", "A000007", 0, 96);
+            return true;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
     
     private Handler handler = new Handler()
     {
@@ -486,5 +456,27 @@ public class Login extends Activity implements OnClickListener
     private void showToast(String showString)
     {
         Toast.makeText(this, showString, Toast.LENGTH_SHORT).show();
+    }
+    
+    private void saveData(String account, String password, int group)
+    {
+        SharedPreferences settings = getSharedPreferences(Utility.LoginField.APP_DATA, Utility.DEFAULT_ZERO_VALUE);
+        settings.edit().putString(Utility.LoginField.APP_ACCOUNT, account).putString(Utility.LoginField.APP_PASSWORD, password)
+                .putInt(Utility.LoginField.APP_GROUP, group).commit();
+    }
+    
+    private boolean hadLogin()
+    {
+        SharedPreferences settings = getSharedPreferences(Utility.LoginField.APP_DATA, Utility.DEFAULT_ZERO_VALUE);
+        String id = settings.getString(Utility.LoginField.APP_ACCOUNT, "");
+
+        if (id != null && !id.equals(Utility.SPACE_STRING))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

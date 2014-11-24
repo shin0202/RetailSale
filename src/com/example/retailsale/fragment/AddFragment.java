@@ -742,7 +742,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         budgetAdapter = new OptionAdapter(this.getActivity(), budgetList);
         budgetSpinner.setAdapter(budgetAdapter);
         
-        Cursor userStoreCursor = retialSaleDbAdapter.getOptionByOptionSerial(Utility.getCreatorGroup(AddFragment.this
+        Cursor userStoreCursor = retialSaleDbAdapter.getOptionByOptionSerial(Utility.getAppCreatorGroup(AddFragment.this
                 .getActivity()));
 
         String userStoreOptionName;
@@ -780,7 +780,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 
         // to get user content
 //        Cursor userCursor = retialSaleDbAdapter.getAllUser();
-        Cursor userCursor = retialSaleDbAdapter.getUserByCreator(Utility.getCreatorGroup(mainActivity));
+        Cursor userCursor = retialSaleDbAdapter.getUserByCreator(Utility.getAppCreatorGroup(mainActivity));
 
         if (userCursor != null)
         {

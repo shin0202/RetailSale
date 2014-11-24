@@ -630,6 +630,25 @@ public class RetialSaleDbAdapter
             return null;
         }
     }
+    
+    /** Query app user by account and password */
+    public Cursor getUserByAccountAndPassword(String account, String password) throws SQLException
+    {
+
+        if (db.isOpen())
+        {
+            Cursor cursor = db.query(true, APP_USER_TABLE, new String[] { KEY_APP_USER_ID,
+                    KEY_APP_USER_ACCOUNT, KEY_APP_USER_PASSWORD, KEY_APP_USER_SERIAL,
+                    KEY_APP_USER_GROUP }, KEY_APP_USER_ACCOUNT + "=" + "\"" + account + "\"" + " AND "
+                    + KEY_APP_USER_PASSWORD + "=" + "\"" +password + "\"", null, null, null, null, null);
+            if (cursor != null) { return cursor; }
+            return null;
+        }
+        else
+        {
+            return null;
+        }
+    }
 
     /** Update the customer table */
     public boolean updateCustomer(String rowID, String customerName, String home, String mobile, String company,

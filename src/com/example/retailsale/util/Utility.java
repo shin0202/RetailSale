@@ -121,12 +121,16 @@ public class Utility
 
     public class LoginField
     {
+        public static final String APP_DATA = "app_data";
         public static final String DATA = "data";
         public static final String ID = "id";
         public static final String PASSWORD = "password";
         public static final String USER_SERIAL = "user_serial";
         public static final String USER_GROUP = "user_group";
         public static final String LOGIN_KEY = "login_key";
+        public static final String APP_ACCOUNT = "app_account";
+        public static final String APP_PASSWORD = "app_password";
+        public static final String APP_GROUP = "app_group";
     }
     
     public class County
@@ -610,6 +614,17 @@ public class Utility
         int creatorGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
 
         Log.d(TAG, "creator group is " + creatorGroup);
+
+        return creatorGroup;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static int getAppCreatorGroup(Activity actiivty)
+    {
+        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.APP_DATA, Utility.DEFAULT_ZERO_VALUE);
+        int creatorGroup = settings.getInt(Utility.LoginField.APP_GROUP, -1);
+
+        Log.d(TAG, "app creator group is " + creatorGroup);
 
         return creatorGroup;
     }

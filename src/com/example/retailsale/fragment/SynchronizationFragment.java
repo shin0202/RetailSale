@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.json.JSONStringer;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -29,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -73,6 +75,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     private ProgressDialog progressDialog;
 
     private Button startBtn;
+    
+    private Dialog loginDialog;
 
     private List<LocalFolderInfo> localFolderInfoList;
 
@@ -95,6 +99,10 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     private RetialSaleDbAdapter retialSaleDbAdapter;
 
     private List<String> detailList;
+    
+    private int currentResId = 0;
+    
+    private String id, password;
 
     public static final class SelectedItem
     {
@@ -263,7 +271,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             // To avoid loginkey is expired, so need login before call any APIs.
             if (Utility.isInternetAvailable(getActivity()))
             {
-                login(R.id.sync_tab_download_layout);
+//                login(R.id.sync_tab_download_layout);
+                handleLoginAction(R.id.sync_tab_download_layout);
             }
             else
             {
@@ -277,13 +286,82 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             // To avoid loginkey is expired, so need login before call any APIs.
             if (Utility.isInternetAvailable(getActivity()))
             {
-                login(R.id.sync_tab_start_btn);
+//                login(R.id.sync_tab_start_btn);
+                handleLoginAction(R.id.sync_tab_start_btn);
             }
             else
             {
                 showToast(getResources().getString(R.string.api_no_network));
             }
             break;
+        case R.id.login_dialog_btn:
+            if (loginDialog != null)
+            {
+                id = ((EditText) loginDialog.findViewById(R.id.login_dialog_input_user_id))
+                        .getText().toString();
+                password = ((EditText) loginDialog.findViewById(R.id.login_dialog_input_user_pwd))
+                        .getText().toString();
+                
+                loginDialog.dismiss();
+                
+                login(currentResId);
+            }
+            else
+            {
+                showToast(getResources().getString(R.string.ui_error));
+            }
+            break;
+        case R.id.login_dialog_cancel_btn:
+            if (loginDialog != null)
+            {
+                loginDialog.dismiss();
+            }
+            break;
+        }
+    }
+    
+    private void handleLoginAction(int resId)
+    {
+
+        boolean hadLogin = Utility.hadLogin(getActivity());
+        
+        currentResId = resId;
+        
+        Log.d(TAG, "had login ? " + hadLogin);
+
+        if (hadLogin)
+        {
+            login(resId);
+        }
+        else
+        {
+            // to show login dialog
+            if (loginDialog == null)
+            {
+                loginDialog = new Dialog(getActivity());
+                loginDialog.setContentView(R.layout.login_dialog);
+            }
+            else
+            {
+                if (loginDialog.isShowing())
+                {
+                    Log.d(TAG, "The login dialog is showing! ");
+                    return;
+                }
+                else
+                {
+                    Log.d(TAG, "The login dialog is not showing! ");
+                }
+            }
+            
+            Button loginBtn = (Button) loginDialog.findViewById(R.id.login_dialog_btn);
+            loginBtn.setOnClickListener(this);
+            
+            Button cancelBtn = (Button) loginDialog.findViewById(R.id.login_dialog_cancel_btn);
+            cancelBtn.setOnClickListener(this);
+
+            loginDialog.setTitle(getResources().getString(R.string.login));
+            loginDialog.show();
         }
     }
 
@@ -424,8 +502,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
         SharedPreferences settings = getActivity().getSharedPreferences(Utility.LoginField.DATA,
                 Utility.DEFAULT_ZERO_VALUE);
-        final String id = settings.getString(Utility.LoginField.ID, "");
-        final String password = settings.getString(Utility.LoginField.PASSWORD, "");
+//        final String id = settings.getString(Utility.LoginField.ID, "");
+//        final String password = settings.getString(Utility.LoginField.PASSWORD, "");
 
         HttpManager httpManager = new HttpManager();
         httpManager.login(SynchronizationFragment.this.getActivity(), id, password,

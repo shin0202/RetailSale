@@ -1,6 +1,7 @@
 package com.example.retailsale.fragment;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -58,6 +59,12 @@ public class ManageFragment extends Fragment implements OnClickListener
             Log.d(TAG, "Now logout");
             Utility.saveData(mainActivity, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.DEFAULT_NEGATIVE_VALUE,
                     Utility.DEFAULT_NEGATIVE_VALUE, Utility.SPACE_STRING);
+            
+            SharedPreferences settings = getActivity().getSharedPreferences(Utility.LoginField.APP_DATA, Utility.DEFAULT_ZERO_VALUE);
+            settings.edit().putString(Utility.LoginField.APP_ACCOUNT, Utility.SPACE_STRING).putString(Utility.LoginField.APP_PASSWORD, Utility.SPACE_STRING)
+                    .putInt(Utility.LoginField.APP_GROUP, Utility.DEFAULT_NEGATIVE_VALUE).commit();
+            
+            
             mainActivity.finish();
         }
     }
