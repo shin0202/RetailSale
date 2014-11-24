@@ -46,7 +46,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
     private TimePicker measureTime;
     private Spinner spaceSpinner, statusSpinner;
     private TextView saleCreateDateTV, consumerNameTV, phoneNumberTV;
-    private EditText caseNameET, cantDescriptionET, consumerAddressET;
+    private EditText caseNameET, cantDescriptionET;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -109,7 +109,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         phoneNumberTV = (TextView) findViewById(R.id.order_measure_consumer_phone_number);
         caseNameET = (EditText) findViewById(R.id.order_measure_case_name);
         cantDescriptionET = (EditText) findViewById(R.id.order_measure_cant_description);
-        consumerAddressET = (EditText) findViewById(R.id.order_measure_consumer_address);
+//        consumerAddressET = (EditText) findViewById(R.id.order_measure_consumer_address);
 
         statusSpinner = (Spinner) findViewById(R.id.order_measure_sale_status_request);
         spaceSpinner = (Spinner) findViewById(R.id.order_measure_consumer_request);
@@ -150,7 +150,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
             else
             {
                 setInfo(false, customerInfo.getReservationWorkAlias(),
-                        customerInfo.getReservationWork(), customerInfo.getReservationYear(),
+                        customerInfo.getReservationYear(),
                         customerInfo.getReservationMonth(), customerInfo.getReservationDay(),
                         customerInfo.getReservationHour(), customerInfo.getReservationMinute(),
                         customerInfo.getReservationStatusComment(),
@@ -167,7 +167,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         }
     }
 
-    private void setInfo(boolean isDefault, String caseName, String workAddress,
+    private void setInfo(boolean isDefault, String caseName,
             int reservationYear, int reservationMonth, int reservationDay, int reservationHour, int reservationMinute,
             String cantDescription, int statusPosition, int requestPosition, int costPosition)
     {
@@ -177,7 +177,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         else
         {
             caseNameET.setText(caseName);
-            consumerAddressET.setText(workAddress);
+//            consumerAddressET.setText(workAddress);
             measureDate.updateDate(reservationYear, reservationMonth - 1, reservationDay);
             measureTime.setCurrentHour(reservationHour);
             measureTime.setCurrentMinute(reservationMinute);
@@ -194,20 +194,20 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         // case name
         customerInfo.setReservationWorkAlias(caseNameET.getText().toString());
 
-        // work address
-        customerInfo.setReservationWork(consumerAddressET.getText().toString());
+//        // work address
+//        customerInfo.setReservationWork(consumerAddressET.getText().toString());
 
         Log.d(TAG, "work is " + customerInfo.getReservationWork());
 
         // contact address
-        if (asAboveCheckBox.isChecked())
-        {
-            customerInfo.setReservationWork(customerInfo.getReservationContact());
-        }
-        else
-        {
-            customerInfo.setReservationWork(consumerAddressET.getText().toString());
-        }
+//        if (asAboveCheckBox.isChecked())
+//        {
+//            customerInfo.setReservationWork(customerInfo.getReservationContact());
+//        }
+//        else
+//        {
+//            customerInfo.setReservationWork(consumerAddressET.getText().toString());
+//        }
 
         // measure date & time
         int year = measureDate.getYear();
@@ -330,22 +330,22 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 
     private void handleContactAddress(boolean isEnable)
     {
-        if (isEnable)
-        {
-            if (customerInfo != null)
-            {
-                consumerAddressET.setText(customerInfo.getReservationContact());
-            }
-            else
-            {
-                consumerAddressET.setText("");
-            }
-            consumerAddressET.setEnabled(false);
-        }
-        else
-        {
-            consumerAddressET.setEnabled(true);
-        }
+//        if (isEnable)
+//        {
+//            if (customerInfo != null)
+//            {
+//                consumerAddressET.setText(customerInfo.getReservationContact());
+//            }
+//            else
+//            {
+//                consumerAddressET.setText("");
+//            }
+//            consumerAddressET.setEnabled(false);
+//        }
+//        else
+//        {
+//            consumerAddressET.setEnabled(true);
+//        }
     }
     
     private void finishActivity()

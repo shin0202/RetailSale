@@ -637,7 +637,8 @@ public class CustomerInfo implements Parcelable
             String customerHome, String customerCompany, int customerSex, int customerTitle, String customerMail,
             String customerVisitDate, int customerInfo, String customerIntroducer, int customerJob, int customerAge,
             String customerMemo, String customerBirth, int creator, int creatorGroup, String createTime,
-            int reservationRepairItem, int reservationArea, int reservationBudget, String reservationContact, String contactPostcode)
+            int reservationRepairItem, int reservationArea, int reservationBudget, String reservationContact, String contactPostcode
+            , String reservationWork, String workPostcode)
     {
         this.customerAccount = customerAccount;
         this.custometName = custometName;
@@ -662,6 +663,8 @@ public class CustomerInfo implements Parcelable
         this.reservationBudget = reservationBudget;
         this.reservationContact = reservationContact;
         this.contactPostcode = contactPostcode;
+        this.reservationWork = reservationWork;
+        this.workPostcode = workPostcode;
     }
 
     // ///////////////////////////////// Parcel need add

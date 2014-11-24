@@ -57,17 +57,17 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private List<DataOption> infoList, jobList, ageList, sexList, titleList;
     private List<DataOption> statusList, spaceList, budgetList, repairItemList, areaList;
     private List<UserDataForList> userDataList;
-    private List<String> phoneCodeList, countyList, cityList;
+    private List<String> phoneCodeList, contactCountyList, contactCityList, workCountyList, workCityList;
     // views
     private MainActivity mainActivity;
     private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
     private Spinner yearSpinner, monthSpinner, daySpinner;
     private Spinner phoneNumberSpinner, companyPhoneNumberSpinner;
     private Spinner repairItemSpinner, areaSpinner;
-    private Spinner countySpinner, citySpinner;
+    private Spinner contactCountySpinner, contactCitySpinner, workCountySpinner, workCitySpinner;
     private Spinner budgetSpinner;
     private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
-            introducerET, memoET, contactET;
+            introducerET, memoET, contactET, workET;
     private CheckBox leaveInfoCB;
     private TextView companyNameTV, designerStoreTV, createDateTV;
     private DatePicker consumerVisitDateDP;
@@ -125,6 +125,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         emailET = (EditText) view.findViewById(R.id.add_tab_edit_email);
         memoET = (EditText) view.findViewById(R.id.add_tab_edit_customer_memo);
         contactET = (EditText) view.findViewById(R.id.add_tab_edit_contact_address);
+        workET = (EditText) view.findViewById(R.id.add_tab_edit_work_address);
         leaveInfoCB = (CheckBox) view.findViewById(R.id.add_tab_leave_info_checkbox);
         consumerVisitDateDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_visit_datePicker);
         consumerVisitTimeTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_visit_timePicker);
@@ -145,10 +146,15 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         repairItemSpinner = (Spinner) view.findViewById(R.id.add_tab_repair_item);
         areaSpinner = (Spinner) view.findViewById(R.id.add_tab_area);
         
-        countySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_county);
-        countySpinner.setOnItemSelectedListener(this);
-        citySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_city);
-        citySpinner.setEnabled(false);
+        contactCountySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_county);
+        contactCountySpinner.setOnItemSelectedListener(this);
+        contactCitySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_city);
+        contactCitySpinner.setEnabled(false);
+        
+        workCountySpinner = (Spinner) view.findViewById(R.id.add_tab_work_address_county);
+        workCountySpinner.setOnItemSelectedListener(this);
+        workCitySpinner = (Spinner) view.findViewById(R.id.add_tab_work_address_city);
+        workCitySpinner.setEnabled(false);
         
         String[] phoneCodeArray = getResources().getStringArray(R.array.phone_code);
         phoneCodeList = Arrays.asList(phoneCodeArray);
@@ -179,8 +185,10 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         // get designer list
         getUserList();
         
-        // set county list
-        setCountyList();
+        // set contact county list
+        setContactCountyList();
+        
+        // set work county list
         
         // set customer birthday spinner(year, month, day)
         setCustomerBirthdayYearSpinner();
@@ -299,55 +307,75 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 + customerBirthday + " introducer: " + introducer);
         
         // handle contact address
-        int countyPosition = countySpinner.getSelectedItemPosition();
-        String contactAddress = "";
-        String zipCode = "";
-        String countyCity = "";
+        int contactCountyPosition = contactCountySpinner.getSelectedItemPosition();
+        int workCountyPosition = workCountySpinner.getSelectedItemPosition();
+        String contactAddress = "", workAddress = "";
+        String contactZipCode = "", workZipCode = "";
+        String contactCountyCity = "", workCountyCity = "";
         TWZipCode tZip = new TWZipCode();
         
-        if (countyPosition == 0) // default, no data
+        if (contactCountyPosition == 0) // default, no data
         {
-            contactAddress = countyList.get(countyPosition);
+            contactAddress = contactCountyList.get(contactCountyPosition);
         }
         else
         {
-            tZip.setCountry(countyList.get(countyPosition));
-            tZip.setTown(cityList.get(citySpinner.getSelectedItemPosition()));
+            tZip.setCountry(contactCountyList.get(contactCountyPosition));
+            tZip.setTown(contactCityList.get(contactCitySpinner.getSelectedItemPosition()));
             
-            countyCity = countyList.get(countyPosition)
-                    + cityList.get(citySpinner.getSelectedItemPosition());
-            contactAddress = countyCity + contactET.getText();
+            contactCountyCity = contactCountyList.get(contactCountyPosition)
+                    + contactCityList.get(contactCitySpinner.getSelectedItemPosition());
+            contactAddress = contactCountyCity + contactET.getText();
         }
         
-        zipCode = tZip.getZipCode();
+        contactZipCode = tZip.getZipCode();
         
-        Log.d(TAG, "contact address county : " + countyPosition + " countyCity : " + countyCity
-                + " contactAddress : " + contactAddress + " zip code : " + zipCode);
+        Log.d(TAG, "contact address county : " + contactCountyPosition + " countyCity : " + contactCountyCity
+                + " contactAddress : " + contactAddress + " zip code : " + contactZipCode);
+        
+        if (workCountyPosition == 0) // default, no data
+        {
+            workAddress = workCountyList.get(workCountyPosition);
+        }
+        else
+        {
+            tZip.setCountry(workCountyList.get(workCountyPosition));
+            tZip.setTown(workCityList.get(workCitySpinner.getSelectedItemPosition()));
+            
+            workCountyCity = workCountyList.get(workCountyPosition)
+                    + workCityList.get(workCitySpinner.getSelectedItemPosition());
+            workAddress = workCountyCity + contactET.getText();
+        }
+        
+        workZipCode = tZip.getZipCode();
+        
+        Log.d(TAG, "work address county : " + workCountyPosition + " countyCity : " + workCountyCity
+                + " workAddress : " + workAddress + " zip code : " + workZipCode);
         
         // check phone number
-//        if (!isChecked && !Utility.isPhoneValid(phoneNumber))
-//        {
-//            showToast(this.getActivity().getResources().getString(R.string.home_phone_field_error));
-//            return false;
-//        }
-//        // check cellphone number
-//        if (!isChecked && !Utility.isCellphoneValid(cellPhoneNumber))
-//        {
-//            showToast(this.getActivity().getResources().getString(R.string.cell_phone_field_error));
-//            return false;
-//        }
-//        // check company phone number
-//        if (!isChecked && !companyPhoneNumber.equals(Utility.SPACE_STRING) && !Utility.isCompanyPhoneValid(phoneNumber))
-//        {
-//            showToast(this.getActivity().getResources().getString(R.string.company_phone_field_error));
-//            return false;
-//        }
-//        // check email
-//        if (!isChecked && !email.equals(Utility.SPACE_STRING) && !Utility.isEmailValid(email))
-//        {
-//            showToast(this.getActivity().getResources().getString(R.string.email_field_error));
-//            return false;
-//        }
+        if (!isChecked && !Utility.isPhoneValid(phoneNumber))
+        {
+            showToast(this.getActivity().getResources().getString(R.string.home_phone_field_error));
+            return false;
+        }
+        // check cellphone number
+        if (!isChecked && !Utility.isCellphoneValid(cellPhoneNumber))
+        {
+            showToast(this.getActivity().getResources().getString(R.string.cell_phone_field_error));
+            return false;
+        }
+        // check company phone number
+        if (!isChecked && !companyPhoneNumber.equals(Utility.SPACE_STRING) && !Utility.isCompanyPhoneValid(phoneNumber))
+        {
+            showToast(this.getActivity().getResources().getString(R.string.company_phone_field_error));
+            return false;
+        }
+        // check email
+        if (!isChecked && !email.equals(Utility.SPACE_STRING) && !Utility.isEmailValid(email))
+        {
+            showToast(this.getActivity().getResources().getString(R.string.email_field_error));
+            return false;
+        }
         // check birthday
 //		if (!isChecked && !Utility.isBirthdayValid(customerBirthday))
 //		{
@@ -371,8 +399,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, noData, noData, noData, noData,
                             sexSelectedSerial, titleSelectedSerial, noData, dateString + timeString, msgSelectedSerial,
                             noData, jobSelectedSerial, ageSelectedSerial, memo, noData, creator, group, createDateTime,
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
-                            contactAddress, zipCode, spaceList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), statusList
+                            Utility.SPACE_STRING, Utility.SPACE_STRING, workAddress, workZipCode, Utility.SPACE_STRING,
+                            contactAddress, contactZipCode, spaceList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), statusList
                                     .get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), Utility.SPACE_STRING,
                             Utility.SPACE_STRING, budgetSelectedSerial, repairSelectedSerial, areaSelectedSerial);
                 }
@@ -382,8 +410,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                             phoneNumber, companyPhoneNumber, sexSelectedSerial, titleSelectedSerial, email, dateString
                                     + timeString, msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial,
                             memo, customerBirthday.toString(), creator, group, createDateTime, Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING, Utility.SPACE_STRING,
-                            contactAddress, zipCode, spaceList.get(Utility.DEFAULT_ZERO_VALUE)
+                            Utility.SPACE_STRING, workAddress, workZipCode, Utility.SPACE_STRING,
+                            contactAddress, contactZipCode, spaceList.get(Utility.DEFAULT_ZERO_VALUE)
                                     .getOptSerial(), statusList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
                             Utility.SPACE_STRING, Utility.SPACE_STRING, budgetSelectedSerial, repairSelectedSerial, areaSelectedSerial);
                 }
@@ -395,7 +423,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                         titleSelectedSerial, email, dateString + timeString, msgSelectedSerial,
                         introducer, jobSelectedSerial, ageSelectedSerial, memo,
                         customerBirthday.toString(), creator, group, dateString + timeString,
-                        repairSelectedSerial, areaSelectedSerial, budgetSelectedSerial, contactAddress, zipCode);
+                        repairSelectedSerial, areaSelectedSerial, budgetSelectedSerial, contactAddress, contactZipCode, workAddress, workZipCode);
                 
                 Log.d(TAG, "ReservationContact === " + customerInfo.getReservationContact());
             }
@@ -753,102 +781,197 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         designerSpinner.setAdapter(userAdapter);
     }
     
-    private void setCountyList()
+    private void setContactCountyList()
     {
         String[] countyArray = getResources().getStringArray(R.array.county_city);
-        countyList = Arrays.asList(countyArray);
+        contactCountyList = Arrays.asList(countyArray);
         
-        CommonAdapter countyAdapter = new CommonAdapter(this.getActivity(), countyList);
+        CommonAdapter contactCountyAdapter = new CommonAdapter(this.getActivity(), contactCountyList);
         
-        countySpinner.setAdapter(countyAdapter);
+        contactCountySpinner.setAdapter(contactCountyAdapter);
+        
+        workCountyList = Arrays.asList(countyArray);
+        
+        CommonAdapter workCountyAdapter = new CommonAdapter(this.getActivity(), workCountyList);
+        
+        workCountySpinner.setAdapter(workCountyAdapter);
     }
     
-    private void setCityList(String[] cityArray)
+    private void setContactCityList(String[] cityArray)
     {
-        cityList = Arrays.asList(cityArray);
+        contactCityList = Arrays.asList(cityArray);
         
-        CommonAdapter cityAdapter = new CommonAdapter(this.getActivity(), cityList);
+        CommonAdapter cityAdapter = new CommonAdapter(this.getActivity(), contactCityList);
         
-        citySpinner.setAdapter(cityAdapter);
+        contactCitySpinner.setAdapter(cityAdapter);
     }
     
-    private void handeCountyEvent(int position)
+    private void setWorkCityList(String[] cityArray)
     {
-        citySpinner.setEnabled(true);
+        workCityList = Arrays.asList(cityArray);
+        
+        CommonAdapter cityAdapter = new CommonAdapter(this.getActivity(), workCityList);
+        
+        workCitySpinner.setAdapter(cityAdapter);
+    }
+    
+    private void handeContactCountyEvent(int position, boolean isContact)
+    {
+        if (isContact)
+            contactCitySpinner.setEnabled(true);
+        else
+            workCitySpinner.setEnabled(true);
         switch (position)
         {
         case Utility.County.NONE:
-            citySpinner.setEnabled(false);
-            citySpinner.setAdapter(null);
+            if (isContact)
+            {
+                contactCitySpinner.setEnabled(false);
+                contactCitySpinner.setAdapter(null);
+            }
+            else
+            {
+                workCitySpinner.setEnabled(false);
+                workCitySpinner.setAdapter(null);
+            }
             break;
         case Utility.County.KEELUNG_CITY:
-            setCityList(getResources().getStringArray(R.array.Keelung));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.Keelung));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.Keelung));
             break;
         case Utility.County.TAIPEI_CITY:
-            setCityList(getResources().getStringArray(R.array.taipei));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.taipei));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.taipei));
             break;
         case Utility.County.NEW_TAIPEI_CITY:
-            setCityList(getResources().getStringArray(R.array.new_taipei));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.new_taipei));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.new_taipei));
             break;
         case Utility.County.YILAN_COUNTY:
-            setCityList(getResources().getStringArray(R.array.yilan));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.yilan));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.yilan));
             break;
         case Utility.County.HSINCHU_CITY:
-            setCityList(getResources().getStringArray(R.array.hsinchu_city));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.hsinchu_city));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.hsinchu_city));
             break;
         case Utility.County.HSINCHU_COUNTY:
-            setCityList(getResources().getStringArray(R.array.hsinchu_county));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.hsinchu_county));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.hsinchu_county));
             break;
         case Utility.County.TAOYUAN_COUNTY:
-            setCityList(getResources().getStringArray(R.array.taoyuan_city));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.taoyuan_city));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.taoyuan_city));
             break;
         case Utility.County.MIAOLI_COUNTY:
-            setCityList(getResources().getStringArray(R.array.miaoli_city));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.miaoli_city));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.miaoli_city));
             break;
         case Utility.County.TAICHUNG_CITY:
-            setCityList(getResources().getStringArray(R.array.taichung_city));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.taichung_city));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.taichung_city));
             break;
         case Utility.County.CHANGHUA_COUNTY:
-            setCityList(getResources().getStringArray(R.array.changhua_city));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.changhua_city));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.changhua_city));
             break;
         case Utility.County.NANTOU_COUNTY:
-            setCityList(getResources().getStringArray(R.array.nantou_city));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.nantou_city));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.nantou_city));
             break;
         case Utility.County.CHIAYI_CITY:
-            setCityList(getResources().getStringArray(R.array.chiayi_city));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.chiayi_city));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.chiayi_city));
             break;
         case Utility.County.CHIAYI_COUNTY:
-            setCityList(getResources().getStringArray(R.array.chiayi_county));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.chiayi_county));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.chiayi_county));
             break;
         case Utility.County.YUNLIN_COUNTY:
-            setCityList(getResources().getStringArray(R.array.yunlin_county));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.yunlin_county));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.yunlin_county));
             break;
         case Utility.County.TAINAN_CITY:
-            setCityList(getResources().getStringArray(R.array.tainan_city));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.tainan_city));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.tainan_city));
             break;
         case Utility.County.KAOHSIUNG_CITY:
-            setCityList(getResources().getStringArray(R.array.kaohsiung_city));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.kaohsiung_city));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.kaohsiung_city));
             break;
         case Utility.County.PINGDONG_COUNTY:
-            setCityList(getResources().getStringArray(R.array.pingtung_county));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.pingtung_county));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.pingtung_county));
             break;
         case Utility.County.TAIDONG_COUNTY:
-            setCityList(getResources().getStringArray(R.array.taitung_county));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.taitung_county));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.taitung_county));
             break;
         case Utility.County.HUALIAN_COUNTY:
-            setCityList(getResources().getStringArray(R.array.hualien_county));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.hualien_county));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.hualien_county));
             break;
         case Utility.County.KINMEN_COUNTY:
-            setCityList(getResources().getStringArray(R.array.kinmen_county));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.kinmen_county));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.kinmen_county));
             break;
         case Utility.County.LIANJIANG_COUNTY:
-            setCityList(getResources().getStringArray(R.array.lianjiang_county));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.lianjiang_county));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.lianjiang_county));
             break;
         case Utility.County.PENGHU_COUNTY:
-            setCityList(getResources().getStringArray(R.array.penghu_county));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.penghu_county));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.penghu_county));
             break;
         case Utility.County.SOUTH_SEA_ISLANDS:
-            setCityList(getResources().getStringArray(R.array.south_sea_islands));
+            if (isContact)
+                setContactCityList(getResources().getStringArray(R.array.south_sea_islands));
+            else
+                setWorkCityList(getResources().getStringArray(R.array.south_sea_islands));
             break;
         }
     }
@@ -1010,9 +1133,15 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             }
             break;
         case R.id.add_tab_contact_address_county:
-            Log.d(TAG, "To select county, the position is " + position);
+            Log.d(TAG, "To select contact county, the position is " + position);
             
-            handeCountyEvent(position);
+            handeContactCountyEvent(position, true);
+            break;
+        case R.id.add_tab_work_address_county:
+            Log.d(TAG, "To select work county, the position is " + position);
+            handeContactCountyEvent(position, false);
+            
+            
             break;
         }
     }
