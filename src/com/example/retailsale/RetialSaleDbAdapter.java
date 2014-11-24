@@ -25,6 +25,7 @@ public class RetialSaleDbAdapter
     private static final String ADD_CUSTOMER_TABLE = "add_customer";
     private static final String DATA_OPTION_TABLE = "data_option";
     private static final String USER_TABLE = "user";
+    private static final String APP_USER_TABLE = "app_user";
     private static final String CREATE_TABLE_STRING = "create table ";
     public static final String ORDER_DESC = " desc";
     /************************************************************************** for add customer (16) */
@@ -91,6 +92,14 @@ public class RetialSaleDbAdapter
     public static final String KEY_USER_GROUP_NAMING = "user_group_naming";
     public static final String KEY_USER_TYPE_NAMING = "user_type_naming";
     /************************************************************************** for group */
+    
+    /************************************************************************** for app user */
+    public static final String KEY_APP_USER_ID = "_id";
+    public static final String KEY_APP_USER_ACCOUNT = "user_account";
+    public static final String KEY_APP_USER_PASSWORD = "user_password";
+    public static final String KEY_APP_USER_SERIAL = "user_serial";
+    public static final String KEY_APP_USER_GROUP = "user_group";
+    /************************************************************************** for app user */
     public static final int NOTUPLOAD = 0;
     public static final int UPLOAD = 1;
     
@@ -114,6 +123,10 @@ public class RetialSaleDbAdapter
             + KEY_USER_ID + " INTEGER PRIMARY KEY," + KEY_USER_SERIAL + " INTEGER," + KEY_USER_NAME
             + " TEXT," + KEY_USER_GROUP + " INTEGER," + KEY_USER_TYPE + " INTEGER,"
             + KEY_USER_GROUP_NAMING + " TEXT," + KEY_USER_TYPE_NAMING + " TEXT" + ");";
+    
+    private static final String APP_USER_CREATE = CREATE_TABLE_STRING + APP_USER_TABLE + "(" + KEY_APP_USER_ID
+            + " INTEGER PRIMARY KEY," + KEY_APP_USER_ACCOUNT + " TEXT," + KEY_APP_USER_PASSWORD + " TEXT,"
+            + KEY_APP_USER_SERIAL + " INTEGER," + KEY_APP_USER_GROUP + " INTEGER" + ");";
     
     private Context context = null;
     private DatabaseHelper dbHelper;
@@ -209,6 +222,7 @@ public class RetialSaleDbAdapter
             db.execSQL(ADD_CUSTOMER_CREATE);
             db.execSQL(DATA_OPTION_CREATE);
             db.execSQL(USER_CREATE);
+            db.execSQL(APP_USER_CREATE);
         }
 
         @Override
@@ -217,6 +231,7 @@ public class RetialSaleDbAdapter
             db.execSQL("DROP TABLE IF EXISTS " + ADD_CUSTOMER_TABLE);
             db.execSQL("DROP TABLE IF EXISTS " + DATA_OPTION_TABLE);
             db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + APP_USER_TABLE);
             onCreate(db);
         }
     }
@@ -281,6 +296,15 @@ public class RetialSaleDbAdapter
 
         return db.query(USER_TABLE, new String[] { KEY_USER_ID, KEY_USER_SERIAL, KEY_USER_NAME,
                 KEY_USER_GROUP, KEY_USER_TYPE, KEY_USER_GROUP_NAMING, KEY_USER_TYPE_NAMING }, null,
+                null, null, null, null);
+    }
+    
+    /** Get all app user from user table */
+    public Cursor getAllAppUser()
+    {
+
+        return db.query(APP_USER_TABLE, new String[] { KEY_APP_USER_ID, KEY_APP_USER_ACCOUNT, KEY_APP_USER_PASSWORD,
+                KEY_APP_USER_SERIAL, KEY_APP_USER_GROUP }, null,
                 null, null, null, null);
     }
 
@@ -349,6 +373,18 @@ public class RetialSaleDbAdapter
         args.put(KEY_USER_TYPE_NAMING, userTypeNm);
         return db.insert(USER_TABLE, null, args);
     }
+    
+    /** Insert app user to app user table */
+    public long create(String userAccount, String userPassword, int userSerial, int userGroup)
+    {
+        ContentValues args = new ContentValues();
+        args.put(KEY_APP_USER_ACCOUNT, userAccount);
+        args.put(KEY_APP_USER_PASSWORD, userPassword);
+        args.put(KEY_APP_USER_SERIAL, userSerial);
+        args.put(KEY_APP_USER_GROUP, userGroup);
+        
+        return db.insert(APP_USER_TABLE, null, args);
+    }
 
     /** Delete one customer from customer table */
     public boolean deleteCustomer(String rowId)
@@ -373,6 +409,14 @@ public class RetialSaleDbAdapter
         else
             return false;
     }
+    
+    /** Delete one app user from app user table */
+    public boolean deleteAppUser(String rowId)
+    {
+        if (db != null && db.isOpen()) return db.delete(APP_USER_TABLE, KEY_APP_USER_ID + "=" + rowId, null) > 0;
+        else
+            return false;
+    }
 
     /** Delete all customer from customer table */
     public boolean deleteAllCustomer()
@@ -394,6 +438,14 @@ public class RetialSaleDbAdapter
     public boolean deleteAllUser()
     {
         if (db != null && db.isOpen()) return db.delete(USER_TABLE, null, null) > 0;
+        else
+            return false;
+    }
+    
+    /** Delete all app user from app user table */
+    public boolean deleteAllAppUser()
+    {
+        if (db != null && db.isOpen()) return db.delete(APP_USER_TABLE, null, null) > 0;
         else
             return false;
     }
