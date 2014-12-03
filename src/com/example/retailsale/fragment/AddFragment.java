@@ -418,8 +418,17 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 //		}
         
         // the creator is not from share preference but from creator list
-        int creator = userDataList.get(designerSpinner.getSelectedItemPosition()).getUserSerial();
-        int group = userDataList.get(designerSpinner.getSelectedItemPosition()).getUserGroup();
+        int creator = 0, group = 0;
+        
+        if (designerSpinner.getSelectedItemPosition() < userDataList.size() || designerSpinner.getSelectedItemPosition() >= userDataList.size())
+        {
+            Log.d(TAG, "creator index error ");
+        }
+        else
+        {
+            creator = userDataList.get(designerSpinner.getSelectedItemPosition()).getUserSerial();
+            group = userDataList.get(designerSpinner.getSelectedItemPosition()).getUserGroup();
+        }
         
         Log.d(TAG, "creator: " + creator + " group: " + group);
 
