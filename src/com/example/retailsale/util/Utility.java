@@ -38,6 +38,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.example.retailsale.fragment.SynchronizationFragment;
+import com.example.retailsale.manager.HttpManager;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo;
 
 public class Utility
@@ -123,11 +124,13 @@ public class Utility
     {
         public static final String APP_DATA = "app_data";
         public static final String DATA = "data";
+        public static final String IP_DATA = "ip_data";
         public static final String ID = "id";
         public static final String PASSWORD = "password";
         public static final String USER_SERIAL = "user_serial";
         public static final String USER_GROUP = "user_group";
         public static final String LOGIN_KEY = "login_key";
+        public static final String SERVER_IP = "server_ip";
         public static final String APP_ACCOUNT = "app_account";
         public static final String APP_PASSWORD = "app_password";
         public static final String APP_GROUP = "app_group";
@@ -914,5 +917,41 @@ public class Utility
         {
             return false;
         }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static String getIP(Activity actiivty)
+    {
+        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.IP_DATA, DEFAULT_ZERO_VALUE);
+        String ip = settings.getString(Utility.LoginField.SERVER_IP, HttpManager.IP);
+
+        Log.d(TAG, "ip : " + ip);
+        
+        return ip;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static void setDefaultIP(Activity activity)
+    {
+        SharedPreferences settings = activity.getSharedPreferences(Utility.LoginField.IP_DATA, DEFAULT_ZERO_VALUE);
+        String ipContent = settings.getString(Utility.LoginField.SERVER_IP, SPACE_STRING);
+        if (ipContent.equals(SPACE_STRING))
+        {
+            Log.d(TAG, "To set default ip " + HttpManager.IP);
+            settings.edit().putString(Utility.LoginField.SERVER_IP, HttpManager.IP).commit();
+        }
+        else
+        {
+            Log.d(TAG, "The ip had exist, no need to reset ");
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static void setIP(Activity activity, String ip)
+    {
+        SharedPreferences settings = activity.getSharedPreferences(Utility.LoginField.IP_DATA, DEFAULT_ZERO_VALUE);
+        String originalIP = settings.getString(Utility.LoginField.SERVER_IP, SPACE_STRING);
+        Log.d(TAG, "originalIP : " + originalIP + " ip : " + ip);
+        settings.edit().putString(Utility.LoginField.SERVER_IP, ip).commit();
     }
 }

@@ -70,10 +70,10 @@ public class HttpManager
     }
 
     //////////////////////////////////////////////////////////////////////////////// Login related.
-    public void login(Context context, String userAccount, String userPwd, final GetLoginListener loginListener)
+    public void login(Activity activity, String userAccount, String userPwd, final GetLoginListener loginListener)
     {
 
-        String loginUri = "http://" + IP + "/KendoAPI/odata/userQuery(userAccount='" + userAccount + "',userPwd='"
+        String loginUri = "http://" + Utility.getIP(activity) + "/KendoAPI/odata/userQuery(userAccount='" + userAccount + "',userPwd='"
                 + userPwd + "')";
         Log.e(TAG, "login() loginUri = " + loginUri);
 
@@ -83,7 +83,7 @@ public class HttpManager
                 ACTION_NAME, Utility.SPACE_STRING);
         getLoginGsonRequset.setTag("login");
 
-        VolleySingleton.getInstance(context).getRequestQueue().add(getLoginGsonRequset);
+        VolleySingleton.getInstance(activity).getRequestQueue().add(getLoginGsonRequset);
     }
 
     public void cancelLogin(Context context)
@@ -140,7 +140,7 @@ public class HttpManager
             String userName, String userHostAddress, String actionName, String loginKey, JSONStringer json, long rowId,
             RetialSaleDbAdapter retialSaleDbAdapter)
     {
-        String addCustomerInfoUri = "http://" + IP + "/KendoAPI/odata/customerData_Mobile";
+        String addCustomerInfoUri = "http://" + Utility.getIP(activity) + "/KendoAPI/odata/customerData_Mobile";
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(addCustomerInfoUri);
         httppost.setHeader(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
@@ -197,7 +197,7 @@ public class HttpManager
     //////////////////////////////////////////////////////////////////////////////// data option
     public void getDataOptions(Activity activity, GetDataOptionListener getDataOptionListener)
     {
-        String dataOptionsUri = "http://" + IP + "/KendoAPI/odata/dataOptionParm";
+        String dataOptionsUri = "http://" + Utility.getIP(activity) + "/KendoAPI/odata/dataOptionParm";
         Log.e(TAG, "getDataOptions() dataOptionsUri = " + dataOptionsUri);
 
         GsonRequest<GsonDataOption> getDataOptionsGsonRequset = new GsonRequest<GsonDataOption>(Method.GET,
@@ -226,8 +226,8 @@ public class HttpManager
     ////////////////////////////////////////////////////////////////////////////////get user list by group
     public void getUserListByGroup(Activity activity, GetUsetListByGroupListener getUsetListByGroupListener, int group)
     {
-//        String getUserListUri = "http://" + IP + "/KendoAPI/odata/usp_Qry_UserbyGroup?$filter=userGroup eq " + group;
-        String getUserListUri = "http://" + IP + "/KendoAPI/odata/usp_Qry_UserbyGroup?userGroup=" + group;
+//        String getUserListUri = "http://" + Utility.getIP(activity) + "/KendoAPI/odata/usp_Qry_UserbyGroup?$filter=userGroup eq " + group;
+        String getUserListUri = "http://" + Utility.getIP(activity) + "/KendoAPI/odata/usp_Qry_UserbyGroup?userGroup=" + group;
         Log.e(TAG, "getUserListByGroup() getUserListUri = " + getUserListUri);
 
         GsonRequest<GsonUserByGroup> getUserListByGroupGsonRequset = new GsonRequest<GsonUserByGroup>(Method.GET, getUserListUri,
@@ -245,7 +245,7 @@ public class HttpManager
     public void getFileInfo(Activity activity, int pathId, int fileId, GetFileInfoListener getFileInfoListener,
             Handler handler)
     {
-        String fileInfoUri = "http://" + IP + "/KendoAPI/odata/fileContent(pathId=" + pathId + ",fileId=" + fileId
+        String fileInfoUri = "http://" + Utility.getIP(activity) + "/KendoAPI/odata/fileContent(pathId=" + pathId + ",fileId=" + fileId
                 + ")";
         Log.e(TAG, "getFileInfo() fileInfoUri = " + fileInfoUri);
 
@@ -265,7 +265,7 @@ public class HttpManager
     //////////////////////////////////////////////////////////////////////////////// folder info
     public void getFolderInfo(Activity activity, GetFolderInfoListener getFolderInfoListener)
     {
-        String fileInfoUri = "http://" + IP + "/KendoAPI/odata/folderInfo";
+        String fileInfoUri = "http://" + Utility.getIP(activity) + "/KendoAPI/odata/folderInfo";
         Log.e(TAG, "getFolderInfo() fileInfoUri = " + fileInfoUri);
 
         GsonRequest<GsonFolderInfo> getFolderInfoGsonRequset = new GsonRequest<GsonFolderInfo>(Method.GET, fileInfoUri,

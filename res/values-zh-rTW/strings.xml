@@ -161,6 +161,9 @@
     <string name="option_customer_repair_item">營修項目</string>
     <string name="option_customer_area">區域項目</string>
     
+    <!-- Input IP -->
+    <string name="server_ip">伺服器位置</string>
+    
     <!-- API Error -->
     <string name="api_no_network">網路無法連線, 請檢查網路狀態</string>
     <string name="login_successfully">登入成功</string>

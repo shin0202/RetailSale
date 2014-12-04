@@ -46,6 +46,9 @@ public class Login extends Activity implements OnClickListener
 //
 //        if (hadLogin) startManageFragment();
         
+        // To set default IP, if IP not exist
+        Utility.setDefaultIP(this);
+        
         if (hadLogin()) 
         {
             startManageFragment();
