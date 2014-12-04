@@ -21,6 +21,14 @@
             android:orientation="horizontal" />
     </HorizontalScrollView>
 
+    <TextView
+        android:id="@+id/photo_player_display_position"
+        style="@style/addTabTextViewStyle"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/white" 
+        android:text="1/1" />
+
     <Button
         android:id="@+id/photo_player_cancel_btn"
         style="@style/btnStyle"

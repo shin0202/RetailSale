@@ -37,6 +37,7 @@ public class PhotoPlayer extends Activity implements OnClickListener
     // views
     private LinearLayout photosLayout;
     private ImageView scalableIV;
+    private TextView displayPositionTV;
     private Button backBtn;
     PhotoViewAttacher attacher;
     private ProgressDialog progressDialog;
@@ -68,6 +69,7 @@ public class PhotoPlayer extends Activity implements OnClickListener
 
         backBtn.setVisibility(View.VISIBLE);
         photosLayout.setVisibility(View.VISIBLE);
+        displayPositionTV.setVisibility(View.VISIBLE);
 
         setPhotosLayout();
 
@@ -133,6 +135,8 @@ public class PhotoPlayer extends Activity implements OnClickListener
         photosLayout = (LinearLayout) findViewById(R.id.photots);
         backBtn = (Button) findViewById(R.id.photo_player_cancel_btn);
         backBtn.setOnClickListener(this);
+        
+        displayPositionTV = (TextView) findViewById(R.id.photo_player_display_position);
     }
 
     private void getBundle()
@@ -152,6 +156,8 @@ public class PhotoPlayer extends Activity implements OnClickListener
                     Log.d(TAG, "Get data showAlbumCount : " + i + " name: " + photoList.get(i).getFileName()
                             + " path: " + photoList.get(i).getFilePath() + " type: " + photoList.get(i).getFileType());
                 }
+                
+                showPosition();
             }
             else
             {
@@ -162,6 +168,11 @@ public class PhotoPlayer extends Activity implements OnClickListener
         {
             Log.d(TAG, "It is no data from BrowserFragment(bundle is null)!");
         }
+    }
+    
+    private void showPosition()
+    {
+        displayPositionTV.setText((currentPosition + 1) + "/" + photoList.size());
     }
 
     private void setPhotosLayout()
@@ -232,6 +243,7 @@ public class PhotoPlayer extends Activity implements OnClickListener
                         // If you later call scalableIV.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
                         attacher.update();
                 }
+                showPosition();
             }
         });
 
@@ -441,6 +453,7 @@ public class PhotoPlayer extends Activity implements OnClickListener
 
             }
         }
+        showPosition();
     }
 
     public void handleController()
@@ -449,11 +462,13 @@ public class PhotoPlayer extends Activity implements OnClickListener
         {
             backBtn.setVisibility(View.VISIBLE);
             photosLayout.setVisibility(View.VISIBLE);
+            displayPositionTV.setVisibility(View.VISIBLE);
         }
         else
         {
             backBtn.setVisibility(View.INVISIBLE);
             photosLayout.setVisibility(View.INVISIBLE);
+            displayPositionTV.setVisibility(View.INVISIBLE);
         }
         hideController = !hideController;
     }
