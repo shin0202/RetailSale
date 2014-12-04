@@ -8,14 +8,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.retailsale.MainActivity;
 import com.example.retailsale.R;
 import com.example.retailsale.util.Utility;
 
-public class ManageFragment extends Fragment implements OnClickListener
+public class ManageFragment extends Fragment implements OnClickListener, OnLongClickListener
 {
     private static final String TAG = "ManageFragment";
     private MainActivity mainActivity;
@@ -41,6 +43,9 @@ public class ManageFragment extends Fragment implements OnClickListener
 
         TextView logoutText = (TextView) view.findViewById(R.id.logout_btn);
         logoutText.setOnClickListener(this);
+        
+        ImageView welcomeLogo = (ImageView) view.findViewById(R.id.welcome_logo);
+        welcomeLogo.setOnLongClickListener(this);
 
         return view;
     }
@@ -67,5 +72,16 @@ public class ManageFragment extends Fragment implements OnClickListener
             
             mainActivity.finish();
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v)
+    {
+        return false;
+    }
+    
+    private void modifyIPDialog()
+    {
+        
     }
 }
