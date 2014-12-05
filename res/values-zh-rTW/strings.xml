@@ -142,6 +142,7 @@
     <string name="birthday_field_error">客戶生日欄位錯誤</string>
     <string name="sd_not_exist">SD卡不存在, 請檢查</string>
     <string name="ui_error">介面錯誤, 請重新嘗試動作</string>
+    <string name="home_phone_or_cellphone_field_error">住家電話欄位或手機電話欄位錯誤</string>
 
     <!-- API return message -->
     <string name="login_successful">成功登入</string>
@@ -168,5 +169,8 @@
     <string name="api_no_network">網路無法連線, 請檢查網路狀態</string>
     <string name="login_successfully">登入成功</string>
     <string name="login_failed">登入錯誤</string>
+    
+    <!-- Error String -->
+    <string name="designer_not_enough_error">設計使選項不足, 請更新資料或重新登入帳號</string>
 
 </resources>

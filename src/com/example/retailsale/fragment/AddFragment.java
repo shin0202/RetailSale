@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -73,6 +74,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private TextView companyNameTV, designerStoreTV, createDateTV;
     private DatePicker consumerVisitDateDP;
     private TimePicker consumerVisitTimeTP;
+    private Dialog errorDialog = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -188,16 +190,15 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         // get optionType
         getOptionType();
         
-        // get designer list
-        getUserList();
-        
         // set contact county list
         setContactCountyList();
         
-        // set work county list
-        
         // set customer birthday spinner(year, month, day)
         setCustomerBirthdayYearSpinner();
+        
+        // get designer list
+        getUserList();
+        
         return view;
     }
 
@@ -218,6 +219,12 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             break;
         case R.id.add_tab_new_btn:
             startOrderMeasureActivity();
+            break;
+        case R.id.error_dialog_btn:
+            if (errorDialog != null)
+            {
+                errorDialog.dismiss();
+            }
             break;
         }
     }
@@ -245,7 +252,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             if (isChecked)
             { // work address same as contact address
                 workCountySpinner.setSelection(contactCountyPosition);
-                handeContactCountyEvent(contactCountyPosition, false, true); // to set work city position in this
+                handleCountyEvent(contactCountyPosition, false, true); // to set work city position in this
 
                 workCountySpinner.setEnabled(false);
 
@@ -386,18 +393,14 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         Log.d(TAG, "work address county : " + workCountyPosition + " countyCity : " + workCountyCity
                 + " workAddress : " + workAddress + " zip code : " + workZipCode);
         
-        // check phone number
-        if (!isNotLeaveChecked && !Utility.isPhoneValid(phoneNumber))
+        // check phone and cellphone number, only need to select one item to write
+        if (!isNotLeaveChecked && !Utility.isPhoneValid(phoneNumber) && !Utility.isCellphoneValid(cellPhoneNumber))
         {
-            showToast(this.getActivity().getResources().getString(R.string.home_phone_field_error));
+            showToast(this.getActivity().getResources().getString(R.string.home_phone_or_cellphone_field_error));
             return false;
         }
-        // check cellphone number
-        if (!isNotLeaveChecked && !Utility.isCellphoneValid(cellPhoneNumber))
-        {
-            showToast(this.getActivity().getResources().getString(R.string.cell_phone_field_error));
-            return false;
-        }
+        
+        
         // check company phone number
         if (!isNotLeaveChecked && !companyPhoneNumber.equals(Utility.SPACE_STRING) && !Utility.isCompanyPhoneValid(phoneNumber))
         {
@@ -416,6 +419,21 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 //			showToast(this.getActivity().getResources().getString(R.string.birthday_field_error));
 //			return false;
 //		}
+        
+        // to check user data list (designer)
+        if (userDataList == null)
+        {
+            showErrorDialog();
+            return false;
+        }
+        else
+        {
+            if (userDataList.size() <= 0)
+            {
+                showErrorDialog();
+                return false;
+            }
+        }
         
         // the creator is not from share preference but from creator list
         int creator = 0, group = 0;
@@ -819,6 +837,14 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         {
             Log.d(TAG, "user cursor is null ");
         }
+        
+        if (userDataList.size() <= 0)
+        {
+            Log.d(TAG, "user data occur error or data were incorrect! ");
+            showErrorDialog();
+            return;
+        }
+        
         // user spinner
         UserAdapter userAdapter = new UserAdapter(this.getActivity(), userDataList);
         designerSpinner.setAdapter(userAdapter);
@@ -865,7 +891,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         }
     }
     
-    private void handeContactCountyEvent(int position, boolean isContact, boolean isAbove)
+    private void handleCountyEvent(int position, boolean isContact, boolean isAbove)
     {
         if (isContact)
             contactCitySpinner.setEnabled(true);
@@ -1185,13 +1211,13 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         case R.id.add_tab_contact_address_county:
             Log.d(TAG, "To select contact county, the position is " + position);
             contactCountyPosition = position;
-            handeContactCountyEvent(position, true, false);
+            handleCountyEvent(position, true, false);
             break;
         case R.id.add_tab_work_address_county:
             if (asAboveCB.isChecked())
                 return;
             Log.d(TAG, "To select work county, the position is " + position);
-            handeContactCountyEvent(position, false, false);
+            handleCountyEvent(position, false, false);
          
             break;
         case R.id.add_tab_contact_address_city:
@@ -1205,5 +1231,35 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     public void onNothingSelected(AdapterView<?> parent)
     {
 
+    }
+    
+    private void showErrorDialog()
+    {
+        if (errorDialog == null)
+        {
+            errorDialog = new Dialog(getActivity());
+            errorDialog.setContentView(R.layout.error_dialog);
+        }
+        else
+        {
+            if (errorDialog.isShowing())
+            {
+                Log.d(TAG, "The error dialog is showing! ");
+                return;
+            }
+            else
+            {
+                Log.d(TAG, "The error dialog is not showing! ");
+            }
+        }
+        
+        Button loginBtn = (Button) errorDialog.findViewById(R.id.error_dialog_btn);
+        loginBtn.setOnClickListener(this);
+        
+        TextView errorMsg = (TextView) errorDialog.findViewById(R.id.error_dialog_message);
+        errorMsg.setText(getString(R.string.designer_not_enough_error));
+
+        errorDialog.setTitle(getResources().getString(R.string.field_error));
+        errorDialog.show();
     }
 }
