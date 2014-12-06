@@ -264,9 +264,11 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         switch (v.getId())
         {
         case R.id.sync_tab_upload_layout:
+            currentFolderName = Utility.SPACE_STRING;
             focusUploadConsumer();
             break;
         case R.id.sync_tab_download_layout:
+            currentFolderName = Utility.SPACE_STRING;
             focusDownloadPicture();
             // To avoid loginkey is expired, so need login before call any APIs.
             if (Utility.isInternetAvailable(getActivity()))
@@ -280,6 +282,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             }
             break;
         case R.id.sync_tab_sync_layout:
+            currentFolderName = Utility.SPACE_STRING;
             focusSyncData();
             break;
         case R.id.sync_tab_start_btn:
@@ -304,7 +307,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 
                 loginDialog.dismiss();
                 
-                login(currentResId);
+                login(currentResId, false);
             }
             else
             {
@@ -331,7 +334,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
         if (hadLogin)
         {
-            login(resId);
+            login(resId, true);
         }
         else
         {
@@ -494,14 +497,19 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     /*
      * *************************************************Login Related*******************************************************
      */
-    private void login(final int resId)
+    private void login(final int resId, boolean hadLogin)
     {
 
         handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+        
         SharedPreferences settings = getActivity().getSharedPreferences(Utility.LoginField.DATA,
                 Utility.DEFAULT_ZERO_VALUE);
-//        final String id = settings.getString(Utility.LoginField.ID, "");
-//        final String password = settings.getString(Utility.LoginField.PASSWORD, "");
+        
+        if (hadLogin)
+        {
+            id = settings.getString(Utility.LoginField.ID, "");
+            password = settings.getString(Utility.LoginField.PASSWORD, "");
+        }
 
         HttpManager httpManager = new HttpManager();
         httpManager.login(SynchronizationFragment.this.getActivity(), id, password,
@@ -735,7 +743,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     private boolean selectFolder(String folderName)
     {
 
-        if (folderName == null)
+        if (folderName == null || folderName.equals(Utility.SPACE_STRING))
         {
             showToast(getResources().getString(R.string.sync_tab_sync_no_select_any_folder));
             return true;
