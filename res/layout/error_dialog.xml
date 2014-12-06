@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/error_dialog_message"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@color/login_bg"
+        android:textColor="@color/white"
+        android:textSize="@dimen/login_text_size" />
+
+    <Button
+        android:id="@+id/error_dialog_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/login_btn_height"
+        android:layout_marginLeft="@dimen/login_edit_layout_margin_right_left"
+        android:layout_marginRight="@dimen/login_edit_layout_margin_right_left"
+        android:background="@drawable/btn_login_selector"
+        android:text="@string/ok"
+        android:textColor="@color/black"
+        android:textSize="@dimen/login_text_size"
+        android:textStyle="bold" />
+
+</LinearLayout>
