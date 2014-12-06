@@ -426,6 +426,16 @@ public class Login extends Activity implements OnClickListener
             retialSaleDbAdapter.create("A000005", "A000005", 0, 64);
             retialSaleDbAdapter.create("A000006", "A000006", 0, 65);
             retialSaleDbAdapter.create("A000007", "A000007", 0, 96);
+            retialSaleDbAdapter.create("A000008", "A000008", 0, 102);
+            retialSaleDbAdapter.create("A000009", "A000009", 0, 103);
+            retialSaleDbAdapter.create("A000010", "A000010", 0, 104);
+            retialSaleDbAdapter.create("A000011", "A000011", 0, 105);
+            retialSaleDbAdapter.create("A000012", "A000012", 0, 106);
+            retialSaleDbAdapter.create("A000013", "A000013", 0, 107);
+            retialSaleDbAdapter.create("A000014", "A000014", 0, 108);
+            retialSaleDbAdapter.create("A000015", "A000015", 0, 109);
+            retialSaleDbAdapter.create("A000016", "A000016", 0, 110);
+            retialSaleDbAdapter.create("A000017", "A000017", 0, 111);
             return true;
         }
         catch (Exception e)
