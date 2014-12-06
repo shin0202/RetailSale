@@ -413,10 +413,12 @@ public class PhotoPlayer extends Activity implements OnClickListener
                 if (progressDialog != null) progressDialog.dismiss();
                 break;
             case Utility.SUCCESS:
-                showToast(getResources().getString(R.string.decode_success));
+                Log.d(TAG, getResources().getString(R.string.decode_success));
+//                showToast(getResources().getString(R.string.decode_success));
                 break;
             case Utility.FAILED:
-                showToast(getResources().getString(R.string.decode_failed));
+                Log.d(TAG, getResources().getString(R.string.decode_failed));
+//                showToast(getResources().getString(R.string.decode_failed));
                 break;
             }
         }
