@@ -71,6 +71,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
             introducerET, memoET, contactET, workET;
     private CheckBox leaveInfoCB, asAboveCB;
+    @SuppressWarnings("unused")
     private TextView companyNameTV, designerStoreTV, createDateTV;
     private DatePicker consumerVisitDateDP;
     private TimePicker consumerVisitTimeTP;
@@ -669,6 +670,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         areaList = new ArrayList<DataOption>();
         // to get option type content
         Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
+        @SuppressWarnings("unused")
         int optionType, optionSerial;
         String optionAlias, optionName;
         String sexType = mainActivity.getResources().getString(R.string.option_customer_sex);
@@ -1121,7 +1123,6 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     
     private class UserAdapter extends BaseAdapter
     {
-        private static final String TAG = "UserAdapter";
         private static final int BASE_INDEX = 1000;
         private List<UserDataForList> userList;
         private Context context;

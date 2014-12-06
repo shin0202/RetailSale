@@ -282,16 +282,19 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                     String path = fileEntry.getAbsolutePath();
                     Log.d(TAG, "folder name: " + name + " path: " + path);
 
-                    Message msg = new Message();
-                    msg.what = ADD_VIEW;
-                    Bundle bundle = new Bundle();
-                    bundle.putString(GET_NAME, name);
-                    bundle.putString(GET_PATH, path);
-                    msg.setData(bundle);
+                    if (!name.equals(Utility.THUMB_PATH_FOR_SHOW))
+                    {
+                        Message msg = new Message();
+                        msg.what = ADD_VIEW;
+                        Bundle bundle = new Bundle();
+                        bundle.putString(GET_NAME, name);
+                        bundle.putString(GET_PATH, path);
+                        msg.setData(bundle);
 
-                    albumList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
+                        albumList.add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
 
-                    uiHandler.sendMessage(msg);
+                        uiHandler.sendMessage(msg);
+                    }
                 }
             }
         }

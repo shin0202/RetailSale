@@ -277,6 +277,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
 
         // to get option type content
         Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
+        @SuppressWarnings("unused")
         int optionType, optionSerial;
         String optionAlias, optionName;
         String statusType = this.getResources().getString(R.string.option_customer_status);
@@ -327,6 +328,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         spaceSpinner.setAdapter(spaceAdapter);
     }
 
+    @SuppressWarnings("unused")
     private void handleContactAddress(boolean isEnable)
     {
 //        if (isEnable)

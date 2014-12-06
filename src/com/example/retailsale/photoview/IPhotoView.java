@@ -15,10 +15,6 @@
  *******************************************************************************/
 package com.example.retailsale.photoview;
 
-import com.example.retailsale.photoview.PhotoViewAttacher.OnMatrixChangedListener;
-import com.example.retailsale.photoview.PhotoViewAttacher.OnPhotoTapListener;
-import com.example.retailsale.photoview.PhotoViewAttacher.OnViewTapListener;
-
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;

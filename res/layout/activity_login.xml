@@ -85,8 +85,8 @@
                 android:layout_width="@dimen/login_edit_et_width"
                 android:layout_height="wrap_content"
                 android:hint="@string/user_pwd_hint"
-                android:singleLine="true"
                 android:inputType="textPassword"
+                android:singleLine="true"
                 android:textColor="@color/black" />
         </LinearLayout>
 

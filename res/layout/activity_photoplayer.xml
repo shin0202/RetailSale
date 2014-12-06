@@ -26,8 +26,8 @@
         style="@style/addTabTextViewStyle"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:textColor="@color/white" 
-        android:text="1/1" />
+        android:text="1/1"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/photo_player_cancel_btn"

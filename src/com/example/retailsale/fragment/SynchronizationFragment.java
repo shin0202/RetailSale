@@ -813,9 +813,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                 {
                                     for (int i = 0; i < value.size(); i++)
                                     {
-                                        String path = value.get(i).getPath();
                                         String fileName = value.get(i).getFileName();
-                                        String fileStream = value.get(i).getFileStream();
 
                                         showMessage(fileName,
                                                 R.string.sync_tab_sync_download_success);
@@ -1310,6 +1308,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         }, Utility.getCreatorGroup(this.getActivity()));
     }
 
+    @SuppressWarnings("unused")
     private List<String> getAllFolderNameFromParent()
     {
 

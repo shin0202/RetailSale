@@ -84,18 +84,22 @@ public class LocalFolderInfo
         public String getFolderId() {
             return folderId;
         }
+
+        @SuppressWarnings("unused")
         public void setFolderId(String folderId) {
             this.folderId = folderId;
         }
         public String getFileId() {
             return fileId;
         }
+        @SuppressWarnings("unused")
         public void setFileId(String fileId) {
             this.fileId = fileId;
         }
         public String getFileName() {
             return fileName;
         }
+        @SuppressWarnings("unused")
         public void setFileName(String fileName) {
             this.fileName = fileName;
         }

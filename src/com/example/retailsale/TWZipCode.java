@@ -176,6 +176,7 @@ public class TWZipCode
         return this.tZipCode;
     }
 
+    @SuppressWarnings("rawtypes")
     public List getCountryList()
     {
 
@@ -191,6 +192,7 @@ public class TWZipCode
         return tCountryList;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public List getTownList(String pCountry)
     {
 
@@ -202,6 +204,7 @@ public class TWZipCode
         return tTownList;
     }
 
+    @SuppressWarnings("rawtypes")
     private List getTownByCountry(String pCountry)
     {
 

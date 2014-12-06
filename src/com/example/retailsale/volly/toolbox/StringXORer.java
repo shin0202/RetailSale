@@ -1,12 +1,6 @@
 package com.example.retailsale.volly.toolbox;
 
-//import sun.misc.BASE64Encoder;
-//import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Base64;
-
-import com.example.retailsale.util.Utility;
-
-//import android.util.Base64;
 
 public class StringXORer
 {

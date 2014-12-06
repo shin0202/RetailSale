@@ -17,6 +17,7 @@ public class MainActivity extends FragmentActivity
 {
     private TabHost tabHost;
     private TabManager tabManager;
+    @SuppressWarnings("unused")
     private int currentTab;
 
     public class TabPosition

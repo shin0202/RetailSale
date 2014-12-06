@@ -278,6 +278,7 @@ public class PhotoPlayer extends Activity implements OnClickListener
         }
     }
 
+    @SuppressWarnings("unused")
     private Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight)
     {
         Bitmap bm = null;
@@ -475,6 +476,7 @@ public class PhotoPlayer extends Activity implements OnClickListener
         hideController = !hideController;
     }
     
+    @SuppressWarnings("unused")
     private void showToast(String showString)
     {
         Toast.makeText(this, showString, Toast.LENGTH_SHORT).show();

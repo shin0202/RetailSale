@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 public class CommonAdapter extends BaseAdapter
 {
-    private static final String TAG = "CommonAdapter";
     private static final int BASE_INDEX = 1000;
     private List<String> birthList;
     private Context context;

@@ -8,11 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import com.example.retailsale.R;
 
 public class OptionAdapter extends BaseAdapter
 {
-    private static final String TAG = "OptionAdapter";
     private static final int BASE_INDEX = 1000;
     private List<DataOption> optionList;
     private Context context;

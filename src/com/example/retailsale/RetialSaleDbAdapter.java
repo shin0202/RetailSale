@@ -149,6 +149,7 @@ public class RetialSaleDbAdapter
          * 
          * @throws IOException
          */
+        @SuppressWarnings("unused")
         public void createDatabase() throws IOException
         {
             boolean dbExist = checkDatabase();
@@ -209,6 +210,7 @@ public class RetialSaleDbAdapter
             myInput.close();
         }
 
+        @SuppressWarnings("unused")
         public SQLiteDatabase openDataBase() throws SQLException
         {
             // Open the database
