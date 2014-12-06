@@ -267,7 +267,7 @@ public class Login extends Activity implements OnClickListener
             retialSaleDbAdapter.create(4, "客戶訊息來源", 51, "路過門市");
             retialSaleDbAdapter.create(4, "客戶訊息來源", 72, "雜誌訊息");
             retialSaleDbAdapter.create(4, "客戶訊息來源", 73, "報紙報導");
-            retialSaleDbAdapter.create(4, "客戶訊息來源", 74, "電台撥放");
+            retialSaleDbAdapter.create(4, "客戶訊息來源", 74, "電台播放");
             retialSaleDbAdapter.create(4, "客戶訊息來源", 75, "電視播映");
             retialSaleDbAdapter.create(4, "客戶訊息來源", 76, "網路搜尋");
             retialSaleDbAdapter.create(4, "客戶訊息來源", 77, "電子郵件");

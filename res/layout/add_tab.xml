@@ -520,6 +520,8 @@
                     <TextView
                         android:id="@+id/add_tab_select_repair_item_field"
                         style="@style/addTabTextViewStyle"
+                        android:layout_width="110dp"
+                        android:layout_marginLeft="10dp"
                         android:text="@string/add_tab_select_repair_item" />
 
                     <Spinner

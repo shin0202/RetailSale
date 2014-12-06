@@ -199,6 +199,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         // get designer list
         getUserList();
         
+        consumerVisitDateDP.setEnabled(false);
+        
         return view;
     }
 
@@ -402,7 +404,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         
         // check company phone number
-        if (!isNotLeaveChecked && !companyPhoneNumber.equals(Utility.SPACE_STRING) && !Utility.isCompanyPhoneValid(phoneNumber))
+        if (!isNotLeaveChecked && !companyPhoneNumber.equals(Utility.SPACE_STRING) && !Utility.isCompanyPhoneValid(companyPhoneNumber))
         {
             showToast(this.getActivity().getResources().getString(R.string.company_phone_field_error));
             return false;
@@ -591,7 +593,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         jobSpinner.setEnabled(enabled);
         ageSpinner.setEnabled(enabled);
         sexSpinner.setEnabled(enabled);
-        titleSpinner.setEnabled(enabled);
+        titleSpinner.setEnabled(false);
         // edittext
         customerNameET.setEnabled(enabled);
         cellPhoneNumberET.setEnabled(enabled);
@@ -608,7 +610,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         introducerET.setEnabled(enabled);
         // datepicker
-        consumerVisitDateDP.setEnabled(enabled);
+        consumerVisitDateDP.setEnabled(false);
         // timepicker
         consumerVisitTimeTP.setEnabled(enabled);
         
@@ -618,7 +620,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             jobSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
             ageSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
             sexSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
-            titleSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
+            titleSpinner.setSelection(2);
             repairItemSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
             areaSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
 
@@ -759,6 +761,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         // title spinner
         titleAdapter = new OptionAdapter(this.getActivity(), titleList);
         titleSpinner.setAdapter(titleAdapter);
+        
+        titleSpinner.setEnabled(false);
+        titleSpinner.setSelection(2); // to set default title
         // repair spinner
         repairItemAdapter = new OptionAdapter(this.getActivity(), repairItemList);
         repairItemSpinner.setAdapter(repairItemAdapter);
@@ -1060,7 +1065,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         List<String> yearList = new ArrayList<String>();
         
-        yearList.add(getResources().getString(R.string.no_data));
+        yearList.add(Utility.SPACE_STRING);
         
         for (int i = startYear; i < currentYear; i++)
         {

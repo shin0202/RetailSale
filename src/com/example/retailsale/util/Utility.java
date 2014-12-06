@@ -56,6 +56,7 @@ public class Utility
     public static final String FILE_PATH_2 = "/sdcard/retail";
     public static final String REPLACE_SERVER_FOLDER = "C:\\Project\\_code\\testFolder";
     public static final String REPLACE_STRING = ".jpg.txt";
+    public static final String REPLACE_B_STRING = ".JPG.txt";
     public static final String REPLACE_JPEG_STRING = ".jpg";
     public static final String REPLACE_TXT_STRING = ".txt";
     public static final String SPACE_STRING = "";
