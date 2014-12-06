@@ -396,13 +396,11 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
             {
                 if (!selectFolder(currentFolderName))
-                    showMessage.setText(SynchronizationFragment.this.getResources().getString(
-                            R.string.sync_tab_sync_no_file));
+                    showMessage(R.string.sync_tab_sync_no_file);
             }
             else
             {
-                showMessage.setText(SynchronizationFragment.this.getResources().getString(
-                        R.string.sd_not_exist));
+                showMessage(R.string.sd_not_exist);
             }
             break;
         case SelectedItem.SYNC_DATA:
@@ -715,7 +713,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 String name = fileEntry.getName();
                 String path = fileEntry.getAbsolutePath();
                 Log.d(TAG, "file name: " + name + " path: " + path);
-                if (fileEntry.isDirectory())
+                if (fileEntry.isDirectory() && !name.equals(Utility.THUMB_PATH_FOR_SHOW))
                 {
                     localFileInfoList
                             .add(new LocalFileInfo(name, path, LocalFileInfo.SELECTED_DIR));
@@ -777,6 +775,12 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             }
         }
         Log.d(TAG, "needCount : " + needCount);
+        
+        if (needCount == 0)
+        {
+            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+        }
+        
         return hadFile;
     }
 
@@ -1261,9 +1265,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                             + userGroupNm + " userTypeNm : " + userTypeNm);
                                     retialSaleDbAdapter.create(userSerial, userName, userGroup,
                                             userType, userGroupNm, userTypeNm);
-                                    showMessage(Utility.SPACE_STRING,
-                                            R.string.sync_tab_sync_download_user_list_success);
                                 }
+                                showMessage(Utility.SPACE_STRING,
+                                        R.string.sync_tab_sync_download_user_list_success);
                             }
                             catch (Exception e)
                             {
