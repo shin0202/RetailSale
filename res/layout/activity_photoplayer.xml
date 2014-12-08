@@ -26,7 +26,6 @@
         style="@style/addTabTextViewStyle"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="1/1"
         android:textColor="@color/white" />
 
     <Button
