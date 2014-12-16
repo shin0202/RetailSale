@@ -5,7 +5,7 @@
     <!-- Login -->
     <dimen name="login_layout_height">180dp</dimen>
     <dimen name="login_layout_margin_right_left">300dp</dimen>
-    <dimen name="login_logo_margin_right_left">50dp</dimen>
+    <dimen name="login_logo_margin_right_left">2dp</dimen>
     <dimen name="login_text_size">18sp</dimen>
     <dimen name="login_edit_layout_height">45dp</dimen>
     <dimen name="login_edit_layout_margin_right_left">15dp</dimen>
