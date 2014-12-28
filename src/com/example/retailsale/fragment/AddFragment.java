@@ -58,23 +58,29 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private List<DataOption> infoList, jobList, ageList, sexList, titleList;
     private List<DataOption> statusList, spaceList, budgetList, repairItemList, areaList;
     private List<UserDataForList> userDataList;
-    private List<String> phoneCodeList, contactCountyList, contactCityList, workCountyList, workCityList;
-    private int contactCountyPosition = 0, contactCityPosition = 0;
+//    private List<String> phoneCodeList, contactCountyList, contactCityList, workCountyList, workCityList;
+    private List<String> phoneCodeList, workCountyList, workCityList;
+//    private int contactCountyPosition = 0, contactCityPosition = 0;
     // views
     private MainActivity mainActivity;
     private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
     private Spinner yearSpinner, monthSpinner, daySpinner;
     private Spinner phoneNumberSpinner, companyPhoneNumberSpinner;
     private Spinner repairItemSpinner, areaSpinner;
-    private Spinner contactCountySpinner, contactCitySpinner, workCountySpinner, workCitySpinner;
+    private Spinner spaceSpinner, statusSpinner;
+//    private Spinner contactCountySpinner, contactCitySpinner, workCountySpinner, workCitySpinner;
+    private Spinner workCountySpinner, workCitySpinner;
     private Spinner budgetSpinner;
+//    private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
+//            introducerET, memoET, contactET, workET;
     private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
-            introducerET, memoET, contactET, workET;
-    private CheckBox leaveInfoCB, asAboveCB;
+    introducerET, memoET, workET, caseNameET, cantDescriptionET;
+//    private CheckBox leaveInfoCB, asAboveCB;
+    private CheckBox leaveInfoCB;
     @SuppressWarnings("unused")
     private TextView companyNameTV, designerStoreTV, createDateTV;
-    private DatePicker consumerVisitDateDP;
-    private TimePicker consumerVisitTimeTP;
+    private DatePicker consumerVisitDateDP, reservationDP;
+    private TimePicker consumerVisitTimeTP, reservationTP;
     private Dialog errorDialog = null;
 
     @Override
@@ -119,8 +125,10 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         sexSpinner = (Spinner) view.findViewById(R.id.add_tab_sex_selection);
         titleSpinner = (Spinner) view.findViewById(R.id.add_tab_title_selection);
         budgetSpinner = (Spinner) view.findViewById(R.id.add_tab_budget);
+        spaceSpinner = (Spinner) view.findViewById(R.id.add_tab_space);
+        statusSpinner = (Spinner) view.findViewById(R.id.add_tab_sale_status);
         Button saveBtn = (Button) view.findViewById(R.id.add_tab_save_btn);
-        Button newBtn = (Button) view.findViewById(R.id.add_tab_new_btn);
+//        Button newBtn = (Button) view.findViewById(R.id.add_tab_new_btn);
         customerNameET = (EditText) view.findViewById(R.id.add_tab_edit_customer_name);
         phoneNumberET = (EditText) view.findViewById(R.id.add_tab_edit_phone_number);
         cellPhoneNumberET = (EditText) view.findViewById(R.id.add_tab_edit_cellphone_number);
@@ -128,12 +136,16 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         introducerET = (EditText) view.findViewById(R.id.add_tab_edit_introducer);
         emailET = (EditText) view.findViewById(R.id.add_tab_edit_email);
         memoET = (EditText) view.findViewById(R.id.add_tab_edit_customer_memo);
-        contactET = (EditText) view.findViewById(R.id.add_tab_edit_contact_address);
+//        contactET = (EditText) view.findViewById(R.id.add_tab_edit_contact_address);
         workET = (EditText) view.findViewById(R.id.add_tab_edit_work_address);
+        caseNameET = (EditText) view.findViewById(R.id.add_tab_edit_case_name);
+        cantDescriptionET = (EditText) view.findViewById(R.id.add_tab_edit_cant_description);
         leaveInfoCB = (CheckBox) view.findViewById(R.id.add_tab_leave_info_checkbox);
-        asAboveCB = (CheckBox) view.findViewById(R.id.add_tab_as_above_checkbox);
+//        asAboveCB = (CheckBox) view.findViewById(R.id.add_tab_as_above_checkbox);
         consumerVisitDateDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_visit_datePicker);
         consumerVisitTimeTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_visit_timePicker);
+        reservationDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_reservation_datePicker);
+        reservationTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_reservation_timePicker);
         designerStoreTV = (TextView) view.findViewById(R.id.add_tab_designer_store);
         designerSpinner = (Spinner) view.findViewById(R.id.add_tab_user);
         createDateTV = (TextView) view.findViewById(R.id.add_tab_create_date);
@@ -151,11 +163,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         repairItemSpinner = (Spinner) view.findViewById(R.id.add_tab_repair_item);
         areaSpinner = (Spinner) view.findViewById(R.id.add_tab_area);
         
-        contactCountySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_county);
-        contactCountySpinner.setOnItemSelectedListener(this);
-        contactCitySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_city);
-        contactCitySpinner.setOnItemSelectedListener(this);
-        contactCitySpinner.setEnabled(false);
+//        contactCountySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_county);
+//        contactCountySpinner.setOnItemSelectedListener(this);
+//        contactCitySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_city);
+//        contactCitySpinner.setOnItemSelectedListener(this);
+//        contactCitySpinner.setEnabled(false);
         
         workCountySpinner = (Spinner) view.findViewById(R.id.add_tab_work_address_county);
         workCountySpinner.setOnItemSelectedListener(this);
@@ -172,14 +184,15 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         // save btn
         saveBtn.setOnClickListener(this);
-        newBtn.setOnClickListener(this);
+//        newBtn.setOnClickListener(this);
         // leave info
         leaveInfoCB.setOnCheckedChangeListener(this);
         // time picker to set 24h
         consumerVisitTimeTP.setIs24HourView(true);
+        reservationTP.setIs24HourView(true);
         
         // as above
-        asAboveCB.setOnCheckedChangeListener(this);
+//        asAboveCB.setOnCheckedChangeListener(this);
         
         // create date
         createDateTime = Utility.getCurrentDateTime();
@@ -220,9 +233,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         case R.id.add_tab_save_btn:
             saveData();
             break;
-        case R.id.add_tab_new_btn:
-            startOrderMeasureActivity();
-            break;
+//        case R.id.add_tab_new_btn:
+//            startOrderMeasureActivity();
+//            break;
         case R.id.error_dialog_btn:
             if (errorDialog != null)
             {
@@ -248,29 +261,29 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             }
             this.isNotLeaveChecked = isChecked;
             break;
-        case R.id.add_tab_as_above_checkbox:
-            
-            Log.d(TAG, "contactCountyPosition === " + contactCountyPosition);
-            
-            if (isChecked)
-            { // work address same as contact address
-                workCountySpinner.setSelection(contactCountyPosition);
-                handleCountyEvent(contactCountyPosition, false, true); // to set work city position in this
-
-                workCountySpinner.setEnabled(false);
-
-                workET.setText(contactET.getText().toString());
-                workET.setEnabled(false);
-            }
-            else
-            {
-                workCountySpinner.setEnabled(true);
-                workCountySpinner.setSelection(0);
-                workCitySpinner.setAdapter(null);
-                workCitySpinner.setEnabled(false);
-                workET.setEnabled(true);
-            }
-            break;
+//        case R.id.add_tab_as_above_checkbox:
+//            
+//            Log.d(TAG, "contactCountyPosition === " + contactCountyPosition);
+//            
+//            if (isChecked)
+//            { // work address same as contact address
+//                workCountySpinner.setSelection(contactCountyPosition);
+//                handleCountyEvent(contactCountyPosition, false, true); // to set work city position in this
+//
+//                workCountySpinner.setEnabled(false);
+//
+//                workET.setText(contactET.getText().toString());
+//                workET.setEnabled(false);
+//            }
+//            else
+//            {
+//                workCountySpinner.setEnabled(true);
+//                workCountySpinner.setSelection(0);
+//                workCitySpinner.setAdapter(null);
+//                workCitySpinner.setEnabled(false);
+//                workET.setEnabled(true);
+//            }
+//            break;
         }
     }
 
@@ -312,9 +325,17 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         String timeString = Utility.covertTimeToString(consumerVisitTimeTP.getCurrentHour(),
                 consumerVisitTimeTP.getCurrentMinute())
                 + ":00";
+        
+        String reservationDateString = Utility.covertDateToString(reservationDP.getYear(),
+                reservationDP.getMonth() + 1, reservationDP.getDayOfMonth());
+        String reservationTimeString = Utility.covertTimeToString(reservationTP.getCurrentHour(),
+                reservationTP.getCurrentMinute()) + ":00";
         String customerName = customerNameET.getText().toString();
         String introducer = introducerET.getText().toString();
         String memo = memoET.getText().toString();
+        
+        String reservationWorkAlias = caseNameET.getText().toString();
+        String reservationStatusComment = cantDescriptionET.getText().toString();
         
         int msgSelectedSerial = infoList.get(infoSpinner.getSelectedItemPosition()).getOptSerial();
         int jobSelectedSerial = jobList.get(jobSpinner.getSelectedItemPosition()).getOptSerial();
@@ -324,6 +345,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         int repairSelectedSerial = repairItemList.get(repairItemSpinner.getSelectedItemPosition()).getOptSerial();
         int areaSelectedSerial = areaList.get(areaSpinner.getSelectedItemPosition()).getOptSerial();
         int budgetSelectedSerial = budgetList.get(budgetSpinner.getSelectedItemPosition()).getOptSerial();
+        int spaceSelectedSerial = spaceList.get(spaceSpinner.getSelectedItemPosition()).getOptSerial();
+        int statusSelectedSerial = statusList.get(statusSpinner.getSelectedItemPosition()).getOptSerial();
         
         int yearSelectedPosition = yearSpinner.getSelectedItemPosition();
         
@@ -337,45 +360,50 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     .append(monthSpinner.getSelectedItem()).append("-")
                     .append(daySpinner.getSelectedItem());
         }
-        
+
         Log.d(TAG, "msgSelectedSerial: " + msgSelectedSerial + " jobSelectedSerial: "
                 + jobSelectedSerial + " ageSelectedSerial: " + ageSelectedSerial
                 + " sexSelectedSerial: " + sexSelectedSerial + " titleSelectedSerial: "
                 + titleSelectedSerial + " repairSelectedSerial: " + repairSelectedSerial
-                + " areaSelectedSerial : " + areaSelectedSerial + " budgetSelectedSerial : " + budgetSelectedSerial);
-        
-        Log.d(TAG, "date: " + dateString + "time : " + timeString);
-        
-        Log.d(TAG, "customerName : " + customerName + " phoneNumber: " + phoneNumber + " cellPhoneNumber: "
-                + cellPhoneNumber + " companyPhoneNumber: " + companyPhoneNumber + " email: " + email + " birthday: "
-                + customerBirthday + " introducer: " + introducer);
+                + " areaSelectedSerial : " + areaSelectedSerial + " budgetSelectedSerial : "
+                + budgetSelectedSerial + " spaceSelectedSerial : " + spaceSelectedSerial
+                + " statusSelectedSerial : " + statusSelectedSerial);
+
+        Log.d(TAG, "date: " + dateString + " time : " + timeString + " reservationDate : "
+                + reservationDateString + " reservationTimeString : " + reservationTimeString);
+
+        Log.d(TAG, "customerName : " + customerName + " phoneNumber: " + phoneNumber
+                + " cellPhoneNumber: " + cellPhoneNumber + " companyPhoneNumber: "
+                + companyPhoneNumber + " email: " + email + " birthday: " + customerBirthday
+                + " introducer: " + introducer + " reservationWorkAlias : " + reservationWorkAlias
+                + " reservationStatusComment : " + reservationStatusComment);
         
         // handle contact address
-        int contactCountyPosition = contactCountySpinner.getSelectedItemPosition();
+//        int contactCountyPosition = contactCountySpinner.getSelectedItemPosition();
         int workCountyPosition = workCountySpinner.getSelectedItemPosition();
         String contactAddress = "", workAddress = "";
         String contactZipCode = "", workZipCode = "";
         String contactCountyCity = "", workCountyCity = "";
         TWZipCode tZip = new TWZipCode();
         
-        if (contactCountyPosition == 0) // default, no data
-        {
-            contactAddress = contactCountyList.get(contactCountyPosition);
-        }
-        else
-        {
-            tZip.setCountry(contactCountyList.get(contactCountyPosition));
-            tZip.setTown(contactCityList.get(contactCitySpinner.getSelectedItemPosition()));
-            
-            contactCountyCity = contactCountyList.get(contactCountyPosition)
-                    + contactCityList.get(contactCitySpinner.getSelectedItemPosition());
-            contactAddress = contactCountyCity + contactET.getText();
-        }
+//        if (contactCountyPosition == 0) // default, no data
+//        {
+//            contactAddress = contactCountyList.get(contactCountyPosition);
+//        }
+//        else
+//        {
+//            tZip.setCountry(contactCountyList.get(contactCountyPosition));
+//            tZip.setTown(contactCityList.get(contactCitySpinner.getSelectedItemPosition()));
+//            
+//            contactCountyCity = contactCountyList.get(contactCountyPosition)
+//                    + contactCityList.get(contactCitySpinner.getSelectedItemPosition());
+//            contactAddress = contactCountyCity + contactET.getText();
+//        }
         
         contactZipCode = tZip.getZipCode();
         
-        Log.d(TAG, "contact address county : " + contactCountyPosition + " countyCity : " + contactCountyCity
-                + " contactAddress : " + contactAddress + " zip code : " + contactZipCode);
+//        Log.d(TAG, "contact address county : " + contactCountyPosition + " countyCity : " + contactCountyCity
+//                + " contactAddress : " + contactAddress + " zip code : " + contactZipCode);
         
         if (workCountyPosition == 0) // default, no data
         {
@@ -388,7 +416,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             
             workCountyCity = workCountyList.get(workCountyPosition)
                     + workCityList.get(workCitySpinner.getSelectedItemPosition());
-            workAddress = workCountyCity + contactET.getText();
+//            workAddress = workCountyCity + contactET.getText();
+            workAddress = workCountyCity + workET.getText();
         }
         
         workZipCode = tZip.getZipCode();
@@ -441,7 +470,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         // the creator is not from share preference but from creator list
         int creator = 0, group = 0;
         
-        if (designerSpinner.getSelectedItemPosition() < userDataList.size() || designerSpinner.getSelectedItemPosition() >= userDataList.size())
+        if (designerSpinner.getSelectedItemPosition() >= userDataList.size())
         {
             Log.d(TAG, "creator index error ");
         }
@@ -460,24 +489,28 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 if (isNotLeaveChecked)
                 {
                     String noData = AddFragment.this.getResources().getString(R.string.no_data);
-                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, noData, noData, noData, noData,
-                            sexSelectedSerial, titleSelectedSerial, noData, dateString + timeString, msgSelectedSerial,
-                            noData, jobSelectedSerial, ageSelectedSerial, memo, noData, creator, group, createDateTime,
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, workAddress, workZipCode, Utility.SPACE_STRING,
-                            contactAddress, contactZipCode, spaceList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), statusList
-                                    .get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(), Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, budgetSelectedSerial, repairSelectedSerial, areaSelectedSerial);
+                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, noData, noData,
+                            noData, noData, sexSelectedSerial, titleSelectedSerial, noData,
+                            dateString + timeString, msgSelectedSerial, noData, jobSelectedSerial,
+                            ageSelectedSerial, memo, noData, creator, group, createDateTime,
+                            reservationDateString + reservationTimeString, reservationTimeString, workAddress, workZipCode,
+                            reservationWorkAlias, contactAddress, contactZipCode,
+                            spaceSelectedSerial, statusSelectedSerial, Utility.SPACE_STRING,
+                            reservationStatusComment, budgetSelectedSerial, repairSelectedSerial,
+                            areaSelectedSerial);
                 }
                 else
                 {
-                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber,
-                            phoneNumber, companyPhoneNumber, sexSelectedSerial, titleSelectedSerial, email, dateString
-                                    + timeString, msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial,
-                            memo, customerBirthday.toString(), creator, group, createDateTime, Utility.SPACE_STRING,
-                            Utility.SPACE_STRING, workAddress, workZipCode, Utility.SPACE_STRING,
-                            contactAddress, contactZipCode, spaceList.get(Utility.DEFAULT_ZERO_VALUE)
-                                    .getOptSerial(), statusList.get(Utility.DEFAULT_ZERO_VALUE).getOptSerial(),
-                            Utility.SPACE_STRING, Utility.SPACE_STRING, budgetSelectedSerial, repairSelectedSerial, areaSelectedSerial);
+                    customerInfo = new CustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName,
+                            cellPhoneNumber, phoneNumber, companyPhoneNumber, sexSelectedSerial,
+                            titleSelectedSerial, email, dateString + timeString, msgSelectedSerial,
+                            introducer, jobSelectedSerial, ageSelectedSerial, memo,
+                            customerBirthday.toString(), creator, group, createDateTime,
+                            reservationDateString + reservationTimeString, reservationTimeString, workAddress, workZipCode,
+                            reservationWorkAlias, contactAddress, contactZipCode,
+                            spaceSelectedSerial, statusSelectedSerial, Utility.SPACE_STRING,
+                            reservationStatusComment, budgetSelectedSerial, repairSelectedSerial,
+                            areaSelectedSerial);
                 }
             }
             else
@@ -513,14 +546,14 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 
         Log.d(TAG, "saveData() customerInfo === " + customerInfo.toString());
 
-        if (!workAddress.equals(Utility.SPACE_STRING) && contactAddress.equals(Utility.SPACE_STRING))
-        {
-            showAlertDialog();
-        }
-        else
-        {
+//        if (!workAddress.equals(Utility.SPACE_STRING) && contactAddress.equals(Utility.SPACE_STRING))
+//        {
+//            showAlertDialog();
+//        }
+//        else
+//        {
             insertToDB();
-        }
+//        }
     }
 
     private void showAlertDialog()
@@ -614,6 +647,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         consumerVisitDateDP.setEnabled(false);
         // timepicker
         consumerVisitTimeTP.setEnabled(enabled);
+        
+        reservationDP.setEnabled(enabled);
+        reservationTP.setEnabled(enabled);
         
         if (!enabled)
         {
@@ -747,7 +783,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             Log.d(TAG, "option cursor is null ");
         }
         
-        OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter, repairItemAdapter, areaAdapter, budgetAdapter;
+        OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter, repairItemAdapter, areaAdapter, budgetAdapter, spaceAdapter, statusAdapter;
         // msg spinner
         infoAdapter = new OptionAdapter(this.getActivity(), infoList);
         infoSpinner.setAdapter(infoAdapter);
@@ -775,6 +811,12 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         // budget spinner
         budgetAdapter = new OptionAdapter(this.getActivity(), budgetList);
         budgetSpinner.setAdapter(budgetAdapter);
+        // space spinner
+        spaceAdapter = new OptionAdapter(this.getActivity(), spaceList);
+        spaceSpinner.setAdapter(spaceAdapter);
+        // status spinner
+        statusAdapter = new OptionAdapter(this.getActivity(), statusList);
+        statusSpinner.setAdapter(statusAdapter);
         
         Cursor userStoreCursor = retialSaleDbAdapter.getOptionByOptionSerial(Utility.getAppCreatorGroup(AddFragment.this
                 .getActivity()));
@@ -860,11 +902,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private void setContactCountyList()
     {
         String[] countyArray = getResources().getStringArray(R.array.county_city);
-        contactCountyList = Arrays.asList(countyArray);
-        
-        CommonAdapter contactCountyAdapter = new CommonAdapter(this.getActivity(), contactCountyList);
-        
-        contactCountySpinner.setAdapter(contactCountyAdapter);
+//        contactCountyList = Arrays.asList(countyArray);
+//        
+//        CommonAdapter contactCountyAdapter = new CommonAdapter(this.getActivity(), contactCountyList);
+//        
+//        contactCountySpinner.setAdapter(contactCountyAdapter);
         
         workCountyList = Arrays.asList(countyArray);
         
@@ -875,11 +917,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     
     private void setContactCityList(String[] cityArray)
     {
-        contactCityList = Arrays.asList(cityArray);
-        
-        CommonAdapter cityAdapter = new CommonAdapter(this.getActivity(), contactCityList);
-        
-        contactCitySpinner.setAdapter(cityAdapter);
+//        contactCityList = Arrays.asList(cityArray);
+//        
+//        CommonAdapter cityAdapter = new CommonAdapter(this.getActivity(), contactCityList);
+//        
+//        contactCitySpinner.setAdapter(cityAdapter);
     }
     
     private void setWorkCityList(String[] cityArray, boolean isAbove)
@@ -890,27 +932,27 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         workCitySpinner.setAdapter(cityAdapter);
         
-        if (isAbove)
-        {
-            Log.d(TAG, "contactCityPosition === " + contactCityPosition);
-            workCitySpinner.setEnabled(false);
-            workCitySpinner.setSelection(contactCityPosition);
-        }
+//        if (isAbove)
+//        {
+//            Log.d(TAG, "contactCityPosition === " + contactCityPosition);
+//            workCitySpinner.setEnabled(false);
+//            workCitySpinner.setSelection(contactCityPosition);
+//        }
     }
     
     private void handleCountyEvent(int position, boolean isContact, boolean isAbove)
     {
-        if (isContact)
-            contactCitySpinner.setEnabled(true);
-        else
+//        if (isContact)
+//            contactCitySpinner.setEnabled(true);
+//        else
             workCitySpinner.setEnabled(true);
         switch (position)
         {
         case Utility.County.NONE:
             if (isContact)
             {
-                contactCitySpinner.setEnabled(false);
-                contactCitySpinner.setAdapter(null);
+//                contactCitySpinner.setEnabled(false);
+//                contactCitySpinner.setAdapter(null);
             }
             else
             {
@@ -1214,22 +1256,22 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 setCustomerBirthdayDaySpinner(days);
             }
             break;
-        case R.id.add_tab_contact_address_county:
-            Log.d(TAG, "To select contact county, the position is " + position);
-            contactCountyPosition = position;
-            handleCountyEvent(position, true, false);
-            break;
+//        case R.id.add_tab_contact_address_county:
+//            Log.d(TAG, "To select contact county, the position is " + position);
+//            contactCountyPosition = position;
+//            handleCountyEvent(position, true, false);
+//            break;
         case R.id.add_tab_work_address_county:
-            if (asAboveCB.isChecked())
-                return;
+//            if (asAboveCB.isChecked())
+//                return;
             Log.d(TAG, "To select work county, the position is " + position);
             handleCountyEvent(position, false, false);
          
             break;
-        case R.id.add_tab_contact_address_city:
-            Log.d(TAG, "To select contact city, the position is " + position);
-            contactCityPosition = position;
-            break;
+//        case R.id.add_tab_contact_address_city:
+//            Log.d(TAG, "To select contact city, the position is " + position);
+//            contactCityPosition = position;
+//            break;
         }
     }
 
