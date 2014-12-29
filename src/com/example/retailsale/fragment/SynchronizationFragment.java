@@ -1237,7 +1237,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     {
 
         HttpManager httpManager = new HttpManager();
-        httpManager.getUserListByGroup(getActivity(), new GetUsetListByGroupListener()
+//        httpManager.getUserListByGroup(getActivity(), new GetUsetListByGroupListener()
+        httpManager.getUserList(getActivity(), new GetUsetListByGroupListener()
         {
             @Override
             public void onResult(Boolean isSuccess, GsonUserByGroup user)
@@ -1305,7 +1306,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 closeDb();
                 handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
             }
-        }, Utility.getCreatorGroup(this.getActivity()));
+//        }, Utility.getCreatorGroup(this.getActivity()));
+        });
     }
 
     @SuppressWarnings("unused")

@@ -240,6 +240,24 @@ public class HttpManager
         VolleySingleton.getInstance(activity).getRequestQueue().add(getUserListByGroupGsonRequset);
     }
     ////////////////////////////////////////////////////////////////////////////////
+    
+    ////////////////////////////////////////////////////////////////////////////////get user list
+    public void getUserList(Activity activity, GetUsetListByGroupListener getUsetListByGroupListener)
+    {
+//        String getUserListUri = "http://" + Utility.getIP(activity) + "/KendoAPI/odata/usp_Qry_UserbyGroup?$filter=userGroup eq " + group;
+        String getUserListUri = "http://" + Utility.getIP(activity) + "/KendoAPI/odata/usp_Qry_UserbyGroup";
+        Log.e(TAG, "getUserList() getUserListUri = " + getUserListUri);
+
+        GsonRequest<GsonUserByGroup> getUserListByGroupGsonRequset = new GsonRequest<GsonUserByGroup>(Method.GET, getUserListUri,
+                GsonUserByGroup.class, getUsetListByGroupReqSuccessListener(getUsetListByGroupListener),
+                getUsetListByGroupReqErrorListener(getUsetListByGroupListener), LogType.OPERATION, String.valueOf(Utility
+                        .getCreator(activity)), Utility.SPACE_STRING, USER_HOST, ACTION_NAME,
+                Utility.getLoginKey(activity));
+        getUserListByGroupGsonRequset.setTag("getUserList");
+
+        VolleySingleton.getInstance(activity).getRequestQueue().add(getUserListByGroupGsonRequset);
+    }
+    ////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////// file info
     public void getFileInfo(Activity activity, int pathId, int fileId, GetFileInfoListener getFileInfoListener,
