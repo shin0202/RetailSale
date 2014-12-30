@@ -41,7 +41,7 @@
                     <TextView
                         android:id="@+id/add_tab_company_name"
                         style="@style/addTabTextViewStyle"
-                        android:text="@string/add_tab_company_name" />
+                        android:text="@string/add_tab_show_company_name" />
                 </LinearLayout>
 
                 <CheckBox

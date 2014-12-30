@@ -73,6 +73,7 @@
     <string name="add_tab_customer_come_id">來店案號</string>
     <string name="add_tab_check_address_title">檢查地址</string>
     <string name="add_tab_check_address_message">聯絡地址為空白, 是否與施工地址相同, 若不同請重新修改</string>
+    <string name="add_tab_show_company_name">Order系統傢俱</string>
 
     <!-- Order measure -->
     <string name="order_measure_send_note_msg">傳送備忘簡訊</string>
