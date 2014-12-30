@@ -432,13 +432,23 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             return false;
         }
         
+        if (phoneNumberET.getText().toString().equals(Utility.SPACE_STRING))
+        {
+            phoneNumber = Utility.SPACE_STRING;
+        }
+        
         
         // check company phone number
-        if (!isNotLeaveChecked && !companyPhoneNumber.equals(Utility.SPACE_STRING) && !Utility.isCompanyPhoneValid(companyPhoneNumber))
+//        if (!isNotLeaveChecked && !companyPhoneNumber.equals(Utility.SPACE_STRING) && !Utility.isCompanyPhoneValid(companyPhoneNumber))
+//        {
+//            showToast(this.getActivity().getResources().getString(R.string.company_phone_field_error));
+//            return false;
+//        }
+        if (companyPhoneNumberET.getText().toString().equals(Utility.SPACE_STRING))
         {
-            showToast(this.getActivity().getResources().getString(R.string.company_phone_field_error));
-            return false;
+            companyPhoneNumber = Utility.SPACE_STRING;
         }
+        
         // check email
         if (!isNotLeaveChecked && !email.equals(Utility.SPACE_STRING) && !Utility.isEmailValid(email))
         {
