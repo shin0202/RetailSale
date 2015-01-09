@@ -419,23 +419,23 @@ public class Login extends Activity implements OnClickListener
 
         try
         {
-            retialSaleDbAdapter.create("A000001", "A000001", 0, 22);
-            retialSaleDbAdapter.create("A000002", "A000002", 0, 23);
-            retialSaleDbAdapter.create("A000003", "A000003", 0, 41);
-            retialSaleDbAdapter.create("A000004", "A000004", 0, 42);
-            retialSaleDbAdapter.create("A000005", "A000005", 0, 64);
-            retialSaleDbAdapter.create("A000006", "A000006", 0, 65);
-            retialSaleDbAdapter.create("A000007", "A000007", 0, 96);
-            retialSaleDbAdapter.create("A000008", "A000008", 0, 102);
-            retialSaleDbAdapter.create("A000009", "A000009", 0, 103);
-            retialSaleDbAdapter.create("A000010", "A000010", 0, 104);
-            retialSaleDbAdapter.create("A000011", "A000011", 0, 105);
-            retialSaleDbAdapter.create("A000012", "A000012", 0, 106);
-            retialSaleDbAdapter.create("A000013", "A000013", 0, 107);
-            retialSaleDbAdapter.create("A000014", "A000014", 0, 108);
-            retialSaleDbAdapter.create("A000015", "A000015", 0, 109);
-            retialSaleDbAdapter.create("A000016", "A000016", 0, 110);
-            retialSaleDbAdapter.create("A000017", "A000017", 0, 111);
+            retialSaleDbAdapter.create("46A", "46A", 0, 22);
+            retialSaleDbAdapter.create("J9A", "J9A", 0, 23);
+            retialSaleDbAdapter.create("48A", "48A", 0, 41);
+            retialSaleDbAdapter.create("47A", "47A", 0, 42);
+            retialSaleDbAdapter.create("J6A", "J6A", 0, 64);
+            retialSaleDbAdapter.create("45A", "45A", 0, 65);
+            retialSaleDbAdapter.create("L3A", "L3A", 0, 96);
+            retialSaleDbAdapter.create("P5A", "P5A", 0, 102);
+            retialSaleDbAdapter.create("05A", "05A", 0, 103);
+            retialSaleDbAdapter.create("08A", "08A", 0, 104);
+            retialSaleDbAdapter.create("09A", "09A", 0, 105);
+            retialSaleDbAdapter.create("12A", "12A", 0, 106);
+            retialSaleDbAdapter.create("25A", "25A", 0, 107);
+            retialSaleDbAdapter.create("B2A", "B2A", 0, 108);
+            retialSaleDbAdapter.create("B9A", "B9A", 0, 109);
+            retialSaleDbAdapter.create("J5A", "J5A", 0, 110);
+            retialSaleDbAdapter.create("P3A", "P3A", 0, 111);
             return true;
         }
         catch (Exception e)

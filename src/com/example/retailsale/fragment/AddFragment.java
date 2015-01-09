@@ -63,7 +63,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 //    private int contactCountyPosition = 0, contactCityPosition = 0;
     // views
     private MainActivity mainActivity;
-    private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
+//    private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
+    private Spinner infoSpinner, jobSpinner, ageSpinner, titleSpinner, designerSpinner;
     private Spinner yearSpinner, monthSpinner, daySpinner;
     private Spinner phoneNumberSpinner, companyPhoneNumberSpinner;
     private Spinner repairItemSpinner, areaSpinner;
@@ -122,7 +123,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         infoSpinner = (Spinner) view.findViewById(R.id.add_tab_info_from);
         jobSpinner = (Spinner) view.findViewById(R.id.add_tab_job);
         ageSpinner = (Spinner) view.findViewById(R.id.add_tab_age_selection);
-        sexSpinner = (Spinner) view.findViewById(R.id.add_tab_sex_selection);
+//        sexSpinner = (Spinner) view.findViewById(R.id.add_tab_sex_selection);
         titleSpinner = (Spinner) view.findViewById(R.id.add_tab_title_selection);
         budgetSpinner = (Spinner) view.findViewById(R.id.add_tab_budget);
         spaceSpinner = (Spinner) view.findViewById(R.id.add_tab_space);
@@ -340,7 +341,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         int msgSelectedSerial = infoList.get(infoSpinner.getSelectedItemPosition()).getOptSerial();
         int jobSelectedSerial = jobList.get(jobSpinner.getSelectedItemPosition()).getOptSerial();
         int ageSelectedSerial = ageList.get(ageSpinner.getSelectedItemPosition()).getOptSerial();
-        int sexSelectedSerial = sexList.get(sexSpinner.getSelectedItemPosition()).getOptSerial();
+//        int sexSelectedSerial = sexList.get(sexSpinner.getSelectedItemPosition()).getOptSerial();
+        int sexSelectedSerial = 0;
         int titleSelectedSerial = titleList.get(titleSpinner.getSelectedItemPosition()).getOptSerial();
         int repairSelectedSerial = repairItemList.get(repairItemSpinner.getSelectedItemPosition()).getOptSerial();
         int areaSelectedSerial = areaList.get(areaSpinner.getSelectedItemPosition()).getOptSerial();
@@ -636,8 +638,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         infoSpinner.setEnabled(enabled);
         jobSpinner.setEnabled(enabled);
         ageSpinner.setEnabled(enabled);
-        sexSpinner.setEnabled(enabled);
-        titleSpinner.setEnabled(false);
+//        sexSpinner.setEnabled(enabled);
+        titleSpinner.setEnabled(enabled);
         // edittext
         customerNameET.setEnabled(enabled);
         cellPhoneNumberET.setEnabled(enabled);
@@ -666,7 +668,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             infoSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
             jobSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
             ageSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
-            sexSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
+//            sexSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
             titleSpinner.setSelection(2);
             repairItemSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
             areaSpinner.setSelection(Utility.DEFAULT_ZERO_VALUE);
@@ -793,7 +795,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             Log.d(TAG, "option cursor is null ");
         }
         
-        OptionAdapter infoAdapter, jobAdapter, ageAdapter, sexAdapter, titleAdapter, repairItemAdapter, areaAdapter, budgetAdapter, spaceAdapter, statusAdapter;
+        OptionAdapter infoAdapter, jobAdapter, ageAdapter, titleAdapter, repairItemAdapter, areaAdapter, budgetAdapter, spaceAdapter, statusAdapter;
         // msg spinner
         infoAdapter = new OptionAdapter(this.getActivity(), infoList);
         infoSpinner.setAdapter(infoAdapter);
@@ -804,13 +806,13 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         ageAdapter = new OptionAdapter(this.getActivity(), ageList);
         ageSpinner.setAdapter(ageAdapter);
         // sex spinner
-        sexAdapter = new OptionAdapter(this.getActivity(), sexList);
-        sexSpinner.setAdapter(sexAdapter);
+//        sexAdapter = new OptionAdapter(this.getActivity(), sexList);
+//        sexSpinner.setAdapter(sexAdapter);
         // title spinner
         titleAdapter = new OptionAdapter(this.getActivity(), titleList);
         titleSpinner.setAdapter(titleAdapter);
         
-        titleSpinner.setEnabled(false);
+//        titleSpinner.setEnabled(false);
         titleSpinner.setSelection(2); // to set default title
         // repair spinner
         repairItemAdapter = new OptionAdapter(this.getActivity(), repairItemList);

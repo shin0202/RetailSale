@@ -45,7 +45,7 @@
     <string name="add_tab_phone_number_company">公司電話</string>
     <string name="add_tab_phone_number_company_hint">例:12345678#0000</string>
     <string name="add_tab_cellphone_number">手機電話</string>
-    <string name="add_tab_cellphone_number_hint">請輸入手機電話(0912-345678)</string>
+    <string name="add_tab_cellphone_number_hint">請輸入手機電話(0912345678)</string>
     <string name="add_tab_select_info">訊息來源</string>
     <string name="add_tab_select_job">職業</string>
     <string name="add_tab_leave_info">客戶不留基本資料</string>
@@ -83,7 +83,7 @@
     <string name="order_measure_consumer_comment_hint">請輸入備註</string>
     <string name="order_measure_consumer_request_msg">格局需求</string>
     <string name="order_measure_consumer_cost_msg">預算</string>
-    <string name="order_measure_consumer_date_time_msg">約定時間</string>
+    <string name="order_measure_consumer_date_time_msg">丈量時間</string>
     <string name="order_measure_last_update">上次更新</string>
     <string name="order_measure_sale_create_date">銷售建立日期</string>
 

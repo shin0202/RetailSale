@@ -526,7 +526,7 @@
 
                 <!-- sex -->
 
-                <LinearLayout
+                <!--  <LinearLayout
                     android:id="@+id/add_tab_select_sex_layout"
                     style="@style/inputLayoutStyleInclueMargin"
                     android:orientation="horizontal" >
@@ -541,7 +541,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center" />
-                </LinearLayout>
+                </LinearLayout> -->
 
                 <!-- area & repair -->
 
