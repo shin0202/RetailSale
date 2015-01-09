@@ -428,15 +428,32 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 + " workAddress : " + workAddress + " zip code : " + workZipCode);
         
         // check phone and cellphone number, only need to select one item to write
-        if (!isNotLeaveChecked && !Utility.isPhoneValid(phoneNumber) && !Utility.isCellphoneValid(cellPhoneNumber))
-        {
-            showToast(this.getActivity().getResources().getString(R.string.home_phone_or_cellphone_field_error));
-            return false;
-        }
         
-        if (phoneNumberET.getText().toString().equals(Utility.SPACE_STRING))
+        if (isNotLeaveChecked)
         {
             phoneNumber = Utility.SPACE_STRING;
+            cellPhoneNumber = Utility.SPACE_STRING;
+        }
+        else
+        {
+            // let phone number is space string when get space string from phoneNumberET
+            if (phoneNumberET.getText().toString().equals(Utility.SPACE_STRING))
+            {
+                phoneNumber = Utility.SPACE_STRING;
+            }
+            
+            Log.d(TAG, " ----- phoneNumber: " + phoneNumber + " cellPhoneNumber: "
+                    + cellPhoneNumber);
+            
+            boolean isPhoneValid = Utility.isPhoneValid(phoneNumber);
+            boolean isCellPhoneValid = Utility.isCellphoneValid(cellPhoneNumber);
+            
+            if ((!isPhoneValid && !isCellPhoneValid) || (!phoneNumber.equals(Utility.SPACE_STRING) && !isPhoneValid)
+                    || (!cellPhoneNumber.equals(Utility.SPACE_STRING) && !isCellPhoneValid))
+            {
+                showToast(this.getActivity().getResources().getString(R.string.home_phone_or_cellphone_field_error));
+                return false;
+            }
         }
         
         
