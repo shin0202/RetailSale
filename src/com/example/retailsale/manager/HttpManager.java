@@ -136,11 +136,11 @@ public class HttpManager
 //		VolleySingleton.getInstance(context).getRequestQueue().add(addCustomerInfoRequset);
     }
 
-    public void addCustomerInfo(Activity activity, String custometName, Handler handler, String logType, String userNo,
+    public void addCustomerInfo(Context context, String custometName, Handler handler, String logType, String userNo,
             String userName, String userHostAddress, String actionName, String loginKey, JSONStringer json, long rowId,
             RetialSaleDbAdapter retialSaleDbAdapter)
     {
-        String addCustomerInfoUri = "http://" + Utility.getIP(activity) + "/KendoAPI/odata/customerData_Mobile";
+        String addCustomerInfoUri = "http://" + Utility.getIP(context) + "/KendoAPI/odata/customerData_Mobile";
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(addCustomerInfoUri);
         httppost.setHeader(Utility.JSONTag.CONTENT_TYPE, Utility.HeaderContent.CONTENT_TYPE);
@@ -189,7 +189,11 @@ public class HttpManager
             e.printStackTrace();
             msg.arg1 = Utility.FAILED_UPLOAD;
         }
-        handler.sendMessage(msg);
+        
+        if (handler != null)
+        {
+            handler.sendMessage(msg);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////

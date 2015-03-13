@@ -9,7 +9,7 @@
         android:layout_width="@dimen/browser_tab_cell_img_edge"
         android:layout_height="@dimen/browser_tab_cell_img_edge"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"/>
+        android:gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/photo_name"

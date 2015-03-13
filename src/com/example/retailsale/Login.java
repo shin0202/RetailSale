@@ -1,13 +1,19 @@
 package com.example.retailsale;
 
+import java.util.Calendar;
+
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,6 +54,8 @@ public class Login extends Activity implements OnClickListener
         
         // To set default IP, if IP not exist
         Utility.setDefaultIP(this);
+        
+        testAlarmManager();
         
         if (hadLogin()) 
         {
@@ -436,6 +444,12 @@ public class Login extends Activity implements OnClickListener
             retialSaleDbAdapter.create("B9A", "B9A", 0, 109);
             retialSaleDbAdapter.create("J5A", "J5A", 0, 110);
             retialSaleDbAdapter.create("P3A", "P3A", 0, 111);
+            
+            retialSaleDbAdapter.create("62R", "62R", 0, 127);
+            retialSaleDbAdapter.create("63R", "63R", 0, 128);
+            retialSaleDbAdapter.create("65R", "65R", 0, 129);
+            retialSaleDbAdapter.create("66R", "66R", 0, 130);
+            retialSaleDbAdapter.create("71R", "71R", 0, 131);
             return true;
         }
         catch (Exception e)
@@ -491,5 +505,34 @@ public class Login extends Activity implements OnClickListener
         {
             return false;
         }
+    }
+    
+    // test alarmManager
+    private void testAlarmManager()
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+//        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        calendar.set(Calendar.HOUR_OF_DAY, 20);
+        calendar.set(Calendar.MINUTE, 1);
+        
+        Intent intent = new Intent(this, UploadReceiver.class);
+        intent.putExtra("msg", "upload");
+        
+        Log.d(TAG, "calendar.getTimeInMillis() === " + calendar.getTimeInMillis());
+        Log.d(TAG, "SystemClock.currentThreadTimeMillis() === " + SystemClock.currentThreadTimeMillis());
+        
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        // With setInexactRepeating(), you have to use one of the AlarmManager interval
+        // constants--in this case, AlarmManager.INTERVAL_DAY.
+//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+//                AlarmManager.INTERVAL_DAY, pi);
+        
+//        am.cancel(pi);
+        
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                120000, pi);
     }
 }

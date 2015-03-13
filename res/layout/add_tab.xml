@@ -644,22 +644,6 @@
                         android:layout_gravity="center"
                         android:hint="@string/order_measure_consumer_contact_address_hint" />
                 </LinearLayout> -->
-
-                <!-- Input work address -->
-
-                <LinearLayout
-                    android:id="@+id/add_tab_input_work_address_edit_layout"
-                    style="@style/inputLayoutStyle"
-                    android:layout_marginTop="30dp"
-                    android:orientation="horizontal" >
-
-                    <EditText
-                        android:id="@+id/add_tab_edit_work_address"
-                        style="@style/inputTextStyle"
-                        android:layout_width="fill_parent"
-                        android:layout_gravity="center"
-                        android:hint="@string/order_measure_consumer_address_hint" />
-                </LinearLayout>
                 
                 <!-- sale status -->
 
@@ -678,6 +662,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center" />
+                </LinearLayout>
+
+                <!-- Input work address -->
+
+                <LinearLayout
+                    android:id="@+id/add_tab_input_work_address_edit_layout"
+                    style="@style/inputLayoutStyle"
+                    android:layout_marginTop="36dp"
+                    android:orientation="horizontal" >
+
+                    <EditText
+                        android:id="@+id/add_tab_edit_work_address"
+                        style="@style/inputTextStyle"
+                        android:layout_width="fill_parent"
+                        android:layout_gravity="center"
+                        android:hint="@string/order_measure_consumer_address_hint" />
                 </LinearLayout>
                 
                 <!-- space -->

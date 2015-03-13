@@ -601,9 +601,9 @@ public class Utility
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static int getCreator(Activity activity)
+    public static int getCreator(Context context)
     {
-        SharedPreferences settings = activity.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
+        SharedPreferences settings = context.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
         int creator = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
 
         Log.d(TAG, "creator is " + creator);
@@ -634,9 +634,9 @@ public class Utility
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static String getLoginKey(Activity actiivty)
+    public static String getLoginKey(Context context)
     {
-        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
+        SharedPreferences settings = context.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
         String loginKey = settings.getString(Utility.LoginField.LOGIN_KEY, "");
 
         Log.d(TAG, "loginKey is " + loginKey);
@@ -921,9 +921,9 @@ public class Utility
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static String getIP(Activity actiivty)
+    public static String getIP(Context context)
     {
-        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.IP_DATA, DEFAULT_ZERO_VALUE);
+        SharedPreferences settings = context.getSharedPreferences(Utility.LoginField.IP_DATA, DEFAULT_ZERO_VALUE);
         String ip = settings.getString(Utility.LoginField.SERVER_IP, HttpManager.IP);
 
         Log.d(TAG, "ip : " + ip);

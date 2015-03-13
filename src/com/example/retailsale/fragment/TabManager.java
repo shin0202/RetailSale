@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -115,6 +116,13 @@ public class TabManager implements OnTabChangeListener
                     ft.replace(containerId, newTab.fragment);
                     ft.attach(newTab.fragment);
                 }
+                
+                if (lastTab != null)
+                {
+                    Log.d("John", "lastTab name " + lastTab.clss.getName());
+                }
+                
+                Log.d("John", "newTab name " + newTab.clss.getName());
             }
 
             lastTab = newTab;

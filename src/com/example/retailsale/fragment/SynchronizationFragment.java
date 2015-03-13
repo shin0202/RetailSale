@@ -40,6 +40,7 @@ import android.widget.Toast;
 import com.example.retailsale.R;
 import com.example.retailsale.RetialSaleDbAdapter;
 import com.example.retailsale.manager.HttpManager;
+import com.example.retailsale.manager.POSTThread;
 import com.example.retailsale.manager.dataoption.DataOption;
 import com.example.retailsale.manager.dataoption.GetDataOptionListener;
 import com.example.retailsale.manager.dataoption.GsonDataOption;
@@ -60,7 +61,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         OnItemClickListener
 {
     private static final String TAG = "SynchronizationFragment";
-    private static final int SHOW_NO_NETWORK_TOAST = -1000;
+    public static final int SHOW_NO_NETWORK_TOAST = -1000;
 
     private LinearLayout uploadConsumer, downloadPicture, syncData;
 
@@ -1027,7 +1028,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                 .key(Utility.AddCustomerJsonTag.CUSTOMER_RESERVATION)
                                 .value(customerReservationJson).endObject();
                         // Log.d(TAG, "json === " + json.toString());
-                        POSTThread postThread = new POSTThread(json, custometName, handler, rowId,
+                        POSTThread postThread = new POSTThread(this.getActivity(), json, custometName, handler, rowId,
                                 retialSaleDbAdapter);
                         postThread.start();
                     }
@@ -1463,42 +1464,6 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         }
     };
 
-    private class POSTThread extends Thread
-    {
-        private JSONStringer json;
-
-        private String custometName;
-
-        private Handler handler;
-
-        private long rowId;
-
-        private RetialSaleDbAdapter retialSaleDbAdapter;
-
-        public POSTThread(JSONStringer json, String custometName, Handler handler, long rowId,
-                RetialSaleDbAdapter retialSaleDbAdapter)
-        {
-
-            this.json = json;
-            this.custometName = custometName;
-            this.handler = handler;
-            this.rowId = rowId;
-            this.retialSaleDbAdapter = retialSaleDbAdapter;
-        }
-
-        @Override
-        public void run()
-        {
-            if (Utility.isInternetAvailable(getActivity()))
-            {
-                addCustomerInfo(json, custometName, handler, rowId, retialSaleDbAdapter);
-            }
-            else
-            {
-                handler.sendEmptyMessage(SHOW_NO_NETWORK_TOAST);
-            }
-        }
-    }
 
     private class SyncThread extends Thread
     {

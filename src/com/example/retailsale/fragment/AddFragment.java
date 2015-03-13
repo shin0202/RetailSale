@@ -701,6 +701,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             daySpinner.setAdapter(null);
             
             introducerET.setText(this.getResources().getString(R.string.no_data));
+            
         }
     }
 
