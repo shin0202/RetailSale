@@ -401,7 +401,7 @@ public class Utility
             {
                 logFile.createNewFile();
             }
-            outputContent = new BufferedWriter(new FileWriter(logFile));
+            outputContent = new BufferedWriter(new FileWriter(logFile, true));
         }
         catch (IOException e)
         {
