@@ -65,7 +65,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
     private LinearLayout uploadConsumer, downloadPicture, syncData;
 
-    private TextView showTitle, showDescription, showMessage;
+    private TextView showTitleView, showDescriptionView, showMessageView;
 
     private GridView filesGrid;
 
@@ -166,9 +166,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         uploadConsumer = (LinearLayout) view.findViewById(R.id.sync_tab_upload_layout);
         downloadPicture = (LinearLayout) view.findViewById(R.id.sync_tab_download_layout);
         syncData = (LinearLayout) view.findViewById(R.id.sync_tab_sync_layout);
-        showTitle = (TextView) view.findViewById(R.id.sync_tab_item_title);
-        showDescription = (TextView) view.findViewById(R.id.sync_tab_item_description);
-        showMessage = (TextView) view.findViewById(R.id.sync_tab_item_message);
+        showTitleView = (TextView) view.findViewById(R.id.sync_tab_item_title);
+        showDescriptionView = (TextView) view.findViewById(R.id.sync_tab_item_description);
+        showMessageView = (TextView) view.findViewById(R.id.sync_tab_item_message);
         filesGrid = (GridView) view.findViewById(R.id.sync_tab_files_grid);
         filesGrid.setOnItemClickListener(this);
         startBtn = (Button) view.findViewById(R.id.sync_tab_start_btn);
@@ -180,6 +180,10 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         messageStringBuilder = new StringBuilder();
         contentListView = (ListView) view.findViewById(R.id.sync_tab_content_list);
         focusUploadConsumer();
+        
+        // load past message
+        showMessageView.setText(Utility.readFile(Utility.LOG_FILE_PATH));
+        
         return view;
     }
 
@@ -192,9 +196,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 R.color.sync_item_normal));
         syncData.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(
                 R.color.sync_item_normal));
-        showTitle.setText(SynchronizationFragment.this.getResources().getString(
+        showTitleView.setText(SynchronizationFragment.this.getResources().getString(
                 R.string.sync_tab_upload_consumer));
-        showDescription.setText(SynchronizationFragment.this.getResources().getString(
+        showDescriptionView.setText(SynchronizationFragment.this.getResources().getString(
                 R.string.sync_tab_upload_description));
         selectedItem = SelectedItem.UPLOAD_CUSTOMER;
         filesGrid.setVisibility(View.GONE);
@@ -218,9 +222,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 R.color.sync_item_focus));
         syncData.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(
                 R.color.sync_item_normal));
-        showTitle.setText(SynchronizationFragment.this.getResources().getString(
+        showTitleView.setText(SynchronizationFragment.this.getResources().getString(
                 R.string.sync_tab_download_picture));
-        showDescription.setText(SynchronizationFragment.this.getResources().getString(
+        showDescriptionView.setText(SynchronizationFragment.this.getResources().getString(
                 R.string.sync_tab_download_description));
         selectedItem = SelectedItem.DOWNLOAD_PICTURE;
         filesGrid.setVisibility(View.VISIBLE);
@@ -241,9 +245,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 R.color.sync_item_normal));
         syncData.setBackgroundColor(SynchronizationFragment.this.getResources().getColor(
                 R.color.sync_item_focus));
-        showTitle.setText(SynchronizationFragment.this.getResources().getString(
+        showTitleView.setText(SynchronizationFragment.this.getResources().getString(
                 R.string.sync_tab_sync_data));
-        showDescription.setText(SynchronizationFragment.this.getResources().getString(
+        showDescriptionView.setText(SynchronizationFragment.this.getResources().getString(
                 R.string.sync_tab_sync_description));
         selectedItem = SelectedItem.SYNC_DATA;
         filesGrid.setVisibility(View.GONE);
@@ -389,7 +393,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         }
         else
         {
-            showMessage.setText(SynchronizationFragment.this.getResources().getString(
+            showMessageView.setText(SynchronizationFragment.this.getResources().getString(
                     R.string.incorrect));
         }
     }
@@ -442,11 +446,11 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         messageStringBuilder.append(itemName)
                 .append(SynchronizationFragment.this.getResources().getString(resID))
                 .append(Utility.LINE_FEED);
-        showMessage.setText(messageStringBuilder.toString());
+        showMessageView.setText(messageStringBuilder.toString());
         
-//        Utility.writeLogData(itemName + SynchronizationFragment.this.getResources().getString(resID));
-        Utility.writeFile(Utility.LOG_FILE_PATH, itemName
-                + SynchronizationFragment.this.getResources().getString(resID), true);
+        Utility.writeLogData(itemName + SynchronizationFragment.this.getResources().getString(resID));
+//        Utility.writeFile(Utility.LOG_FILE_PATH, itemName
+//                + SynchronizationFragment.this.getResources().getString(resID), true);
     }
 
     private void showMessage(int resID)
@@ -454,11 +458,11 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
         messageStringBuilder.append(SynchronizationFragment.this.getResources().getString(resID))
                 .append(Utility.LINE_FEED);
-        showMessage.setText(messageStringBuilder.toString());
+        showMessageView.setText(messageStringBuilder.toString());
         
-//        Utility.writeLogData(SynchronizationFragment.this.getResources().getString(resID));
-        Utility.writeFile(Utility.LOG_FILE_PATH, SynchronizationFragment.this.getResources()
-                .getString(resID), true);
+        Utility.writeLogData(SynchronizationFragment.this.getResources().getString(resID));
+//        Utility.writeFile(Utility.LOG_FILE_PATH, SynchronizationFragment.this.getResources()
+//                .getString(resID), true);
     }
 
     private void openDb()

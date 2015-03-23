@@ -70,10 +70,10 @@ public class HttpManager
     }
 
     //////////////////////////////////////////////////////////////////////////////// Login related.
-    public void login(Activity activity, String userAccount, String userPwd, final GetLoginListener loginListener)
+    public void login(Context context, String userAccount, String userPwd, final GetLoginListener loginListener)
     {
 
-        String loginUri = "http://" + Utility.getIP(activity) + "/KendoAPI/odata/userQuery(userAccount='" + userAccount + "',userPwd='"
+        String loginUri = "http://" + Utility.getIP(context) + "/KendoAPI/odata/userQuery(userAccount='" + userAccount + "',userPwd='"
                 + userPwd + "')";
         Log.e(TAG, "login() loginUri = " + loginUri);
 
@@ -83,7 +83,7 @@ public class HttpManager
                 ACTION_NAME, Utility.SPACE_STRING);
         getLoginGsonRequset.setTag("login");
 
-        VolleySingleton.getInstance(activity).getRequestQueue().add(getLoginGsonRequset);
+        VolleySingleton.getInstance(context).getRequestQueue().add(getLoginGsonRequset);
     }
 
     public void cancelLogin(Context context)

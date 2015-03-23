@@ -417,7 +417,6 @@ public class Utility
     {
         try
         {
-            outputContent.flush();
             outputContent.close();
         }
         catch (IOException e)
@@ -436,6 +435,7 @@ public class Utility
         {
             outputContent.write(data);
             outputContent.newLine();
+            outputContent.flush();
         }
         catch (IOException e)
         {
@@ -801,19 +801,19 @@ public class Utility
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static void saveData(Activity activity, String id, String password, int userSerial, int userGroup,
+    public static void saveData(Context context, String id, String password, int userSerial, int userGroup,
             String loginKey)
     {
-        SharedPreferences settings = activity.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
+        SharedPreferences settings = context.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
         settings.edit().putString(Utility.LoginField.ID, id).putString(Utility.LoginField.PASSWORD, password)
                 .putInt(Utility.LoginField.USER_SERIAL, userSerial).putInt(Utility.LoginField.USER_GROUP, userGroup)
                 .putString(Utility.LoginField.LOGIN_KEY, loginKey).commit();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static boolean hadLogin(Activity actiivty)
+    public static boolean hadLogin(Context context)
     {
-        SharedPreferences settings = actiivty.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
+        SharedPreferences settings = context.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
         String id = settings.getString(Utility.LoginField.ID, "");
 
         if (id != null && !id.equals(Utility.SPACE_STRING))

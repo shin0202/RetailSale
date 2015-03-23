@@ -1,15 +1,22 @@
 package com.example.retailsale;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONStringer;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
+import com.example.retailsale.manager.HttpManager;
 import com.example.retailsale.manager.POSTThread;
+import com.example.retailsale.manager.login.GetLoginListener;
+import com.example.retailsale.manager.login.GsonLoginInfo;
 import com.example.retailsale.util.Utility;
 
 public class UploadReceiver extends BroadcastReceiver
@@ -17,6 +24,14 @@ public class UploadReceiver extends BroadcastReceiver
     private static final String TAG = "UploadReceiver";
     
     private RetialSaleDbAdapter retialSaleDbAdapter;
+    
+    private Context context;
+    
+    private String id;
+    private String password;
+    
+    private int needCount = 0;
+    private int currentCount = 0;
     
     @Override
     public void onReceive(Context context, Intent intent)
@@ -33,9 +48,97 @@ public class UploadReceiver extends BroadcastReceiver
             {
                 Log.d(TAG, "get upload broadcast");
 //                Bundle data = intent.getExtras();
-                addCustomer(context);
+//                addCustomer(context);
+                this.context = context;
+                handleLoginAction(context);
             }
         }
+    }
+    
+    private void handleLoginAction(Context context)
+    {
+
+        boolean hadLogin = Utility.hadLogin(context);
+        
+        Log.d(TAG, "had login ? " + hadLogin);
+
+        if (hadLogin)
+        {
+            login(context, true);
+        }
+        else
+        {
+            // to show login dialog
+            
+        }
+    }
+    
+    private void login(final Context context, boolean hadLogin)
+    {
+        Utility.openLogFile(Utility.LOG_FILE_PATH);
+        SharedPreferences settings = context.getSharedPreferences(Utility.LoginField.DATA, Utility.DEFAULT_ZERO_VALUE);
+
+        if (hadLogin)
+        {
+            id = settings.getString(Utility.LoginField.ID, "");
+            password = settings.getString(Utility.LoginField.PASSWORD, "");
+        }
+
+        HttpManager httpManager = new HttpManager();
+        httpManager.login(context, id, password, new GetLoginListener()
+        {
+            @Override
+            public void onResult(Boolean isSuccess, GsonLoginInfo userInfo)
+            {
+
+                if (isSuccess)
+                {
+                    if (userInfo != null)
+                    {
+                        if (userInfo.getValue() != null && userInfo.getValue().size() > 0)
+                        {
+                            int userSerial = userInfo.getValue().get(0).getUserSerial();
+                            int userGroup = userInfo.getValue().get(0).getUserGroup();
+                            String loginKey = userInfo.getValue().get(0).getLoginKey();
+                            String message = userInfo.getValue().get(0).getMessage();
+                            Log.d(TAG, " userSerial : " + userSerial + " userGroup : " + userGroup + " loginKey : "
+                                    + loginKey + " message : " + message);
+                            if (message.equals(context.getResources().getString(R.string.login_successful)))
+                            {
+                                Log.d(TAG, "Message is successfully");
+                                Utility.saveData(context, id, password, userSerial, userGroup, loginKey);
+
+                                addCustomer(context);
+                            }
+                            else
+                            {
+                                Log.d(TAG, "Message is failed");
+                                Utility.writeLogData(context.getResources().getString(R.string.sync_tab_upload_error));
+                                Utility.closeLogFile();
+                            }
+                        }
+                        else
+                        {
+                            Log.d(TAG, "value is null or size less/equal than 0");
+                            Utility.writeLogData(context.getResources().getString(R.string.sync_tab_upload_error));
+                            Utility.closeLogFile();
+                        }
+                    }
+                    else
+                    {
+                        Log.d(TAG, "userInfo is null");
+                        Utility.writeLogData(context.getResources().getString(R.string.sync_tab_upload_error));
+                        Utility.closeLogFile();
+                    }
+                }
+                else
+                {
+                    Log.d(TAG, "Login failed");
+                    Utility.writeLogData(context.getResources().getString(R.string.sync_tab_upload_error));
+                    Utility.closeLogFile();
+                }
+            }
+        });
     }
     
     private void addCustomer(Context context)
@@ -48,8 +151,8 @@ public class UploadReceiver extends BroadcastReceiver
         if (!retialSaleDbAdapter.isDbOpen())
             retialSaleDbAdapter.open();
 
-        int needCount = 0;
-        int currentCount = 0;
+        needCount = 0;
+        currentCount = 0;
 
         Cursor cursor = retialSaleDbAdapter.getCustomerNotUpload();
         if (cursor != null)
@@ -174,7 +277,8 @@ public class UploadReceiver extends BroadcastReceiver
                     catch (JSONException e)
                     {
                         e.printStackTrace();
-//                        showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_db_error);
+                        Utility.writeLogData(context.getResources().getString(R.string.sync_tab_sync_db_error));
+                        Utility.closeLogFile();
                         break;
                     }
                     try
@@ -208,30 +312,65 @@ public class UploadReceiver extends BroadcastReceiver
                                 .key(Utility.AddCustomerJsonTag.CUSTOMER_RESERVATION)
                                 .value(customerReservationJson).endObject();
                         // Log.d(TAG, "json === " + json.toString());
-                        POSTThread postThread = new POSTThread(context, json, custometName, null, rowId,
+                        POSTThread postThread = new POSTThread(context, json, custometName, handler, rowId,
                                 retialSaleDbAdapter);
                         postThread.start();
                     }
                     catch (JSONException e)
                     {
                         e.printStackTrace();
-//                        showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_db_error);
                         Log.d(TAG, "db get error");
+                        Utility.writeLogData(context.getResources().getString(R.string.sync_tab_sync_db_error));
+                        Utility.closeLogFile();
                         break;
                     }
                 }
             }
             else
             {
-//                showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_no_customer);
                 Log.d(TAG, "no customer");
+                Utility.writeLogData(context.getResources().getString(R.string.sync_tab_sync_no_customer));
+                Utility.closeLogFile();
             }
             cursor.close();
         }
         else
         {
-//            showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_no_customer);
             Log.d(TAG, "no customer, cursor is null");
+            Utility.writeLogData(context.getResources().getString(R.string.sync_tab_sync_no_customer));
+            Utility.closeLogFile();
         }
     }
+    
+    private void closeDb()
+    {
+
+        if (retialSaleDbAdapter.isDbOpen())
+        {
+            retialSaleDbAdapter.close();
+        }
+    }
+    
+    private Handler handler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            currentCount++;
+            if (currentCount == needCount)
+            {
+                closeDb();
+            }
+            String customerName = (String) msg.obj;
+            int statusCode = msg.arg1;
+            if (statusCode == HttpStatus.SC_CREATED)
+            {
+                Utility.writeLogData(customerName + context.getResources().getString(R.string.sync_tab_sync_upload_success));
+            }
+            else
+            {
+                Utility.writeLogData(customerName + context.getResources().getString(R.string.sync_tab_sync_upload_failed));
+            }
+        }
+    };
 }
