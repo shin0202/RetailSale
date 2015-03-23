@@ -1189,7 +1189,7 @@ public class Utility
         calendar.setTimeInMillis(System.currentTimeMillis());
 //        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
         calendar.set(Calendar.HOUR_OF_DAY, 20);
-        calendar.set(Calendar.MINUTE, 1);
+        calendar.set(Calendar.MINUTE, 0);
         
         Intent intent = new Intent(context, UploadReceiver.class);
         intent.putExtra("msg", "upload");
@@ -1202,7 +1202,7 @@ public class Utility
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         // With setInexactRepeating(), you have to use one of the AlarmManager interval
         // constants--in this case, AlarmManager.INTERVAL_DAY.
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pi);
         
 //        am.cancel(pi);
@@ -1213,21 +1213,21 @@ public class Utility
         Calendar calendar1 = Calendar.getInstance();
         calendar1.setTimeInMillis(System.currentTimeMillis());
         calendar1.set(Calendar.HOUR_OF_DAY, 7);
-        calendar1.set(Calendar.MINUTE, 1);
+        calendar1.set(Calendar.MINUTE, 0);
         
         PendingIntent pi1 = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar1.getTimeInMillis(),
+        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar1.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pi1);
         
         Calendar calendar2 = Calendar.getInstance();
         calendar2.setTimeInMillis(System.currentTimeMillis());
         calendar2.set(Calendar.HOUR_OF_DAY, 14);
-        calendar2.set(Calendar.MINUTE, 1);
+        calendar2.set(Calendar.MINUTE, 0);
         
         PendingIntent pi2 = PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(),
+        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar2.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pi2);
     }
 }

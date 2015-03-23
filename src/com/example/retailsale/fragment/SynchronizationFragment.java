@@ -182,7 +182,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         focusUploadConsumer();
         
         // load past message
-        showMessageView.setText(Utility.readFile(Utility.LOG_FILE_PATH));
+        showMessageView.setText(messageStringBuilder
+                .append(Utility.readFile(Utility.LOG_FILE_PATH)).toString());
         
         return view;
     }
