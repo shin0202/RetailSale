@@ -1,19 +1,13 @@
 package com.example.retailsale;
 
-import java.util.Calendar;
-
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,6 +36,10 @@ public class Login extends Activity implements OnClickListener
 
         findViews();
         retialSaleDbAdapter = new RetialSaleDbAdapter(Login.this);
+        
+        Utility.setAlarmManager(Login.this);
+        
+        Utility.createFolder(Utility.LOG_FOLDER_PATH);
     }
 
     @Override
@@ -54,8 +52,6 @@ public class Login extends Activity implements OnClickListener
         
         // To set default IP, if IP not exist
         Utility.setDefaultIP(this);
-        
-        testAlarmManager();
         
         if (hadLogin()) 
         {
@@ -505,34 +501,5 @@ public class Login extends Activity implements OnClickListener
         {
             return false;
         }
-    }
-    
-    // test alarmManager
-    private void testAlarmManager()
-    {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-//        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.set(Calendar.HOUR_OF_DAY, 20);
-        calendar.set(Calendar.MINUTE, 1);
-        
-        Intent intent = new Intent(this, UploadReceiver.class);
-        intent.putExtra("msg", "upload");
-        
-        Log.d(TAG, "calendar.getTimeInMillis() === " + calendar.getTimeInMillis());
-        Log.d(TAG, "SystemClock.currentThreadTimeMillis() === " + SystemClock.currentThreadTimeMillis());
-        
-        PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        
-        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        // With setInexactRepeating(), you have to use one of the AlarmManager interval
-        // constants--in this case, AlarmManager.INTERVAL_DAY.
-//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-//                AlarmManager.INTERVAL_DAY, pi);
-        
-//        am.cancel(pi);
-        
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                120000, pi);
     }
 }

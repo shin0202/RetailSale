@@ -129,6 +129,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
         super.onResume();
         openDb();
+        
+        // open log file
+        Utility.openLogFile(Utility.LOG_FILE_PATH);
     }
 
     @Override
@@ -144,6 +147,9 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         closeDb();
 
         retialSaleDbAdapter = null;
+        
+        // close log file
+        Utility.closeLogFile();
     }
 
     @Override
@@ -437,6 +443,10 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                 .append(SynchronizationFragment.this.getResources().getString(resID))
                 .append(Utility.LINE_FEED);
         showMessage.setText(messageStringBuilder.toString());
+        
+//        Utility.writeLogData(itemName + SynchronizationFragment.this.getResources().getString(resID));
+        Utility.writeFile(Utility.LOG_FILE_PATH, itemName
+                + SynchronizationFragment.this.getResources().getString(resID), true);
     }
 
     private void showMessage(int resID)
@@ -445,6 +455,10 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
         messageStringBuilder.append(SynchronizationFragment.this.getResources().getString(resID))
                 .append(Utility.LINE_FEED);
         showMessage.setText(messageStringBuilder.toString());
+        
+//        Utility.writeLogData(SynchronizationFragment.this.getResources().getString(resID));
+        Utility.writeFile(Utility.LOG_FILE_PATH, SynchronizationFragment.this.getResources()
+                .getString(resID), true);
     }
 
     private void openDb()

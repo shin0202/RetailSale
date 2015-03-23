@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +23,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -32,11 +37,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Base64;
 import android.util.Log;
 
+import com.example.retailsale.UploadReceiver;
 import com.example.retailsale.fragment.SynchronizationFragment;
 import com.example.retailsale.manager.HttpManager;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo;
@@ -54,6 +62,8 @@ public class Utility
 //	public static final String FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/retail/";
     public static final String FILE_PATH = "/sdcard/retail/";
     public static final String FILE_PATH_2 = "/sdcard/retail";
+    public static final String LOG_FILE_PATH = "/sdcard/retail2/log.txt";
+    public static final String LOG_FOLDER_PATH = "/sdcard/retail2/";
     public static final String REPLACE_SERVER_FOLDER = "C:\\Project\\_code\\testFolder";
     public static final String REPLACE_STRING = ".jpg.txt";
     public static final String REPLACE_B_STRING = ".JPG.txt";
@@ -68,6 +78,9 @@ public class Utility
     public static final String DEFAULT_VALUE_STRING = "-1";
     public static final int DEFAULT_ZERO_VALUE = 0;
     public static final int DEFAULT_NEGATIVE_VALUE = -1;
+    
+    private static File logFile;
+    private static BufferedWriter outputContent;
 
     public class JSONTag
     {
@@ -372,6 +385,66 @@ public class Utility
             Log.d(TAG, "directories is not exist and created ? " + result);
         }
     }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean openLogFile(String path)
+    {
+        if (!checkStorage())
+        {
+            return false;
+        }
+        
+        try
+        {
+            logFile = new File(path);
+            if (!logFile.exists())
+            {
+                logFile.createNewFile();
+            }
+            outputContent = new BufferedWriter(new FileWriter(logFile));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean closeLogFile()
+    {
+        try
+        {
+            outputContent.flush();
+            outputContent.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean writeLogData(String data)
+    {
+        Log.d(TAG, "data === " + data);
+        try
+        {
+            outputContent.write(data);
+            outputContent.newLine();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String readFile(String path)
@@ -410,8 +483,13 @@ public class Utility
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static int writeFile(String path, String data)
+    public static int writeFile(String path, String data, boolean isText)
     {
+        if (!checkStorage())
+        {
+            return 0;
+        }
+        
         try
         {
             File fakeFile = new File(path);
@@ -419,8 +497,24 @@ public class Utility
             {
                 fakeFile.createNewFile();
             }
-            BufferedWriter output = new BufferedWriter(new FileWriter(fakeFile));
+            BufferedWriter output;
+            if (isText)
+            {
+                output = new BufferedWriter(new FileWriter(fakeFile, isText));
+            }
+            else
+            {
+                output = new BufferedWriter(new FileWriter(fakeFile));
+            }
+            
             output.write(data);
+            
+            if (isText)
+            {
+                output.newLine();
+            }
+            
+            output.flush();
             output.close();
             return 1;
         }
@@ -433,6 +527,138 @@ public class Utility
         {
             e.printStackTrace();
             return Utility.DEFAULT_ZERO_VALUE;
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // write external
+    public void writeToSDcard(String filename, String data)
+    {
+
+        String path = Environment.getExternalStorageDirectory().getPath();
+        File dir = new File(path + "/movietime");
+        if (!dir.exists())
+        {
+            dir.mkdir();
+        }
+
+        try
+        {
+            File file = new File(path + "/movietime/" + filename);
+            FileOutputStream fout = new FileOutputStream(file);
+            fout.write(data.getBytes());
+            fout.flush();
+            fout.close();
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "Write to SDCARD!");
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // read external
+    public String readFromSDcard(String filename)
+    {
+
+        String path = Environment.getExternalStorageDirectory().getPath();
+        File file = new File(path + "/movietime/" + filename);
+        StringBuilder sb = new StringBuilder();
+        try
+        {
+            FileInputStream fin = new FileInputStream(file);
+            byte[] data = new byte[fin.available()];
+            while (fin.read(data) != -1)
+            {
+                sb.append(new String(data));
+            }
+            fin.close();
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // write internal
+    public void writeDataToFile(String filename, String data, Activity activity)
+    {
+
+        try
+        {
+            // Context.MODE_XXX
+            FileOutputStream fout = activity.openFileOutput(filename, Context.MODE_PRIVATE);
+            fout.write(data.getBytes());
+            fout.flush();
+            fout.close();
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // read internal
+    public String readDataFromFile(String filename, Activity activity)
+    {
+
+        String result = null;
+        try
+        {
+            StringBuilder sb = new StringBuilder();
+            FileInputStream fin = activity.openFileInput(filename);
+            byte[] data = new byte[fin.available()];
+            while (fin.read(data) != -1)
+            {
+                sb.append(new String(data));
+            }
+            fin.close();
+            result = sb.toString();
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean checkStorage()
+    {
+        String state = Environment.getExternalStorageState();
+        Log.d(TAG, "The system state : " + state);
+        
+        if(Environment.MEDIA_MOUNTED.equals(state))
+        {
+            return true;
+        }
+        else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state))
+        {
+            return false;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -706,7 +932,7 @@ public class Utility
 
             Log.d(TAG, "newData  is  ~~~~~~~~~~~~~~~~~~~~ " + newData.toString());
 
-            int status = Utility.writeFile(newFileName.toString(), newData.toString());
+            int status = Utility.writeFile(newFileName.toString(), newData.toString(), false);
             
             // 5. to generate thumbnail
             generateThumbnail(fileName, path + "/" + Utility.THUMB_PATH, fileStream);
@@ -747,7 +973,7 @@ public class Utility
             
             Log.d(TAG, "newFileName : " + newFileName.toString());
             
-            Utility.writeFile(newFileName.toString(), baseThumbnail.toString());
+            Utility.writeFile(newFileName.toString(), baseThumbnail.toString(), false);
         }
         catch (Exception e)
         {
@@ -954,5 +1180,54 @@ public class Utility
         String originalIP = settings.getString(Utility.LoginField.SERVER_IP, SPACE_STRING);
         Log.d(TAG, "originalIP : " + originalIP + " ip : " + ip);
         settings.edit().putString(Utility.LoginField.SERVER_IP, ip).commit();
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static void setAlarmManager(Context context)
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+//        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        calendar.set(Calendar.HOUR_OF_DAY, 20);
+        calendar.set(Calendar.MINUTE, 1);
+        
+        Intent intent = new Intent(context, UploadReceiver.class);
+        intent.putExtra("msg", "upload");
+        
+        Log.d(TAG, "calendar.getTimeInMillis() === " + calendar.getTimeInMillis());
+        Log.d(TAG, "SystemClock.currentThreadTimeMillis() === " + SystemClock.currentThreadTimeMillis());
+        
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        // With setInexactRepeating(), you have to use one of the AlarmManager interval
+        // constants--in this case, AlarmManager.INTERVAL_DAY.
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pi);
+        
+//        am.cancel(pi);
+        
+//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+//                120000, pi);
+        
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTimeInMillis(System.currentTimeMillis());
+        calendar1.set(Calendar.HOUR_OF_DAY, 7);
+        calendar1.set(Calendar.MINUTE, 1);
+        
+        PendingIntent pi1 = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar1.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pi1);
+        
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTimeInMillis(System.currentTimeMillis());
+        calendar2.set(Calendar.HOUR_OF_DAY, 14);
+        calendar2.set(Calendar.MINUTE, 1);
+        
+        PendingIntent pi2 = PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pi2);
     }
 }

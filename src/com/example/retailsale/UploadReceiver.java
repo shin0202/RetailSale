@@ -1,17 +1,12 @@
 package com.example.retailsale;
 
-import java.util.Calendar;
-
 import org.json.JSONException;
 import org.json.JSONStringer;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.SystemClock;
 import android.util.Log;
 
 import com.example.retailsale.manager.POSTThread;
@@ -32,7 +27,7 @@ public class UploadReceiver extends BroadcastReceiver
             if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
             {
                 Log.d(TAG, "get boot completed broadcast");
-                setAlarm(context);
+                Utility.setAlarmManager(context);
             }
             else
             {
@@ -41,32 +36,6 @@ public class UploadReceiver extends BroadcastReceiver
                 addCustomer(context);
             }
         }
-    }
-    
-    private void setAlarm(Context context)
-    {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-//        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.set(Calendar.HOUR_OF_DAY, 20);
-        calendar.set(Calendar.MINUTE, 1);
-        
-        Intent intent = new Intent(context, UploadReceiver.class);
-        intent.putExtra("msg", "upload");
-        
-        Log.d(TAG, "calendar.getTimeInMillis() === " + calendar.getTimeInMillis());
-        Log.d(TAG, "SystemClock.currentThreadTimeMillis() === " + SystemClock.currentThreadTimeMillis());
-        
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        // With setInexactRepeating(), you have to use one of the AlarmManager interval
-        // constants--in this case, AlarmManager.INTERVAL_DAY.
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pi);
-        
-//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-//                120000, pi);
     }
     
     private void addCustomer(Context context)
