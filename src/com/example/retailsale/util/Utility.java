@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -83,6 +84,8 @@ public class Utility
     private static BufferedWriter outputContent;
     
     private static PendingIntent pendingIntent;
+    
+    private static final int ALARM_GAP = 1000 * 60 * 60 * 8;
 
     public class JSONTag
     {
@@ -1185,61 +1188,54 @@ public class Utility
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static void setAlarmManager(Context context)
+    public static void setAlarmTime(Context context, int hour, int min)
     {
+        Log.d(TAG, "setAlarmTime " + hour + ":" + min);
+        Intent intent = new Intent(context, UploadReceiver.class);
+        intent.setAction("upload");
+        pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+
+        long firstTime = SystemClock.elapsedRealtime(); // device working time (include sleep time)
+        long systemTime = System.currentTimeMillis();
+
+        String timezoneID = TimeZone.getDefault().getID();
+        Log.d(TAG, "timezone ID:" + timezoneID);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-//        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.set(Calendar.HOUR_OF_DAY, 20);
-        calendar.set(Calendar.MINUTE, 0);
-        
-        Intent intent = new Intent(context, UploadReceiver.class);
-        intent.putExtra("msg", "upload");
-        
-        Log.d(TAG, "calendar.getTimeInMillis() === " + calendar.getTimeInMillis());
-        Log.d(TAG, "SystemClock.currentThreadTimeMillis() === " + SystemClock.currentThreadTimeMillis());
-        
-        pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        // With setInexactRepeating(), you have to use one of the AlarmManager interval
-        // constants--in this case, AlarmManager.INTERVAL_DAY.
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
-        
-//        am.cancel(pi);
-        
-//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-//                120000, pi);
-        
-//        Calendar calendar1 = Calendar.getInstance();
-//        calendar1.setTimeInMillis(System.currentTimeMillis());
-//        calendar1.set(Calendar.HOUR_OF_DAY, 7);
-//        calendar1.set(Calendar.MINUTE, 0);
-//        
-//        PendingIntent pi1 = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        
-//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar1.getTimeInMillis(),
-//                AlarmManager.INTERVAL_DAY, pi1);
-//        
-//        Calendar calendar2 = Calendar.getInstance();
-//        calendar2.setTimeInMillis(System.currentTimeMillis());
-//        calendar2.set(Calendar.HOUR_OF_DAY, 14);
-//        calendar2.set(Calendar.MINUTE, 0);
-//        
-//        PendingIntent pi2 = PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        
-//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(),
-//                AlarmManager.INTERVAL_DAY, pi2);
+        calendar.setTimeZone(TimeZone.getTimeZone(timezoneID));
+
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        // to set the time of every day
+        long selectTime = calendar.getTimeInMillis();
+
+        // if current time greater than setting time, then start from second day's setting time
+        if (systemTime > selectTime)
+        {
+            Log.d(TAG, "current time greater than setting time, select time:");
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            selectTime = calendar.getTimeInMillis();
+        }
+
+        // The gap between current time and setting time.
+        long time = selectTime - systemTime;
+        firstTime += time;
+
+        // To register alarm
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, ALARM_GAP, pendingIntent);
+//        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, AlarmManager.INTERVAL_DAY, pendingIntent);
+
+        Log.d(TAG, "alarmManager selectTime:" + selectTime + " systemTime: " + systemTime + " firstTime: " + firstTime);
     }
     
-    public static void cancelAlarmManager(Context context)
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static void setAlarmTime(Context context)
     {
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        
-        if (pendingIntent != null)
-        {
-            am.cancel(pendingIntent);
-        }
+        setAlarmTime(context, 8, 0);
     }
 }

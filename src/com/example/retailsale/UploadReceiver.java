@@ -33,29 +33,25 @@ public class UploadReceiver extends BroadcastReceiver
     private int needCount = 0;
     private int currentCount = 0;
     
-    private boolean isRun = false;
-    
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        
         if (intent != null)
         {
-            if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
+            String action = intent.getAction();
+            Log.d(TAG, "action : " + action);
+            if (action != null)
             {
-                Log.d(TAG, "get boot completed broadcast");
-                Utility.cancelAlarmManager(context);
-                Utility.setAlarmManager(context);
-            }
-            else if (intent.getAction() != null)
-            {
-                Log.d(TAG, "get upload broadcast : " + context + " action: " + intent.getAction());
-//                Bundle data = intent.getExtras();
-                this.context = context;
-                
-                if (!isRun)
+                if (action.equals(Intent.ACTION_BOOT_COMPLETED) || action.equals(Intent.ACTION_DATE_CHANGED)
+                        || action.equals(Intent.ACTION_TIME_CHANGED))
                 {
-                    isRun = true;
+                    Utility.setAlarmTime(context, 8, 0);
+                }
+                else if (intent.getAction() != null)
+                {
+                    this.context = context;
+
+                    Utility.openLogFile(Utility.LOG_FILE_PATH);
                     handleLoginAction(context);
                 }
             }
@@ -75,7 +71,6 @@ public class UploadReceiver extends BroadcastReceiver
         }
         else
         {
-            isRun = false;
             Utility.writeLogData(context.getResources().getString(R.string.sync_tab_upload_error));
             Utility.closeLogFile();
         }
@@ -123,7 +118,6 @@ public class UploadReceiver extends BroadcastReceiver
                                 Log.d(TAG, "Message is failed");
                                 Utility.writeLogData(context.getResources().getString(R.string.sync_tab_upload_error));
                                 Utility.closeLogFile();
-                                isRun = false;
                             }
                         }
                         else
@@ -131,7 +125,6 @@ public class UploadReceiver extends BroadcastReceiver
                             Log.d(TAG, "value is null or size less/equal than 0");
                             Utility.writeLogData(context.getResources().getString(R.string.sync_tab_upload_error));
                             Utility.closeLogFile();
-                            isRun = false;
                         }
                     }
                     else
@@ -139,7 +132,6 @@ public class UploadReceiver extends BroadcastReceiver
                         Log.d(TAG, "userInfo is null");
                         Utility.writeLogData(context.getResources().getString(R.string.sync_tab_upload_error));
                         Utility.closeLogFile();
-                        isRun = false;
                     }
                 }
                 else
@@ -147,7 +139,6 @@ public class UploadReceiver extends BroadcastReceiver
                     Log.d(TAG, "Login failed");
                     Utility.writeLogData(context.getResources().getString(R.string.sync_tab_upload_error));
                     Utility.closeLogFile();
-                    isRun = false;
                 }
             }
         });
@@ -291,7 +282,6 @@ public class UploadReceiver extends BroadcastReceiver
                         e.printStackTrace();
                         Utility.writeLogData(context.getResources().getString(R.string.sync_tab_sync_db_error));
                         Utility.closeLogFile();
-                        isRun = false;
                         break;
                     }
                     try
@@ -335,7 +325,6 @@ public class UploadReceiver extends BroadcastReceiver
                         Log.d(TAG, "db get error");
                         Utility.writeLogData(context.getResources().getString(R.string.sync_tab_sync_db_error));
                         Utility.closeLogFile();
-                        isRun = false;
                         break;
                     }
                 }
@@ -345,7 +334,6 @@ public class UploadReceiver extends BroadcastReceiver
                 Log.d(TAG, "no customer");
                 Utility.writeLogData(context.getResources().getString(R.string.sync_tab_sync_no_customer));
                 Utility.closeLogFile();
-                isRun = false;
             }
             cursor.close();
         }
@@ -354,7 +342,6 @@ public class UploadReceiver extends BroadcastReceiver
             Log.d(TAG, "no customer, cursor is null");
             Utility.writeLogData(context.getResources().getString(R.string.sync_tab_sync_no_customer));
             Utility.closeLogFile();
-            isRun = false;
         }
     }
     
@@ -376,7 +363,6 @@ public class UploadReceiver extends BroadcastReceiver
             if (currentCount == needCount)
             {
                 closeDb();
-                isRun = false;
             }
             String customerName = (String) msg.obj;
             int statusCode = msg.arg1;
