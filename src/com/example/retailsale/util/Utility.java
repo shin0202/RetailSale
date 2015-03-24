@@ -81,6 +81,8 @@ public class Utility
     
     private static File logFile;
     private static BufferedWriter outputContent;
+    
+    private static PendingIntent pendingIntent;
 
     public class JSONTag
     {
@@ -1197,37 +1199,47 @@ public class Utility
         Log.d(TAG, "calendar.getTimeInMillis() === " + calendar.getTimeInMillis());
         Log.d(TAG, "SystemClock.currentThreadTimeMillis() === " + SystemClock.currentThreadTimeMillis());
         
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         // With setInexactRepeating(), you have to use one of the AlarmManager interval
         // constants--in this case, AlarmManager.INTERVAL_DAY.
-        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pi);
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
         
 //        am.cancel(pi);
         
 //        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
 //                120000, pi);
         
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.setTimeInMillis(System.currentTimeMillis());
-        calendar1.set(Calendar.HOUR_OF_DAY, 7);
-        calendar1.set(Calendar.MINUTE, 0);
+//        Calendar calendar1 = Calendar.getInstance();
+//        calendar1.setTimeInMillis(System.currentTimeMillis());
+//        calendar1.set(Calendar.HOUR_OF_DAY, 7);
+//        calendar1.set(Calendar.MINUTE, 0);
+//        
+//        PendingIntent pi1 = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        
+//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar1.getTimeInMillis(),
+//                AlarmManager.INTERVAL_DAY, pi1);
+//        
+//        Calendar calendar2 = Calendar.getInstance();
+//        calendar2.setTimeInMillis(System.currentTimeMillis());
+//        calendar2.set(Calendar.HOUR_OF_DAY, 14);
+//        calendar2.set(Calendar.MINUTE, 0);
+//        
+//        PendingIntent pi2 = PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        
+//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(),
+//                AlarmManager.INTERVAL_DAY, pi2);
+    }
+    
+    public static void cancelAlarmManager(Context context)
+    {
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         
-        PendingIntent pi1 = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        
-        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar1.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pi1);
-        
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.setTimeInMillis(System.currentTimeMillis());
-        calendar2.set(Calendar.HOUR_OF_DAY, 14);
-        calendar2.set(Calendar.MINUTE, 0);
-        
-        PendingIntent pi2 = PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        
-        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar2.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pi2);
+        if (pendingIntent != null)
+        {
+            am.cancel(pendingIntent);
+        }
     }
 }

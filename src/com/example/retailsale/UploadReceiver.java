@@ -44,6 +44,7 @@ public class UploadReceiver extends BroadcastReceiver
             if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
             {
                 Log.d(TAG, "get boot completed broadcast");
+                Utility.cancelAlarmManager(context);
                 Utility.setAlarmManager(context);
             }
             else if (intent.getAction() != null)
