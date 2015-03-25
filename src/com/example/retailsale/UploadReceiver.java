@@ -45,14 +45,20 @@ public class UploadReceiver extends BroadcastReceiver
                 if (action.equals(Intent.ACTION_BOOT_COMPLETED) || action.equals(Intent.ACTION_DATE_CHANGED)
                         || action.equals(Intent.ACTION_TIME_CHANGED))
                 {
-                    Utility.setAlarmTime(context, 8, 0);
+                    Utility.setAlarmTime(context);
                 }
                 else if (intent.getAction() != null)
                 {
                     this.context = context;
-
-                    Utility.openLogFile(Utility.LOG_FILE_PATH);
-                    handleLoginAction(context);
+                    
+                    if (!Utility.hasAppRunning(context))
+                    {
+                        if (Utility.isInternetAvailable(context))
+                        {
+                            Utility.openLogFile(Utility.LOG_FILE_PATH);
+                            handleLoginAction(context);
+                        }
+                    }
                 }
             }
         }

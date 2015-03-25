@@ -19,11 +19,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -1188,12 +1191,12 @@ public class Utility
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static void setAlarmTime(Context context, int hour, int min)
+    public static void setAlarmTime(Context context, int hour, int min, int requestCode)
     {
         Log.d(TAG, "setAlarmTime " + hour + ":" + min);
         Intent intent = new Intent(context, UploadReceiver.class);
         intent.setAction("upload");
-        pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0);
+        pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
 
@@ -1227,15 +1230,40 @@ public class Utility
         firstTime += time;
 
         // To register alarm
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, ALARM_GAP, pendingIntent);
-//        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, AlarmManager.INTERVAL_DAY, pendingIntent);
+//        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, ALARM_GAP, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, AlarmManager.INTERVAL_DAY, pendingIntent);
 
         Log.d(TAG, "alarmManager selectTime:" + selectTime + " systemTime: " + systemTime + " firstTime: " + firstTime);
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static void setAlarmTime(Context context)
+    {   
+        for (int i = 0; i < 3; i++)
+        {
+            // am 8 : 00, pm 3  : 00, pm 10:00
+            setAlarmTime(context, 8 + i * 7, 0, i);
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean hasAppRunning(Context context)
     {
-        setAlarmTime(context, 8, 0);
+        String packageName = "com.example.retailsale";
+
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+
+        List<RunningTaskInfo> tasksInfo = activityManager.getRunningTasks(1);
+
+        if (tasksInfo.size() > 0)
+        {    
+            Log.d(TAG, "package name : " + tasksInfo.get(0).topActivity.getPackageName());
+
+            if (packageName.equals(tasksInfo.get(0).topActivity.getPackageName()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

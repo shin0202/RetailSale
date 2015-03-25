@@ -1194,6 +1194,58 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         daySpinner.setAdapter(dayAdapter);
     }
     
+    private void setMultiDialog(List<DataOption> items)
+    {
+        final String[] itemsArray = new String[items.size()];
+        final boolean[] initStates = new boolean[items.size()];
+
+        for (int i = 0; i < items.size(); i++)
+        {
+            itemsArray[i] = items.get(i).getOptName();
+            initStates[i] = false;
+        }
+
+        AlertDialog dialog = new AlertDialog.Builder(AddFragment.this.getActivity())
+                .setTitle(getString(R.string.add_tab_select_repair_item)).setIcon(android.R.drawable.ic_dialog_alert)
+                .setMultiChoiceItems(itemsArray, initStates, new DialogInterface.OnMultiChoiceClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked)
+                    {
+
+                    }
+                }).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener()
+                {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        Log.d(TAG, "Positive Button : " + which);
+                        String temp = " ";
+                        for (int i = 0; i < initStates.length; i++)
+                        {
+                            if (initStates[i])
+                            {
+                                temp += itemsArray[i] + ", ";
+                            }
+                        }
+
+                        Toast.makeText(AddFragment.this.getActivity(),
+                                getString(R.string.add_tab_show_select_item) + temp, Toast.LENGTH_SHORT).show();
+                    }
+                }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener()
+                {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        Log.d(TAG, "Negative Button : " + which);
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
+    }
+    
     private class UserAdapter extends BaseAdapter
     {
         private static final int BASE_INDEX = 1000;

@@ -37,7 +37,7 @@ public class Login extends Activity implements OnClickListener
         findViews();
         retialSaleDbAdapter = new RetialSaleDbAdapter(Login.this);
         
-        Utility.setAlarmTime(Login.this, 8, 0);
+        Utility.setAlarmTime(Login.this);
         
         Utility.createFolder(Utility.LOG_FOLDER_PATH);
     }
