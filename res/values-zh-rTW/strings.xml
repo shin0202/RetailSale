@@ -33,6 +33,7 @@
     <!-- tab name -->
     <string name="add_consumer">新增客戶資料</string>
     <string name="browser_all_photo">瀏覽所有相片</string>
+    <string name="browser_upload_customer">瀏覽客戶資料</string>
     <string name="sync_with_server">與伺服器進行同步</string>
     <string name="logout">登出</string>
     <string name="manage">管理</string>

@@ -82,6 +82,7 @@ public class Utility
     public static final String DEFAULT_VALUE_STRING = "-1";
     public static final int DEFAULT_ZERO_VALUE = 0;
     public static final int DEFAULT_NEGATIVE_VALUE = -1;
+    public static final int NO_DATA = -1000;
     
     private static File logFile;
     private static BufferedWriter outputContent;

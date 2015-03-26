@@ -1098,11 +1098,11 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             {
                 while (cursor.moveToNext())
                 {
-                    String custometName = cursor.getString(cursor
+                    String customerName = cursor.getString(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_NAME));
                     detailList.add(SynchronizationFragment.this.getResources().getString(
                             R.string.customer_name)
-                            + custometName);
+                            + customerName);
                 }
             }
             else

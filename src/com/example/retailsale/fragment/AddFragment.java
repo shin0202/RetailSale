@@ -309,6 +309,57 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             }
         }
     }
+    
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    {
+        switch (parent.getId())
+        {
+        case R.id.add_tab_customer_birthday_year:
+            Log.d(TAG, "To select year, the position is " + position);
+            if (position == Utility.DEFAULT_ZERO_VALUE)
+            {
+                monthSpinner.setAdapter(null);
+                daySpinner.setAdapter(null);
+            }
+            else
+            {
+                setCustomerBirthdayMonthSpinner();
+            }
+            break;
+        case R.id.add_tab_customer_birthday_month:
+            Log.d(TAG, "To select month, the position is " + position);
+            if (yearSpinner.getSelectedItemPosition() != Utility.DEFAULT_ZERO_VALUE)
+            {
+                int days = Utility.getDays((String)yearSpinner.getSelectedItem() + "-" + (String)monthSpinner.getSelectedItem());
+                Log.d(TAG, "days : " + days);
+                setCustomerBirthdayDaySpinner(days);
+            }
+            break;
+//        case R.id.add_tab_contact_address_county:
+//            Log.d(TAG, "To select contact county, the position is " + position);
+//            contactCountyPosition = position;
+//            handleCountyEvent(position, true, false);
+//            break;
+        case R.id.add_tab_work_address_county:
+//            if (asAboveCB.isChecked())
+//                return;
+            Log.d(TAG, "To select work county, the position is " + position);
+            handleCountyEvent(position, false, false);
+         
+            break;
+//        case R.id.add_tab_contact_address_city:
+//            Log.d(TAG, "To select contact city, the position is " + position);
+//            contactCityPosition = position;
+//            break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent)
+    {
+
+    }
 
     private boolean setCustomerData()
     {
@@ -612,7 +663,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 //            int userSerial = settings.getInt(Utility.LoginField.USER_SERIAL, -1);
 //            int userGroup = settings.getInt(Utility.LoginField.USER_GROUP, -1);
             Log.d(TAG, "userSerial === " + customerInfo.getCreator() + "userGroup === " + customerInfo.getCreatorGroup());
-            long id = retialSaleDbAdapter.create(customerInfo.getCustometName(), customerInfo.getCustomerHome(),
+            long id = retialSaleDbAdapter.create(customerInfo.getCustomerName(), customerInfo.getCustomerHome(),
                     customerInfo.getCustomerMobile(), customerInfo.getCustomerCompany(),
                     customerInfo.getCustomerMail(), customerInfo.getCustomerSex(), customerInfo.getCustomerBirth(),
                     customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(), customerInfo.getCustomerJob(),
@@ -1194,6 +1245,51 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         daySpinner.setAdapter(dayAdapter);
     }
     
+    private void showErrorDialog()
+    {
+        if (errorDialog == null)
+        {
+            errorDialog = new Dialog(getActivity());
+            errorDialog.setContentView(R.layout.dialog_error);
+        }
+        else
+        {
+            if (errorDialog.isShowing())
+            {
+                Log.d(TAG, "The error dialog is showing! ");
+                return;
+            }
+            else
+            {
+                Log.d(TAG, "The error dialog is not showing! ");
+            }
+        }
+        
+        Button loginBtn = (Button) errorDialog.findViewById(R.id.error_dialog_btn);
+        loginBtn.setOnClickListener(this);
+        
+        TextView errorMsg = (TextView) errorDialog.findViewById(R.id.error_dialog_message);
+        errorMsg.setText(getString(R.string.designer_not_enough_error));
+
+        errorDialog.setTitle(getResources().getString(R.string.field_error));
+        errorDialog.show();
+    }
+    
+    private int getOptionSelectedPosition(List<DataOption> dataList, int optSerial)
+    {
+        int position = 0;
+        
+        for (int i = 0; i < dataList.size(); i++)
+        {
+            if (dataList.get(i).getOptSerial() == optSerial){
+                position = i;
+                return position;
+            }
+        }
+        
+        return position;
+    }
+    
     private void setMultiDialog(List<DataOption> items)
     {
         final String[] itemsArray = new String[items.size()];
@@ -1311,86 +1407,5 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 this.itemName = itemName;
             }
         }
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-    {
-        switch (parent.getId())
-        {
-        case R.id.add_tab_customer_birthday_year:
-            Log.d(TAG, "To select year, the position is " + position);
-            if (position == Utility.DEFAULT_ZERO_VALUE)
-            {
-                monthSpinner.setAdapter(null);
-                daySpinner.setAdapter(null);
-            }
-            else
-            {
-                setCustomerBirthdayMonthSpinner();
-            }
-            break;
-        case R.id.add_tab_customer_birthday_month:
-            Log.d(TAG, "To select month, the position is " + position);
-            if (yearSpinner.getSelectedItemPosition() != Utility.DEFAULT_ZERO_VALUE)
-            {
-                int days = Utility.getDays((String)yearSpinner.getSelectedItem() + "-" + (String)monthSpinner.getSelectedItem());
-                Log.d(TAG, "days : " + days);
-                setCustomerBirthdayDaySpinner(days);
-            }
-            break;
-//        case R.id.add_tab_contact_address_county:
-//            Log.d(TAG, "To select contact county, the position is " + position);
-//            contactCountyPosition = position;
-//            handleCountyEvent(position, true, false);
-//            break;
-        case R.id.add_tab_work_address_county:
-//            if (asAboveCB.isChecked())
-//                return;
-            Log.d(TAG, "To select work county, the position is " + position);
-            handleCountyEvent(position, false, false);
-         
-            break;
-//        case R.id.add_tab_contact_address_city:
-//            Log.d(TAG, "To select contact city, the position is " + position);
-//            contactCityPosition = position;
-//            break;
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent)
-    {
-
-    }
-    
-    private void showErrorDialog()
-    {
-        if (errorDialog == null)
-        {
-            errorDialog = new Dialog(getActivity());
-            errorDialog.setContentView(R.layout.dialog_error);
-        }
-        else
-        {
-            if (errorDialog.isShowing())
-            {
-                Log.d(TAG, "The error dialog is showing! ");
-                return;
-            }
-            else
-            {
-                Log.d(TAG, "The error dialog is not showing! ");
-            }
-        }
-        
-        Button loginBtn = (Button) errorDialog.findViewById(R.id.error_dialog_btn);
-        loginBtn.setOnClickListener(this);
-        
-        TextView errorMsg = (TextView) errorDialog.findViewById(R.id.error_dialog_message);
-        errorMsg.setText(getString(R.string.designer_not_enough_error));
-
-        errorDialog.setTitle(getResources().getString(R.string.field_error));
-        errorDialog.show();
     }
 }

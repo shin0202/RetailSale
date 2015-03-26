@@ -161,7 +161,7 @@ public class OrderMeasureActivity extends Activity implements OnClickListener, O
 
             if (customerInfo != null)
             {
-                consumerNameTV.setText(customerInfo.getCustometName());
+                consumerNameTV.setText(customerInfo.getCustomerName());
                 phoneNumberTV.setText(customerInfo.getCustomerHome());
             }
         }

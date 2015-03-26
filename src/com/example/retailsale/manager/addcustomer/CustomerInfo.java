@@ -14,7 +14,7 @@ public class CustomerInfo implements Parcelable
     {
     }
 
-    public CustomerInfo(String customerAccount, String custometName, String customerMobile, String customerHome,
+    public CustomerInfo(String customerAccount, String customerName, String customerMobile, String customerHome,
             String customerCompany, int customerSex, int customerTitle, String customerMail, String customerVisitDate,
             int customerInfo, String customerIntroducer, int customerJob, int customerAge, String customerMemo,
             String customerBirth, int creator, int creatorGroup, String createTime, String reservationDate,
@@ -25,7 +25,7 @@ public class CustomerInfo implements Parcelable
     {
         super();
         this.customerAccount = customerAccount;
-        this.custometName = custometName;
+        this.customerName = customerName;
         this.customerMobile = customerMobile;
         this.customerHome = customerHome;
         this.customerCompany = customerCompany;
@@ -59,14 +59,14 @@ public class CustomerInfo implements Parcelable
     }
 
     // for Add Fragment
-    public CustomerInfo(String customerAccount, String custometName, String customerMobile, String customerHome,
+    public CustomerInfo(String customerAccount, String customerName, String customerMobile, String customerHome,
             String customerCompany, int customerSex, int customerTitle, String customerMail, String customerVisitDate,
             int customerInfo, String customerIntroducer, int customerJob, int customerAge, String customerBirth,
             int creator, int creatorGroup, String createTime, int reservationRepairItem, int reservationArea)
     {
         super();
         this.customerAccount = customerAccount;
-        this.custometName = custometName;
+        this.customerName = customerName;
         this.customerMobile = customerMobile;
         this.customerHome = customerHome;
         this.customerCompany = customerCompany;
@@ -108,8 +108,8 @@ public class CustomerInfo implements Parcelable
 
     @SerializedName("customerAccount")
     private String customerAccount;
-    @SerializedName("custometName")
-    private String custometName;
+    @SerializedName("customerName")
+    private String customerName;
     @SerializedName("customerMobile")
     private String customerMobile;
     @SerializedName("customerHome")
@@ -363,14 +363,14 @@ public class CustomerInfo implements Parcelable
         this.customerAccount = customerAccount;
     }
 
-    public String getCustometName()
+    public String getCustomerName()
     {
-        return custometName;
+        return customerName;
     }
 
-    public void setCustometName(String custometName)
+    public void setCustomerName(String customerName)
     {
-        this.custometName = custometName;
+        this.customerName = customerName;
     }
 
     public String getCustomerMobile()
@@ -633,7 +633,7 @@ public class CustomerInfo implements Parcelable
         this.reservationBudget = reservationBudget;
     }
 
-    public void modifyCustomerInfo(String customerAccount, String custometName, String customerMobile,
+    public void modifyCustomerInfo(String customerAccount, String customerName, String customerMobile,
             String customerHome, String customerCompany, int customerSex, int customerTitle, String customerMail,
             String customerVisitDate, int customerInfo, String customerIntroducer, int customerJob, int customerAge,
             String customerMemo, String customerBirth, int creator, int creatorGroup, String createTime,
@@ -641,7 +641,7 @@ public class CustomerInfo implements Parcelable
             , String reservationWork, String workPostcode)
     {
         this.customerAccount = customerAccount;
-        this.custometName = custometName;
+        this.customerName = customerName;
         this.customerMobile = customerMobile;
         this.customerHome = customerHome;
         this.customerCompany = customerCompany;
@@ -679,7 +679,7 @@ public class CustomerInfo implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeString(customerAccount);
-        dest.writeString(custometName);
+        dest.writeString(customerName);
         dest.writeString(customerMobile);
         dest.writeString(customerHome);
         dest.writeString(customerCompany);
@@ -748,7 +748,7 @@ public class CustomerInfo implements Parcelable
     public void readFromParcel(Parcel in)
     {
         this.customerAccount = in.readString();
-        this.custometName = in.readString();
+        this.customerName = in.readString();
         this.customerMobile = in.readString();
         this.customerHome = in.readString();
         this.customerCompany = in.readString();

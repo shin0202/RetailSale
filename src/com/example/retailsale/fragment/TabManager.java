@@ -16,7 +16,7 @@ import com.example.retailsale.MainFragmentActivity;
 
 public class TabManager implements OnTabChangeListener
 {
-
+    private static final String TAG = "TabManager";
     private final FragmentActivity activity;
     private final TabHost tabhost;
     private final int containerId;
@@ -119,10 +119,10 @@ public class TabManager implements OnTabChangeListener
                 
                 if (lastTab != null)
                 {
-                    Log.d("John", "lastTab name " + lastTab.clss.getName());
+                    Log.d(TAG, "lastTab name " + lastTab.clss.getName());
                 }
                 
-                Log.d("John", "newTab name " + newTab.clss.getName());
+                Log.d(TAG, "newTab name " + newTab.clss.getName());
             }
 
             lastTab = newTab;
