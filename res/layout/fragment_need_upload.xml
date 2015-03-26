@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_layout_bg"
+    android:orientation="horizontal" >
+
+    <!-- Not upload list -->
+
+    <ListView
+        android:id="@+id/not_upload_tab_content_list"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sync_fragment_grid_height"
+        android:cacheColorHint="@android:color/transparent"
+        android:listSelector="@android:color/transparent"
+        android:verticalSpacing="@dimen/browser_tab_vertical_spacing"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/not_upload_tab_add_btn"
+        android:layout_width="2dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/common_btn_selector"
+        android:text="@string/add_consumer" />
+
+</RelativeLayout>
