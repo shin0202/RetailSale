@@ -44,7 +44,7 @@ public class ManageFragment extends Fragment implements OnClickListener, OnLongC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
 
-        View view = inflater.inflate(R.layout.manage_tab, container, false);
+        View view = inflater.inflate(R.layout.fragment_manager, container, false);
 
         TextView logoutText = (TextView) view.findViewById(R.id.logout_btn);
         logoutText.setOnClickListener(this);
@@ -118,7 +118,7 @@ public class ManageFragment extends Fragment implements OnClickListener, OnLongC
         if (inputIpDialog == null)
         {
             inputIpDialog = new Dialog(getActivity());
-            inputIpDialog.setContentView(R.layout.input_ip_dialog);
+            inputIpDialog.setContentView(R.layout.dialog_input_ip);
         }
         else
         {

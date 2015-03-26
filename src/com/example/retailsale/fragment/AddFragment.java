@@ -119,7 +119,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         Log.d(TAG, "onCreateView()");
-        View view = inflater.inflate(R.layout.add_tab, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_customer, container, false);
         infoSpinner = (Spinner) view.findViewById(R.id.add_tab_info_from);
         jobSpinner = (Spinner) view.findViewById(R.id.add_tab_job);
         ageSpinner = (Spinner) view.findViewById(R.id.add_tab_age_selection);
@@ -1283,7 +1283,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             if (convertView == null)
             {
                 LayoutInflater layoutInflater = LayoutInflater.from(context);
-                convertView = layoutInflater.inflate(R.layout.option_layout, null);
+                convertView = layoutInflater.inflate(R.layout.cell_of_option, null);
                 viewTag = new ViewTag((TextView) convertView.findViewById(R.id.option_text));
                 convertView.setTag(viewTag);
             }
@@ -1369,7 +1369,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         if (errorDialog == null)
         {
             errorDialog = new Dialog(getActivity());
-            errorDialog.setContentView(R.layout.error_dialog);
+            errorDialog.setContentView(R.layout.dialog_error);
         }
         else
         {

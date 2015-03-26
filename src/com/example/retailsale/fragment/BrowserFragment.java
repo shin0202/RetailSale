@@ -141,7 +141,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.browser_tab, container, false);
+        View view = inflater.inflate(R.layout.fragment_browser, container, false);
         photoGrid = (GridView) view.findViewById(R.id.browser_tab_files_grid);
         photoGrid.setOnItemClickListener(this);
         albums = (LinearLayout) view.findViewById(R.id.albums);

@@ -59,12 +59,12 @@ public class PhotoAdapter extends BaseAdapter
             switch (selectdTab)
             {
             case BROWSER_TAB:
-                convertView = layoutInflater.inflate(R.layout.cell_of_browser_tab, null);
+                convertView = layoutInflater.inflate(R.layout.cell_of_fragment_browser, null);
                 viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.browser_photo),
                         (TextView) convertView.findViewById(R.id.photo_name));
                 break;
             case SYNC_TAB:
-                convertView = layoutInflater.inflate(R.layout.cell_of_sync_tab_download_browser, null);
+                convertView = layoutInflater.inflate(R.layout.cell_of_fragment_sync_download_browser, null);
                 viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.download_browser_photo),
                         (TextView) convertView.findViewById(R.id.download_browser_name));
                 break;

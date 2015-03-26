@@ -163,7 +163,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
 
-        View view = inflater.inflate(R.layout.synchronization_tab, container, false);
+        View view = inflater.inflate(R.layout.fragment_synchronization, container, false);
         uploadConsumer = (LinearLayout) view.findViewById(R.id.sync_tab_upload_layout);
         downloadPicture = (LinearLayout) view.findViewById(R.id.sync_tab_download_layout);
         syncData = (LinearLayout) view.findViewById(R.id.sync_tab_sync_layout);
@@ -355,7 +355,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             if (loginDialog == null)
             {
                 loginDialog = new Dialog(getActivity());
-                loginDialog.setContentView(R.layout.login_dialog);
+                loginDialog.setContentView(R.layout.dialog_login);
             }
             else
             {
@@ -1573,7 +1573,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
             if (convertView == null)
             {
-                convertView = layoutInflater.inflate(R.layout.cell_of_sync_tab_content_list, null);
+                convertView = layoutInflater.inflate(R.layout.cell_of_fragment_sync_content_list, null);
                 viewTag = new ViewTag((TextView) convertView.findViewById(R.id.content_list_name));
 
                 convertView.setTag(viewTag);

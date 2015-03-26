@@ -51,7 +51,7 @@ public class OptionAdapter extends BaseAdapter
         if (convertView == null)
         {
             LayoutInflater layoutInflater = LayoutInflater.from(context);
-            convertView = layoutInflater.inflate(R.layout.option_layout, null);
+            convertView = layoutInflater.inflate(R.layout.cell_of_option, null);
             viewTag = new ViewTag((TextView) convertView.findViewById(R.id.option_text));
             convertView.setTag(viewTag);
         }
