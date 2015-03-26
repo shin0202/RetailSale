@@ -32,16 +32,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.retailsale.CommonAdapter;
-import com.example.retailsale.MainActivity;
-import com.example.retailsale.OrderMeasure;
+import com.example.retailsale.MainFragmentActivity;
+import com.example.retailsale.OrderMeasureActivity;
 import com.example.retailsale.R;
-import com.example.retailsale.RetialSaleDbAdapter;
-import com.example.retailsale.TWZipCode;
+import com.example.retailsale.adapter.CommonAdapter;
+import com.example.retailsale.adapter.RetialSaleDbAdapter;
 import com.example.retailsale.manager.addcustomer.CustomerInfo;
 import com.example.retailsale.manager.dataoption.DataOption;
 import com.example.retailsale.manager.dataoption.OptionAdapter;
 import com.example.retailsale.manager.userlist.UserDataForList;
+import com.example.retailsale.util.TWZipCode;
 import com.example.retailsale.util.Utility;
 
 public class AddFragment extends Fragment implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener
@@ -62,7 +62,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private List<String> phoneCodeList, workCountyList, workCityList;
 //    private int contactCountyPosition = 0, contactCityPosition = 0;
     // views
-    private MainActivity mainActivity;
+    private MainFragmentActivity mainActivity;
 //    private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
     private Spinner infoSpinner, jobSpinner, ageSpinner, titleSpinner, designerSpinner;
     private Spinner yearSpinner, monthSpinner, daySpinner;
@@ -112,7 +112,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     {
         super.onAttach(activity);
         Log.d(TAG, "onAttach()");
-        mainActivity = (MainActivity) activity;
+        mainActivity = (MainFragmentActivity) activity;
     }
 
     @Override
@@ -640,7 +640,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     {
         if (setCustomerData())
         {
-            Intent orderintent = new Intent(this.getActivity(), OrderMeasure.class);
+            Intent orderintent = new Intent(this.getActivity(), OrderMeasureActivity.class);
             orderintent.putExtra(SEND_CUSTOMER_INFO, customerInfo);
             orderintent.putExtra(AddFragment.SEND_NOTE_MSG, isSendMsg);
             startActivityForResult(orderintent, REQUEST_ORDER_MEASURE);

@@ -17,14 +17,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.retailsale.MainActivity;
+import com.example.retailsale.MainFragmentActivity;
 import com.example.retailsale.R;
 import com.example.retailsale.util.Utility;
 
 public class ManageFragment extends Fragment implements OnClickListener, OnLongClickListener
 {
     private static final String TAG = "ManageFragment";
-    private MainActivity mainActivity;
+    private MainFragmentActivity mainActivity;
     private Dialog inputIpDialog;
 
     @Override
@@ -37,7 +37,7 @@ public class ManageFragment extends Fragment implements OnClickListener, OnLongC
     public void onAttach(Activity activity)
     {
         super.onAttach(activity);
-        mainActivity = (MainActivity) activity;
+        mainActivity = (MainFragmentActivity) activity;
     }
 
     @Override

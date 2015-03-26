@@ -1,4 +1,4 @@
-package com.example.retailsale.fragment;
+package com.example.retailsale.adapter;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import com.example.retailsale.R;
 import com.example.retailsale.manager.fileinfo.LocalFileInfo;
 import com.example.retailsale.util.Utility;
 
-public class PhotosAdapterView extends BaseAdapter
+public class PhotoAdapter extends BaseAdapter
 {
     public static final int BASE_INDEX = 1000;
     public static final int BROWSER_TAB = 0;
@@ -26,7 +26,7 @@ public class PhotosAdapterView extends BaseAdapter
     private LayoutInflater layoutInflater;
     private ViewTag viewTag;
 
-    public PhotosAdapterView(Context context, List<LocalFileInfo> photoList, int selectdTab)
+    public PhotoAdapter(Context context, List<LocalFileInfo> photoList, int selectdTab)
     {
         this.photoList = photoList;
         this.selectdTab = selectdTab;

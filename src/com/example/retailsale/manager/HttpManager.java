@@ -21,7 +21,7 @@ import android.util.Log;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.example.retailsale.RetialSaleDbAdapter;
+import com.example.retailsale.adapter.RetialSaleDbAdapter;
 import com.example.retailsale.fragment.SynchronizationFragment;
 import com.example.retailsale.manager.addcustomer.AddCustomerListener;
 import com.example.retailsale.manager.dataoption.GetDataOptionListener;

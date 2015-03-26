@@ -1,4 +1,4 @@
-package com.example.retailsale;
+package com.example.retailsale.adapter;
 
 import java.io.File;
 import java.io.FileOutputStream;

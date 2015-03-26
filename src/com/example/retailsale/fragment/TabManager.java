@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 
-import com.example.retailsale.MainActivity;
+import com.example.retailsale.MainFragmentActivity;
 
 public class TabManager implements OnTabChangeListener
 {
@@ -89,7 +89,7 @@ public class TabManager implements OnTabChangeListener
     {
         TabInfo newTab = tabs.get(tabId);
 
-        ((MainActivity) activity).setTabColor(tabhost);
+        ((MainFragmentActivity) activity).setTabColor(tabhost);
 
         if (lastTab != newTab)
         {

@@ -31,9 +31,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.retailsale.MainActivity;
-import com.example.retailsale.PhotoPlayer;
+import com.example.retailsale.MainFragmentActivity;
+import com.example.retailsale.PhotoPlayerActivity;
 import com.example.retailsale.R;
+import com.example.retailsale.adapter.PhotoAdapter;
 import com.example.retailsale.manager.fileinfo.LocalFileInfo;
 import com.example.retailsale.util.Utility;
 
@@ -53,13 +54,13 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     private int albumNum = 0;
     private String currentParentPath;
     private int currentAlbumPosition;
-    private PhotosAdapterView photosAdapterView;
+    private PhotoAdapter photosAdapterView;
     private List<LocalFileInfo> albumList;
     private List<LocalFileInfo> photoList;
     private ProgressDialog progressDialog;
     private Stack<Integer> positionStack;
     // views
-    private MainActivity mainActivity;
+    private MainFragmentActivity mainActivity;
     private LinearLayout albums;
     private GridView photoGrid;
     private Button backBtn;
@@ -134,7 +135,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         super.onAttach(activity);
 
         Log.d(TAG, "onAttach  ");
-        mainActivity = (MainActivity) activity;
+        mainActivity = (MainFragmentActivity) activity;
     }
 
     @Override
@@ -170,7 +171,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 {
                     if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
                     {
-                        Intent intent = new Intent(getActivity(), PhotoPlayer.class);
+                        Intent intent = new Intent(getActivity(), PhotoPlayerActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList(FILE_LIST, (ArrayList<? extends Parcelable>) photoList);
                         Log.d(TAG, "position === " + position);
@@ -506,7 +507,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             case SET_ADAPTER:
                 if (photoList.size() != 0)
                 {
-                    photosAdapterView = new PhotosAdapterView(getActivity(), photoList, PhotosAdapterView.BROWSER_TAB);
+                    photosAdapterView = new PhotoAdapter(getActivity(), photoList, PhotoAdapter.BROWSER_TAB);
                     photoGrid.setAdapter(photosAdapterView);
                 }
                 break;

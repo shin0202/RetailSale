@@ -5,7 +5,7 @@ import org.json.JSONStringer;
 import android.content.Context;
 import android.os.Handler;
 
-import com.example.retailsale.RetialSaleDbAdapter;
+import com.example.retailsale.adapter.RetialSaleDbAdapter;
 import com.example.retailsale.fragment.SynchronizationFragment;
 import com.example.retailsale.util.Utility;
 

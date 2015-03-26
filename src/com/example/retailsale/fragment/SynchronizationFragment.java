@@ -38,7 +38,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.retailsale.R;
-import com.example.retailsale.RetialSaleDbAdapter;
+import com.example.retailsale.adapter.PhotoAdapter;
+import com.example.retailsale.adapter.RetialSaleDbAdapter;
 import com.example.retailsale.manager.HttpManager;
 import com.example.retailsale.manager.POSTThread;
 import com.example.retailsale.manager.dataoption.DataOption;
@@ -85,7 +86,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
 
     private int selectedItem;
 
-    private PhotosAdapterView photosAdapterView;
+    private PhotoAdapter photosAdapterView;
 
     private ContentListAdapter contentListAdapter;
 
@@ -753,8 +754,8 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             Log.d(TAG, "listFile is null ");
         }
         // to set adapter
-        photosAdapterView = new PhotosAdapterView(SynchronizationFragment.this.getActivity(),
-                localFileInfoList, PhotosAdapterView.SYNC_TAB);
+        photosAdapterView = new PhotoAdapter(SynchronizationFragment.this.getActivity(),
+                localFileInfoList, PhotoAdapter.SYNC_TAB);
         filesGrid.setAdapter(photosAdapterView);
         handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
         showMessage(Utility.SPACE_STRING, R.string.sync_tab_sync_get_server_directory_success);
@@ -1581,7 +1582,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
             {
                 viewTag = (ViewTag) convertView.getTag();
             }
-            convertView.setId(PhotosAdapterView.BASE_INDEX + position);
+            convertView.setId(PhotoAdapter.BASE_INDEX + position);
             if (position < contentList.size()) viewTag.showName.setText(contentList.get(position));
             return convertView;
         }

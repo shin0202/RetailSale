@@ -16,9 +16,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.retailsale.R;
+import com.example.retailsale.R.id;
+import com.example.retailsale.R.layout;
+import com.example.retailsale.R.string;
+import com.example.retailsale.adapter.RetialSaleDbAdapter;
 import com.example.retailsale.util.Utility;
 
-public class Login extends Activity implements OnClickListener
+public class LoginActivity extends Activity implements OnClickListener
 {
     private static final String TAG = "Login";
 
@@ -35,9 +40,9 @@ public class Login extends Activity implements OnClickListener
         setContentView(R.layout.activity_login);
 
         findViews();
-        retialSaleDbAdapter = new RetialSaleDbAdapter(Login.this);
+        retialSaleDbAdapter = new RetialSaleDbAdapter(LoginActivity.this);
         
-        Utility.setAlarmTime(Login.this);
+        Utility.setAlarmTime(LoginActivity.this);
         
         Utility.createFolder(Utility.LOG_FOLDER_PATH);
     }
@@ -148,7 +153,7 @@ public class Login extends Activity implements OnClickListener
 
     private void startManageFragment()
     {
-        Intent intent = new Intent(Login.this, MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MainFragmentActivity.class);
         startActivity(intent);
 //		Login.this.finish();
     }
@@ -465,7 +470,7 @@ public class Login extends Activity implements OnClickListener
             {
             case Utility.SHOW_WAITING_DIALOG:
                 Log.d(TAG, "show waiting dialog ");
-                progressDialog = ProgressDialog.show(Login.this, Utility.SPACE_STRING,
+                progressDialog = ProgressDialog.show(LoginActivity.this, Utility.SPACE_STRING,
                         getResources().getString(R.string.loading));
                 break;
             case Utility.DISMISS_WAITING_DIALOG:

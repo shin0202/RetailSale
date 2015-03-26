@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.example.retailsale.adapter.RetialSaleDbAdapter;
 import com.example.retailsale.manager.HttpManager;
 import com.example.retailsale.manager.POSTThread;
 import com.example.retailsale.manager.login.GetLoginListener;

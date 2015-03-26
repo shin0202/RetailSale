@@ -13,7 +13,7 @@ import com.example.retailsale.fragment.ManageFragment;
 import com.example.retailsale.fragment.SynchronizationFragment;
 import com.example.retailsale.fragment.TabManager;
 
-public class MainActivity extends FragmentActivity
+public class MainFragmentActivity extends FragmentActivity
 {
     private TabHost tabHost;
     private TabManager tabManager;

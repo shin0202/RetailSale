@@ -33,13 +33,13 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.retailsale.PhotoPlayer"
+            android:name="com.example.retailsale.PhotoPlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:screenOrientation="landscape">
             <!-- android:theme="@android:style/Theme.NoTitleBar.Fullscreen" -->
         </activity>
         <activity
-            android:name="com.example.retailsale.Login"
+            android:name="com.example.retailsale.LoginActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="landscape">
@@ -50,12 +50,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.retailsale.MainActivity"
+            android:name="com.example.retailsale.MainFragmentActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:screenOrientation="landscape">
         </activity>
         <activity
-            android:name="com.example.retailsale.OrderMeasure"
+            android:name="com.example.retailsale.OrderMeasureActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:screenOrientation="landscape">
         </activity>

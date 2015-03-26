@@ -30,7 +30,7 @@ import com.example.retailsale.manager.fileinfo.LocalFileInfo;
 import com.example.retailsale.photoview.PhotoViewAttacher;
 import com.example.retailsale.util.Utility;
 
-public class PhotoPlayer extends Activity implements OnClickListener
+public class PhotoPlayerActivity extends Activity implements OnClickListener
 {
     private static final String TAG = "PhotoPlayer";
 
@@ -74,7 +74,7 @@ public class PhotoPlayer extends Activity implements OnClickListener
         setPhotosLayout();
 
         // Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
-        if (attacher == null) attacher = new PhotoViewAttacher(scalableIV, PhotoPlayer.this);
+        if (attacher == null) attacher = new PhotoViewAttacher(scalableIV, PhotoPlayerActivity.this);
 
         setInitImage();
     }
@@ -212,12 +212,12 @@ public class PhotoPlayer extends Activity implements OnClickListener
         int imgDp = (int) getResources().getDimension(R.dimen.scrollview_img_size);
         int txtSize = (int) getResources().getDimension(R.dimen.scrollview_txt_size);
 
-        LinearLayout layout = new LinearLayout(PhotoPlayer.this);
+        LinearLayout layout = new LinearLayout(PhotoPlayerActivity.this);
         layout.setLayoutParams(new LayoutParams(layoutDp, layoutDp));
         layout.setGravity(Gravity.CENTER);
         layout.setOrientation(LinearLayout.VERTICAL);
         
-        ImageView imageView = new ImageView(PhotoPlayer.this);
+        ImageView imageView = new ImageView(PhotoPlayerActivity.this);
         imageView.setLayoutParams(new LayoutParams(imgDp, imgDp));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setImageBitmap(bm);
@@ -233,7 +233,6 @@ public class PhotoPlayer extends Activity implements OnClickListener
             {
                 int position = (Integer) v.getTag();
                 Log.d(TAG, "position : " + position);
-//                scalableIV.initStanScalableImageView(PhotoPlayer.this);
 
                 if (photoList != null && photoList.size() > 0 && position < photoList.size())
                 {
@@ -247,7 +246,7 @@ public class PhotoPlayer extends Activity implements OnClickListener
             }
         });
 
-        TextView textView = new TextView(PhotoPlayer.this);
+        TextView textView = new TextView(PhotoPlayerActivity.this);
         textView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -406,7 +405,7 @@ public class PhotoPlayer extends Activity implements OnClickListener
             {
             case Utility.SHOW_WAITING_DIALOG:
                 Log.d(TAG, "show waiting dialog ");
-                progressDialog = ProgressDialog.show(PhotoPlayer.this, Utility.SPACE_STRING, PhotoPlayer.this
+                progressDialog = ProgressDialog.show(PhotoPlayerActivity.this, Utility.SPACE_STRING, PhotoPlayerActivity.this
                         .getResources().getString(R.string.loading));
                 break;
             case Utility.DISMISS_WAITING_DIALOG:

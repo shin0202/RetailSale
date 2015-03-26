@@ -41,7 +41,7 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.example.retailsale.PhotoPlayer;
+import com.example.retailsale.PhotoPlayerActivity;
 import com.example.retailsale.photoview.gestures.OnGestureListener;
 import com.example.retailsale.photoview.gestures.VersionedGestureDetector;
 import com.example.retailsale.photoview.scrollproxy.ScrollerProxy;
@@ -194,12 +194,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, OnGe
 
                 if (e1.getX() - e2.getX() > 120)
                 {
-                    ((PhotoPlayer) activity).changeImage(true);
+                    ((PhotoPlayerActivity) activity).changeImage(true);
                     return true;
                 }
                 else if (e1.getX() - e2.getX() < -120)
                 {
-                    ((PhotoPlayer) activity).changeImage(false);
+                    ((PhotoPlayerActivity) activity).changeImage(false);
                     return true;
                 }
                 return false;
@@ -1059,7 +1059,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, OnGe
 
     public void handlePlayerController()
     {
-        if (activity != null) ((PhotoPlayer) activity).handleController();
+        if (activity != null) ((PhotoPlayerActivity) activity).handleController();
     }
 
     /**

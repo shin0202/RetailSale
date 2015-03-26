@@ -22,13 +22,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.retailsale.adapter.RetialSaleDbAdapter;
 import com.example.retailsale.fragment.AddFragment;
 import com.example.retailsale.manager.addcustomer.CustomerInfo;
 import com.example.retailsale.manager.dataoption.DataOption;
 import com.example.retailsale.manager.dataoption.OptionAdapter;
 import com.example.retailsale.util.Utility;
 
-public class OrderMeasure extends Activity implements OnClickListener, OnCheckedChangeListener
+public class OrderMeasureActivity extends Activity implements OnClickListener, OnCheckedChangeListener
 {
     private static final String TAG = "OrderMeasure";
     private OptionAdapter spaceAdapter, statusAdapter;
@@ -272,7 +273,7 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         spaceList = new ArrayList<DataOption>();
         statusList = new ArrayList<DataOption>();
 
-        retialSaleDbAdapter = new RetialSaleDbAdapter(OrderMeasure.this);
+        retialSaleDbAdapter = new RetialSaleDbAdapter(OrderMeasureActivity.this);
         retialSaleDbAdapter.open();
 
         // to get option type content
@@ -320,11 +321,11 @@ public class OrderMeasure extends Activity implements OnClickListener, OnChecked
         }
 
         // status spinner
-        statusAdapter = new OptionAdapter(OrderMeasure.this, statusList);
+        statusAdapter = new OptionAdapter(OrderMeasureActivity.this, statusList);
         statusSpinner.setAdapter(statusAdapter);
 
         // space spinner
-        spaceAdapter = new OptionAdapter(OrderMeasure.this, spaceList);
+        spaceAdapter = new OptionAdapter(OrderMeasureActivity.this, spaceList);
         spaceSpinner.setAdapter(spaceAdapter);
     }
 

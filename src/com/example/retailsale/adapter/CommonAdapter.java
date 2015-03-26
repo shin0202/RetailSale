@@ -1,6 +1,10 @@
-package com.example.retailsale;
+package com.example.retailsale.adapter;
 
 import java.util.List;
+
+import com.example.retailsale.R;
+import com.example.retailsale.R.id;
+import com.example.retailsale.R.layout;
 
 import android.content.Context;
 import android.view.LayoutInflater;
