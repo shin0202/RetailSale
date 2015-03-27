@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,20 +15,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.retailsale.EditCustomerActivity;
 import com.example.retailsale.MainFragmentActivity;
+import com.example.retailsale.OrderMeasureActivity;
 import com.example.retailsale.R;
 import com.example.retailsale.adapter.NeedUploadAdapter;
 import com.example.retailsale.adapter.RetialSaleDbAdapter;
 import com.example.retailsale.manager.addcustomer.CustomerInfo;
 import com.example.retailsale.util.Utility;
 
-public class NeedUploadListFragment extends Fragment implements View.OnClickListener
+public class NeedUploadListFragment extends Fragment implements View.OnClickListener, OnItemClickListener
 {
     private static final String TAG = "NotUploadListFragment";
+    public static final String SEND_CUSTOMER_INFO = "sendCustomerInfo";
     
     private RetialSaleDbAdapter retialSaleDbAdapter;
     private List<CustomerInfo> customerList;
@@ -100,10 +106,20 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
         {
         case R.id.need_upload_tab_add_btn:
             Log.d(TAG, "start add customer page");
+            startEditCustomerActivity(null, false);
             break;
         default:
             break;
         }
+    }
+    
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    {
+        Log.d(TAG, "position : " + position);
+        Log.d(TAG, "customer info : " + customerList.get(position).toString());
+        
+        startEditCustomerActivity(customerList.get(position), true);
     }
     
     private void findViews(View view)
@@ -119,61 +135,61 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
         addBtn.setOnClickListener(this);
         
         // for test
-        List<CustomerInfo> testList = new ArrayList<CustomerInfo>();
-        testList.add(new CustomerInfo("111", "Customer 1", "0912345678", "033651469", "0212345678",
-                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
-                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
-                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
-                "reservationStatusComment", 90, 100, 110));
-        testList.add(new CustomerInfo("111", "Customer 2", "0912345678", "033651469", "0212345678",
-                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
-                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
-                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
-                "reservationStatusComment", 90, 100, 110));
-        testList.add(new CustomerInfo("111", "Customer 3", "0912345678", "033651469", "0212345678",
-                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
-                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
-                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
-                "reservationStatusComment", 90, 100, 110));
-        testList.add(new CustomerInfo("111", "Customer 4", "0912345678", "033651469", "0212345678",
-                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
-                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
-                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
-                "reservationStatusComment", 90, 100, 110));
-        testList.add(new CustomerInfo("111", "Customer 5", "0912345678", "033651469", "0212345678",
-                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
-                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
-                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
-                "reservationStatusComment", 90, 100, 110));
-        testList.add(new CustomerInfo("111", "Customer 6", "0912345678", "033651469", "0212345678",
-                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
-                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
-                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
-                "reservationStatusComment", 90, 100, 110));
-        testList.add(new CustomerInfo("111", "Customer 7", "0912345678", "033651469", "0212345678",
-                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
-                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
-                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
-                "reservationStatusComment", 90, 100, 110));
-        testList.add(new CustomerInfo("111", "Customer 8", "0912345678", "033651469", "0212345678",
-                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
-                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
-                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
-                "reservationStatusComment", 90, 100, 110));
-        testList.add(new CustomerInfo("111", "Customer 9", "0912345678", "033651469", "0212345678",
-                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
-                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
-                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
-                "reservationStatusComment", 90, 100, 110));
-        testList.add(new CustomerInfo("111", "Customer 10", "0912345678", "033651469", "0212345678",
-                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
-                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
-                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
-                "reservationStatusComment", 90, 100, 110));
-
-        commonAdapter = new NeedUploadAdapter(mainActivity, testList);
-        
-        uploadListView.setAdapter(commonAdapter);
+//        List<CustomerInfo> testList = new ArrayList<CustomerInfo>();
+//        testList.add(new CustomerInfo("111", "Customer 1", "0912345678", "033651469", "0212345678",
+//                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
+//                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
+//                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
+//                "reservationStatusComment", 90, 100, 110));
+//        testList.add(new CustomerInfo("111", "Customer 2", "0912345678", "033651469", "0212345678",
+//                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
+//                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
+//                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
+//                "reservationStatusComment", 90, 100, 110));
+//        testList.add(new CustomerInfo("111", "Customer 3", "0912345678", "033651469", "0212345678",
+//                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
+//                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
+//                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
+//                "reservationStatusComment", 90, 100, 110));
+//        testList.add(new CustomerInfo("111", "Customer 4", "0912345678", "033651469", "0212345678",
+//                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
+//                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
+//                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
+//                "reservationStatusComment", 90, 100, 110));
+//        testList.add(new CustomerInfo("111", "Customer 5", "0912345678", "033651469", "0212345678",
+//                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
+//                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
+//                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
+//                "reservationStatusComment", 90, 100, 110));
+//        testList.add(new CustomerInfo("111", "Customer 6", "0912345678", "033651469", "0212345678",
+//                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
+//                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
+//                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
+//                "reservationStatusComment", 90, 100, 110));
+//        testList.add(new CustomerInfo("111", "Customer 7", "0912345678", "033651469", "0212345678",
+//                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
+//                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
+//                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
+//                "reservationStatusComment", 90, 100, 110));
+//        testList.add(new CustomerInfo("111", "Customer 8", "0912345678", "033651469", "0212345678",
+//                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
+//                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
+//                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
+//                "reservationStatusComment", 90, 100, 110));
+//        testList.add(new CustomerInfo("111", "Customer 9", "0912345678", "033651469", "0212345678",
+//                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
+//                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
+//                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
+//                "reservationStatusComment", 90, 100, 110));
+//        testList.add(new CustomerInfo("111", "Customer 10", "0912345678", "033651469", "0212345678",
+//                10, 20, "aa@aa.aa", "2015/03/03", 30, "John", 40, 50, "Memo", "1986/02/02", 60, 70,
+//                "2015/03/03", "2015/03/03", "06:11", "xxx", "workPostcode", "reservationWorkAlias",
+//                "reservationContact", "contactPostcode", 70, 80, "reservationUpateTime",
+//                "reservationStatusComment", 90, 100, 110));
+//
+//        commonAdapter = new NeedUploadAdapter(mainActivity, testList);
+//        
+//        uploadListView.setAdapter(commonAdapter);
     }
     
     private void openDatabase()
@@ -198,6 +214,22 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
     
     private void getAllCustomerByCreator()
     {
+        // 1.reservationDateString = Utility.covertDateToString(reservationDP.getYear(), 
+        // reservationDP.getMonth() + 1, reservationDP.getDayOfMonth())
+        
+        // 2.reservationTimeString = Utility.covertTimeToString(reservationTP.getCurrentHour(),
+        // reservationTP.getCurrentMinute()) + ":00";
+        
+        // 3.reservationDate --> reservationDateString + reservationTimeString
+        // 4.reservationTime --> reservationTimeString
+        // 5.customerVisitDate --> Utility.covertDateToString(consumerVisitDateDP.getYear(),
+        // consumerVisitDateDP.getMonth() + 1, consumerVisitDateDP.getDayOfMonth()) + 
+        // Utility.covertTimeToString(consumerVisitTimeTP.getCurrentHour(), consumerVisitTimeTP.getCurrentMinute()) + ":00"
+        // 6.reservationUpateTime --> Utility.SPACE_STRING
+        // 7.customerAccount --> Utility.DEFAULT_VALUE_STRING
+        
+        // dateTime format ---> YYYY-MM-DDThh:mm:00
+        
         openDatabase();
         Cursor cursor = retialSaleDbAdapter.getCustomerNotUpload();
         if (cursor != null)
@@ -206,11 +238,10 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
             {
                 while (cursor.moveToNext())
                 {
-                    String customerName = cursor.getString(cursor
-                            .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_NAME));
                     customerList.add(new CustomerInfo(
-                            cursor.getString(cursor
+                            cursor.getLong(cursor
                                     .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_ID)), 
+                            Utility.DEFAULT_VALUE_STRING,
                             cursor.getString(cursor
                                     .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_NAME)), 
                             cursor.getString(cursor
@@ -262,7 +293,7 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
                                     .getColumnIndex(RetialSaleDbAdapter.KEY_SPACE)), 
                             cursor.getInt(cursor
                                     .getColumnIndex(RetialSaleDbAdapter.KEY_STATUS)),
-                            "reservationUpateTime", 
+                            Utility.SPACE_STRING, 
                             cursor.getString(cursor
                                     .getColumnIndex(RetialSaleDbAdapter.KEY_STATUS_COMMENT)), 
                             cursor.getInt(cursor
@@ -272,6 +303,7 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
                             cursor.getInt(cursor
                                     .getColumnIndex(RetialSaleDbAdapter.KEY_AREA))));
                 }
+                handler.sendEmptyMessage(Utility.SUCCESS);
             }
             else
             {
@@ -309,6 +341,21 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
         }
     }
     
+    private void startEditCustomerActivity(CustomerInfo customerInfo, boolean isEdit)
+    {
+        Intent editIntent = new Intent(mainActivity, EditCustomerActivity.class);
+        
+        if (isEdit)
+        {
+            editIntent.putExtra(SEND_CUSTOMER_INFO, customerInfo);
+        }
+        
+        startActivity(editIntent);
+        
+        mainActivity.overridePendingTransition(R.anim.activity_conversion_in_from_right,
+                R.anim.activity_conversion_out_to_left);
+    }
+    
     private Handler handler = new Handler()
     {
         @Override
@@ -330,6 +377,14 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
                 Log.d(TAG, "No data ");
                 showLayout(true);
                 break;
+            case Utility.SUCCESS:
+                Log.d(TAG, "Get success ");
+                commonAdapter = new NeedUploadAdapter(mainActivity, customerList);
+                
+                uploadListView.setAdapter(commonAdapter);
+                showLayout(false);
+                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                break;
             }
         }
     };
@@ -345,8 +400,6 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
             else customerList.clear();
 
             getAllCustomerByCreator();
-
-            handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
         }
     }
 }

@@ -1,8 +1,18 @@
-package com.example.retailsale.fragment;
+package com.example.retailsale;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.example.retailsale.adapter.CommonAdapter;
+import com.example.retailsale.adapter.RetialSaleDbAdapter;
+import com.example.retailsale.fragment.NeedUploadListFragment;
+import com.example.retailsale.manager.addcustomer.CustomerInfo;
+import com.example.retailsale.manager.dataoption.DataOption;
+import com.example.retailsale.manager.dataoption.OptionAdapter;
+import com.example.retailsale.manager.userlist.UserDataForList;
+import com.example.retailsale.util.TWZipCode;
+import com.example.retailsale.util.Utility;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,42 +22,29 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import com.example.retailsale.MainFragmentActivity;
-import com.example.retailsale.OrderMeasureActivity;
-import com.example.retailsale.R;
-import com.example.retailsale.adapter.CommonAdapter;
-import com.example.retailsale.adapter.RetialSaleDbAdapter;
-import com.example.retailsale.manager.addcustomer.CustomerInfo;
-import com.example.retailsale.manager.dataoption.DataOption;
-import com.example.retailsale.manager.dataoption.OptionAdapter;
-import com.example.retailsale.manager.userlist.UserDataForList;
-import com.example.retailsale.util.TWZipCode;
-import com.example.retailsale.util.Utility;
-
-public class AddFragment extends Fragment implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener
+public class EditCustomerActivity extends Activity implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener
 {
     private static final String TAG = "AddFragment";
-    private static final int REQUEST_ORDER_MEASURE = 999;
     public static final String SEND_CUSTOMER_INFO = "send_customer_info";
     public static final String SEND_NOTE_MSG = "send_note_msg";
     private boolean isNotLeaveChecked = false;
@@ -61,8 +58,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 //    private List<String> phoneCodeList, contactCountyList, contactCityList, workCountyList, workCityList;
     private List<String> phoneCodeList, workCountyList, workCityList;
 //    private int contactCountyPosition = 0, contactCityPosition = 0;
+    
     // views
-    private MainFragmentActivity mainActivity;
 //    private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
     private Spinner infoSpinner, jobSpinner, ageSpinner, titleSpinner, designerSpinner;
     private Spinner yearSpinner, monthSpinner, daySpinner;
@@ -88,7 +85,14 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.fragment_add_customer);
+        
         Log.d(TAG, "onCreate()");
+
+        findViews();
+        
+        getBundle();
     }
 
     @Override
@@ -97,110 +101,6 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         super.onResume();
         Log.d(TAG, "onResume()");
         openDatabase();
-    }
-
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        Log.d(TAG, "onPause()");
-        retialSaleDbAdapter.close();
-    }
-
-    @Override
-    public void onAttach(Activity activity)
-    {
-        super.onAttach(activity);
-        Log.d(TAG, "onAttach()");
-        mainActivity = (MainFragmentActivity) activity;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        Log.d(TAG, "onCreateView()");
-        View view = inflater.inflate(R.layout.fragment_add_customer, container, false);
-        infoSpinner = (Spinner) view.findViewById(R.id.add_tab_info_from);
-        jobSpinner = (Spinner) view.findViewById(R.id.add_tab_job);
-        ageSpinner = (Spinner) view.findViewById(R.id.add_tab_age_selection);
-//        sexSpinner = (Spinner) view.findViewById(R.id.add_tab_sex_selection);
-        titleSpinner = (Spinner) view.findViewById(R.id.add_tab_title_selection);
-        budgetSpinner = (Spinner) view.findViewById(R.id.add_tab_budget);
-        spaceSpinner = (Spinner) view.findViewById(R.id.add_tab_space);
-        statusSpinner = (Spinner) view.findViewById(R.id.add_tab_sale_status);
-        Button saveBtn = (Button) view.findViewById(R.id.add_tab_save_btn);
-//        Button newBtn = (Button) view.findViewById(R.id.add_tab_new_btn);
-        customerNameET = (EditText) view.findViewById(R.id.add_tab_edit_customer_name);
-        phoneNumberET = (EditText) view.findViewById(R.id.add_tab_edit_phone_number);
-        cellPhoneNumberET = (EditText) view.findViewById(R.id.add_tab_edit_cellphone_number);
-        companyPhoneNumberET = (EditText) view.findViewById(R.id.add_tab_edit_phone_number_company);
-        introducerET = (EditText) view.findViewById(R.id.add_tab_edit_introducer);
-        emailET = (EditText) view.findViewById(R.id.add_tab_edit_email);
-        memoET = (EditText) view.findViewById(R.id.add_tab_edit_customer_memo);
-//        contactET = (EditText) view.findViewById(R.id.add_tab_edit_contact_address);
-        workET = (EditText) view.findViewById(R.id.add_tab_edit_work_address);
-        caseNameET = (EditText) view.findViewById(R.id.add_tab_edit_case_name);
-        cantDescriptionET = (EditText) view.findViewById(R.id.add_tab_edit_cant_description);
-        leaveInfoCB = (CheckBox) view.findViewById(R.id.add_tab_leave_info_checkbox);
-//        asAboveCB = (CheckBox) view.findViewById(R.id.add_tab_as_above_checkbox);
-        consumerVisitDateDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_visit_datePicker);
-        consumerVisitTimeTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_visit_timePicker);
-        reservationDP = (DatePicker) view.findViewById(R.id.add_tab_consumer_reservation_datePicker);
-        reservationTP = (TimePicker) view.findViewById(R.id.add_tab_consumer_reservation_timePicker);
-        designerStoreTV = (TextView) view.findViewById(R.id.add_tab_designer_store);
-        designerSpinner = (Spinner) view.findViewById(R.id.add_tab_user);
-        createDateTV = (TextView) view.findViewById(R.id.add_tab_create_date);
-        
-        yearSpinner = (Spinner) view.findViewById(R.id.add_tab_customer_birthday_year);
-        yearSpinner.setOnItemSelectedListener(this);
-        monthSpinner = (Spinner) view.findViewById(R.id.add_tab_customer_birthday_month);
-        monthSpinner.setOnItemSelectedListener(this);
-        daySpinner = (Spinner) view.findViewById(R.id.add_tab_customer_birthday_day);
-        daySpinner.setOnItemSelectedListener(this);
-        
-        phoneNumberSpinner = (Spinner) view.findViewById(R.id.add_tab_phone_number_spinner);
-        companyPhoneNumberSpinner = (Spinner) view.findViewById(R.id.add_tab_company_phone_number_spinner);
-        
-        repairItemSpinner = (Spinner) view.findViewById(R.id.add_tab_repair_item);
-        areaSpinner = (Spinner) view.findViewById(R.id.add_tab_area);
-        
-//        contactCountySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_county);
-//        contactCountySpinner.setOnItemSelectedListener(this);
-//        contactCitySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_city);
-//        contactCitySpinner.setOnItemSelectedListener(this);
-//        contactCitySpinner.setEnabled(false);
-        
-        workCountySpinner = (Spinner) view.findViewById(R.id.add_tab_work_address_county);
-        workCountySpinner.setOnItemSelectedListener(this);
-        workCitySpinner = (Spinner) view.findViewById(R.id.add_tab_work_address_city);
-        workCitySpinner.setEnabled(false);
-        
-        String[] phoneCodeArray = getResources().getStringArray(R.array.phone_code);
-        phoneCodeList = Arrays.asList(phoneCodeArray);
-        
-        CommonAdapter phoneCodeAdapter = new CommonAdapter(this.getActivity(), phoneCodeList);
-        
-        phoneNumberSpinner.setAdapter(phoneCodeAdapter);
-        companyPhoneNumberSpinner.setAdapter(phoneCodeAdapter);
-        
-        // save btn
-        saveBtn.setOnClickListener(this);
-//        newBtn.setOnClickListener(this);
-        // leave info
-        leaveInfoCB.setOnCheckedChangeListener(this);
-        // time picker to set 24h
-        consumerVisitTimeTP.setIs24HourView(true);
-        reservationTP.setIs24HourView(true);
-        
-        // as above
-//        asAboveCB.setOnCheckedChangeListener(this);
-        
-        // create date
-        createDateTime = Utility.getCurrentDateTime();
-        createDateTV.setText(createDateTime.replace("T", ""));
-
-        retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
-        retialSaleDbAdapter.open();
         
         // get optionType
         getOptionType();
@@ -215,15 +115,14 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         getUserList();
         
         consumerVisitDateDP.setEnabled(false);
-        
-        return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState)
+    public void onPause()
     {
-        super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "onActivityCreated()");
+        super.onPause();
+        Log.d(TAG, "onPause()");
+        closeDatabase();
     }
 
     @Override
@@ -234,9 +133,6 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         case R.id.add_tab_save_btn:
             saveData();
             break;
-//        case R.id.add_tab_new_btn:
-//            startOrderMeasureActivity();
-//            break;
         case R.id.error_dialog_btn:
             if (errorDialog != null)
             {
@@ -287,28 +183,6 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 //            break;
         }
     }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == REQUEST_ORDER_MEASURE)
-        {
-            if (resultCode == android.app.Activity.RESULT_OK)
-            {
-                if (data != null)
-                {
-                    customerInfo = data.getParcelableExtra(SEND_CUSTOMER_INFO);
-                    isSendMsg = data.getBooleanExtra(AddFragment.SEND_NOTE_MSG, isSendMsg);
-                    Log.d(TAG, "date is " + customerInfo.getReservationDate());
-                    Log.d(TAG, "time is " + customerInfo.getReservationTime());
-                    Log.d(TAG, "hour is " + customerInfo.getReservationHour());
-                    Log.d(TAG, "month is " + customerInfo.getReservationMonth());
-                    Log.d(TAG, "progress is " + customerInfo.getReservationStatus());
-                    Log.d(TAG, "isSendMsg is " + isSendMsg);
-                }
-            }
-        }
-    }
     
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -336,22 +210,10 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 setCustomerBirthdayDaySpinner(days);
             }
             break;
-//        case R.id.add_tab_contact_address_county:
-//            Log.d(TAG, "To select contact county, the position is " + position);
-//            contactCountyPosition = position;
-//            handleCountyEvent(position, true, false);
-//            break;
         case R.id.add_tab_work_address_county:
-//            if (asAboveCB.isChecked())
-//                return;
             Log.d(TAG, "To select work county, the position is " + position);
             handleCountyEvent(position, false, false);
-         
             break;
-//        case R.id.add_tab_contact_address_city:
-//            Log.d(TAG, "To select contact city, the position is " + position);
-//            contactCityPosition = position;
-//            break;
         }
     }
 
@@ -360,8 +222,100 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     {
 
     }
+    
+    private void findViews()
+    {
+        infoSpinner = (Spinner) findViewById(R.id.add_tab_info_from);
+        jobSpinner = (Spinner) findViewById(R.id.add_tab_job);
+        ageSpinner = (Spinner) findViewById(R.id.add_tab_age_selection);
+//        sexSpinner = (Spinner) view.findViewById(R.id.add_tab_sex_selection);
+        titleSpinner = (Spinner) findViewById(R.id.add_tab_title_selection);
+        budgetSpinner = (Spinner) findViewById(R.id.add_tab_budget);
+        spaceSpinner = (Spinner) findViewById(R.id.add_tab_space);
+        statusSpinner = (Spinner) findViewById(R.id.add_tab_sale_status);
+        Button saveBtn = (Button) findViewById(R.id.add_tab_save_btn);
+//        Button newBtn = (Button) view.findViewById(R.id.add_tab_new_btn);
+        customerNameET = (EditText) findViewById(R.id.add_tab_edit_customer_name);
+        phoneNumberET = (EditText) findViewById(R.id.add_tab_edit_phone_number);
+        cellPhoneNumberET = (EditText) findViewById(R.id.add_tab_edit_cellphone_number);
+        companyPhoneNumberET = (EditText) findViewById(R.id.add_tab_edit_phone_number_company);
+        introducerET = (EditText) findViewById(R.id.add_tab_edit_introducer);
+        emailET = (EditText) findViewById(R.id.add_tab_edit_email);
+        memoET = (EditText) findViewById(R.id.add_tab_edit_customer_memo);
+//        contactET = (EditText) view.findViewById(R.id.add_tab_edit_contact_address);
+        workET = (EditText) findViewById(R.id.add_tab_edit_work_address);
+        caseNameET = (EditText) findViewById(R.id.add_tab_edit_case_name);
+        cantDescriptionET = (EditText) findViewById(R.id.add_tab_edit_cant_description);
+        leaveInfoCB = (CheckBox) findViewById(R.id.add_tab_leave_info_checkbox);
+//        asAboveCB = (CheckBox) view.findViewById(R.id.add_tab_as_above_checkbox);
+        consumerVisitDateDP = (DatePicker) findViewById(R.id.add_tab_consumer_visit_datePicker);
+        consumerVisitTimeTP = (TimePicker) findViewById(R.id.add_tab_consumer_visit_timePicker);
+        reservationDP = (DatePicker) findViewById(R.id.add_tab_consumer_reservation_datePicker);
+        reservationTP = (TimePicker) findViewById(R.id.add_tab_consumer_reservation_timePicker);
+        designerStoreTV = (TextView) findViewById(R.id.add_tab_designer_store);
+        designerSpinner = (Spinner) findViewById(R.id.add_tab_user);
+        createDateTV = (TextView) findViewById(R.id.add_tab_create_date);
+        
+        yearSpinner = (Spinner) findViewById(R.id.add_tab_customer_birthday_year);
+        yearSpinner.setOnItemSelectedListener(this);
+        monthSpinner = (Spinner) findViewById(R.id.add_tab_customer_birthday_month);
+        monthSpinner.setOnItemSelectedListener(this);
+        daySpinner = (Spinner) findViewById(R.id.add_tab_customer_birthday_day);
+        daySpinner.setOnItemSelectedListener(this);
+        
+        phoneNumberSpinner = (Spinner) findViewById(R.id.add_tab_phone_number_spinner);
+        companyPhoneNumberSpinner = (Spinner) findViewById(R.id.add_tab_company_phone_number_spinner);
+        
+        repairItemSpinner = (Spinner) findViewById(R.id.add_tab_repair_item);
+        areaSpinner = (Spinner) findViewById(R.id.add_tab_area);
+        
+//        contactCountySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_county);
+//        contactCountySpinner.setOnItemSelectedListener(this);
+//        contactCitySpinner = (Spinner) view.findViewById(R.id.add_tab_contact_address_city);
+//        contactCitySpinner.setOnItemSelectedListener(this);
+//        contactCitySpinner.setEnabled(false);
+        
+        workCountySpinner = (Spinner) findViewById(R.id.add_tab_work_address_county);
+        workCountySpinner.setOnItemSelectedListener(this);
+        workCitySpinner = (Spinner) findViewById(R.id.add_tab_work_address_city);
+        workCitySpinner.setEnabled(false);
+        
+        String[] phoneCodeArray = getResources().getStringArray(R.array.phone_code);
+        phoneCodeList = Arrays.asList(phoneCodeArray);
+        
+        CommonAdapter phoneCodeAdapter = new CommonAdapter(EditCustomerActivity.this, phoneCodeList);
+        
+        phoneNumberSpinner.setAdapter(phoneCodeAdapter);
+        companyPhoneNumberSpinner.setAdapter(phoneCodeAdapter);
+        
+        // save btn
+        saveBtn.setOnClickListener(this);
+//        newBtn.setOnClickListener(this);
+        // leave info
+        leaveInfoCB.setOnCheckedChangeListener(this);
+        // time picker to set 24h
+        consumerVisitTimeTP.setIs24HourView(true);
+        reservationTP.setIs24HourView(true);
+        
+        // as above
+//        asAboveCB.setOnCheckedChangeListener(this);
+        
+        // create date
+        createDateTime = Utility.getCurrentDateTime();
+        createDateTV.setText(createDateTime.replace("T", ""));
+    }
+    
+    private void getBundle()
+    {
+        Intent intent = EditCustomerActivity.this.getIntent();
+        
+        if (intent != null)
+        {
+            customerInfo = intent.getParcelableExtra(NeedUploadListFragment.SEND_CUSTOMER_INFO);
+        }
+    }
 
-    private boolean setCustomerData()
+    private boolean checkCustomerData()
     {
         String phoneCode = phoneCodeList.get(phoneNumberSpinner.getSelectedItemPosition());
         String companyPhoneCode = phoneCodeList.get(companyPhoneNumberSpinner.getSelectedItemPosition());
@@ -502,7 +456,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             if ((!isPhoneValid && !isCellPhoneValid) || (!phoneNumber.equals(Utility.SPACE_STRING) && !isPhoneValid)
                     || (!cellPhoneNumber.equals(Utility.SPACE_STRING) && !isCellPhoneValid))
             {
-                showToast(this.getActivity().getResources().getString(R.string.home_phone_or_cellphone_field_error));
+                showToast(getResources().getString(R.string.home_phone_or_cellphone_field_error));
                 return false;
             }
         }
@@ -522,15 +476,15 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         // check email
         if (!isNotLeaveChecked && !email.equals(Utility.SPACE_STRING) && !Utility.isEmailValid(email))
         {
-            showToast(this.getActivity().getResources().getString(R.string.email_field_error));
+            showToast(getResources().getString(R.string.email_field_error));
             return false;
         }
         // check birthday
-//		if (!isChecked && !Utility.isBirthdayValid(customerBirthday))
-//		{
-//			showToast(this.getActivity().getResources().getString(R.string.birthday_field_error));
-//			return false;
-//		}
+//      if (!isChecked && !Utility.isBirthdayValid(customerBirthday))
+//      {
+//          showToast(this.getActivity().getResources().getString(R.string.birthday_field_error));
+//          return false;
+//      }
         
         // to check user data list (designer)
         if (userDataList == null)
@@ -568,41 +522,38 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             {
                 if (isNotLeaveChecked)
                 {
-                    String noData = AddFragment.this.getResources().getString(R.string.no_data);
-                    customerInfo = new CustomerInfo(Utility.DEFAULT_ROW_ID, Utility.DEFAULT_VALUE_STRING, noData, noData,
-                            noData, noData, sexSelectedSerial, titleSelectedSerial, noData,
-                            dateString + timeString, msgSelectedSerial, noData, jobSelectedSerial,
-                            ageSelectedSerial, memo, noData, creator, group, createDateTime,
-                            reservationDateString + reservationTimeString, reservationTimeString, workAddress, workZipCode,
-                            reservationWorkAlias, contactAddress, contactZipCode,
-                            spaceSelectedSerial, statusSelectedSerial, Utility.SPACE_STRING,
-                            reservationStatusComment, budgetSelectedSerial, repairSelectedSerial,
-                            areaSelectedSerial);
+                    String noData = getResources().getString(R.string.no_data);
+                    customerInfo = new CustomerInfo(Utility.DEFAULT_ROW_ID, Utility.DEFAULT_VALUE_STRING, noData,
+                            noData, noData, noData, sexSelectedSerial, titleSelectedSerial, noData, dateString
+                                    + timeString, msgSelectedSerial, noData, jobSelectedSerial, ageSelectedSerial,
+                            memo, noData, creator, group, createDateTime,
+                            reservationDateString + reservationTimeString, reservationTimeString, workAddress,
+                            workZipCode, reservationWorkAlias, contactAddress, contactZipCode, spaceSelectedSerial,
+                            statusSelectedSerial, Utility.SPACE_STRING, reservationStatusComment, budgetSelectedSerial,
+                            repairSelectedSerial, areaSelectedSerial);
                 }
                 else
                 {
                     customerInfo = new CustomerInfo(Utility.DEFAULT_ROW_ID, Utility.DEFAULT_VALUE_STRING, customerName,
-                            cellPhoneNumber, phoneNumber, companyPhoneNumber, sexSelectedSerial,
-                            titleSelectedSerial, email, dateString + timeString, msgSelectedSerial,
-                            introducer, jobSelectedSerial, ageSelectedSerial, memo,
-                            customerBirthday.toString(), creator, group, createDateTime,
-                            reservationDateString + reservationTimeString, reservationTimeString, workAddress, workZipCode,
-                            reservationWorkAlias, contactAddress, contactZipCode,
-                            spaceSelectedSerial, statusSelectedSerial, Utility.SPACE_STRING,
-                            reservationStatusComment, budgetSelectedSerial, repairSelectedSerial,
-                            areaSelectedSerial);
+                            cellPhoneNumber, phoneNumber, companyPhoneNumber, sexSelectedSerial, titleSelectedSerial,
+                            email, dateString + timeString, msgSelectedSerial, introducer, jobSelectedSerial,
+                            ageSelectedSerial, memo, customerBirthday.toString(), creator, group, createDateTime,
+                            reservationDateString + reservationTimeString, reservationTimeString, workAddress,
+                            workZipCode, reservationWorkAlias, contactAddress, contactZipCode, spaceSelectedSerial,
+                            statusSelectedSerial, Utility.SPACE_STRING, reservationStatusComment, budgetSelectedSerial,
+                            repairSelectedSerial, areaSelectedSerial);
                 }
             }
             else
-            {
-                customerInfo.modifyCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName,
-                        cellPhoneNumber, phoneNumber, companyPhoneNumber, sexSelectedSerial,
-                        titleSelectedSerial, email, dateString + timeString, msgSelectedSerial,
-                        introducer, jobSelectedSerial, ageSelectedSerial, memo,
-                        customerBirthday.toString(), creator, group, dateString + timeString,
-                        repairSelectedSerial, areaSelectedSerial, budgetSelectedSerial, contactAddress, contactZipCode, workAddress, workZipCode);
-                
-                Log.d(TAG, "ReservationContact === " + customerInfo.getReservationContact());
+            { // had row id and we edit it
+                customerInfo.setCustomerInfo(Utility.DEFAULT_VALUE_STRING, customerName, cellPhoneNumber, phoneNumber,
+                        companyPhoneNumber, sexSelectedSerial, titleSelectedSerial, email, dateString + timeString,
+                        msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial, memo,
+                        customerBirthday.toString(), creator, group, createDateTime, reservationDateString
+                                + reservationTimeString, reservationTimeString, workAddress, workZipCode,
+                        reservationWorkAlias, contactAddress, contactZipCode, spaceSelectedSerial,
+                        statusSelectedSerial, Utility.SPACE_STRING, reservationStatusComment, budgetSelectedSerial,
+                        repairSelectedSerial, areaSelectedSerial);
             }
         }
         catch (Exception e)
@@ -616,40 +567,21 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 
     private void saveData()
     {
-        if (!setCustomerData()) return;
+        if (!checkCustomerData()) return;
 
         openDatabase();
 
-        // to check work address had, but contact address not, then contact equals to work?
-        String workAddress = customerInfo.getReservationWork();
-        String contactAddress = customerInfo.getReservationContact();
-
         Log.d(TAG, "saveData() customerInfo === " + customerInfo.toString());
 
-//        if (!workAddress.equals(Utility.SPACE_STRING) && contactAddress.equals(Utility.SPACE_STRING))
-//        {
-//            showAlertDialog();
-//        }
-//        else
-//        {
+        if (customerInfo.getRowId() == Utility.DEFAULT_ROW_ID) // add
+        {
             insertToDB();
-//        }
-    }
-
-    private void showAlertDialog()
-    {
-        new AlertDialog.Builder(AddFragment.this.getActivity())
-                .setTitle(AddFragment.this.getResources().getString(R.string.add_tab_check_address_title))
-                .setMessage(AddFragment.this.getResources().getString(R.string.add_tab_check_address_message))
-                .setPositiveButton(AddFragment.this.getResources().getString(R.string.ok),
-                        new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                customerInfo.setReservationContact(customerInfo.getReservationWork());
-                                insertToDB();
-                            }
-                        }).setNegativeButton(AddFragment.this.getResources().getString(R.string.cancel), null).show();
+        }
+        else // edit
+        {
+            updateToDB();
+        }
+            
     }
 
     private void insertToDB()
@@ -678,26 +610,45 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     customerInfo.getReservationRepairItem(), customerInfo.getReservationArea(),
                     RetialSaleDbAdapter.NOTUPLOAD);
             Log.d(TAG, "id is " + id);
-
-            mainActivity.setManageTab();
         }
         else
         {
-            Log.d(TAG, "customerInfo is null, cannot access data to db.");
+            Log.d(TAG, "customerInfo is null, cannot save data to db.");
         }
+        
+        closeDatabase();
     }
-
-    private void startOrderMeasureActivity()
+    
+    private void updateToDB()
     {
-        if (setCustomerData())
+        if (customerInfo != null)
         {
-            Intent orderintent = new Intent(this.getActivity(), OrderMeasureActivity.class);
-            orderintent.putExtra(SEND_CUSTOMER_INFO, customerInfo);
-            orderintent.putExtra(AddFragment.SEND_NOTE_MSG, isSendMsg);
-            startActivityForResult(orderintent, REQUEST_ORDER_MEASURE);
-            this.getActivity().overridePendingTransition(R.anim.activity_conversion_in_from_right,
-                    R.anim.activity_conversion_out_to_left);
+            int sendNoteValue = isSendMsg ? 1 : 0;
+            Log.d(TAG, "sendNoteValue is " + sendNoteValue + " createDateTime is " + createDateTime);
+
+            Log.d(TAG, "userSerial === " + customerInfo.getCreator() + "userGroup === " + customerInfo.getCreatorGroup());
+            
+            retialSaleDbAdapter.updateCustomer(customerInfo.getRowId(), customerInfo.getCustomerName(),
+                    customerInfo.getCustomerHome(), customerInfo.getCustomerMobile(),
+                    customerInfo.getCustomerCompany(), customerInfo.getCustomerMail(), customerInfo.getCustomerSex(),
+                    customerInfo.getCustomerBirth(), customerInfo.getCustomerInfo(), customerInfo.getCustomerTitle(),
+                    customerInfo.getCustomerJob(), customerInfo.getCustomerIntroducer(), customerInfo.getCustomerAge(),
+                    customerInfo.getCustomerMemo(), customerInfo.getCustomerVisitDate(), customerInfo.getCreator(),
+                    customerInfo.getCreatorGroup(), Utility.covertDateStringToServer(createDateTime), sendNoteValue,
+                    customerInfo.getReservationWorkAlias(), customerInfo.getReservationStatusComment(),
+                    customerInfo.getReservationStatus(), customerInfo.getReservationWork(),
+                    customerInfo.getWorkPostcode(), customerInfo.getReservationContact(),
+                    customerInfo.getContactPostcode(), customerInfo.getReservationSpace(),
+                    customerInfo.getReservationBudget(), customerInfo.getReservationDate(),
+                    customerInfo.getReservationRepairItem(), customerInfo.getReservationArea(),
+                    RetialSaleDbAdapter.NOTUPLOAD);
         }
+        else
+        {
+            Log.d(TAG, "customerInfo is null, cannot update data to db.");
+        }
+        
+        closeDatabase();
     }
 
     private void enableField(boolean enabled)
@@ -758,18 +709,27 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 
     private void showToast(String showString)
     {
-        Toast.makeText(this.getActivity(), showString, Toast.LENGTH_SHORT).show();
+        Toast.makeText(EditCustomerActivity.this, showString, Toast.LENGTH_SHORT).show();
     }
 
     private void openDatabase()
     {
         if (retialSaleDbAdapter == null)
         {
-            retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
+            retialSaleDbAdapter = new RetialSaleDbAdapter(EditCustomerActivity.this);
         }
         if (!retialSaleDbAdapter.isDbOpen())
         { // not open, then open it
             retialSaleDbAdapter.open();
+        }
+    }
+    
+    private void closeDatabase()
+    {
+        if (retialSaleDbAdapter != null)
+        {
+            retialSaleDbAdapter.close();
+            retialSaleDbAdapter = null;
         }
     }
 
@@ -790,16 +750,16 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         @SuppressWarnings("unused")
         int optionType, optionSerial;
         String optionAlias, optionName;
-        String sexType = mainActivity.getResources().getString(R.string.option_customer_sex);
-        String titleType = mainActivity.getResources().getString(R.string.option_customer_title);
-        String infoType = mainActivity.getResources().getString(R.string.option_customer_info);
-        String jobType = mainActivity.getResources().getString(R.string.option_customer_job);
-        String ageType = mainActivity.getResources().getString(R.string.option_customer_age);
-        String statusType = mainActivity.getResources().getString(R.string.option_customer_status);
-        String spaceType = mainActivity.getResources().getString(R.string.option_customer_space);
-        String budgetType = mainActivity.getResources().getString(R.string.option_customer_budget);
-        String repairItemType = mainActivity.getResources().getString(R.string.option_customer_repair_item);
-        String areaType = mainActivity.getResources().getString(R.string.option_customer_area);
+        String sexType = getResources().getString(R.string.option_customer_sex);
+        String titleType = getResources().getString(R.string.option_customer_title);
+        String infoType = getResources().getString(R.string.option_customer_info);
+        String jobType = getResources().getString(R.string.option_customer_job);
+        String ageType = getResources().getString(R.string.option_customer_age);
+        String statusType = getResources().getString(R.string.option_customer_status);
+        String spaceType = getResources().getString(R.string.option_customer_space);
+        String budgetType = getResources().getString(R.string.option_customer_budget);
+        String repairItemType = getResources().getString(R.string.option_customer_repair_item);
+        String areaType = getResources().getString(R.string.option_customer_area);
         if (optionTypeCursor != null)
         {
             int count = optionTypeCursor.getCount();
@@ -866,41 +826,41 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         OptionAdapter infoAdapter, jobAdapter, ageAdapter, titleAdapter, repairItemAdapter, areaAdapter, budgetAdapter, spaceAdapter, statusAdapter;
         // msg spinner
-        infoAdapter = new OptionAdapter(this.getActivity(), infoList);
+        infoAdapter = new OptionAdapter(EditCustomerActivity.this, infoList);
         infoSpinner.setAdapter(infoAdapter);
         // job spinner
-        jobAdapter = new OptionAdapter(this.getActivity(), jobList);
+        jobAdapter = new OptionAdapter(EditCustomerActivity.this, jobList);
         jobSpinner.setAdapter(jobAdapter);
         // age spinner
-        ageAdapter = new OptionAdapter(this.getActivity(), ageList);
+        ageAdapter = new OptionAdapter(EditCustomerActivity.this, ageList);
         ageSpinner.setAdapter(ageAdapter);
         // sex spinner
 //        sexAdapter = new OptionAdapter(this.getActivity(), sexList);
 //        sexSpinner.setAdapter(sexAdapter);
         // title spinner
-        titleAdapter = new OptionAdapter(this.getActivity(), titleList);
+        titleAdapter = new OptionAdapter(EditCustomerActivity.this, titleList);
         titleSpinner.setAdapter(titleAdapter);
         
 //        titleSpinner.setEnabled(false);
         titleSpinner.setSelection(2); // to set default title
         // repair spinner
-        repairItemAdapter = new OptionAdapter(this.getActivity(), repairItemList);
+        repairItemAdapter = new OptionAdapter(EditCustomerActivity.this, repairItemList);
         repairItemSpinner.setAdapter(repairItemAdapter);
         // area spinner
-        areaAdapter = new OptionAdapter(this.getActivity(), areaList);
+        areaAdapter = new OptionAdapter(EditCustomerActivity.this, areaList);
         areaSpinner.setAdapter(areaAdapter);
         // budget spinner
-        budgetAdapter = new OptionAdapter(this.getActivity(), budgetList);
+        budgetAdapter = new OptionAdapter(EditCustomerActivity.this, budgetList);
         budgetSpinner.setAdapter(budgetAdapter);
         // space spinner
-        spaceAdapter = new OptionAdapter(this.getActivity(), spaceList);
+        spaceAdapter = new OptionAdapter(EditCustomerActivity.this, spaceList);
         spaceSpinner.setAdapter(spaceAdapter);
         // status spinner
-        statusAdapter = new OptionAdapter(this.getActivity(), statusList);
+        statusAdapter = new OptionAdapter(EditCustomerActivity.this, statusList);
         statusSpinner.setAdapter(statusAdapter);
         
-        Cursor userStoreCursor = retialSaleDbAdapter.getOptionByOptionSerial(Utility.getAppCreatorGroup(AddFragment.this
-                .getActivity()));
+        Cursor userStoreCursor = retialSaleDbAdapter.getOptionByOptionSerial(Utility
+                .getAppCreatorGroup(EditCustomerActivity.this));
 
         String userStoreOptionName;
 
@@ -919,12 +879,12 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             }
             else
             {
-                designerStoreTV.setText(AddFragment.this.getActivity().getResources().getString(R.string.no_data));
+                designerStoreTV.setText(getResources().getString(R.string.no_data));
             }
         }
         else
         {
-            designerStoreTV.setText(AddFragment.this.getActivity().getResources().getString(R.string.no_data));
+            designerStoreTV.setText(getResources().getString(R.string.no_data));
         }
     }
     
@@ -937,7 +897,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 
         // to get user content
 //        Cursor userCursor = retialSaleDbAdapter.getAllUser();
-        Cursor userCursor = retialSaleDbAdapter.getUserByCreator(Utility.getAppCreatorGroup(mainActivity));
+        Cursor userCursor = retialSaleDbAdapter.getUserByCreator(Utility.getAppCreatorGroup(EditCustomerActivity.this));
 //        Cursor userCursor = retialSaleDbAdapter.getUserByCreator(Utility.getCreatorGroup(mainActivity));
 
         if (userCursor != null)
@@ -977,7 +937,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         }
         
         // user spinner
-        UserAdapter userAdapter = new UserAdapter(this.getActivity(), userDataList);
+        UserAdapter userAdapter = new UserAdapter(EditCustomerActivity.this, userDataList);
         designerSpinner.setAdapter(userAdapter);
     }
     
@@ -992,7 +952,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         workCountyList = Arrays.asList(countyArray);
         
-        CommonAdapter workCountyAdapter = new CommonAdapter(this.getActivity(), workCountyList);
+        CommonAdapter workCountyAdapter = new CommonAdapter(EditCustomerActivity.this, workCountyList);
         
         workCountySpinner.setAdapter(workCountyAdapter);
     }
@@ -1010,7 +970,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     {
         workCityList = Arrays.asList(cityArray);
         
-        CommonAdapter cityAdapter = new CommonAdapter(this.getActivity(), workCityList);
+        CommonAdapter cityAdapter = new CommonAdapter(EditCustomerActivity.this, workCityList);
         
         workCitySpinner.setAdapter(cityAdapter);
         
@@ -1198,7 +1158,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             yearList.add(String.valueOf(i));
         }
         
-        CommonAdapter yearAdapter = new CommonAdapter(this.getActivity(), yearList);
+        CommonAdapter yearAdapter = new CommonAdapter(EditCustomerActivity.this, yearList);
         
         yearSpinner.setAdapter(yearAdapter);
     }
@@ -1219,7 +1179,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             }
         }
         
-        CommonAdapter monthAdapter = new CommonAdapter(this.getActivity(), monthList);
+        CommonAdapter monthAdapter = new CommonAdapter(EditCustomerActivity.this, monthList);
         
         monthSpinner.setAdapter(monthAdapter);
     }
@@ -1240,7 +1200,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             }
         }
         
-        CommonAdapter dayAdapter = new CommonAdapter(this.getActivity(), dayList);
+        CommonAdapter dayAdapter = new CommonAdapter(EditCustomerActivity.this, dayList);
         
         daySpinner.setAdapter(dayAdapter);
     }
@@ -1249,7 +1209,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     {
         if (errorDialog == null)
         {
-            errorDialog = new Dialog(getActivity());
+            errorDialog = new Dialog(EditCustomerActivity.this);
             errorDialog.setContentView(R.layout.dialog_error);
         }
         else
@@ -1301,7 +1261,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             initStates[i] = false;
         }
 
-        AlertDialog dialog = new AlertDialog.Builder(AddFragment.this.getActivity())
+        AlertDialog dialog = new AlertDialog.Builder(EditCustomerActivity.this)
                 .setTitle(getString(R.string.add_tab_select_repair_item)).setIcon(android.R.drawable.ic_dialog_alert)
                 .setMultiChoiceItems(itemsArray, initStates, new DialogInterface.OnMultiChoiceClickListener()
                 {
@@ -1326,7 +1286,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                             }
                         }
 
-                        Toast.makeText(AddFragment.this.getActivity(),
+                        Toast.makeText(EditCustomerActivity.this,
                                 getString(R.string.add_tab_show_select_item) + temp, Toast.LENGTH_SHORT).show();
                     }
                 }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener()

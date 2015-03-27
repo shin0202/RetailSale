@@ -522,7 +522,7 @@ public class RetialSaleDbAdapter
     }
 
     /** Delete one customer from customer table */
-    public boolean deleteCustomer(String rowId)
+    public boolean deleteCustomer(long rowId)
     {
 
         if (db != null && db.isOpen())
@@ -531,7 +531,7 @@ public class RetialSaleDbAdapter
     }
 
     /** Delete one option from option table */
-    public boolean deleteOption(String rowId)
+    public boolean deleteOption(long rowId)
     {
 
         if (db != null && db.isOpen())
@@ -540,7 +540,7 @@ public class RetialSaleDbAdapter
     }
 
     /** Delete one user from user table */
-    public boolean deleteUser(String rowId)
+    public boolean deleteUser(long rowId)
     {
 
         if (db != null && db.isOpen())
@@ -594,7 +594,7 @@ public class RetialSaleDbAdapter
     }
 
     /** Query single customer */
-    public Cursor getCustomer(String rowId) throws SQLException
+    public Cursor getCustomer(long rowId) throws SQLException
     {
 
         if (db.isOpen())
@@ -690,7 +690,7 @@ public class RetialSaleDbAdapter
     }
 
     /** Query single option */
-    public Cursor getOption(String rowId) throws SQLException
+    public Cursor getOption(long rowId) throws SQLException
     {
 
         if (db.isOpen())
@@ -785,7 +785,7 @@ public class RetialSaleDbAdapter
     }
 
     /** Update the customer table */
-    public boolean updateCustomer(String rowID, String customerName, String home, String mobile,
+    public boolean updateCustomer(long rowID, String customerName, String home, String mobile,
             String company, String email, int sex, String birthday, int info, int title, int job,
             String introducer, int age, String memo, String visitDate, int creator,
             int creatorGroup, String createDate, int sendMsg, String workAlias,
@@ -849,7 +849,7 @@ public class RetialSaleDbAdapter
     }
 
     /** Update the option table */
-    public boolean updateOption(int rowID, String optionType, String optionAlias, int optionSerial,
+    public boolean updateOption(long rowID, String optionType, String optionAlias, int optionSerial,
             String optionName)
     {
 
@@ -869,7 +869,7 @@ public class RetialSaleDbAdapter
     }
 
     /** Update the user table */
-    public boolean updateUser(int rowID, int userSerial, String userName, int userGroup,
+    public boolean updateUser(long rowID, int userSerial, String userName, int userGroup,
             int userType, String userGroupNm, String userTypeNm)
     {
 

@@ -10,102 +10,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class CustomerInfo implements Parcelable
 {
-    public CustomerInfo()
-    {
-    }
-
-    public CustomerInfo(String customerAccount, String customerName, String customerMobile, String customerHome,
-            String customerCompany, int customerSex, int customerTitle, String customerMail, String customerVisitDate,
-            int customerInfo, String customerIntroducer, int customerJob, int customerAge, String customerMemo,
-            String customerBirth, int creator, int creatorGroup, String createTime, String reservationDate,
-            String reservationTime, String reservationWork, String workPostcode, String reservationWorkAlias,
-            String reservationContact, String contactPostcode, int reservationSpace, int reservationStatus,
-            String reservationUpateTime, String reservationStatusComment, int reservationBudget,
-            int reservationRepairItem, int reservationArea)
-    {
-        super();
-        this.customerAccount = customerAccount;
-        this.customerName = customerName;
-        this.customerMobile = customerMobile;
-        this.customerHome = customerHome;
-        this.customerCompany = customerCompany;
-        this.customerSex = customerSex;
-        this.customerTitle = customerTitle;
-        this.customerMail = customerMail;
-        this.customerVisitDate = customerVisitDate;
-        this.customerInfo = customerInfo;
-        this.customerIntroducer = customerIntroducer;
-        this.customerJob = customerJob;
-        this.customerAge = customerAge;
-        this.customerMemo = customerMemo;
-        this.customerBirth = customerBirth;
-        this.creator = creator;
-        this.creatorGroup = creatorGroup;
-        this.createTime = createTime;
-        this.reservationDate = reservationDate;
-        this.reservationTime = reservationTime;
-        this.reservationWork = reservationWork;
-        this.workPostcode = workPostcode;
-        this.reservationWorkAlias = reservationWorkAlias;
-        this.reservationContact = reservationContact;
-        this.contactPostcode = contactPostcode;
-        this.reservationSpace = reservationSpace;
-        this.reservationStatus = reservationStatus;
-        this.reservationUpateTime = reservationUpateTime;
-        this.reservationStatusComment = reservationStatusComment;
-        this.reservationBudget = reservationBudget;
-        this.reservationRepairItem = reservationRepairItem;
-        this.reservationArea = reservationArea;
-    }
-
-    // for Add Fragment
-    public CustomerInfo(String customerAccount, String customerName, String customerMobile, String customerHome,
-            String customerCompany, int customerSex, int customerTitle, String customerMail, String customerVisitDate,
-            int customerInfo, String customerIntroducer, int customerJob, int customerAge, String customerBirth,
-            int creator, int creatorGroup, String createTime, int reservationRepairItem, int reservationArea)
-    {
-        super();
-        this.customerAccount = customerAccount;
-        this.customerName = customerName;
-        this.customerMobile = customerMobile;
-        this.customerHome = customerHome;
-        this.customerCompany = customerCompany;
-        this.customerSex = customerSex;
-        this.customerTitle = customerTitle;
-        this.customerMail = customerMail;
-        this.customerVisitDate = customerVisitDate;
-        this.customerInfo = customerInfo;
-        this.customerIntroducer = customerIntroducer;
-        this.customerJob = customerJob;
-        this.customerAge = customerAge;
-        this.customerBirth = customerBirth;
-        this.creator = creator;
-        this.creatorGroup = creatorGroup;
-        this.createTime = createTime;
-        this.reservationRepairItem = reservationRepairItem;
-        this.reservationArea = reservationArea;
-    }
-
-    // for Order Measure
-    public CustomerInfo(String reservationDate, String reservationTime, String reservationWork, String workPostcode,
-            String reservationWorkAlias, String reservationContact, String contactPostcode, int reservationSpace,
-            int reservationStatus, String reservationUpateTime, String reservationStatusComment, int reservationBudget)
-    {
-        super();
-        this.reservationDate = reservationDate;
-        this.reservationTime = reservationTime;
-        this.reservationWork = reservationWork;
-        this.workPostcode = workPostcode;
-        this.reservationWorkAlias = reservationWorkAlias;
-        this.reservationContact = reservationContact;
-        this.contactPostcode = contactPostcode;
-        this.reservationSpace = reservationSpace;
-        this.reservationStatus = reservationStatus;
-        this.reservationUpateTime = reservationUpateTime;
-        this.reservationStatusComment = reservationStatusComment;
-        this.reservationBudget = reservationBudget;
-    }
-
     @SerializedName("customerAccount")
     private String customerAccount;
     @SerializedName("customerName")
@@ -175,6 +79,195 @@ public class CustomerInfo implements Parcelable
     private int contactCitySelectedPosition;
     private int workCountySelectedPosition;
     private int workCitySelectedPosition;
+    
+    private long rowId;
+    
+    private int reservationYear;
+    private int reservationMonth;
+    private int reservationDay;
+    private int reservationHour;
+    private int reservationMinute;
+
+    private int reservationSpacePosition = 0;
+    private int reservationStatusPosition = 0;
+    private int reservationBudgetPosition = 0;
+    
+    public CustomerInfo()
+    {
+    }
+
+    public CustomerInfo(long rowId, String customerAccount, String customerName, String customerMobile, String customerHome,
+            String customerCompany, int customerSex, int customerTitle, String customerMail, String customerVisitDate,
+            int customerInfo, String customerIntroducer, int customerJob, int customerAge, String customerMemo,
+            String customerBirth, int creator, int creatorGroup, String createTime, String reservationDate,
+            String reservationTime, String reservationWork, String workPostcode, String reservationWorkAlias,
+            String reservationContact, String contactPostcode, int reservationSpace, int reservationStatus,
+            String reservationUpateTime, String reservationStatusComment, int reservationBudget,
+            int reservationRepairItem, int reservationArea)
+    {
+        super();
+        setCustomerInfo(rowId, customerAccount, customerName, customerMobile, customerHome, customerCompany,
+                customerSex, customerTitle, customerMail, customerVisitDate, customerInfo, customerIntroducer,
+                customerJob, customerAge, customerMemo, customerBirth, creator, creatorGroup, createTime,
+                reservationDate, reservationTime, reservationWork, workPostcode, reservationWorkAlias,
+                reservationContact, contactPostcode, reservationSpace, reservationStatus, reservationUpateTime,
+                reservationStatusComment, reservationBudget, reservationRepairItem, reservationArea);
+    }
+
+    // for Add Fragment
+    public CustomerInfo(String customerAccount, String customerName, String customerMobile, String customerHome,
+            String customerCompany, int customerSex, int customerTitle, String customerMail, String customerVisitDate,
+            int customerInfo, String customerIntroducer, int customerJob, int customerAge, String customerBirth,
+            int creator, int creatorGroup, String createTime, int reservationRepairItem, int reservationArea)
+    {
+        super();
+        this.customerAccount = customerAccount;
+        this.customerName = customerName;
+        this.customerMobile = customerMobile;
+        this.customerHome = customerHome;
+        this.customerCompany = customerCompany;
+        this.customerSex = customerSex;
+        this.customerTitle = customerTitle;
+        this.customerMail = customerMail;
+        this.customerVisitDate = customerVisitDate;
+        this.customerInfo = customerInfo;
+        this.customerIntroducer = customerIntroducer;
+        this.customerJob = customerJob;
+        this.customerAge = customerAge;
+        this.customerBirth = customerBirth;
+        this.creator = creator;
+        this.creatorGroup = creatorGroup;
+        this.createTime = createTime;
+        this.reservationRepairItem = reservationRepairItem;
+        this.reservationArea = reservationArea;
+    }
+
+    // for Order Measure
+    public CustomerInfo(String reservationDate, String reservationTime, String reservationWork, String workPostcode,
+            String reservationWorkAlias, String reservationContact, String contactPostcode, int reservationSpace,
+            int reservationStatus, String reservationUpateTime, String reservationStatusComment, int reservationBudget)
+    {
+        super();
+        this.reservationDate = reservationDate;
+        this.reservationTime = reservationTime;
+        this.reservationWork = reservationWork;
+        this.workPostcode = workPostcode;
+        this.reservationWorkAlias = reservationWorkAlias;
+        this.reservationContact = reservationContact;
+        this.contactPostcode = contactPostcode;
+        this.reservationSpace = reservationSpace;
+        this.reservationStatus = reservationStatus;
+        this.reservationUpateTime = reservationUpateTime;
+        this.reservationStatusComment = reservationStatusComment;
+        this.reservationBudget = reservationBudget;
+    }
+    
+    public void modifyCustomerInfo(String customerAccount, String customerName, String customerMobile,
+            String customerHome, String customerCompany, int customerSex, int customerTitle, String customerMail,
+            String customerVisitDate, int customerInfo, String customerIntroducer, int customerJob, int customerAge,
+            String customerMemo, String customerBirth, int creator, int creatorGroup, String createTime,
+            int reservationRepairItem, int reservationArea, int reservationBudget, String reservationContact, String contactPostcode
+            , String reservationWork, String workPostcode)
+    {
+        this.customerAccount = customerAccount;
+        this.customerName = customerName;
+        this.customerMobile = customerMobile;
+        this.customerHome = customerHome;
+        this.customerCompany = customerCompany;
+        this.customerSex = customerSex;
+        this.customerTitle = customerTitle;
+        this.customerMail = customerMail;
+        this.customerVisitDate = customerVisitDate;
+        this.customerInfo = customerInfo;
+        this.customerIntroducer = customerIntroducer;
+        this.customerJob = customerJob;
+        this.customerAge = customerAge;
+        this.customerMemo = customerMemo;
+        this.customerBirth = customerBirth;
+        this.creator = creator;
+        this.creatorGroup = creatorGroup;
+        this.createTime = createTime;
+        this.reservationRepairItem = reservationRepairItem;
+        this.reservationArea = reservationArea;
+        this.reservationBudget = reservationBudget;
+        this.reservationContact = reservationContact;
+        this.contactPostcode = contactPostcode;
+        this.reservationWork = reservationWork;
+        this.workPostcode = workPostcode;
+    }
+    
+    public void setCustomerInfo(long rowId, String customerAccount, String customerName, String customerMobile,
+            String customerHome, String customerCompany, int customerSex, int customerTitle, String customerMail,
+            String customerVisitDate, int customerInfo, String customerIntroducer, int customerJob, int customerAge,
+            String customerMemo, String customerBirth, int creator, int creatorGroup, String createTime,
+            String reservationDate, String reservationTime, String reservationWork, String workPostcode,
+            String reservationWorkAlias, String reservationContact, String contactPostcode, int reservationSpace,
+            int reservationStatus, String reservationUpateTime, String reservationStatusComment, int reservationBudget,
+            int reservationRepairItem, int reservationArea)
+    {
+        this.rowId = rowId;
+        setCustomerInfo(customerAccount, customerName, customerMobile, customerHome, customerCompany, customerSex,
+                customerTitle, customerMail, customerVisitDate, customerInfo, customerIntroducer, customerJob,
+                customerAge, customerMemo, customerBirth, creator, creatorGroup, createTime, reservationDate,
+                reservationTime, reservationWork, workPostcode, reservationWorkAlias, reservationContact,
+                contactPostcode, reservationSpace, reservationStatus, reservationUpateTime, reservationStatusComment,
+                reservationBudget, reservationRepairItem, reservationArea);
+    }
+    
+    // for edit
+    public void setCustomerInfo(String customerAccount, String customerName, String customerMobile,
+            String customerHome, String customerCompany, int customerSex, int customerTitle, String customerMail,
+            String customerVisitDate, int customerInfo, String customerIntroducer, int customerJob, int customerAge,
+            String customerMemo, String customerBirth, int creator, int creatorGroup, String createTime,
+            String reservationDate, String reservationTime, String reservationWork, String workPostcode,
+            String reservationWorkAlias, String reservationContact, String contactPostcode, int reservationSpace,
+            int reservationStatus, String reservationUpateTime, String reservationStatusComment, int reservationBudget,
+            int reservationRepairItem, int reservationArea)
+    {
+        this.customerAccount = customerAccount;
+        this.customerName = customerName;
+        this.customerMobile = customerMobile;
+        this.customerHome = customerHome;
+        this.customerCompany = customerCompany;
+        this.customerSex = customerSex;
+        this.customerTitle = customerTitle;
+        this.customerMail = customerMail;
+        this.customerVisitDate = customerVisitDate;
+        this.customerInfo = customerInfo;
+        this.customerIntroducer = customerIntroducer;
+        this.customerJob = customerJob;
+        this.customerAge = customerAge;
+        this.customerMemo = customerMemo;
+        this.customerBirth = customerBirth;
+        this.creator = creator;
+        this.creatorGroup = creatorGroup;
+        this.createTime = createTime;
+        this.reservationDate = reservationDate;
+        this.reservationTime = reservationTime;
+        this.reservationWork = reservationWork;
+        this.workPostcode = workPostcode;
+        this.reservationWorkAlias = reservationWorkAlias;
+        this.reservationContact = reservationContact;
+        this.contactPostcode = contactPostcode;
+        this.reservationSpace = reservationSpace;
+        this.reservationStatus = reservationStatus;
+        this.reservationUpateTime = reservationUpateTime;
+        this.reservationStatusComment = reservationStatusComment;
+        this.reservationBudget = reservationBudget;
+        this.reservationRepairItem = reservationRepairItem;
+        this.reservationArea = reservationArea;
+    }
+    
+    public long getRowId()
+    {
+        return rowId;
+    }
+
+    public void setRowId(long rowId)
+    {
+        this.rowId = rowId;
+    }
+
     public int getContactCountySelectedPosition()
     {
     
@@ -262,16 +355,6 @@ public class CustomerInfo implements Parcelable
     {
         this.reservationArea = reservationArea;
     }
-
-    private int reservationYear;
-    private int reservationMonth;
-    private int reservationDay;
-    private int reservationHour;
-    private int reservationMinute;
-
-    private int reservationSpacePosition = 0;
-    private int reservationStatusPosition = 0;
-    private int reservationBudgetPosition = 0;
 
     public int getReservationSpacePosition()
     {
@@ -633,42 +716,7 @@ public class CustomerInfo implements Parcelable
         this.reservationBudget = reservationBudget;
     }
 
-    public void modifyCustomerInfo(String customerAccount, String customerName, String customerMobile,
-            String customerHome, String customerCompany, int customerSex, int customerTitle, String customerMail,
-            String customerVisitDate, int customerInfo, String customerIntroducer, int customerJob, int customerAge,
-            String customerMemo, String customerBirth, int creator, int creatorGroup, String createTime,
-            int reservationRepairItem, int reservationArea, int reservationBudget, String reservationContact, String contactPostcode
-            , String reservationWork, String workPostcode)
-    {
-        this.customerAccount = customerAccount;
-        this.customerName = customerName;
-        this.customerMobile = customerMobile;
-        this.customerHome = customerHome;
-        this.customerCompany = customerCompany;
-        this.customerSex = customerSex;
-        this.customerTitle = customerTitle;
-        this.customerMail = customerMail;
-        this.customerVisitDate = customerVisitDate;
-        this.customerInfo = customerInfo;
-        this.customerIntroducer = customerIntroducer;
-        this.customerJob = customerJob;
-        this.customerAge = customerAge;
-        this.customerMemo = customerMemo;
-        this.customerBirth = customerBirth;
-        this.creator = creator;
-        this.creatorGroup = creatorGroup;
-        this.createTime = createTime;
-        this.reservationRepairItem = reservationRepairItem;
-        this.reservationArea = reservationArea;
-        this.reservationBudget = reservationBudget;
-        this.reservationContact = reservationContact;
-        this.contactPostcode = contactPostcode;
-        this.reservationWork = reservationWork;
-        this.workPostcode = workPostcode;
-    }
-
-    // ///////////////////////////////// Parcel need add
-    // ////////////////////////////////////////////
+    // ///////////////////////////////// Parcel need add // ////////////////////////////////////////////
     @Override
     public int describeContents()
     {
@@ -795,8 +843,8 @@ public class CustomerInfo implements Parcelable
         this.workCitySelectedPosition = in.readInt();
     }
 
-    // ///////////////////////////////// Parcel need add
-    // ////////////////////////////////////////////
+    // ///////////////////////////////// Parcel need add// ////////////////////////////////////////////
+    
     public String toString()
     {
         StringBuilder result = new StringBuilder();

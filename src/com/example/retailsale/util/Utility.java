@@ -83,6 +83,7 @@ public class Utility
     public static final int DEFAULT_ZERO_VALUE = 0;
     public static final int DEFAULT_NEGATIVE_VALUE = -1;
     public static final int NO_DATA = -1000;
+    public static final long DEFAULT_ROW_ID = -1;
     
     private static File logFile;
     private static BufferedWriter outputContent;
@@ -336,6 +337,27 @@ public class Utility
         timeString.append(minute);
 
         return timeString.toString();
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public Integer[] parseDateTime(String dateTime)
+    {
+//        String testDate = "1986-12-11T15:30:20";
+        Integer[] dateTimeArray = new Integer[6];
+        
+        // parse year to array index 0
+        dateTimeArray[0] = Integer.parseInt(dateTime.substring(0, 4));
+        
+        // parse month, day, hour, minute, second to array index 1 ~ 5
+        for (int i = 0; i < 5; i++)
+        {
+            dateTimeArray[i + 1] = Integer.parseInt(dateTime.substring(5 + i * 3, 7 + i * 3));
+        }
+        
+        Log.d(TAG, "year : " + dateTimeArray[0] + " month : " + dateTimeArray[1] + " day : " + dateTimeArray[2]
+                + " hour : " + dateTimeArray[3] + " minute : " + dateTimeArray[4] + " second : " + dateTimeArray[5]);
+        
+        return dateTimeArray;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
