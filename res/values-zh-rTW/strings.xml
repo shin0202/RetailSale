@@ -21,6 +21,7 @@
     <string name="customer_name">客戶姓名 : </string>
     <string name="decode_success">解密成功</string>
     <string name="decode_failed">解密失敗</string>
+    <string name="delete">刪除</string>
 
     <!-- Login -->
     <string name="login">登入</string>
@@ -175,5 +176,9 @@
     
     <!-- Error String -->
     <string name="designer_not_enough_error">設計使選項不足, 請更新資料或重新登入帳號</string>
+    
+    <!-- Browser Tab -->
+    <string name="browser_tab_in_deleted_state">目前在刪除狀態, 請按下刪除按鍵即可刪除</string>
+    <string name="browser_tab_close_deleted_state">關閉刪除狀態</string>
 
 </resources>

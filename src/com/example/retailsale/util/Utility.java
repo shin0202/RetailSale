@@ -929,6 +929,17 @@ public class Utility
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean removeFile(File file)
+    {
+        if (file.exists())
+        {
+            return file.delete();
+        }
+        
+        return false;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static void handleFileInfo(GsonFileInfo fileInfo, Handler handler)
     {
         if (fileInfo != null)

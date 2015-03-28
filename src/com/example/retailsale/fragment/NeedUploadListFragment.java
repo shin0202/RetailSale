@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import com.example.retailsale.EditCustomerActivity;
 import com.example.retailsale.MainFragmentActivity;
-import com.example.retailsale.OrderMeasureActivity;
 import com.example.retailsale.R;
 import com.example.retailsale.adapter.NeedUploadAdapter;
 import com.example.retailsale.adapter.RetialSaleDbAdapter;
@@ -32,7 +31,7 @@ import com.example.retailsale.util.Utility;
 
 public class NeedUploadListFragment extends Fragment implements View.OnClickListener, OnItemClickListener
 {
-    private static final String TAG = "NotUploadListFragment";
+    private static final String TAG = "NeedUploadListFragment";
     public static final String SEND_CUSTOMER_INFO = "sendCustomerInfo";
     
     private RetialSaleDbAdapter retialSaleDbAdapter;
@@ -126,6 +125,7 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
     {
         // init upload list view
         uploadListView = (ListView) view.findViewById(R.id.need_upload_tab_content_list);
+        uploadListView.setOnItemClickListener(this);
         
         // init no data view
         noDataView = (TextView) view.findViewById(R.id.need_upload_tab_no_data);
@@ -376,6 +376,7 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
             case Utility.NO_DATA:
                 Log.d(TAG, "No data ");
                 showLayout(true);
+                handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
                 break;
             case Utility.SUCCESS:
                 Log.d(TAG, "Get success ");

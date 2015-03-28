@@ -7,9 +7,9 @@ import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.example.retailsale.fragment.AddFragment;
 import com.example.retailsale.fragment.BrowserFragment;
 import com.example.retailsale.fragment.ManageFragment;
-import com.example.retailsale.fragment.NeedUploadListFragment;
 import com.example.retailsale.fragment.SynchronizationFragment;
 import com.example.retailsale.fragment.TabManager;
 
@@ -23,7 +23,8 @@ public class MainFragmentActivity extends FragmentActivity
     public class TabPosition
     {
         public static final int BROWSER = 0;
-        public static final int NEED = 1;
+//        public static final int NEED = 1;
+        public static final int ADD = 1;
         public static final int SYNC = 2;
         public static final int MANAGE = 3;
     }
@@ -39,14 +40,16 @@ public class MainFragmentActivity extends FragmentActivity
         tabHost.setup();
         Resources res = getResources();
         String browserString = res.getString(R.string.browser_all_photo);
-        String needString = res.getString(R.string.browser_upload_customer);
+//        String needString = res.getString(R.string.browser_upload_customer);
+        String addString = res.getString(R.string.add_consumer);
         String synchronizationString = res.getString(R.string.sync_with_server);
         String manageString = res.getString(R.string.manage);
 
         tabManager = new TabManager(this, tabHost, R.id.realtabcontent);
 
         tabManager.addTab(tabHost.newTabSpec(browserString).setIndicator(browserString), BrowserFragment.class, null);
-        tabManager.addTab(tabHost.newTabSpec(needString).setIndicator(needString), NeedUploadListFragment.class, null);
+//        tabManager.addTab(tabHost.newTabSpec(needString).setIndicator(needString), NeedUploadListFragment.class, null);
+        tabManager.addTab(tabHost.newTabSpec(addString).setIndicator(addString), AddFragment.class, null);
         tabManager.addTab(tabHost.newTabSpec(synchronizationString).setIndicator(synchronizationString),
                 SynchronizationFragment.class, null);
         tabManager.addTab(tabHost.newTabSpec(manageString).setIndicator(manageString), ManageFragment.class, null);

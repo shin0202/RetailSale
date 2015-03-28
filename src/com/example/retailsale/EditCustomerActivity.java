@@ -4,16 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.example.retailsale.adapter.CommonAdapter;
-import com.example.retailsale.adapter.RetialSaleDbAdapter;
-import com.example.retailsale.fragment.NeedUploadListFragment;
-import com.example.retailsale.manager.addcustomer.CustomerInfo;
-import com.example.retailsale.manager.dataoption.DataOption;
-import com.example.retailsale.manager.dataoption.OptionAdapter;
-import com.example.retailsale.manager.userlist.UserDataForList;
-import com.example.retailsale.util.TWZipCode;
-import com.example.retailsale.util.Utility;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,32 +15,42 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+
+import com.example.retailsale.adapter.CommonAdapter;
+import com.example.retailsale.adapter.RetialSaleDbAdapter;
+import com.example.retailsale.fragment.NeedUploadListFragment;
+import com.example.retailsale.manager.addcustomer.CustomerInfo;
+import com.example.retailsale.manager.dataoption.DataOption;
+import com.example.retailsale.manager.dataoption.OptionAdapter;
+import com.example.retailsale.manager.userlist.UserDataForList;
+import com.example.retailsale.util.TWZipCode;
+import com.example.retailsale.util.Utility;
 
 public class EditCustomerActivity extends Activity implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener
 {
-    private static final String TAG = "AddFragment";
+    private static final String TAG = "EditCustomerActivity";
     public static final String SEND_CUSTOMER_INFO = "send_customer_info";
     public static final String SEND_NOTE_MSG = "send_note_msg";
     private boolean isNotLeaveChecked = false;
     private CustomerInfo customerInfo;
     private RetialSaleDbAdapter retialSaleDbAdapter;
-    private boolean isSendMsg = false;
+    private boolean isSendMsg = false; // it is not used in screen
     private String createDateTime;
     private List<DataOption> infoList, jobList, ageList, sexList, titleList;
     private List<DataOption> statusList, spaceList, budgetList, repairItemList, areaList;
@@ -77,7 +77,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
     private CheckBox leaveInfoCB;
     @SuppressWarnings("unused")
     private TextView companyNameTV, designerStoreTV, createDateTV;
-    private DatePicker consumerVisitDateDP, reservationDP;
+    private DatePicker consumerVisitDateDP, reservationDP; // visit date cannot selected and modified
     private TimePicker consumerVisitTimeTP, reservationTP;
     private Dialog errorDialog = null;
 
@@ -581,7 +581,8 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         {
             updateToDB();
         }
-            
+        
+        EditCustomerActivity.this.finish();
     }
 
     private void insertToDB()

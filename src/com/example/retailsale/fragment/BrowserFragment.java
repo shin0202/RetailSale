@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -38,7 +39,7 @@ import com.example.retailsale.adapter.PhotoAdapter;
 import com.example.retailsale.manager.fileinfo.LocalFileInfo;
 import com.example.retailsale.util.Utility;
 
-public class BrowserFragment extends Fragment implements OnItemClickListener, OnClickListener
+public class BrowserFragment extends Fragment implements OnItemClickListener, OnClickListener, OnItemLongClickListener
 {
     private static final String TAG = "BrowserFragment";
     private static final String GET_NAME = "get_name";
@@ -51,19 +52,18 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     private static final int SET_ADAPTER = 3;
     private static final int SD_NOT_EXIST = 4;
     private static final int REFRESH_ADAPTER = 5;
-    private int albumNum = 0;
+    private int albumNum = 0, currentAlbumPosition, currentLongClickPosition = 0;
     private String currentParentPath;
-    private int currentAlbumPosition;
+    private boolean isDeletedState = false;
     private PhotoAdapter photosAdapterView;
-    private List<LocalFileInfo> albumList;
-    private List<LocalFileInfo> photoList;
-    private ProgressDialog progressDialog;
+    private List<LocalFileInfo> albumList, photoList; // albumList is in the bottom, photoList is in the top
     private Stack<Integer> positionStack;
     // views
     private MainFragmentActivity mainActivity;
     private LinearLayout albums;
     private GridView photoGrid;
-    private Button backBtn;
+    private ProgressDialog progressDialog;
+    private Button deleteBtn;
     
     // load thread ----> handlePageRefresh -----> listFolder(uiHandler ---> addQuicklySelectedDummy), listFilesInFolder
     // onItemClick ----> isFile ----->  PhotoPlayer
@@ -88,6 +88,8 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     {
         super.onResume();
         Log.d(TAG, "onResume  ");
+        isDeletedState = false;
+        currentLongClickPosition = 0;
         albumList = new ArrayList<LocalFileInfo>();
         photoList = new ArrayList<LocalFileInfo>();
         LoadFileThread loadFileThread = new LoadFileThread(currentParentPath);
@@ -144,9 +146,12 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         View view = inflater.inflate(R.layout.fragment_browser, container, false);
         photoGrid = (GridView) view.findViewById(R.id.browser_tab_files_grid);
         photoGrid.setOnItemClickListener(this);
+        photoGrid.setOnItemLongClickListener(this);
         albums = (LinearLayout) view.findViewById(R.id.albums);
-        backBtn = (Button) view.findViewById(R.id.browser_back_btn);
+        Button backBtn = (Button) view.findViewById(R.id.browser_back_btn);
         backBtn.setOnClickListener(this);
+        deleteBtn = (Button) view.findViewById(R.id.browser_delete_btn);
+        deleteBtn.setOnClickListener(this);
         removeAllAlbums();
 
         Log.d(TAG, "onCreateView  ");
@@ -157,47 +162,60 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
-        if (photoList != null)
+
+        if (!isDeletedState)
         {
-            LocalFileInfo localFileInfo = photoList.get(position);
-            
-            Toast.makeText(BrowserFragment.this.getActivity(),
-                    getResources().getString(R.string.select) + localFileInfo.getFileName(), Toast.LENGTH_SHORT).show();
-            
-            if (localFileInfo != null && position < photoList.size())
+            if (photoList != null)
             {
-                int fileType = localFileInfo.getFileType();
-                if (fileType == LocalFileInfo.SELECTED_FILE) // is file, need to send list(path) for PhotoPlayer
+                LocalFileInfo localFileInfo = photoList.get(position);
+
+                showToast(getResources().getString(R.string.select) + localFileInfo.getFileName());
+
+                if (localFileInfo != null && position < photoList.size())
                 {
-                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+                    int fileType = localFileInfo.getFileType();
+                    
+                    if (fileType == LocalFileInfo.SELECTED_FILE) // is file, need to send list(path) for PhotoPlayer
                     {
-                        Intent intent = new Intent(getActivity(), PhotoPlayerActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelableArrayList(FILE_LIST, (ArrayList<? extends Parcelable>) photoList);
-                        Log.d(TAG, "position === " + position);
-                        Log.d(TAG, "currentAlbumPosition === " + currentAlbumPosition);
-                        bundle.putInt(FILE_POSITION, position);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
+                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+                        {
+                            Intent intent = new Intent(getActivity(), PhotoPlayerActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelableArrayList(FILE_LIST,
+                                    (ArrayList<? extends Parcelable>) photoList);
+                            Log.d(TAG, "position === " + position);
+                            Log.d(TAG, "currentAlbumPosition === " + currentAlbumPosition);
+                            bundle.putInt(FILE_POSITION, position);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }
+                        else
+                        {
+                            uiHandler.sendEmptyMessage(SD_NOT_EXIST);
+                        }
                     }
                     else
-                    {
-                        uiHandler.sendEmptyMessage(SD_NOT_EXIST);
+                    { // is directory
+                        if (currentAlbumPosition < albumList.size())
+                        {
+                            currentParentPath = currentParentPath
+                                    + albumList.get(currentAlbumPosition).getFileName() + "/";
+                            removeAllAlbums();
+
+                            positionStack.push(currentAlbumPosition); // push current position to stack
+
+                            currentAlbumPosition = position;
+
+                            LoadFileThread loadFileThread = new LoadFileThread(currentParentPath);
+                            loadFileThread.start();
+                        }
                     }
                 }
-                else
-                { // is directory
-                    currentParentPath = currentParentPath + albumList.get(currentAlbumPosition).getFileName() + "/";
-                    removeAllAlbums();
-                    
-                    positionStack.push(currentAlbumPosition); // push current position to stack
-                    
-                    currentAlbumPosition = position;
-                    
-                    LoadFileThread loadFileThread = new LoadFileThread(currentParentPath);
-                    loadFileThread.start();
-                }
             }
+        }
+        else
+        {
+            Log.d(TAG, "OnItemClickListener, but in deleted action. ");
         }
     }
 
@@ -238,6 +256,60 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 mainActivity.setManageTab();
             }
         }
+        else //doing delete action
+        {
+            Log.d(TAG, "onClick get delete action, isDeletedState : " + isDeletedState + " currentLongClickPosition : " + currentLongClickPosition);
+            
+            if (currentLongClickPosition < photoList.size())
+            {
+                Log.d(TAG, "get folder from photoList by position " + photoList.get(currentLongClickPosition).toString());
+                
+                if (isDeletedState)
+                {
+                    File file = new File(photoList.get(currentLongClickPosition).getFilePath());
+                    
+                    dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+                    
+                    if (photoList.get(currentLongClickPosition).getFileType() == LocalFileInfo.SELECTED_DIR) // is dir
+                    {
+                        Utility.removeDirectory(file);
+                    }
+                    else // is File
+                    {
+                        Utility.removeFile(file);
+                    }
+                    
+                    dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                    
+                    changeDeletedState();
+                    
+                    removeAllAlbums();
+
+                    LoadFileThread loadFileThread = new LoadFileThread(currentParentPath);
+                    loadFileThread.start();
+                }
+                else
+                {
+                    Log.d(TAG, "onClick get delete action, delete state incorrect! ");
+                }
+            }
+            else
+            {
+                Log.d(TAG, "onClick get delete action, it get error! ");
+            }
+        }
+    }
+    
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+    {
+        Log.d(TAG, "onItemLongClick position : " + position);
+        
+        currentLongClickPosition = position;
+        
+        changeDeletedState();
+        
+        return false;
     }
 
     private void handlePageRefresh(String currentParent)
@@ -250,7 +322,9 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 
         Log.d(TAG, "current parent is " + currentParent);
 
+
         listFolder(new File(currentParent));
+                
         // get content from first album path
 
         if (albumList.size() > 0)
@@ -407,8 +481,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 
                 Log.d(TAG, " currentAlbumPosition : " + currentAlbumPosition + " file path : " + localFileInfo.getFilePath());
                 
-                Toast.makeText(BrowserFragment.this.getActivity(),
-                        getResources().getString(R.string.select) + localFileInfo.getFileName(), Toast.LENGTH_SHORT).show();
+                showToast(getResources().getString(R.string.select) + localFileInfo.getFileName());
                 
                 if (photoList != null)
                 {
@@ -432,12 +505,33 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         
         return layout;
     }
-
+    
     private void removeAllAlbums()
     {
         if (albums != null)
         {
             albums.removeAllViews();
+        }
+    }
+    
+    private void showToast(String showString)
+    {
+        Toast.makeText(getActivity(), showString, Toast.LENGTH_SHORT).show();
+    }
+    
+    private void changeDeletedState()
+    {
+        if (isDeletedState)
+        {
+            isDeletedState = false;
+            showToast(getResources().getString(R.string.browser_tab_close_deleted_state));
+            deleteBtn.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            isDeletedState = true;
+            showToast(getResources().getString(R.string.browser_tab_in_deleted_state));
+            deleteBtn.setVisibility(View.VISIBLE);
         }
     }
 
@@ -472,8 +566,8 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             {
             case Utility.SHOW_WAITING_DIALOG:
                 Log.d(TAG, "show waiting dialog ");
-                progressDialog = ProgressDialog.show(BrowserFragment.this.getActivity(), Utility.SPACE_STRING,
-                        BrowserFragment.this.getResources().getString(R.string.loading));
+                progressDialog = ProgressDialog.show(getActivity(), Utility.SPACE_STRING,
+                        getResources().getString(R.string.loading));
                 break;
             case Utility.DISMISS_WAITING_DIALOG:
                 Log.d(TAG, "dismiss dialog ");
@@ -512,9 +606,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 }
                 break;
             case SD_NOT_EXIST:
-                Toast.makeText(BrowserFragment.this.getActivity(),
-                        BrowserFragment.this.getResources().getString(R.string.sd_not_exist), Toast.LENGTH_SHORT)
-                        .show();
+                showToast(getResources().getString(R.string.sd_not_exist));
                 break;
             case REFRESH_ADAPTER:
                 if (photosAdapterView != null)
