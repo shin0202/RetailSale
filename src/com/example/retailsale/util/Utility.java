@@ -189,6 +189,14 @@ public class Utility
         public static final int PENGHU_COUNTY = 22;
         public static final int SOUTH_SEA_ISLANDS = 23;
     }
+    
+    public class AlarmTime
+    {
+        public static final String ALARM_TIME = "alarm_time";
+        public static final String ALARM_TIME_1 = "alarm_time_1";
+        public static final String ALARM_TIME_2 = "alarm_time_2";
+        public static final String ALARM_TIME_3 = "alarm_time_3";
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // for home
@@ -840,6 +848,14 @@ public class Utility
                 .putInt(Utility.LoginField.USER_SERIAL, userSerial).putInt(Utility.LoginField.USER_GROUP, userGroup)
                 .putString(Utility.LoginField.LOGIN_KEY, loginKey).commit();
     }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static void saveAlarmTimeData(Context context, int time1, int time2, int time3)
+    {
+        SharedPreferences settings = context.getSharedPreferences(Utility.AlarmTime.ALARM_TIME, Utility.DEFAULT_ZERO_VALUE);
+        settings.edit().putInt(Utility.AlarmTime.ALARM_TIME_1, time1).putInt(Utility.AlarmTime.ALARM_TIME_2, time2)
+                .putInt(Utility.AlarmTime.ALARM_TIME_3, time3).commit();
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static boolean hadLogin(Context context)
@@ -899,6 +915,17 @@ public class Utility
         Log.d(TAG, "loginKey is " + loginKey);
 
         return loginKey;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static int getAlarmTime(Context context, String tag)
+    {
+        SharedPreferences settings = context.getSharedPreferences(Utility.AlarmTime.ALARM_TIME, Utility.DEFAULT_ZERO_VALUE);
+        int time = settings.getInt(tag, 0);
+
+        Log.d(TAG, "time is " + time);
+
+        return time;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1273,11 +1300,34 @@ public class Utility
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static void setAlarmTime(Context context)
     {   
-        for (int i = 0; i < 3; i++)
+        int time1 = getAlarmTime(context, AlarmTime.ALARM_TIME_1);
+        int time2 = getAlarmTime(context, AlarmTime.ALARM_TIME_2);
+        int time3 = getAlarmTime(context, AlarmTime.ALARM_TIME_3);
+        
+        if (time1 > 0)
         {
-            // am 8 : 00, pm 3  : 00, pm 10:00
-            setAlarmTime(context, 8 + i * 7, 0, i);
+            setAlarmTime(context, time1, 0, 0);
+            setAlarmTime(context, time2, 0, 1);
+            setAlarmTime(context, time3, 0, 2);
         }
+        else
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                // am 8 : 00, pm 3  : 00, pm 10:00
+                setAlarmTime(context, 8 + i * 7, 0, i);
+            }
+            
+            saveAlarmTimeData(context, 8, 15, 22);
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static void setAlarmTimeFromSettings(Context context, int time1, int time2, int time3)
+    {   
+        setAlarmTime(context, time1, 0, 0);
+        setAlarmTime(context, time2, 0, 1);
+        setAlarmTime(context, time3, 0, 2);
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
