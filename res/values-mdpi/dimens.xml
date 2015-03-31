@@ -3,7 +3,7 @@
     <dimen name="base_zero">0dp</dimen>
 
     <!-- Login -->
-    <dimen name="login_layout_height">300dp</dimen>
+    <dimen name="login_layout_height">280dp</dimen>
     <dimen name="login_layout_margin_right_left">300dp</dimen>
     <dimen name="login_logo_margin_right_left">2dp</dimen>
     <dimen name="login_text_size">18sp</dimen>

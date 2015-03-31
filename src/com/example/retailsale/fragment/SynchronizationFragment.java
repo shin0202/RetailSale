@@ -990,7 +990,7 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                                 .key(Utility.AddCustomerJsonTag.RESERVATION_REPAIR_ITEM)
                                 .value(reservationRepairItem)
                                 .key(Utility.AddCustomerJsonTag.RESERVATION_AREA)
-                                .value(reservationArea)
+                                .value(String.valueOf(reservationArea))
                                 .key(Utility.AddCustomerJsonTag.RESERVATION_SPACE)
                                 .value(reservationSpace)
                                 .key(Utility.AddCustomerJsonTag.RESERVATION_STATUS)

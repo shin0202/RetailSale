@@ -168,9 +168,10 @@
     
     <!-- Input IP -->
     <string name="server_ip">伺服器位置</string>
-    <string name="set_auto_upload_time_1">設定自動上傳時間</string>
-    <string name="set_auto_upload_time_2">設定自動上傳時間</string>
-    <string name="set_auto_upload_time_3">設定自動上傳時間</string>
+    <string name="set_auto_upload_time_1">設定第一組自動上傳時間</string>
+    <string name="set_auto_upload_time_2">設定第二組自動上傳時間</string>
+    <string name="set_auto_upload_time_3">設定第三組自動上傳時間</string>
+    <string name="set_auto_upload_time_24_format">時(24小時)</string>
     
     <!-- API Error -->
     <string name="api_no_network">網路無法連線, 請檢查網路狀態</string>
