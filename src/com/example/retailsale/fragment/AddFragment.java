@@ -1350,7 +1350,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                         }
 
                         Toast.makeText(AddFragment.this.getActivity(),
-                                getString(R.string.add_tab_show_select_item) + temp, Toast.LENGTH_SHORT).show();
+                                getString(R.string.add_tab_show_select_item) + tempname, Toast.LENGTH_SHORT).show();
                         spaceSelectedContent = temp;
                     }
                 }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener()
