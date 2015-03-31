@@ -58,9 +58,11 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private List<DataOption> infoList, jobList, ageList, sexList, titleList;
     private List<DataOption> statusList, spaceList, budgetList, repairItemList, areaList;
     private List<UserDataForList> userDataList;
+    private List<Boolean> spaceStateList;
 //    private List<String> phoneCodeList, contactCountyList, contactCityList, workCountyList, workCityList;
     private List<String> phoneCodeList, workCountyList, workCityList;
 //    private int contactCountyPosition = 0, contactCityPosition = 0;
+    private String spaceSelectedContent = "";
     // views
     private MainFragmentActivity mainActivity;
 //    private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
@@ -68,7 +70,8 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
     private Spinner yearSpinner, monthSpinner, daySpinner;
     private Spinner phoneNumberSpinner, companyPhoneNumberSpinner;
     private Spinner repairItemSpinner, areaSpinner;
-    private Spinner spaceSpinner, statusSpinner;
+//    private Spinner spaceSpinner, statusSpinner;
+    private Spinner statusSpinner;
 //    private Spinner contactCountySpinner, contactCitySpinner, workCountySpinner, workCitySpinner;
     private Spinner workCountySpinner, workCitySpinner;
     private Spinner budgetSpinner;
@@ -126,7 +129,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
 //        sexSpinner = (Spinner) view.findViewById(R.id.add_tab_sex_selection);
         titleSpinner = (Spinner) view.findViewById(R.id.add_tab_title_selection);
         budgetSpinner = (Spinner) view.findViewById(R.id.add_tab_budget);
-        spaceSpinner = (Spinner) view.findViewById(R.id.add_tab_space);
+//        spaceSpinner = (Spinner) view.findViewById(R.id.add_tab_space);
         statusSpinner = (Spinner) view.findViewById(R.id.add_tab_sale_status);
         Button saveBtn = (Button) view.findViewById(R.id.add_tab_save_btn);
 //        Button newBtn = (Button) view.findViewById(R.id.add_tab_new_btn);
@@ -198,6 +201,10 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         // create date
         createDateTime = Utility.getCurrentDateTime();
         createDateTV.setText(createDateTime.replace("T", ""));
+        
+        // space button
+        Button spaceButton = (Button) view.findViewById(R.id.add_tab_space);
+        spaceButton.setOnClickListener(this);
 
         retialSaleDbAdapter = new RetialSaleDbAdapter(AddFragment.this.getActivity());
         retialSaleDbAdapter.open();
@@ -242,6 +249,10 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
             {
                 errorDialog.dismiss();
             }
+            break;
+        case R.id.add_tab_space:
+            Log.d(TAG, "To select space");
+            setMultiDialog(spaceList);
             break;
         }
     }
@@ -398,7 +409,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         int repairSelectedSerial = repairItemList.get(repairItemSpinner.getSelectedItemPosition()).getOptSerial();
         int areaSelectedSerial = areaList.get(areaSpinner.getSelectedItemPosition()).getOptSerial();
         int budgetSelectedSerial = budgetList.get(budgetSpinner.getSelectedItemPosition()).getOptSerial();
-        int spaceSelectedSerial = spaceList.get(spaceSpinner.getSelectedItemPosition()).getOptSerial();
+//        int spaceSelectedSerial = spaceList.get(spaceSpinner.getSelectedItemPosition()).getOptSerial();
         int statusSelectedSerial = statusList.get(statusSpinner.getSelectedItemPosition()).getOptSerial();
         
         int yearSelectedPosition = yearSpinner.getSelectedItemPosition();
@@ -419,8 +430,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                 + " sexSelectedSerial: " + sexSelectedSerial + " titleSelectedSerial: "
                 + titleSelectedSerial + " repairSelectedSerial: " + repairSelectedSerial
                 + " areaSelectedSerial : " + areaSelectedSerial + " budgetSelectedSerial : "
-                + budgetSelectedSerial + " spaceSelectedSerial : " + spaceSelectedSerial
-                + " statusSelectedSerial : " + statusSelectedSerial);
+                + budgetSelectedSerial + " statusSelectedSerial : " + statusSelectedSerial);
 
         Log.d(TAG, "date: " + dateString + " time : " + timeString + " reservationDate : "
                 + reservationDateString + " reservationTimeString : " + reservationTimeString);
@@ -477,6 +487,9 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         
         Log.d(TAG, "work address county : " + workCountyPosition + " countyCity : " + workCountyCity
                 + " workAddress : " + workAddress + " zip code : " + workZipCode);
+        
+        // handler space string
+        Log.d(TAG, "space selected content === " + spaceSelectedContent);
         
         // check phone and cellphone number, only need to select one item to write
         
@@ -575,7 +588,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                             ageSelectedSerial, memo, noData, creator, group, createDateTime,
                             reservationDateString + reservationTimeString, reservationTimeString, workAddress, workZipCode,
                             reservationWorkAlias, contactAddress, contactZipCode,
-                            spaceSelectedSerial, statusSelectedSerial, Utility.SPACE_STRING,
+                            spaceSelectedContent, statusSelectedSerial, Utility.SPACE_STRING,
                             reservationStatusComment, budgetSelectedSerial, repairSelectedSerial,
                             areaSelectedSerial);
                 }
@@ -588,7 +601,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                             customerBirthday.toString(), creator, group, createDateTime,
                             reservationDateString + reservationTimeString, reservationTimeString, workAddress, workZipCode,
                             reservationWorkAlias, contactAddress, contactZipCode,
-                            spaceSelectedSerial, statusSelectedSerial, Utility.SPACE_STRING,
+                            spaceSelectedContent, statusSelectedSerial, Utility.SPACE_STRING,
                             reservationStatusComment, budgetSelectedSerial, repairSelectedSerial,
                             areaSelectedSerial);
                 }
@@ -785,6 +798,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         budgetList = new ArrayList<DataOption>();
         repairItemList = new ArrayList<DataOption>();
         areaList = new ArrayList<DataOption>();
+        spaceStateList = new ArrayList<Boolean>();
         // to get option type content
         Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
         @SuppressWarnings("unused")
@@ -842,6 +856,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     else if (optionAlias.equals(spaceType))
                     {
                         spaceList.add(new DataOption("", optionSerial, optionName, false));
+                        spaceStateList.add(false);
                     }
                     else if (optionAlias.equals(budgetType))
                     {
@@ -894,7 +909,7 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         budgetSpinner.setAdapter(budgetAdapter);
         // space spinner
         spaceAdapter = new OptionAdapter(this.getActivity(), spaceList);
-        spaceSpinner.setAdapter(spaceAdapter);
+//        spaceSpinner.setAdapter(spaceAdapter);
         // status spinner
         statusAdapter = new OptionAdapter(this.getActivity(), statusList);
         statusSpinner.setAdapter(statusAdapter);
@@ -1290,15 +1305,16 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
         return position;
     }
     
-    private void setMultiDialog(List<DataOption> items)
+    private void setMultiDialog(final List<DataOption> items)
     {
         final String[] itemsArray = new String[items.size()];
-        final boolean[] initStates = new boolean[items.size()];
+        final boolean[] initStates = toPrimitiveArray(spaceStateList);
+        
+        
 
         for (int i = 0; i < items.size(); i++)
         {
             itemsArray[i] = items.get(i).getOptName();
-            initStates[i] = false;
         }
 
         AlertDialog dialog = new AlertDialog.Builder(AddFragment.this.getActivity())
@@ -1317,17 +1333,25 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     public void onClick(DialogInterface dialog, int which)
                     {
                         Log.d(TAG, "Positive Button : " + which);
-                        String temp = " ";
+                        String temp = "";
+                        String tempname = "";
                         for (int i = 0; i < initStates.length; i++)
                         {
                             if (initStates[i])
                             {
-                                temp += itemsArray[i] + ", ";
+                                temp += items.get(i).getOptSerial() + ",";
+                                tempname += items.get(i).getOptName() + " ";
+                                spaceStateList.set(i, true);
+                            }
+                            else
+                            {
+                                spaceStateList.set(i, false);
                             }
                         }
 
                         Toast.makeText(AddFragment.this.getActivity(),
                                 getString(R.string.add_tab_show_select_item) + temp, Toast.LENGTH_SHORT).show();
+                        spaceSelectedContent = temp;
                     }
                 }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener()
                 {
@@ -1340,6 +1364,17 @@ public class AddFragment extends Fragment implements OnClickListener, OnCheckedC
                     }
                 }).create();
         dialog.show();
+    }
+    
+    private boolean[] toPrimitiveArray(final List<Boolean> booleanList)
+    {
+        final boolean[] primitives = new boolean[booleanList.size()];
+        int index = 0;
+        for (Boolean object : booleanList)
+        {
+            primitives[index++] = object;
+        }
+        return primitives;
     }
     
     private class UserAdapter extends BaseAdapter

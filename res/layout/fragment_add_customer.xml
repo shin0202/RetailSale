@@ -260,7 +260,7 @@
                         android:layout_gravity="center"
                         android:hint="@string/add_tab_customer_introducer_hint" />
                 </LinearLayout>
-                
+
                 <!-- Input case name -->
 
                 <LinearLayout
@@ -282,7 +282,9 @@
 
                 <!-- Input contact address -->
 
-<!--                <LinearLayout
+
+                <!--
+                    <LinearLayout
                     android:id="@+id/add_tab_input_contact_address_layout"
                     style="@style/inputLayoutStyle"
                     android:orientation="horizontal" >
@@ -312,7 +314,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/order_measure_consumer_as_work_address"
                     android:textColor="@color/darkorange"
-                    android:textSize="@dimen/add_tab_txt_style_size" /> -->
+                    android:textSize="@dimen/add_tab_txt_style_size" />
+                -->
+
 
                 <!-- Input work address -->
 
@@ -341,6 +345,7 @@
                 </LinearLayout>
 
                 <!-- visit date -->
+
                 <LinearLayout
                     android:id="@+id/add_tab_consumer_visit_date_time_layout"
                     android:layout_width="fill_parent"
@@ -367,8 +372,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
-                
+
                 <!-- reservation date -->
+
                 <LinearLayout
                     android:id="@+id/add_tab_consumer_reservation_date_time_layout"
                     android:layout_width="fill_parent"
@@ -526,7 +532,9 @@
 
                 <!-- sex -->
 
-                <!--  <LinearLayout
+
+                <!--
+                <LinearLayout
                     android:id="@+id/add_tab_select_sex_layout"
                     style="@style/inputLayoutStyleInclueMargin"
                     android:orientation="horizontal" >
@@ -541,7 +549,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center" />
-                </LinearLayout> -->
+                </LinearLayout>
+                -->
+
 
                 <!-- area & repair -->
 
@@ -597,7 +607,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center" />
                 </LinearLayout>
-                
+
                 <!-- Input can't description -->
 
                 <LinearLayout
@@ -631,7 +641,9 @@
 
                 <!-- Input contact address -->
 
-<!--                <LinearLayout
+
+                <!--
+                    <LinearLayout
                     android:id="@+id/add_tab_input_contact_address_edit_layout"
                     style="@style/inputLayoutStyle"
                     android:layout_marginTop="40dp"
@@ -643,8 +655,10 @@
                         android:layout_width="fill_parent"
                         android:layout_gravity="center"
                         android:hint="@string/order_measure_consumer_contact_address_hint" />
-                </LinearLayout> -->
-                
+                </LinearLayout>
+                -->
+
+
                 <!-- sale status -->
 
                 <LinearLayout
@@ -679,7 +693,7 @@
                         android:layout_gravity="center"
                         android:hint="@string/order_measure_consumer_address_hint" />
                 </LinearLayout>
-                
+
                 <!-- space -->
 
                 <LinearLayout
@@ -692,11 +706,22 @@
                         style="@style/addTabTextViewStyle"
                         android:text="@string/order_measure_consumer_request_msg" />
 
-                    <Spinner
+                    <!--
+                          <Spinner
                         android:id="@+id/add_tab_space"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center" />
+                    -->
+
+                    <Button
+                        android:id="@+id/add_tab_space"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:background="@drawable/common_btn_selector"
+                        android:text="@string/select"
+                        android:textSize="@dimen/btn_style_txt_size"
+                        android:textColor="@color/white" />
                 </LinearLayout>
 
                 <!-- Input memo layout -->
@@ -721,13 +746,17 @@
 
                 <!-- add button -->
 
-<!--                 <Button
+
+                <!--
+                     <Button
                     android:id="@+id/add_tab_new_btn"
                     style="@style/btnStyle"
                     android:layout_width="fill_parent"
                     android:background="@drawable/common_btn_selector"
                     android:text="@string/new_item"
-                    android:textColor="@color/white" /> -->
+                    android:textColor="@color/white" />
+                -->
+
 
                 <!-- save button -->
 

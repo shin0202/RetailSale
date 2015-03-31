@@ -61,7 +61,7 @@ public class CustomerInfo implements Parcelable
     @SerializedName("contactPostcode")
     private String contactPostcode;
     @SerializedName("reservationSpace")
-    private int reservationSpace;
+    private String reservationSpace;
     @SerializedName("reservationStatus")
     private int reservationStatus;
     @SerializedName("reservationUpateTime")
@@ -101,7 +101,7 @@ public class CustomerInfo implements Parcelable
             int customerInfo, String customerIntroducer, int customerJob, int customerAge, String customerMemo,
             String customerBirth, int creator, int creatorGroup, String createTime, String reservationDate,
             String reservationTime, String reservationWork, String workPostcode, String reservationWorkAlias,
-            String reservationContact, String contactPostcode, int reservationSpace, int reservationStatus,
+            String reservationContact, String contactPostcode, String reservationSpace, int reservationStatus,
             String reservationUpateTime, String reservationStatusComment, int reservationBudget,
             int reservationRepairItem, int reservationArea)
     {
@@ -144,7 +144,7 @@ public class CustomerInfo implements Parcelable
 
     // for Order Measure
     public CustomerInfo(String reservationDate, String reservationTime, String reservationWork, String workPostcode,
-            String reservationWorkAlias, String reservationContact, String contactPostcode, int reservationSpace,
+            String reservationWorkAlias, String reservationContact, String contactPostcode, String reservationSpace,
             int reservationStatus, String reservationUpateTime, String reservationStatusComment, int reservationBudget)
     {
         super();
@@ -201,7 +201,7 @@ public class CustomerInfo implements Parcelable
             String customerVisitDate, int customerInfo, String customerIntroducer, int customerJob, int customerAge,
             String customerMemo, String customerBirth, int creator, int creatorGroup, String createTime,
             String reservationDate, String reservationTime, String reservationWork, String workPostcode,
-            String reservationWorkAlias, String reservationContact, String contactPostcode, int reservationSpace,
+            String reservationWorkAlias, String reservationContact, String contactPostcode, String reservationSpace,
             int reservationStatus, String reservationUpateTime, String reservationStatusComment, int reservationBudget,
             int reservationRepairItem, int reservationArea)
     {
@@ -220,7 +220,7 @@ public class CustomerInfo implements Parcelable
             String customerVisitDate, int customerInfo, String customerIntroducer, int customerJob, int customerAge,
             String customerMemo, String customerBirth, int creator, int creatorGroup, String createTime,
             String reservationDate, String reservationTime, String reservationWork, String workPostcode,
-            String reservationWorkAlias, String reservationContact, String contactPostcode, int reservationSpace,
+            String reservationWorkAlias, String reservationContact, String contactPostcode, String reservationSpace,
             int reservationStatus, String reservationUpateTime, String reservationStatusComment, int reservationBudget,
             int reservationRepairItem, int reservationArea)
     {
@@ -666,12 +666,12 @@ public class CustomerInfo implements Parcelable
         this.reservationContact = reservationContact;
     }
 
-    public int getReservationSpace()
+    public String getReservationSpace()
     {
         return reservationSpace;
     }
 
-    public void setReservationSpace(int reservationSpace)
+    public void setReservationSpace(String reservationSpace)
     {
         this.reservationSpace = reservationSpace;
     }
@@ -752,7 +752,7 @@ public class CustomerInfo implements Parcelable
         dest.writeString(reservationWorkAlias);
         dest.writeString(reservationContact);
         dest.writeString(contactPostcode);
-        dest.writeInt(reservationSpace);
+        dest.writeString(reservationSpace);
         dest.writeInt(reservationStatus);
         dest.writeString(reservationUpateTime);
         dest.writeString(reservationStatusComment);
@@ -821,7 +821,7 @@ public class CustomerInfo implements Parcelable
         this.reservationWorkAlias = in.readString();
         this.reservationContact = in.readString();
         this.contactPostcode = in.readString();
-        this.reservationSpace = in.readInt();
+        this.reservationSpace = in.readString();
         this.reservationStatus = in.readInt();
         this.reservationUpateTime = in.readString();
         this.reservationStatusComment = in.readString();

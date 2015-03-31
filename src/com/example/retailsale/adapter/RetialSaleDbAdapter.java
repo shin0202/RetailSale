@@ -188,7 +188,7 @@ public class RetialSaleDbAdapter
             + KEY_ADD_SEND_MSG + " INTEGER," + KEY_WORK_ALIAS + " TEXT," + KEY_STATUS_COMMENT
             + " TEXT," + KEY_STATUS + " INTEGER," + KEY_WORK + " TEXT," + KEY_WROK_POSTCODE
             + " TEXT," + KEY_CONTACT + " TEXT," + KEY_CONTACT_POSTCODE + " TEXT," + KEY_SPACE
-            + " INTEGER," + KEY_BUDGET + " INTEGER," + KEY_RESERVATION_DATE + " TEXT,"
+            + " TEXT," + KEY_BUDGET + " INTEGER," + KEY_RESERVATION_DATE + " TEXT,"
             + KEY_REPAIR_ITEM + " INTEGER," + KEY_AREA + " INTEGER," + KEY_IS_UPLOAD + " INTEGER"
             + ");";
 
@@ -442,7 +442,7 @@ public class RetialSaleDbAdapter
             String introducer, int age, String memo, String visitDate, int creator,
             int creatorGroup, String createDate, int sendMsg, String workAlias,
             String statusComment, int status, String work, String workPostcode, String contact,
-            String contactPostcode, int space, int budget, String reservationDate, int repairItem,
+            String contactPostcode, String space, int budget, String reservationDate, int repairItem,
             int area, int isUpload)
     {
 
@@ -790,7 +790,7 @@ public class RetialSaleDbAdapter
             String introducer, int age, String memo, String visitDate, int creator,
             int creatorGroup, String createDate, int sendMsg, String workAlias,
             String statusComment, int status, String work, String workPostcode, String contact,
-            String contactPostCode, int space, int budget, String workDate, int repairItem,
+            String contactPostCode, String space, int budget, String workDate, int repairItem,
             int area, int isUpload)
     {
 

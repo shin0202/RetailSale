@@ -241,7 +241,7 @@ public class OrderMeasureActivity extends Activity implements OnClickListener, O
         customerInfo.setReservationStatusPosition(statusSpinner.getSelectedItemPosition());
 
         // request
-        customerInfo.setReservationSpace(spaceSelectedSerial);
+        customerInfo.setReservationSpace(String.valueOf(spaceSelectedSerial));
         customerInfo.setReservationSpacePosition(spaceSpinner.getSelectedItemPosition());
 
         // send result

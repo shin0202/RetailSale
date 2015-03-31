@@ -58,6 +58,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
 //    private List<String> phoneCodeList, contactCountyList, contactCityList, workCountyList, workCityList;
     private List<String> phoneCodeList, workCountyList, workCityList;
 //    private int contactCountyPosition = 0, contactCityPosition = 0;
+    private String spaceSelectedContent = "";
     
     // views
 //    private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
@@ -65,7 +66,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
     private Spinner yearSpinner, monthSpinner, daySpinner;
     private Spinner phoneNumberSpinner, companyPhoneNumberSpinner;
     private Spinner repairItemSpinner, areaSpinner;
-    private Spinner spaceSpinner, statusSpinner;
+    private Spinner statusSpinner;
 //    private Spinner contactCountySpinner, contactCitySpinner, workCountySpinner, workCitySpinner;
     private Spinner workCountySpinner, workCitySpinner;
     private Spinner budgetSpinner;
@@ -138,6 +139,9 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             {
                 errorDialog.dismiss();
             }
+            break;
+        case R.id.add_tab_space:
+            setMultiDialog(spaceList);
             break;
         }
     }
@@ -231,7 +235,8 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
 //        sexSpinner = (Spinner) view.findViewById(R.id.add_tab_sex_selection);
         titleSpinner = (Spinner) findViewById(R.id.add_tab_title_selection);
         budgetSpinner = (Spinner) findViewById(R.id.add_tab_budget);
-        spaceSpinner = (Spinner) findViewById(R.id.add_tab_space);
+        Button spaceButton = (Button) findViewById(R.id.add_tab_space);
+        spaceButton.setOnClickListener(this);
         statusSpinner = (Spinner) findViewById(R.id.add_tab_sale_status);
         Button saveBtn = (Button) findViewById(R.id.add_tab_save_btn);
 //        Button newBtn = (Button) view.findViewById(R.id.add_tab_new_btn);
@@ -352,7 +357,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         int repairSelectedSerial = repairItemList.get(repairItemSpinner.getSelectedItemPosition()).getOptSerial();
         int areaSelectedSerial = areaList.get(areaSpinner.getSelectedItemPosition()).getOptSerial();
         int budgetSelectedSerial = budgetList.get(budgetSpinner.getSelectedItemPosition()).getOptSerial();
-        int spaceSelectedSerial = spaceList.get(spaceSpinner.getSelectedItemPosition()).getOptSerial();
+//        int spaceSelectedSerial = spaceList.get(spaceSpinner.getSelectedItemPosition()).getOptSerial();
         int statusSelectedSerial = statusList.get(statusSpinner.getSelectedItemPosition()).getOptSerial();
         
         int yearSelectedPosition = yearSpinner.getSelectedItemPosition();
@@ -373,8 +378,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
                 + " sexSelectedSerial: " + sexSelectedSerial + " titleSelectedSerial: "
                 + titleSelectedSerial + " repairSelectedSerial: " + repairSelectedSerial
                 + " areaSelectedSerial : " + areaSelectedSerial + " budgetSelectedSerial : "
-                + budgetSelectedSerial + " spaceSelectedSerial : " + spaceSelectedSerial
-                + " statusSelectedSerial : " + statusSelectedSerial);
+                + budgetSelectedSerial + " statusSelectedSerial : " + statusSelectedSerial);
 
         Log.d(TAG, "date: " + dateString + " time : " + timeString + " reservationDate : "
                 + reservationDateString + " reservationTimeString : " + reservationTimeString);
@@ -528,7 +532,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
                                     + timeString, msgSelectedSerial, noData, jobSelectedSerial, ageSelectedSerial,
                             memo, noData, creator, group, createDateTime,
                             reservationDateString + reservationTimeString, reservationTimeString, workAddress,
-                            workZipCode, reservationWorkAlias, contactAddress, contactZipCode, spaceSelectedSerial,
+                            workZipCode, reservationWorkAlias, contactAddress, contactZipCode, spaceSelectedContent,
                             statusSelectedSerial, Utility.SPACE_STRING, reservationStatusComment, budgetSelectedSerial,
                             repairSelectedSerial, areaSelectedSerial);
                 }
@@ -539,7 +543,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
                             email, dateString + timeString, msgSelectedSerial, introducer, jobSelectedSerial,
                             ageSelectedSerial, memo, customerBirthday.toString(), creator, group, createDateTime,
                             reservationDateString + reservationTimeString, reservationTimeString, workAddress,
-                            workZipCode, reservationWorkAlias, contactAddress, contactZipCode, spaceSelectedSerial,
+                            workZipCode, reservationWorkAlias, contactAddress, contactZipCode, spaceSelectedContent,
                             statusSelectedSerial, Utility.SPACE_STRING, reservationStatusComment, budgetSelectedSerial,
                             repairSelectedSerial, areaSelectedSerial);
                 }
@@ -551,7 +555,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
                         msgSelectedSerial, introducer, jobSelectedSerial, ageSelectedSerial, memo,
                         customerBirthday.toString(), creator, group, createDateTime, reservationDateString
                                 + reservationTimeString, reservationTimeString, workAddress, workZipCode,
-                        reservationWorkAlias, contactAddress, contactZipCode, spaceSelectedSerial,
+                        reservationWorkAlias, contactAddress, contactZipCode, spaceSelectedContent,
                         statusSelectedSerial, Utility.SPACE_STRING, reservationStatusComment, budgetSelectedSerial,
                         repairSelectedSerial, areaSelectedSerial);
             }
@@ -854,8 +858,8 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         budgetAdapter = new OptionAdapter(EditCustomerActivity.this, budgetList);
         budgetSpinner.setAdapter(budgetAdapter);
         // space spinner
-        spaceAdapter = new OptionAdapter(EditCustomerActivity.this, spaceList);
-        spaceSpinner.setAdapter(spaceAdapter);
+//        spaceAdapter = new OptionAdapter(EditCustomerActivity.this, spaceList);
+//        spaceSpinner.setAdapter(spaceAdapter);
         // status spinner
         statusAdapter = new OptionAdapter(EditCustomerActivity.this, statusList);
         statusSpinner.setAdapter(statusAdapter);
@@ -1251,7 +1255,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         return position;
     }
     
-    private void setMultiDialog(List<DataOption> items)
+    private void setMultiDialog(final List<DataOption> items)
     {
         final String[] itemsArray = new String[items.size()];
         final boolean[] initStates = new boolean[items.size()];
@@ -1283,12 +1287,13 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
                         {
                             if (initStates[i])
                             {
-                                temp += itemsArray[i] + ", ";
+                                temp += items.get(i).getOptSerial() + ",";
                             }
                         }
 
-                        Toast.makeText(EditCustomerActivity.this,
-                                getString(R.string.add_tab_show_select_item) + temp, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(EditCustomerActivity.this,
+//                                getString(R.string.add_tab_show_select_item) + temp, Toast.LENGTH_SHORT).show();
+                        spaceSelectedContent = temp;
                     }
                 }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener()
                 {

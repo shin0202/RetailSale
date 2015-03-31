@@ -289,7 +289,7 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
                                     .getColumnIndex(RetialSaleDbAdapter.KEY_CONTACT)), 
                             cursor.getString(cursor
                                     .getColumnIndex(RetialSaleDbAdapter.KEY_CONTACT_POSTCODE)), 
-                            cursor.getInt(cursor
+                            cursor.getString(cursor
                                     .getColumnIndex(RetialSaleDbAdapter.KEY_SPACE)), 
                             cursor.getInt(cursor
                                     .getColumnIndex(RetialSaleDbAdapter.KEY_STATUS)),
