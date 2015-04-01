@@ -11,8 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
+import android.widget.Toast;
 
 import com.example.retailsale.MainFragmentActivity;
+import com.example.retailsale.R;
 
 public class TabManager implements OnTabChangeListener
 {
@@ -119,10 +121,13 @@ public class TabManager implements OnTabChangeListener
                 
                 if (lastTab != null)
                 {
-                    Log.d(TAG, "lastTab name " + lastTab.clss.getName());
+                    Log.d(TAG, "lastTab name " + lastTab.clss.getName() + " newTab name " + newTab.clss.getName());
+                    
+                    if (!lastTab.clss.getName().equals(newTab.clss.getName()) && lastTab.clss.getName().equals("com.example.retailsale.fragment.AddFragment"))
+                    {
+                        Toast.makeText(activity, activity.getResources().getString(R.string.data_auto_save), Toast.LENGTH_SHORT).show();
+                    }
                 }
-                
-                Log.d(TAG, "newTab name " + newTab.clss.getName());
             }
 
             lastTab = newTab;

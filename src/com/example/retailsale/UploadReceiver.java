@@ -93,6 +93,18 @@ public class UploadReceiver extends BroadcastReceiver
             id = settings.getString(Utility.LoginField.ID, "");
             password = settings.getString(Utility.LoginField.PASSWORD, "");
         }
+        
+        for (int i = 0; i < 3; i++)
+        {
+            if (Utility.isInternetAvailable(context))
+            {
+                break;
+            }
+            else
+            {
+                Utility.writeLogData(context.getResources().getString(R.string.sync_tab_upload_error));
+            }
+        }
 
         HttpManager httpManager = new HttpManager();
         httpManager.login(context, id, password, new GetLoginListener()

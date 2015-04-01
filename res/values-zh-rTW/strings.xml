@@ -22,6 +22,7 @@
     <string name="decode_success">解密成功</string>
     <string name="decode_failed">解密失敗</string>
     <string name="delete">刪除</string>
+    <string name="data_auto_save">資料自動儲存</string>
 
     <!-- Login -->
     <string name="login">登入</string>
