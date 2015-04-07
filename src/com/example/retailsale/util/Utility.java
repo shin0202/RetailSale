@@ -348,7 +348,7 @@ public class Utility
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public Integer[] parseDateTime(String dateTime)
+    public static Integer[] parseDateTime(String dateTime)
     {
 //        String testDate = "1986-12-11T15:30:20";
         Integer[] dateTimeArray = new Integer[6];

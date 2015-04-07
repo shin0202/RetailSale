@@ -55,10 +55,15 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
     private List<DataOption> infoList, jobList, ageList, sexList, titleList;
     private List<DataOption> statusList, spaceList, budgetList, repairItemList, areaList;
     private List<UserDataForList> userDataList;
+    private List<Boolean> spaceStateList;
 //    private List<String> phoneCodeList, contactCountyList, contactCityList, workCountyList, workCityList;
     private List<String> phoneCodeList, workCountyList, workCityList;
 //    private int contactCountyPosition = 0, contactCityPosition = 0;
     private String spaceSelectedContent = "";
+    
+    private List<String> yearList, monthList, dayList;
+    
+    private boolean hasBundle = false;
     
     // views
 //    private Spinner infoSpinner, jobSpinner, ageSpinner, sexSpinner, titleSpinner, designerSpinner;
@@ -116,6 +121,8 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         getUserList();
         
         consumerVisitDateDP.setEnabled(false);
+        
+        initData();
     }
 
     @Override
@@ -141,6 +148,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             }
             break;
         case R.id.add_tab_space:
+            Log.d(TAG, "To select space");
             setMultiDialog(spaceList);
             break;
         }
@@ -194,6 +202,10 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         switch (parent.getId())
         {
         case R.id.add_tab_customer_birthday_year:
+            if (hasBundle)
+            {
+                return;
+            }
             Log.d(TAG, "To select year, the position is " + position);
             if (position == Utility.DEFAULT_ZERO_VALUE)
             {
@@ -206,6 +218,11 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             }
             break;
         case R.id.add_tab_customer_birthday_month:
+            if (hasBundle)
+            {
+                hasBundle = false;
+                return;
+            }
             Log.d(TAG, "To select month, the position is " + position);
             if (yearSpinner.getSelectedItemPosition() != Utility.DEFAULT_ZERO_VALUE)
             {
@@ -317,6 +334,9 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         if (intent != null)
         {
             customerInfo = intent.getParcelableExtra(NeedUploadListFragment.SEND_CUSTOMER_INFO);
+            
+            Log.d(TAG, "get customer info from bundle  === " + customerInfo);
+            hasBundle = true;
         }
     }
 
@@ -435,6 +455,9 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         
         Log.d(TAG, "work address county : " + workCountyPosition + " countyCity : " + workCountyCity
                 + " workAddress : " + workAddress + " zip code : " + workZipCode);
+        
+        // handler space string
+        Log.d(TAG, "space selected content === " + spaceSelectedContent);
         
         // check phone and cellphone number, only need to select one item to write
         
@@ -750,6 +773,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         budgetList = new ArrayList<DataOption>();
         repairItemList = new ArrayList<DataOption>();
         areaList = new ArrayList<DataOption>();
+        spaceStateList = new ArrayList<Boolean>();
         // to get option type content
         Cursor optionTypeCursor = retialSaleDbAdapter.getAllOption();
         @SuppressWarnings("unused")
@@ -807,6 +831,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
                     else if (optionAlias.equals(spaceType))
                     {
                         spaceList.add(new DataOption("", optionSerial, optionName, false));
+                        spaceStateList.add(false);
                     }
                     else if (optionAlias.equals(budgetType))
                     {
@@ -858,7 +883,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         budgetAdapter = new OptionAdapter(EditCustomerActivity.this, budgetList);
         budgetSpinner.setAdapter(budgetAdapter);
         // space spinner
-//        spaceAdapter = new OptionAdapter(EditCustomerActivity.this, spaceList);
+        spaceAdapter = new OptionAdapter(EditCustomerActivity.this, spaceList);
 //        spaceSpinner.setAdapter(spaceAdapter);
         // status spinner
         statusAdapter = new OptionAdapter(EditCustomerActivity.this, statusList);
@@ -1154,7 +1179,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         int startYear = currentYear - 150;
         Log.d(TAG, "current year : " + currentYear + " start year : " + startYear);
         
-        List<String> yearList = new ArrayList<String>();
+        yearList = new ArrayList<String>();
         
         yearList.add(Utility.SPACE_STRING);
         
@@ -1170,7 +1195,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
     
     private void setCustomerBirthdayMonthSpinner()
     {
-        List<String> monthList = new ArrayList<String>();
+        monthList = new ArrayList<String>();
         
         for (int i = 1; i < 13; i++)
         {
@@ -1191,7 +1216,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
     
     private void setCustomerBirthdayDaySpinner(int days)
     {
-        List<String> dayList = new ArrayList<String>();
+        dayList = new ArrayList<String>();
         
         for (int i = 1; i < days + 1; i++)
         {
@@ -1258,12 +1283,13 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
     private void setMultiDialog(final List<DataOption> items)
     {
         final String[] itemsArray = new String[items.size()];
-        final boolean[] initStates = new boolean[items.size()];
+        final boolean[] initStates = toPrimitiveArray(spaceStateList);
+        
+        
 
         for (int i = 0; i < items.size(); i++)
         {
             itemsArray[i] = items.get(i).getOptName();
-            initStates[i] = false;
         }
 
         AlertDialog dialog = new AlertDialog.Builder(EditCustomerActivity.this)
@@ -1282,17 +1308,24 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
                     public void onClick(DialogInterface dialog, int which)
                     {
                         Log.d(TAG, "Positive Button : " + which);
-                        String temp = " ";
+                        String temp = "";
+                        String tempname = "";
                         for (int i = 0; i < initStates.length; i++)
                         {
                             if (initStates[i])
                             {
                                 temp += items.get(i).getOptSerial() + ",";
+                                tempname += items.get(i).getOptName() + " ";
+                                spaceStateList.set(i, true);
+                            }
+                            else
+                            {
+                                spaceStateList.set(i, false);
                             }
                         }
 
-//                        Toast.makeText(EditCustomerActivity.this,
-//                                getString(R.string.add_tab_show_select_item) + temp, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditCustomerActivity.this,
+                                getString(R.string.add_tab_show_select_item) + tempname, Toast.LENGTH_SHORT).show();
                         spaceSelectedContent = temp;
                     }
                 }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener()
@@ -1306,6 +1339,153 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
                     }
                 }).create();
         dialog.show();
+    }
+    
+    private boolean[] toPrimitiveArray(final List<Boolean> booleanList)
+    {
+        final boolean[] primitives = new boolean[booleanList.size()];
+        int index = 0;
+        for (Boolean object : booleanList)
+        {
+            primitives[index++] = object;
+        }
+        return primitives;
+    }
+    
+    // if get data from bundle, then set it
+    private void initData()
+    {
+        Log.d(TAG, "customerInfo === " + customerInfo);
+        if (customerInfo != null)
+        {
+            // Left
+            // set customer name
+            customerNameET.setText(customerInfo.getCustomerName());
+            
+            // set home number
+            String[] homeNumberArray = splitStringToArray(customerInfo.getCustomerHome(), Utility.FILL_DASH);
+            phoneNumberSpinner.setSelection(getPositionFromList(phoneCodeList, homeNumberArray[0]));
+            phoneNumberET.setText(homeNumberArray[1]);
+            
+            // set cell phone number
+            cellPhoneNumberET.setText(customerInfo.getCustomerMobile());
+            
+            // set company number
+            String[] companyNumberArray = splitStringToArray(customerInfo.getCustomerCompany(), Utility.FILL_DASH);
+            companyPhoneNumberSpinner.setSelection(getPositionFromList(phoneCodeList, companyNumberArray[0]));
+            companyPhoneNumberET.setText(companyNumberArray[1]);
+            
+            // set message info
+            infoSpinner.setSelection(getOptionSelectedPosition(infoList, customerInfo.getCustomerInfo()));
+            
+            // set job
+            jobSpinner.setSelection(getOptionSelectedPosition(jobList, customerInfo.getCustomerJob()));
+            
+            // set birthday
+            String[] birthdayArray = splitStringToArray(customerInfo.getCustomerBirth(), Utility.FILL_DASH);
+            yearSpinner.setSelection(getPositionFromList(yearList, birthdayArray[0]));
+            setCustomerBirthdayMonthSpinner();
+            monthSpinner.setSelection(getPositionFromList(monthList, birthdayArray[1]));
+            int days = Utility.getDays((String)yearSpinner.getSelectedItem() + "-" + (String)monthSpinner.getSelectedItem());
+            setCustomerBirthdayDaySpinner(days);
+            daySpinner.setSelection(getPositionFromList(dayList, birthdayArray[2]));
+            
+            // set introducer
+            introducerET.setText(customerInfo.getCustomerIntroducer());
+            
+            // set work alias
+            caseNameET.setText(customerInfo.getReservationWorkAlias());
+            
+            // set work city country
+            
+            // set visit date
+            Integer[] visitDate = Utility.parseDateTime(customerInfo.getCustomerVisitDate());
+            consumerVisitDateDP.updateDate(visitDate[0], visitDate[1] - 1, visitDate[2]);
+            consumerVisitTimeTP.setCurrentHour(visitDate[3]);
+            consumerVisitTimeTP.setCurrentMinute(visitDate[4]);
+            consumerVisitTimeTP.setEnabled(false);
+            
+            // set reservation date
+            Integer[] reservationDate = Utility.parseDateTime(customerInfo.getReservationDate());
+            reservationDP.updateDate(reservationDate[0], reservationDate[1] - 1, reservationDate[2]);
+            reservationTP.setCurrentHour(reservationDate[3]);
+            reservationTP.setCurrentMinute(reservationDate[4]);
+            
+            // Right
+            // set designer store, no need, because get data by creator
+            
+            // set designer name, no need, because get data by creator
+            
+            // set title
+            titleSpinner.setSelection(getOptionSelectedPosition(titleList, customerInfo.getCustomerTitle()));
+            
+            // set mail
+            emailET.setText(customerInfo.getCustomerMail());
+            
+            // set age
+            ageSpinner.setSelection(getOptionSelectedPosition(ageList, customerInfo.getCustomerAge()));
+            
+            // set repair item & area
+            repairItemSpinner.setSelection(getOptionSelectedPosition(repairItemList, customerInfo.getReservationRepairItem()));
+            areaSpinner.setSelection(getOptionSelectedPosition(areaList, customerInfo.getReservationArea()));
+            
+            // set budget
+            budgetSpinner.setSelection(getOptionSelectedPosition(budgetList, customerInfo.getReservationBudget()));
+            
+            // set status comment
+            cantDescriptionET.setText(customerInfo.getReservationStatusComment());
+            
+            // set status
+            statusSpinner.setSelection(getOptionSelectedPosition(statusList, customerInfo.getReservationStatus()));
+            
+            // set address
+            
+            // set space request
+            initSpaceData();
+            
+            // set memo
+            memoET.setText(customerInfo.getCustomerMemo());
+        }
+    }
+    
+    private String[] splitStringToArray(String data, String keyword)
+    {
+        String[] tokens = data.split(keyword);
+        for (String token : tokens)
+        {
+            Log.d(TAG, "token === " + token);
+        }
+        
+        return tokens;
+    }
+    
+    private int getPositionFromList(List<String> data, String keyword)
+    {
+        for (int i = 0; i < data.size(); i++)
+        {
+            if (keyword.equals(data.get(i)))
+            {
+                return i;
+            }
+        }
+        
+        return 0;
+    }
+    
+    private void initSpaceData()
+    {
+        String[] spaceArray = splitStringToArray(customerInfo.getReservationSpace(), ",");
+        
+        for (int i = 0; i < spaceList.size(); i++)
+        {          
+            for (int j = 0; j < spaceArray.length; j++)
+            {
+                if (spaceList.get(i).getOptSerial() == Integer.valueOf(spaceArray[j]))
+                {
+                    spaceStateList.set(i, true);
+                }
+            }
+        }
     }
     
     private class UserAdapter extends BaseAdapter

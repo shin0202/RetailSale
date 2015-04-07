@@ -451,7 +451,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         }
     }
 
-    private View addQuicklySelectedDummy(String name, String path, int type)
+    private View addQuicklySelectedDummy(String name, final String path, int type)
     {
         // Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
         int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
@@ -489,6 +489,17 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 
                     uiHandler.sendEmptyMessage(SET_ADAPTER);
                 }
+            }
+        });
+        
+        imageView.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            
+            @Override
+            public boolean onLongClick(View v)
+            {
+                deleteBottomFolder(path);
+                return false;
             }
         });
         
@@ -533,6 +544,24 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             showToast(getResources().getString(R.string.browser_tab_in_deleted_state));
             deleteBtn.setVisibility(View.VISIBLE);
         }
+    }
+    
+    private void deleteBottomFolder(String path)
+    {
+        Log.d(TAG, "path === " + path);
+        
+        File file = new File(path);
+
+        dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+
+        Utility.removeDirectory(file);
+
+        dialogHandler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+
+        removeAllAlbums();
+
+        LoadFileThread loadFileThread = new LoadFileThread(currentParentPath);
+        loadFileThread.start();
     }
 
     private class LoadFileThread extends Thread
