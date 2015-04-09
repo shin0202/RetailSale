@@ -73,7 +73,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
     private Spinner repairItemSpinner, areaSpinner;
     private Spinner statusSpinner;
 //    private Spinner contactCountySpinner, contactCitySpinner, workCountySpinner, workCitySpinner;
-    private Spinner workCountySpinner, workCitySpinner;
+    private Spinner workCountySpinner, workCitySpinner; // county : 縣 city : 市,鄉鎮,區
     private Spinner budgetSpinner;
 //    private EditText customerNameET, cellPhoneNumberET, phoneNumberET, companyPhoneNumberET, emailET,
 //            introducerET, memoET, contactET, workET;
@@ -1265,25 +1265,26 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         errorDialog.show();
     }
     
-    private int getOptionSelectedPosition(List<DataOption> dataList, int optSerial)
+    private void initSpaceData()
     {
-        int position = 0;
+        String[] spaceArray = Utility.splitStringToArray(customerInfo.getReservationSpace(), ",");
         
-        for (int i = 0; i < dataList.size(); i++)
-        {
-            if (dataList.get(i).getOptSerial() == optSerial){
-                position = i;
-                return position;
+        for (int i = 0; i < spaceList.size(); i++)
+        {          
+            for (int j = 0; j < spaceArray.length; j++)
+            {
+                if (spaceList.get(i).getOptSerial() == Integer.valueOf(spaceArray[j]))
+                {
+                    spaceStateList.set(i, true);
+                }
             }
         }
-        
-        return position;
     }
     
     private void setMultiDialog(final List<DataOption> items)
     {
         final String[] itemsArray = new String[items.size()];
-        final boolean[] initStates = toPrimitiveArray(spaceStateList);
+        final boolean[] initStates = Utility.convertListToArray(spaceStateList);
         
         
 
@@ -1341,17 +1342,6 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         dialog.show();
     }
     
-    private boolean[] toPrimitiveArray(final List<Boolean> booleanList)
-    {
-        final boolean[] primitives = new boolean[booleanList.size()];
-        int index = 0;
-        for (Boolean object : booleanList)
-        {
-            primitives[index++] = object;
-        }
-        return primitives;
-    }
-    
     // if get data from bundle, then set it
     private void initData()
     {
@@ -1363,32 +1353,32 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             customerNameET.setText(customerInfo.getCustomerName());
             
             // set home number
-            String[] homeNumberArray = splitStringToArray(customerInfo.getCustomerHome(), Utility.FILL_DASH);
-            phoneNumberSpinner.setSelection(getPositionFromList(phoneCodeList, homeNumberArray[0]));
+            String[] homeNumberArray = Utility.splitStringToArray(customerInfo.getCustomerHome(), Utility.FILL_DASH);
+            phoneNumberSpinner.setSelection(Utility.getPositionFromListByKeyword(phoneCodeList, homeNumberArray[0]));
             phoneNumberET.setText(homeNumberArray[1]);
             
             // set cell phone number
             cellPhoneNumberET.setText(customerInfo.getCustomerMobile());
             
             // set company number
-            String[] companyNumberArray = splitStringToArray(customerInfo.getCustomerCompany(), Utility.FILL_DASH);
-            companyPhoneNumberSpinner.setSelection(getPositionFromList(phoneCodeList, companyNumberArray[0]));
+            String[] companyNumberArray = Utility.splitStringToArray(customerInfo.getCustomerCompany(), Utility.FILL_DASH);
+            companyPhoneNumberSpinner.setSelection(Utility.getPositionFromListByKeyword(phoneCodeList, companyNumberArray[0]));
             companyPhoneNumberET.setText(companyNumberArray[1]);
             
             // set message info
-            infoSpinner.setSelection(getOptionSelectedPosition(infoList, customerInfo.getCustomerInfo()));
+            infoSpinner.setSelection(Utility.getPositionFromListByOptSerial(infoList, customerInfo.getCustomerInfo()));
             
             // set job
-            jobSpinner.setSelection(getOptionSelectedPosition(jobList, customerInfo.getCustomerJob()));
+            jobSpinner.setSelection(Utility.getPositionFromListByOptSerial(jobList, customerInfo.getCustomerJob()));
             
             // set birthday
-            String[] birthdayArray = splitStringToArray(customerInfo.getCustomerBirth(), Utility.FILL_DASH);
-            yearSpinner.setSelection(getPositionFromList(yearList, birthdayArray[0]));
+            String[] birthdayArray = Utility.splitStringToArray(customerInfo.getCustomerBirth(), Utility.FILL_DASH);
+            yearSpinner.setSelection(Utility.getPositionFromListByKeyword(yearList, birthdayArray[0]));
             setCustomerBirthdayMonthSpinner();
-            monthSpinner.setSelection(getPositionFromList(monthList, birthdayArray[1]));
+            monthSpinner.setSelection(Utility.getPositionFromListByKeyword(monthList, birthdayArray[1]));
             int days = Utility.getDays((String)yearSpinner.getSelectedItem() + "-" + (String)monthSpinner.getSelectedItem());
             setCustomerBirthdayDaySpinner(days);
-            daySpinner.setSelection(getPositionFromList(dayList, birthdayArray[2]));
+            daySpinner.setSelection(Utility.getPositionFromListByKeyword(dayList, birthdayArray[2]));
             
             // set introducer
             introducerET.setText(customerInfo.getCustomerIntroducer());
@@ -1397,6 +1387,15 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             caseNameET.setText(customerInfo.getReservationWorkAlias());
             
             // set work city country
+            String[] address = Utility.splitAddressToArray(customerInfo.getWorkPostcode(), customerInfo.getReservationWork());
+            
+            int countyPosition = Utility.getPositionFromListByKeyword(workCountyList, address[0]);
+            
+            workCountySpinner.setSelection(countyPosition);
+            
+            handleCountyEvent(countyPosition, false, false);
+            
+            workCitySpinner.setSelection(Utility.getPositionFromListByKeyword(workCityList, address[1]));
             
             // set visit date
             Integer[] visitDate = Utility.parseDateTime(customerInfo.getCustomerVisitDate());
@@ -1417,74 +1416,35 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             // set designer name, no need, because get data by creator
             
             // set title
-            titleSpinner.setSelection(getOptionSelectedPosition(titleList, customerInfo.getCustomerTitle()));
+            titleSpinner.setSelection(Utility.getPositionFromListByOptSerial(titleList, customerInfo.getCustomerTitle()));
             
             // set mail
             emailET.setText(customerInfo.getCustomerMail());
             
             // set age
-            ageSpinner.setSelection(getOptionSelectedPosition(ageList, customerInfo.getCustomerAge()));
+            ageSpinner.setSelection(Utility.getPositionFromListByOptSerial(ageList, customerInfo.getCustomerAge()));
             
             // set repair item & area
-            repairItemSpinner.setSelection(getOptionSelectedPosition(repairItemList, customerInfo.getReservationRepairItem()));
-            areaSpinner.setSelection(getOptionSelectedPosition(areaList, customerInfo.getReservationArea()));
+            repairItemSpinner.setSelection(Utility.getPositionFromListByOptSerial(repairItemList, customerInfo.getReservationRepairItem()));
+            areaSpinner.setSelection(Utility.getPositionFromListByOptSerial(areaList, customerInfo.getReservationArea()));
             
             // set budget
-            budgetSpinner.setSelection(getOptionSelectedPosition(budgetList, customerInfo.getReservationBudget()));
+            budgetSpinner.setSelection(Utility.getPositionFromListByOptSerial(budgetList, customerInfo.getReservationBudget()));
             
             // set status comment
             cantDescriptionET.setText(customerInfo.getReservationStatusComment());
             
             // set status
-            statusSpinner.setSelection(getOptionSelectedPosition(statusList, customerInfo.getReservationStatus()));
+            statusSpinner.setSelection(Utility.getPositionFromListByOptSerial(statusList, customerInfo.getReservationStatus()));
             
             // set address
+            workET.setText(address[2]);
             
             // set space request
             initSpaceData();
             
             // set memo
             memoET.setText(customerInfo.getCustomerMemo());
-        }
-    }
-    
-    private String[] splitStringToArray(String data, String keyword)
-    {
-        String[] tokens = data.split(keyword);
-        for (String token : tokens)
-        {
-            Log.d(TAG, "token === " + token);
-        }
-        
-        return tokens;
-    }
-    
-    private int getPositionFromList(List<String> data, String keyword)
-    {
-        for (int i = 0; i < data.size(); i++)
-        {
-            if (keyword.equals(data.get(i)))
-            {
-                return i;
-            }
-        }
-        
-        return 0;
-    }
-    
-    private void initSpaceData()
-    {
-        String[] spaceArray = splitStringToArray(customerInfo.getReservationSpace(), ",");
-        
-        for (int i = 0; i < spaceList.size(); i++)
-        {          
-            for (int j = 0; j < spaceArray.length; j++)
-            {
-                if (spaceList.get(i).getOptSerial() == Integer.valueOf(spaceArray[j]))
-                {
-                    spaceStateList.set(i, true);
-                }
-            }
         }
     }
     

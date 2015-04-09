@@ -51,6 +51,7 @@ import android.util.Log;
 import com.example.retailsale.UploadReceiver;
 import com.example.retailsale.fragment.SynchronizationFragment;
 import com.example.retailsale.manager.HttpManager;
+import com.example.retailsale.manager.dataoption.DataOption;
 import com.example.retailsale.manager.fileinfo.GsonFileInfo;
 
 public class Utility
@@ -1349,5 +1350,120 @@ public class Utility
             }
         }
         return false;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean[] convertListToArray(final List<Boolean> booleanList)
+    {
+        final boolean[] array = new boolean[booleanList.size()];
+        int index = 0;
+        for (Boolean object : booleanList)
+        {
+            array[index++] = object;
+        }
+        return array;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static String[] splitStringToArray(String data, String keyword)
+    {
+        String[] tokens = data.split(keyword);
+        for (String token : tokens)
+        {
+            Log.d(TAG, "token === " + token);
+        }
+        
+        return tokens;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static String[] splitAddressToArray(String zipCode, String address)
+    {
+        String[] addressArray;
+        
+        switch(zipCode)
+        {
+        case "290": // 宜蘭縣 釣魚台列嶼
+            addressArray = splitAddressToArray(address, 3, 5);
+            break;
+        case "300": // 新竹市 東區 北區
+        case "400": // 台中市 中區
+        case "401": // 台中市 東區
+        case "402": // 台中市 南區
+        case "403": // 台中市 西區
+        case "404": // 台中市 北區
+        case "600": // 嘉義市 東區 西區
+        case "701": // 台南市 東區
+        case "702": // 台南市 南區
+        case "704": // 台南市 北區
+            addressArray = splitAddressToArray(address, 3, 2);
+            break;
+        case "849": // 高雄市 那瑪夏區
+        case "963": // 台東縣 太麻里鄉
+            addressArray = splitAddressToArray(address, 3, 4);
+            break;
+        case "817": // 南海諸島 東沙
+        case "819": // 南海諸島 南沙
+            addressArray = splitAddressToArray(address, 4, 2);
+            break;
+        default:
+            addressArray = splitAddressToArray(address, 3, 3);
+            break;
+        }
+        
+        return addressArray;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static String[] splitAddressToArray(String address, int countyLength, int cityLength)
+    {
+        String[] addressArray = new String[3];
+        
+//        String test = "桃園縣八德市榮友新村28號";
+//        
+//        Log.d(TAG, "county === " + test.substring(0, 3));
+//        Log.d(TAG, "city === " + test.substring(3, 6));
+//        Log.d(TAG, "address === " + test.substring(6, test.length()));
+        
+        // city
+        addressArray[0] = address.substring(0, countyLength);
+        
+        // country
+        addressArray[1] = address.substring(countyLength, countyLength + cityLength);
+        
+        // address
+        addressArray[2] = address.substring(countyLength + cityLength, address.length());
+        
+        return addressArray;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static int getPositionFromListByKeyword(List<String> data, String keyword)
+    {
+        for (int i = 0; i < data.size(); i++)
+        {
+            if (keyword.equals(data.get(i)))
+            {
+                return i;
+            }
+        }
+        
+        return 0;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static int getPositionFromListByOptSerial(List<DataOption> dataList, int optSerial)
+    {
+        int position = 0;
+        
+        for (int i = 0; i < dataList.size(); i++)
+        {
+            if (dataList.get(i).getOptSerial() == optSerial){
+                position = i;
+                return position;
+            }
+        }
+        
+        return position;
     }
 }
