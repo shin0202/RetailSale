@@ -1381,34 +1381,28 @@ public class Utility
     {
         String[] addressArray;
         
-        switch(zipCode)
+        if (zipCode.equals("290")) // 宜蘭縣 釣魚台列嶼
         {
-        case "290": // 宜蘭縣 釣魚台列嶼
             addressArray = splitAddressToArray(address, 3, 5);
-            break;
-        case "300": // 新竹市 東區 北區
-        case "400": // 台中市 中區
-        case "401": // 台中市 東區
-        case "402": // 台中市 南區
-        case "403": // 台中市 西區
-        case "404": // 台中市 北區
-        case "600": // 嘉義市 東區 西區
-        case "701": // 台南市 東區
-        case "702": // 台南市 南區
-        case "704": // 台南市 北區
+        }
+        else if (zipCode.equals("300") || zipCode.equals("400") || zipCode.equals("401")
+                || zipCode.equals("402") || zipCode.equals("403") || zipCode.equals("404")
+                || zipCode.equals("600") || zipCode.equals("701") || zipCode.equals("702")
+                || zipCode.equals("704")) // 新竹市 東區 北區, 台中市 中區 東區 南區 西區 北區, 嘉義市 東區 西區, 台南市 東區 南區 北區
+        {
             addressArray = splitAddressToArray(address, 3, 2);
-            break;
-        case "849": // 高雄市 那瑪夏區
-        case "963": // 台東縣 太麻里鄉
+        }
+        else if (zipCode.equals("849") || zipCode.equals("963")) // 高雄市 那瑪夏區, 台東縣 太麻里鄉
+        {
             addressArray = splitAddressToArray(address, 3, 4);
-            break;
-        case "817": // 南海諸島 東沙
-        case "819": // 南海諸島 南沙
+        }
+        else if (zipCode.equals("817") || zipCode.equals("819")) // 南海諸島 東沙 南沙
+        {
             addressArray = splitAddressToArray(address, 4, 2);
-            break;
-        default:
+        }
+        else
+        {
             addressArray = splitAddressToArray(address, 3, 3);
-            break;
         }
         
         return addressArray;
@@ -1419,16 +1413,16 @@ public class Utility
     {
         String[] addressArray = new String[3];
         
-//        String test = "桃園縣八德市榮友新村28號";
+//        String address = "桃園縣八德市xxx村xx號";
 //        
 //        Log.d(TAG, "county === " + test.substring(0, 3));
 //        Log.d(TAG, "city === " + test.substring(3, 6));
 //        Log.d(TAG, "address === " + test.substring(6, test.length()));
         
-        // city
+        // county
         addressArray[0] = address.substring(0, countyLength);
         
-        // country
+        // city
         addressArray[1] = address.substring(countyLength, countyLength + cityLength);
         
         // address

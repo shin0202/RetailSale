@@ -220,7 +220,6 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         case R.id.add_tab_customer_birthday_month:
             if (hasBundle)
             {
-                hasBundle = false;
                 return;
             }
             Log.d(TAG, "To select month, the position is " + position);
@@ -232,6 +231,11 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             }
             break;
         case R.id.add_tab_work_address_county:
+            if (hasBundle)
+            {
+                hasBundle = false;
+                return;
+            }
             Log.d(TAG, "To select work county, the position is " + position);
             handleCountyEvent(position, false, false);
             break;
