@@ -336,6 +336,10 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         else
         {
             Log.d(TAG, "size is  " + albumList.size());
+            if (photoList != null)  // need to clear
+            {
+                photoList.clear();
+            }
         }
 
         uiHandler.sendEmptyMessage(SET_ADAPTER);
@@ -553,6 +557,8 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         File file = new File(path);
 
         dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+        
+        showToast(getResources().getString(R.string.delete) + file.getName());
 
         Utility.removeDirectory(file);
 

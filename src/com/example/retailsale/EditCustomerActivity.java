@@ -1277,6 +1277,10 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
     
     private void initSpaceData()
     {
+        if (customerInfo.getReservationSpace() == null || "".equals(customerInfo.getReservationSpace()))
+        {
+            return;
+        }
         String[] spaceArray = Utility.splitStringToArray(customerInfo.getReservationSpace(), ",");
         
         for (int i = 0; i < spaceList.size(); i++)
@@ -1363,17 +1367,33 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             customerNameET.setText(customerInfo.getCustomerName());
             
             // set home number
-            String[] homeNumberArray = Utility.splitStringToArray(customerInfo.getCustomerHome(), Utility.FILL_DASH);
-            phoneNumberSpinner.setSelection(Utility.getPositionFromListByKeyword(phoneCodeList, homeNumberArray[0]));
-            phoneNumberET.setText(homeNumberArray[1]);
+            if (getResources().getString(R.string.no_data).equals(customerInfo.getCustomerHome())) // no data
+            {
+                phoneNumberSpinner.setSelection(0);
+                phoneNumberET.setText(customerInfo.getCustomerHome());
+            }
+            else
+            {
+                String[] homeNumberArray = Utility.splitStringToArray(customerInfo.getCustomerHome(), Utility.FILL_DASH);
+                phoneNumberSpinner.setSelection(Utility.getPositionFromListByKeyword(phoneCodeList, homeNumberArray[0]));
+                phoneNumberET.setText(homeNumberArray[1]);
+            }
             
             // set cell phone number
             cellPhoneNumberET.setText(customerInfo.getCustomerMobile());
             
             // set company number
-            String[] companyNumberArray = Utility.splitStringToArray(customerInfo.getCustomerCompany(), Utility.FILL_DASH);
-            companyPhoneNumberSpinner.setSelection(Utility.getPositionFromListByKeyword(phoneCodeList, companyNumberArray[0]));
-            companyPhoneNumberET.setText(companyNumberArray[1]);
+            if (getResources().getString(R.string.no_data).equals(customerInfo.getCustomerCompany())) // no data
+            {
+                companyPhoneNumberSpinner.setSelection(0);
+                companyPhoneNumberET.setText(customerInfo.getCustomerHome());
+            }
+            else
+            {
+                String[] companyNumberArray = Utility.splitStringToArray(customerInfo.getCustomerCompany(), Utility.FILL_DASH);
+                companyPhoneNumberSpinner.setSelection(Utility.getPositionFromListByKeyword(phoneCodeList, companyNumberArray[0]));
+                companyPhoneNumberET.setText(companyNumberArray[1]);
+            }
             
             // set message info
             infoSpinner.setSelection(Utility.getPositionFromListByOptSerial(infoList, customerInfo.getCustomerInfo()));
@@ -1382,13 +1402,20 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             jobSpinner.setSelection(Utility.getPositionFromListByOptSerial(jobList, customerInfo.getCustomerJob()));
             
             // set birthday
-            String[] birthdayArray = Utility.splitStringToArray(customerInfo.getCustomerBirth(), Utility.FILL_DASH);
-            yearSpinner.setSelection(Utility.getPositionFromListByKeyword(yearList, birthdayArray[0]));
-            setCustomerBirthdayMonthSpinner();
-            monthSpinner.setSelection(Utility.getPositionFromListByKeyword(monthList, birthdayArray[1]));
-            int days = Utility.getDays((String)yearSpinner.getSelectedItem() + "-" + (String)monthSpinner.getSelectedItem());
-            setCustomerBirthdayDaySpinner(days);
-            daySpinner.setSelection(Utility.getPositionFromListByKeyword(dayList, birthdayArray[2]));
+            if (getResources().getString(R.string.no_data).equals(customerInfo.getCustomerBirth())) // no data
+            {
+                
+            }
+            else
+            {
+                String[] birthdayArray = Utility.splitStringToArray(customerInfo.getCustomerBirth(), Utility.FILL_DASH);
+                yearSpinner.setSelection(Utility.getPositionFromListByKeyword(yearList, birthdayArray[0]));
+                setCustomerBirthdayMonthSpinner();
+                monthSpinner.setSelection(Utility.getPositionFromListByKeyword(monthList, birthdayArray[1]));
+                int days = Utility.getDays((String)yearSpinner.getSelectedItem() + "-" + (String)monthSpinner.getSelectedItem());
+                setCustomerBirthdayDaySpinner(days);
+                daySpinner.setSelection(Utility.getPositionFromListByKeyword(dayList, birthdayArray[2]));
+            }
             
             // set introducer
             introducerET.setText(customerInfo.getCustomerIntroducer());
@@ -1397,15 +1424,26 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             caseNameET.setText(customerInfo.getReservationWorkAlias());
             
             // set work city country
-            String[] address = Utility.splitAddressToArray(customerInfo.getWorkPostcode(), customerInfo.getReservationWork());
-            
-            int countyPosition = Utility.getPositionFromListByKeyword(workCountyList, address[0]);
-            
-            workCountySpinner.setSelection(countyPosition);
-            
-            handleCountyEvent(countyPosition, false, false);
-            
-            workCitySpinner.setSelection(Utility.getPositionFromListByKeyword(workCityList, address[1]));
+            if (customerInfo.getWorkPostcode() == null || "".equals(customerInfo.getWorkPostcode()))
+            {
+                workCountySpinner.setSelection(0);
+                workET.setText("");
+            }
+            else
+            {
+                String[] address = Utility.splitAddressToArray(customerInfo.getWorkPostcode(), customerInfo.getReservationWork());
+                
+                int countyPosition = Utility.getPositionFromListByKeyword(workCountyList, address[0]);
+                
+                workCountySpinner.setSelection(countyPosition);
+                
+                handleCountyEvent(countyPosition, false, false);
+                
+                workCitySpinner.setSelection(Utility.getPositionFromListByKeyword(workCityList, address[1]));
+                
+                // set address
+                workET.setText(address[2]);
+            }
             
             // set visit date
             Integer[] visitDate = Utility.parseDateTime(customerInfo.getCustomerVisitDate());
@@ -1446,9 +1484,6 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             
             // set status
             statusSpinner.setSelection(Utility.getPositionFromListByOptSerial(statusList, customerInfo.getReservationStatus()));
-            
-            // set address
-            workET.setText(address[2]);
             
             // set space request
             initSpaceData();
