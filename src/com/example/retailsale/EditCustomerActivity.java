@@ -151,6 +151,10 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             Log.d(TAG, "To select space");
             setMultiDialog(spaceList);
             break;
+        case R.id.add_tab_back_btn:
+            Log.d(TAG, "Back to list");
+            EditCustomerActivity.this.finish();
+            break;
         }
     }
 
@@ -260,6 +264,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         spaceButton.setOnClickListener(this);
         statusSpinner = (Spinner) findViewById(R.id.add_tab_sale_status);
         Button saveBtn = (Button) findViewById(R.id.add_tab_save_btn);
+        Button backBtn = (Button) findViewById(R.id.add_tab_back_btn);
 //        Button newBtn = (Button) view.findViewById(R.id.add_tab_new_btn);
         customerNameET = (EditText) findViewById(R.id.add_tab_edit_customer_name);
         phoneNumberET = (EditText) findViewById(R.id.add_tab_edit_phone_number);
@@ -316,6 +321,7 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
         
         // save btn
         saveBtn.setOnClickListener(this);
+        backBtn.setOnClickListener(this);
 //        newBtn.setOnClickListener(this);
         // leave info
         leaveInfoCB.setOnCheckedChangeListener(this);
