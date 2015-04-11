@@ -238,6 +238,11 @@ public class NeedUploadListFragment extends Fragment implements View.OnClickList
             {
                 while (cursor.moveToNext())
                 {
+                    Log.d(TAG,
+                            "row id === "
+                                    + cursor.getLong(cursor
+                                            .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_ID)));
+                    
                     customerList.add(new CustomerInfo(
                             cursor.getLong(cursor
                                     .getColumnIndex(RetialSaleDbAdapter.KEY_ADD_CUSTOMER_ID)), 

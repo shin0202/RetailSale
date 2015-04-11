@@ -1367,10 +1367,11 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             customerNameET.setText(customerInfo.getCustomerName());
             
             // set home number
-            if (getResources().getString(R.string.no_data).equals(customerInfo.getCustomerHome())) // no data
+            if (getResources().getString(R.string.no_data).equals(customerInfo.getCustomerHome())
+                    || "".equals(customerInfo.getCustomerHome())) // no data
             {
                 phoneNumberSpinner.setSelection(0);
-                phoneNumberET.setText(customerInfo.getCustomerHome());
+                phoneNumberET.setText("");
             }
             else
             {
@@ -1380,10 +1381,19 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             }
             
             // set cell phone number
-            cellPhoneNumberET.setText(customerInfo.getCustomerMobile());
+            if (getResources().getString(R.string.no_data).equals(customerInfo.getCustomerMobile())
+                    || "".equals(customerInfo.getCustomerMobile())) // no data
+            {
+                cellPhoneNumberET.setText("");
+            }
+            else
+            {
+                cellPhoneNumberET.setText(customerInfo.getCustomerMobile());
+            }
             
             // set company number
-            if (getResources().getString(R.string.no_data).equals(customerInfo.getCustomerCompany())) // no data
+            if (getResources().getString(R.string.no_data).equals(customerInfo.getCustomerCompany())
+                    || "".equals(customerInfo.getCustomerCompany())) // no data
             {
                 companyPhoneNumberSpinner.setSelection(0);
                 companyPhoneNumberET.setText(customerInfo.getCustomerHome());
@@ -1402,7 +1412,8 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             jobSpinner.setSelection(Utility.getPositionFromListByOptSerial(jobList, customerInfo.getCustomerJob()));
             
             // set birthday
-            if (getResources().getString(R.string.no_data).equals(customerInfo.getCustomerBirth())) // no data
+            if (getResources().getString(R.string.no_data).equals(customerInfo.getCustomerBirth())
+                    || "".equals(customerInfo.getCustomerBirth())) // no data
             {
                 
             }
@@ -1467,7 +1478,15 @@ public class EditCustomerActivity extends Activity implements OnClickListener, O
             titleSpinner.setSelection(Utility.getPositionFromListByOptSerial(titleList, customerInfo.getCustomerTitle()));
             
             // set mail
-            emailET.setText(customerInfo.getCustomerMail());
+            if (getResources().getString(R.string.no_data).equals(customerInfo.getCustomerMail())
+                    || "".equals(customerInfo.getCustomerMail())) // no data
+            {
+                emailET.setText("");
+            }
+            else
+            {
+                emailET.setText(customerInfo.getCustomerMail());
+            }
             
             // set age
             ageSpinner.setSelection(Utility.getPositionFromListByOptSerial(ageList, customerInfo.getCustomerAge()));

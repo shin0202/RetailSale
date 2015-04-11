@@ -726,6 +726,7 @@ public class CustomerInfo implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
+        dest.writeLong(rowId);
         dest.writeString(customerAccount);
         dest.writeString(customerName);
         dest.writeString(customerMobile);
@@ -795,6 +796,7 @@ public class CustomerInfo implements Parcelable
 
     public void readFromParcel(Parcel in)
     {
+        this.rowId = in.readLong();
         this.customerAccount = in.readString();
         this.customerName = in.readString();
         this.customerMobile = in.readString();
