@@ -252,7 +252,7 @@ public class PhotoPlayerActivity extends Activity implements OnClickListener
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
         textView.setTextSize(txtSize);
         textView.setTextColor(Color.BLACK);
-        textView.setText(name.replace(Utility.REPLACE_STRING, Utility.SPACE_STRING));
+        textView.setText(name.replace(Utility.REPLACE_STRING, Utility.SPACE_STRING).replace(Utility.REPLACE_TXT_STRING, Utility.SPACE_STRING));
 
         layout.addView(imageView);
         layout.addView(textView);

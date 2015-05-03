@@ -79,7 +79,8 @@ public class PhotoAdapter extends BaseAdapter
         convertView.setId(BASE_INDEX + position);
         viewTag.showName.setText(photoList.get(position).getFileName()
                 .replace(Utility.REPLACE_STRING, Utility.SPACE_STRING)
-                .replace(Utility.REPLACE_B_STRING, Utility.SPACE_STRING));
+                .replace(Utility.REPLACE_B_STRING, Utility.SPACE_STRING)
+                .replace(Utility.REPLACE_TXT_STRING, Utility.SPACE_STRING));
         // to show img
         // viewTag.showPhoto.setImageBitmap(bm);
         if (selectdTab == BROWSER_TAB)

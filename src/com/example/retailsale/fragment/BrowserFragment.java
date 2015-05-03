@@ -169,7 +169,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             {
                 LocalFileInfo localFileInfo = photoList.get(position);
 
-                showToast(getResources().getString(R.string.select) + localFileInfo.getFileName());
+                showToast(getResources().getString(R.string.select) + localFileInfo.getFileName().replace(Utility.REPLACE_TXT_STRING, Utility.SPACE_STRING));
 
                 if (localFileInfo != null && position < photoList.size())
                 {
@@ -485,7 +485,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 
                 Log.d(TAG, " currentAlbumPosition : " + currentAlbumPosition + " file path : " + localFileInfo.getFilePath());
                 
-                showToast(getResources().getString(R.string.select) + localFileInfo.getFileName());
+                showToast(getResources().getString(R.string.select) + localFileInfo.getFileName().replace(Utility.REPLACE_TXT_STRING, Utility.SPACE_STRING));
                 
                 if (photoList != null)
                 {
@@ -558,7 +558,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 
         dialogHandler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
         
-        showToast(getResources().getString(R.string.delete) + file.getName());
+        showToast(getResources().getString(R.string.delete) + file.getName().replace(Utility.REPLACE_TXT_STRING, Utility.SPACE_STRING));
 
         Utility.removeDirectory(file);
 

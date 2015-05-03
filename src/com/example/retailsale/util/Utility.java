@@ -1,5 +1,7 @@
 package com.example.retailsale.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -10,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,11 +22,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -34,6 +41,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -69,6 +77,7 @@ public class Utility
     public static final String FILE_PATH_2 = "/sdcard/retail";
     public static final String LOG_FILE_PATH = "/sdcard/retail2/log.txt";
     public static final String LOG_FOLDER_PATH = "/sdcard/retail2/";
+    public static final String DEFAULT_BASE64_FOLDER_PATH = "/sdcard/Retail/";
     public static final String REPLACE_SERVER_FOLDER = "C:\\Project\\_code\\testFolder";
     public static final String REPLACE_STRING = ".jpg.txt";
     public static final String REPLACE_B_STRING = ".JPG.txt";
@@ -1459,5 +1468,230 @@ public class Utility
         }
         
         return position;
+    }
+    
+    public static void unzip(Context context, String zipFilePath)
+    {
+        Log.d(TAG, "Unzip: " + zipFilePath);
+        // 取得SD卡目錄，並以 App package 作為子目錄
+//        File outDir = new File(Environment.getExternalStorageDirectory(), context.getPackageName());
+//        // 以下與一般 Java 程式作法無二
+//        if (!outDir.exists())
+//        {
+//            // 要有 android.permission.WRITE_EXTERNAL_STORAGE 權限
+//            outDir.mkdir();
+//        }
+//        
+//        if (!outDir.exists())
+//        {
+//            Log.e(TAG, "Can't create this path: " + outDir.getAbsolutePath());
+//            return;
+//        }
+//        Log.d(TAG, "Ouput path: " + outDir.getAbsolutePath());
+        InputStream is = null;
+        BufferedInputStream bi = null;
+        BufferedOutputStream bo = null;
+        try
+        {
+            ZipFile zipFile = new ZipFile(zipFilePath);
+            Enumeration<? extends ZipEntry> entryEnum = zipFile.entries();
+            ZipEntry entry;
+            File outFile;
+            // loop zip 檔案裡所有目錄與檔案
+            while (entryEnum.hasMoreElements())
+            {
+                entry = entryEnum.nextElement();
+//                outFile = new File(outDir, entry.getName());
+                outFile = new File("/sdcard", entry.getName());
+                if (entry.isDirectory())
+                {
+                    Log.d(TAG, "Add a folder: " + outFile.getAbsolutePath());
+                    outFile.mkdir();
+                    if (!outFile.exists())
+                    {
+                        Log.e(TAG, "Can't create this path: " + outFile.getAbsolutePath());
+                        return;
+                    }
+                }
+                else
+                {
+                    Log.d(TAG, "Add a file: " + outFile.getAbsolutePath());
+                    is = zipFile.getInputStream(entry);
+                    bi = new BufferedInputStream(is);
+                    bo = new BufferedOutputStream(new FileOutputStream(outFile));
+                    int data = 0;
+                    while ((data = bi.read()) != -1)
+                    {
+                        bo.write(data);
+                    }
+                    bo.flush();
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            if (bi != null)
+            {
+                try
+                {
+                    bi.close();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            if (bo != null)
+            {
+                try
+                {
+                    bo.close();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    public static boolean copyAssets(Context context) {
+        // to check retail.zip
+        File zipFile = new File("/sdcard/retail.zip");
+        
+        if (zipFile.exists())
+        {
+            return false;
+        }
+        
+        AssetManager assetManager = context.getAssets();
+        String[] files = null;
+        try {
+            files = assetManager.list("");
+        } catch (IOException e) {
+            Log.e("tag", "Failed to get asset file list.", e);
+        }
+        for(String filename : files) {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+              in = assetManager.open(filename);
+              File outFile = new File(Environment.getExternalStorageDirectory(), filename);
+              out = new FileOutputStream(outFile);
+              copyFile(in, out);
+            } catch(IOException e) {
+                Log.e("tag", "Failed to copy asset file: " + filename, e);
+            }     
+            finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        // NOOP
+                    }
+                }
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException e) {
+                        // NOOP
+                    }
+                }
+            }  
+        }
+        
+        unzip(context, "/sdcard/retail.zip");
+        
+        return true;
+    }
+    
+    public static void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while((read = in.read(buffer)) != -1){
+          out.write(buffer, 0, read);
+        }
+    }
+    
+    // for generate default base64 content
+    public static void generateDefaultBase64File(File rootFile)
+    {
+        File[] list = rootFile.listFiles();
+
+        for (File file : list) {
+            if (file.isDirectory()) {
+                Log.d(TAG, "Dir: " + file.getAbsoluteFile());
+                if (!file.getName().contains(".thumb"))
+                {
+                    generateDefaultBase64File(file);
+                }
+            }
+            else {
+                Log.d(TAG, "File: " + file.getAbsoluteFile());
+                
+                StringBuilder sb = new StringBuilder();
+                try
+                {
+                    // read file (reference from readFromSDcard)
+                    FileInputStream fin = new FileInputStream(file);
+                    byte[] data = new byte[fin.available()];
+                    while (fin.read(data) != -1)
+                    {
+                        sb.append(new String(data));
+                    }
+                    fin.close();
+                    
+                    // write file in the begin
+//                    // 1. get file path
+//                    String path = filePath.replace(Utility.REPLACE_SERVER_FOLDER, Utility.FILE_PATH_2).replace("\\", "/");
+//                    
+//                    Log.d(TAG, "path  is  ~~~~~~~~~~~~~~~~~~~~ " + path);
+
+//                    // 2. create the folder from file path
+//                    Utility.createFolder(path.toString());
+
+                    // 3. generate the MD5 string from file name
+                    Log.d(TAG, "file.getName()  is  ~~~~~~~~~~~~~~~~~~~~ " + file.getName());
+                    String md5FileName = Utility.generateMD5String(file.getName().replace(REPLACE_TXT_STRING, SPACE_STRING));
+                    Log.d(TAG, "md5FileName  is  ~~~~~~~~~~~~~~~~~~~~ " + md5FileName);
+
+                    // 4. To mix md5 file name and file data to "newData", then write data to file path(newFileName)
+//                    StringBuilder newFileName = new StringBuilder().append(path.toString()).append("/").append(fileName)
+//                            .append(REPLACE_TXT_STRING);
+
+//                    Log.d(TAG, "newFileName  is  ~~~~~~~~~~~~~~~~~~~~ " + newFileName.toString());
+
+//                    StringBuilder newData = new StringBuilder().append(md5FileName).append(fileStream);
+
+//                    int status = writeFile(newFileName.toString(), newData.toString(), false);
+                    
+                    // 5. to generate thumbnail
+                    generateThumbnail(file.getName().replace(".txt", ""), file.getAbsolutePath().replace(file.getName(), "") + Utility.THUMB_PATH, sb.toString());
+                    
+                    sb.insert(0, md5FileName);
+                    
+                    Log.d(TAG, "sb  is  ~~~~~~~~~~~~~~~~~~~~ " + sb.toString());
+                    
+                    // write file (reference from writeToSDcard)
+                    FileOutputStream fout = new FileOutputStream(file);
+                    fout.write(sb.toString().getBytes());
+                    fout.flush();
+                    fout.close();
+                }
+                catch (FileNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "*************************************************************** ");
+            }
+        }
     }
 }

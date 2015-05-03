@@ -65,7 +65,19 @@ public class LoginActivity extends Activity implements OnClickListener
         getDataOption();
         getUser();
         getAppUser();
+        
+        boolean isSuccess = Utility.copyAssets(this);
+        Log.d(TAG, "isSuccess === " + isSuccess);
         handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+//        Thread thread = new Thread()
+//        {
+//            public void run() 
+//            {
+//                Utility.generateDefaultBase64File(new File(Utility.DEFAULT_BASE64_FOLDER_PATH));
+//            }
+//        };
+//        
+//        thread.run();
     }
 
     @Override
