@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Stack;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -64,6 +67,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     private GridView photoGrid;
     private ProgressDialog progressDialog;
     private Button deleteBtn;
+    private Dialog dialog;
     
     // load thread ----> handlePageRefresh -----> listFolder(uiHandler ---> addQuicklySelectedDummy), listFilesInFolder
     // onItemClick ----> isFile ----->  PhotoPlayer
@@ -455,7 +459,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         }
     }
 
-    private View addQuicklySelectedDummy(String name, final String path, int type)
+    private View addQuicklySelectedDummy(final String name, final String path, int type)
     {
         // Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
         int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
@@ -502,7 +506,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             @Override
             public boolean onLongClick(View v)
             {
-                deleteBottomFolder(path);
+                showDialog(name, path);
                 return false;
             }
         });
@@ -532,6 +536,36 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
     private void showToast(String showString)
     {
         Toast.makeText(getActivity(), showString, Toast.LENGTH_SHORT).show();
+    }
+    
+    private void showDialog(final String name, final String path)
+    {
+        if (dialog == null)
+        {
+            dialog = new AlertDialog.Builder(BrowserFragment.this.getActivity())
+                    .setTitle(getString(R.string.browser_tab_delete_hint))
+                    .setMessage(String.format(getString(R.string.browser_tab_delete_message), name))
+                    .setPositiveButton(getString(R.string.ok),
+                            new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int which)
+                                {
+                                    deleteBottomFolder(path);
+                                    dialog.dismiss();
+                                }
+                            })
+                    .setNegativeButton(getString(R.string.cancel),
+                            new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int which)
+                                {
+                                    dialog.dismiss();
+                                }
+                            }).create();
+        }
+        dialog.show();
     }
     
     private void changeDeletedState()

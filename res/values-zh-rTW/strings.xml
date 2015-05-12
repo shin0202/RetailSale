@@ -185,5 +185,7 @@
     <!-- Browser Tab -->
     <string name="browser_tab_in_deleted_state">目前在刪除狀態, 請按下刪除按鍵即可刪除</string>
     <string name="browser_tab_close_deleted_state">關閉刪除狀態</string>
+    <string name="browser_tab_delete_hint">刪除提示</string>
+    <string name="browser_tab_delete_message">你確定要刪除%1$s資料夾</string>
 
 </resources>

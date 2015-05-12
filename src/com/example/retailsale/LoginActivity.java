@@ -22,6 +22,8 @@ import com.example.retailsale.util.Utility;
 public class LoginActivity extends Activity implements OnClickListener
 {
     private static final String TAG = "Login";
+    private static final String DEFAULT_PHOTO = "default_photo";
+    private static final String INSTALLED = "installed";
 
     private EditText inputUserId;
     private EditText inputUserPassword;
@@ -60,20 +62,34 @@ public class LoginActivity extends Activity implements OnClickListener
             return;
         }
         
-        handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
         retialSaleDbAdapter.open();
-        getDataOption();
-        getUser();
-        getAppUser();
         
-        boolean isSuccess = Utility.copyAssets(this);
-        Log.d(TAG, "isSuccess === " + isSuccess);
-        handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+        if (!hadDefaultPhoto())
+        {
+            handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+            
+            Thread initialThread = new Thread()
+            {
+                @Override
+                public void run()
+                {   
+                    getDataOption();
+                    getUser();
+                    getAppUser();
+                    
+                    boolean isSuccess = Utility.copyAssets(LoginActivity.this);
+                    Log.d(TAG, "isSuccess === " + isSuccess);
+                    handler.sendEmptyMessage(Utility.DISMISS_WAITING_DIALOG);
+                }
+            };
+            initialThread.start();
+        }
+        
 //        Thread thread = new Thread()
 //        {
 //            public void run() 
 //            {
-//                Utility.generateDefaultBase64File(new File(Utility.DEFAULT_BASE64_FOLDER_PATH));
+//                Utility.generateDefaultBase64File(new File(Utility.FILE_PATH));
 //            }
 //        };
 //        
@@ -164,6 +180,20 @@ public class LoginActivity extends Activity implements OnClickListener
         Intent intent = new Intent(LoginActivity.this, MainFragmentActivity.class);
         startActivity(intent);
 //		Login.this.finish();
+    }
+    
+    private boolean hadDefaultPhoto()
+    {
+        SharedPreferences settings = this.getSharedPreferences(DEFAULT_PHOTO, Utility.DEFAULT_ZERO_VALUE);
+        boolean installed = settings.getBoolean(INSTALLED, false);
+        
+        Log.d(TAG, "installed === " + installed);
+        
+        if (!installed)
+        {
+            settings.edit().putBoolean(INSTALLED, true).commit();
+        }
+        return installed;
     }
 
 //    private void login(final String id, final String password)
