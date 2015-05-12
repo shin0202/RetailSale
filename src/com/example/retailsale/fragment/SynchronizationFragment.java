@@ -955,7 +955,12 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
                             .getColumnIndex(RetialSaleDbAdapter.KEY_CONTACT_POSTCODE));
                     String reservationSpace = cursor.getString(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_SPACE));
-                    reservationSpace = reservationSpace.substring(0, reservationSpace.length() - 1);
+                    
+                    if (reservationSpace != null && !reservationSpace.equals(""))
+                    {
+                        reservationSpace = reservationSpace.substring(0, reservationSpace.length() - 1);
+                    }
+                    
                     int reservationStatus = cursor.getInt(cursor
                             .getColumnIndex(RetialSaleDbAdapter.KEY_STATUS));
                     String reservationUpateTime = createDate; // not incorrect?
