@@ -79,6 +79,7 @@ public class Utility
     public static final String LOG_FOLDER_PATH = "/sdcard/retail2/";
 //    public static final String DEFAULT_BASE64_FOLDER_PATH = "/sdcard/retail/";
     public static final String REPLACE_SERVER_FOLDER = "C:\\Project\\_code\\testFolder";
+    public static final String DEFAULT_PHOTO_ZIP = "/sdcard/retail.zip";
     public static final String REPLACE_STRING = ".jpg.txt";
     public static final String REPLACE_B_STRING = ".JPG.txt";
     public static final String REPLACE_JPEG_STRING = ".jpg";
@@ -459,6 +460,28 @@ public class Utility
         }
 
         return true;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean clearLogContent()
+    {
+        return closeLogFile() && setBufferedWriter(false) && writeLogData(SPACE_STRING) && closeLogFile()
+                && openLogFile(LOG_FILE_PATH);
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean setBufferedWriter(boolean isAppend)
+    {
+        try
+        {
+            outputContent = new BufferedWriter(new FileWriter(logFile, isAppend));
+            return true;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1561,20 +1584,25 @@ public class Utility
     
     public static boolean copyAssets(Context context) {
         // to check retail.zip
-        File zipFile = new File("/sdcard/retail.zip");
+        File zipFile = new File(DEFAULT_PHOTO_ZIP);
         
         if (zipFile.exists())
         {
+            Log.d(TAG, "the retail zip exist");
+            unzip(context, DEFAULT_PHOTO_ZIP);
             return false;
         }
         
         AssetManager assetManager = context.getAssets();
         String[] files = null;
+        
         try {
             files = assetManager.list("");
         } catch (IOException e) {
-            Log.e("tag", "Failed to get asset file list.", e);
+            Log.e(TAG, "Failed to get asset file list.", e);
+            return false;
         }
+        
         for(String filename : files) {
             InputStream in = null;
             OutputStream out = null;
@@ -1584,7 +1612,7 @@ public class Utility
               out = new FileOutputStream(outFile);
               copyFile(in, out);
             } catch(IOException e) {
-                Log.e("tag", "Failed to copy asset file: " + filename, e);
+                Log.e(TAG, "Failed to copy asset file: " + filename, e);
             }     
             finally {
                 if (in != null) {
@@ -1604,7 +1632,7 @@ public class Utility
             }  
         }
         
-        unzip(context, "/sdcard/retail.zip");
+        unzip(context, DEFAULT_PHOTO_ZIP);
         
         return true;
     }

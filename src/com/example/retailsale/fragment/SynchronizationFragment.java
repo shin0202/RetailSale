@@ -120,7 +120,6 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-
         super.onCreate(savedInstanceState);
     }
 
@@ -522,6 +521,20 @@ public class SynchronizationFragment extends Fragment implements OnClickListener
     {
 
         handler.sendEmptyMessage(Utility.SHOW_WAITING_DIALOG);
+        
+        // to clear log content
+        showMessageView.setText("");
+        messageStringBuilder.setLength(0);
+//        Thread clearLogThread = new Thread()
+//        {
+//            @Override
+//            public void run()
+//            {
+                Utility.clearLogContent(); 
+//            }
+//        };
+        
+//        clearLogThread.start();
         
         SharedPreferences settings = getActivity().getSharedPreferences(Utility.LoginField.DATA,
                 Utility.DEFAULT_ZERO_VALUE);

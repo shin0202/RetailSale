@@ -23,6 +23,7 @@
     <string name="decode_failed">解密失敗</string>
     <string name="delete">刪除</string>
     <string name="data_auto_save">資料自動儲存</string>
+    <string name="no_network">沒有網路</string>
 
     <!-- Login -->
     <string name="login">登入</string>
@@ -137,6 +138,10 @@
     <string name="sync_tab_upload_error">上傳客戶資料錯誤</string>
     <string name="sync_tab_download">下載相片資料錯誤</string>
     <string name="sync_tab_sync_error">同步伺服器資料錯誤</string>
+    <string name="sync_tab_app_in_forground">程式在前景, 不做上傳動作</string>
+    <string name="auto_upload">[自動上傳]</string>
+    <string name="auto_upload_starting">自動上傳開始</string>
+    <string name="user_account_is">使用者帳號是</string>
 
     <!-- Error String -->
     <string name="field_error">欄位錯誤</string>
