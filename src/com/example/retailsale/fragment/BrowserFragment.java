@@ -459,7 +459,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
         }
     }
 
-    private View addQuicklySelectedDummy(final String name, final String path, int type)
+    private View addQuicklySelectedDummy(final String name)
     {
         // Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
         int layoutDp = (int) getResources().getDimension(R.dimen.scrollview_layout_size);
@@ -506,7 +506,10 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             @Override
             public boolean onLongClick(View v)
             {
-                showDialog(name, path);
+                currentAlbumPosition = (Integer) v.getTag();
+                LocalFileInfo localFileInfo = albumList.get(currentAlbumPosition);
+                Log.d(TAG, "@@@ localFileInfo.getFileName() : " + localFileInfo.getFileName() + " file path : " + localFileInfo.getFilePath());
+                showDialog(localFileInfo.getFileName().replace(Utility.REPLACE_TXT_STRING, Utility.SPACE_STRING), localFileInfo.getFilePath());
                 return false;
             }
         });
@@ -553,6 +556,7 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                                 {
                                     deleteBottomFolder(path);
                                     dialog.dismiss();
+                                    dialog = null;
                                 }
                             })
                     .setNegativeButton(getString(R.string.cancel),
@@ -562,9 +566,11 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                                 public void onClick(DialogInterface dialogInterface, int which)
                                 {
                                     dialog.dismiss();
+                                    dialog = null;
                                 }
                             }).create();
         }
+        
         dialog.show();
     }
     
@@ -663,8 +669,9 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
                 if (bundle != null)
                 {
                     String name = bundle.getString(GET_NAME);
-                    String path = bundle.getString(GET_PATH);
-                    albums.addView(addQuicklySelectedDummy(name, path, LocalFileInfo.SELECTED_DIR));
+//                    String path = bundle.getString(GET_PATH);
+//                    albums.addView(addQuicklySelectedDummy(name, path, LocalFileInfo.SELECTED_DIR));
+                    albums.addView(addQuicklySelectedDummy(name));
                 }
                 break;
             case SET_ADAPTER:
