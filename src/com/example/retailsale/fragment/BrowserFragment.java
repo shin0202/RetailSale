@@ -333,6 +333,10 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
 
         if (albumList.size() > 0)
         {
+            if (currentAlbumPosition >= albumList.size())
+            {
+                currentAlbumPosition = 0;
+            }
             String path = albumList.get(currentAlbumPosition).getFilePath();
             Log.d(TAG, "XXXXXXXXXXXXXXXXXXXXXXX " + path);
             listFilesInFolder(new File(path));
@@ -506,8 +510,8 @@ public class BrowserFragment extends Fragment implements OnItemClickListener, On
             @Override
             public boolean onLongClick(View v)
             {
-                currentAlbumPosition = (Integer) v.getTag();
-                LocalFileInfo localFileInfo = albumList.get(currentAlbumPosition);
+                int tempPosition = (Integer) v.getTag();
+                LocalFileInfo localFileInfo = albumList.get(tempPosition);
                 Log.d(TAG, "@@@ localFileInfo.getFileName() : " + localFileInfo.getFileName() + " file path : " + localFileInfo.getFilePath());
                 showDialog(localFileInfo.getFileName().replace(Utility.REPLACE_TXT_STRING, Utility.SPACE_STRING), localFileInfo.getFilePath());
                 return false;
